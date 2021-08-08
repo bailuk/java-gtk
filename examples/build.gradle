@@ -1,0 +1,16 @@
+plugins {
+    id 'application'
+}
+
+
+dependencies {
+    implementation project(path: ':library')
+}
+
+run {
+    systemProperty "java.library.path", file("${project(":glue").buildDir}/lib/main/debug").absolutePath
+}
+
+application {
+    mainClass = 'examples.HelloWorld'
+}

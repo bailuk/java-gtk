@@ -1,0 +1,41 @@
+
+plugins {
+    id 'java-library'
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+}
+
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+
+test {
+    systemProperty "java.library.path", file("${project(":glue").buildDir}/lib/main/debug").absolutePath
+}
+
+
+sourceSets {
+    main {
+        java.srcDirs += 'build/generated/src/main'
+    }
+}
+
+
+test.dependsOn  ':glue:linkDebug'
+
+compileJava.dependsOn ':generator:generate'
+
+
+
+
+
