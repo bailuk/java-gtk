@@ -22,17 +22,19 @@ public class MethodModel extends Model {
 
     // simple method with return type and parameters can be a factory
     public MethodModel(String namespace, MethodTag method) {
+        setSupported("Deprecated", !method.isDeprecated());
+
         throwsError = method.throwsError();
         gtkName = method.getIdentifier();
         javaName = JavaNames.toJavaMethodName(method.getName());
 
         returnType = new ParameterModel(namespace, method.getReturnValue());
-        setSupported(returnType.isSupported());
+        setSupported("Return value", returnType.isSupported());
 
         for (ParameterTag t : method.getParameters()) {
             var parameterModel = new ParameterModel(namespace, t);
             parameters.add(parameterModel);
-            setSupported(parameterModel.isSupported());
+            setSupported("Parameter", parameterModel.isSupported());
         }
 
         constructorType = "new".equals(method.getName());
@@ -46,7 +48,7 @@ public class MethodModel extends Model {
         parameters = methodModel.parameters;
         javaName = name;
         constructorType = true;
-        setSupported(methodModel.isSupported());
+        setSupported(methodModel.getSupportedState(), methodModel.isSupported());
     }
 
 
@@ -73,7 +75,7 @@ public class MethodModel extends Model {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder()
-        .append(getClass().getSimpleName())
+        .append(getSupportedState())
         .append(":").append(getReturnType().toString())
         .append(":").append(getName());
 

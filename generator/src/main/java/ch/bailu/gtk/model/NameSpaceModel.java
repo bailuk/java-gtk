@@ -25,18 +25,18 @@ public class NameSpaceModel extends Model implements NamespaceInterface {
             includes.add(i.getName());
         }
 
-        setSupported(NamespaceTable.instance().contains(this.namespace));
+        setSupported("Namespace", NamespaceTable.instance().contains(this.namespace));
     }
 
     public NameSpaceModel() {
         this.namespace = "";
-        setSupported(true);
+        setSupported("",true);
     }
 
 
     public NameSpaceModel(NamespaceType type) {
         namespace = type.getNamespace();
-        setSupported(NamespaceTable.instance().contains(this.namespace));
+        setSupported("Namespace", NamespaceTable.instance().contains(this.namespace));
     }
 
 

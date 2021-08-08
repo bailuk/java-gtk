@@ -34,7 +34,7 @@ public class ParameterModel extends Model {
 
         jniConverter = JniTypeConverter.factory(this);
 
-        setSupported(jType.isValid());
+        setSupported("jType", jType.isValid());
     }
 
     
@@ -46,7 +46,7 @@ public class ParameterModel extends Model {
         cType = new CType("int");
         classType = new ClassType();
 
-        setSupported(Filter.flags(name, value));
+        setSupported("Filter", Filter.flags(name, value));
     }
 
     public String getValue() {

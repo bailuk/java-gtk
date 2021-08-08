@@ -61,7 +61,7 @@ public class ClassModel extends Model {
     }
 
     private Model filter(MethodModel methodModel) {
-        methodModel.setSupported(Filter.method(this, methodModel));
+        methodModel.setSupported("Filter", Filter.method(this, methodModel));
         return methodModel;
     }
 

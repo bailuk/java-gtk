@@ -11,6 +11,7 @@ public class MethodTag extends NamedTag {
 
     private String identifier = "";
 
+    private boolean deprecated = false;
     private boolean throwsError = false;
 
     public MethodTag(Tag parent) {
@@ -55,6 +56,8 @@ public class MethodTag extends NamedTag {
             identifier = value;
         } else if ("throws".equals(name)) {
             throwsError = "1".equals(value);
+        } else if ("deprecated".equals(name)) {
+            deprecated = "1".equals(value);
         } else {
             super.setAttribute(name, value);
         }
@@ -71,7 +74,12 @@ public class MethodTag extends NamedTag {
         return identifier;
     }
 
+    public boolean isDeprecated() {
+        return deprecated;
+    }
+
     public boolean throwsError() {
         return throwsError;
     }
+
 }
