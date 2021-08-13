@@ -16,7 +16,7 @@ public class TestCCall {
     @Test
     public void testCCall() {
         ValueArray valueArray = new ValueArray(4);
-        valueArray.getNth(0);
+        //valueArray.getNth(0);
     }
 
     @Test

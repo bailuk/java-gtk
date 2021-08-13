@@ -14,7 +14,7 @@ plugins {
 
 
 library {
-    source.from fileTree(dir: "build/generated/src/main/c", include: "**/*.c")
+    //source.from fileTree(dir: "build/generated/src/main/c", include: "**/*.c")
 
     binaries.configureEach { CppBinary binary ->
         def compileTask = binary.compileTask.get()
@@ -29,6 +29,7 @@ library {
             compileTask.includes.from("${Jvm.current().javaHome}/include/win32")
         }
 
+        compileTask.source.from fileTree(dir: "src/main/c", include: "**/*.c")
         compileTask.source.from fileTree(dir: "build/generated/src/main/c", include: "**/*.c")
 
         def toolChain = binary.toolChain
@@ -57,7 +58,6 @@ model {
         gcc(Gcc) {
             eachPlatform {
                 cppCompiler.withArguments { args ->
-                    args << '-std=c++11'
                     args << '-DPIC64'
                     args << '-static'
                 }
