@@ -1,6 +1,7 @@
 package ch.bailu.gtk.model;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.tag.EnumerationTag;
 import ch.bailu.gtk.tag.MemberTag;
 import ch.bailu.gtk.tag.MethodTag;
+import ch.bailu.gtk.tag.ParameterTag;
 import ch.bailu.gtk.tag.StructureTag;
 import ch.bailu.gtk.writer.CodeWriter;
 
@@ -24,6 +26,7 @@ public class ClassModel extends Model {
     private List<MethodModel> constructors = new ArrayList();
     private List<MethodModel> methods = new ArrayList();
     private List<MethodModel> signals = new ArrayList();
+    private List<ParameterModel> fields = new ArrayList();
     private List<Model>       unsupported = new ArrayList();
 
     private List<ParameterModel> constants = new ArrayList();
@@ -56,6 +59,11 @@ public class ClassModel extends Model {
 
         for (MethodTag signal: structure.getSignals()) {
             addIfSupported(signals, new MethodModel(nameSpace.getNamespace(), signal));
+        }
+
+        for (ParameterTag field: structure.getFields()) {
+            addIfSupported(fields, new ParameterModel(nameSpace.getNamespace(), field));
+
         }
     }
 
@@ -115,7 +123,7 @@ public class ClassModel extends Model {
 
 
     public boolean hasNativeCalls() {
-        return isNameSpaceSupported() && isClassType() && (methods.size() >0 || privateFactories.size() > 0 || signals.size()>0);
+        return isNameSpaceSupported() && isClassType() && (methods.size() >0 || privateFactories.size() > 0 || signals.size()>0 || fields.size()>0);
     }
 
     private boolean isClassType() {
@@ -132,48 +140,45 @@ public class ClassModel extends Model {
 
         if (isClassType()) {
             writer.writeClass(this);
-        } else {
-            writer.writeInterface(this);
-        }
 
-        writer.next();
-        for (MethodModel m : privateFactories) {
-            writer.writePrivateFactory(this, m);
-        }
-
-
-        writer.next();
-        for (MethodModel m : factories) {
-            writer.writeFactory(this, m);
-        }
-
-
-
-        if (isClassType()) {
             writer.next();
-            writer.writeInternalConstructor(getApiName());
-        }
+            for (MethodModel m : privateFactories) {
+                writer.writePrivateFactory(this, m);
+            }
 
-        writer.next();
-        for (MethodModel m : constructors) {
-            writer.writeConstructor(this, m);
-        }
+            writer.next();
+            for (MethodModel m : factories) {
+                writer.writeFactory(this, m);
+            }
 
-        writer.next();
+            writer.next();
+            writer.writeInternalConstructor(this);
 
+            writer.next();
+            for (MethodModel m : constructors) {
+                writer.writeConstructor(this, m);
+            }
 
+            writer.next();
+            for (ParameterModel p: fields) {
+                writer.writeField(this, p);
+            }
 
-        if (isClassType()) {
+            writer.next();
             for (MethodModel m : methods) {
                 writer.writeNativeMethod(this, m);
             }
 
+            writer.next();
             for (MethodModel s : signals) {
                 writer.writeSignal(this, s);
             }
         } else {
-            for (MethodModel m : methods) {
-                writer.writeInterfaceMethod(m);
+            writer.writeInterface(this);
+
+            writer.next();
+            for (ParameterModel p: constants) {
+                writer.writeConstant(p);
             }
         }
 
@@ -182,10 +187,6 @@ public class ClassModel extends Model {
             writer.writeUnsupported(m);
         }
 
-        writer.next();
-        for (ParameterModel p: constants) {
-            writer.writeConstant(p);
-        }
         writer.writeEnd();
     }
 
@@ -220,5 +221,9 @@ public class ClassModel extends Model {
 
     public String getGlobalName(String name) {
         return nameSpace.getNamespace() + "_" + getImpName() + "_" + name;
+    }
+
+    public boolean isRecord() {
+        return "record".equals(type);
     }
 }

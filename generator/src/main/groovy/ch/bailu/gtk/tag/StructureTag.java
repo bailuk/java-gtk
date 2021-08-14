@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.bailu.gtk.model.ParameterModel;
+
 
 /**
  * Record, interface, class
@@ -14,13 +16,14 @@ public class StructureTag extends NamedTag {
     private final String type;
 
 
-    private final List<NamedTag> implementsList = new ArrayList<>(3);
-    private final List<MethodTag> constructors = new ArrayList<>(3);
+    private final List<NamedTag> implementsList = new ArrayList<>();
+    private final List<MethodTag> constructors = new ArrayList<>();
 
-    private final List<MethodTag> virtuals = new ArrayList<>(3);
-    private final List<MethodTag> methods = new ArrayList<>(3);
+    private final List<MethodTag> virtuals = new ArrayList<>();
+    private final List<MethodTag> methods = new ArrayList<>();
 
-    private final List<MethodTag> signals = new ArrayList<>(3);
+    private final List<MethodTag> signals = new ArrayList<>();
+    private final List<ParameterTag> fields = new ArrayList<>();
 
     public StructureTag(Tag parent, String type) {
         super(parent);
@@ -29,6 +32,9 @@ public class StructureTag extends NamedTag {
 
     @Override
     public Tag getChild(String name, String prefix) {
+        if ("field".equals(name)) {
+            return add(fields, new ParameterTag(this));
+        }
         if ("implements".equals(name)) {
              return add(implementsList, new NamedTag(this));
         }
@@ -92,5 +98,9 @@ public class StructureTag extends NamedTag {
 
     public List<MethodTag> getSignals() {
         return signals;
+    }
+
+    public List<ParameterTag> getFields() {
+        return fields;
     }
 }

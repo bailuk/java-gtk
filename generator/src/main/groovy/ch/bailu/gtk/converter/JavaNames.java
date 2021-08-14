@@ -49,4 +49,12 @@ public class JavaNames {
     public static String fixToken(String token) {
         return ReservedTokenTable.instance().convert(token);
     }
+
+    public static String getSetterName(String name) {
+        return toJavaMethodName("set_" + name);
+    }
+
+    public static String getGetterName(String name) {
+        return toJavaMethodName("get_" + name);
+    }
 }

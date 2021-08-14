@@ -18,6 +18,9 @@ public class ParameterModel extends Model {
     private JniTypeConverter jniConverter;
 
 
+    private boolean isWriteable=false;
+
+
     public ParameterModel(String namespace, ParameterTag parameter) {
 
         name = JavaNames.fixToken(parameter.getName());
@@ -34,7 +37,10 @@ public class ParameterModel extends Model {
 
         jniConverter = JniTypeConverter.factory(this);
 
+        //setSupported("private", parameter.isPrivate());
         setSupported("jType", jType.isValid());
+
+        this.isWriteable = parameter.isWriteable();
     }
 
     
@@ -125,4 +131,8 @@ public class ParameterModel extends Model {
         return jniConverter.getJniCallbackMethodName();
     }
 
+
+    public boolean isWriteable() {
+        return isWriteable;
+    }
 }

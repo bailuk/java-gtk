@@ -1,5 +1,6 @@
 package ch.bailu.gtk.writer
 
+import ch.bailu.gtk.converter.JavaNames
 import ch.bailu.gtk.model.*
 
 class JavaApiWriter extends CodeWriter {
@@ -10,49 +11,38 @@ class JavaApiWriter extends CodeWriter {
 
     @Override
     void writeStart(ClassModel classModel, NameSpaceModel namespace) throws IOException {
-
+        super.writeStart(classModel, namespace)
         a"""
-        /* this file is auto generated */
-
-
-        package ${namespace.getFullNamespace()};
-        """
-        end(3);
+            
+            package ${namespace.getFullNamespace()};
+        """.stripIndent()
+        end(3)
     }
 
 
     @Override
-    public void writeClass(ClassModel classModel) throws IOException {
+    void writeClass(ClassModel classModel) throws IOException {
         start()
         a "public class ${classModel.getApiName()} extends ${classModel.getApiParentName()} {\n"
     }
 
     @Override
-    public void writeInterface(ClassModel classModel) throws IOException {
+    void writeInterface(ClassModel classModel) throws IOException {
         start()
         a"public interface ${classModel.getApiName()} {\n"
     }
 
     @Override
-    public void writeUnsupported(Model m) throws IOException {
-        start(1);
+    void writeUnsupported(Model m) throws IOException {
+        start (1)
         a("    /* Unsupported:" + m.toString() + " */\n");
     }
 
     @Override
-    public void writeInterfaceMethod(MethodModel m) throws IOException {
+    void writeNativeMethod(ClassModel classModel, MethodModel m) throws IOException {
         start(1);
-        a("    " + m.getReturnType().getApiType() + " " + m.getApiName());
-        writeSignature(m);
-        a(";\n");
-    }
-
-
-    @Override
-    public void writeNativeMethod(ClassModel classModel, MethodModel m) throws IOException {
-        start(1);
-        a("    public ").a(m.getReturnType().getApiType()).a(" ").a(m.getApiName());
-        writeSignature(m);
+        a("    public ${m.getReturnType().getApiType()} ${m.getApiName()}")
+        writeSignature(m)
 
         a(" {\n        ");
 
@@ -84,10 +74,26 @@ class JavaApiWriter extends CodeWriter {
         a(";\n    }\n");
     }
 
+
+
+
     @Override
-    public void writeInternalConstructor(String className) throws IOException {
+    void writeInternalConstructor(ClassModel c) throws IOException {
         start(1);
-        a("    public " + className + "(long pointer) { super(pointer);}\n");
+        a("""
+            public ${c.getApiName()}(long pointer) {
+                super(pointer);
+            }
+            
+            """.stripIndent(8))
+
+        if (c.isRecord()) {
+            a("""
+            public ${c.getApiName()}() {
+                super(${c.getImpName()}.newFromMalloc());
+            }
+            """.stripIndent(8))
+        }
     }
 
     @Override
@@ -104,7 +110,7 @@ class JavaApiWriter extends CodeWriter {
     }
 
     @Override
-    public void writeFactory(ClassModel classModel, MethodModel m) throws IOException {
+    void writeFactory(ClassModel classModel, MethodModel m) throws IOException {
         start(1);
         a("    public static ").a(classModel.getApiName()).a(" ").a(m.getCall().getApiName() + classModel.getApiName());
         writeSignature(m);
@@ -117,17 +123,17 @@ class JavaApiWriter extends CodeWriter {
     }
 
     @Override
-    public void writePrivateFactory(ClassModel c, MethodModel m) {}
+    void writePrivateFactory(ClassModel c, MethodModel m) {}
 
 
     @Override
-    public void writeConstant(ParameterModel p) throws IOException {
+    void writeConstant(ParameterModel p) throws IOException {
         start(1);
         a("    " + p.getApiType() + " " + p.getName() + " = " + p.getValue()+ ";\n");
     }
 
     @Override
-    public void writeEnd() throws IOException {
+    void writeEnd() throws IOException {
         start();
         a("}\n");
     }
@@ -135,7 +141,7 @@ class JavaApiWriter extends CodeWriter {
 
 
     @Override
-    public void writeSignal(ClassModel c, MethodModel m) throws IOException {
+    void writeSignal(ClassModel c, MethodModel m) throws IOException {
         start(1);
         a("    public void ").a(m.getSignalMethodName()).a("(").a(m.getSignalInterfaceName()).a(" observer) {\n");
         a("        ch.bailu.gtk.Signal.put(toLong(), \"").a(m.getApiName()).a("\", observer);\n");
@@ -146,37 +152,74 @@ class JavaApiWriter extends CodeWriter {
         a("    }\n");
     }
 
+    @Override
+    void writeField(ClassModel classModel, ParameterModel p) {
+        List<ParameterModel> parameters = new ArrayList()
 
-    private void writeSignature(MethodModel m) throws IOException {
-        a("(");
+        String getter = JavaNames.getGetterName(p.getName())
+        String setter = JavaNames.getSetterName(p.getName())
 
-        String del = "";
-        for (ParameterModel p: m.getParameters()) {
-            a(del + p.getApiType() + " " + p.getName());
-            del = ", ";
+        start(1)
+
+        if (p.isJavaNative()) {
+            a("""
+                public ${p.getApiType()} ${getter}() {
+                    return ${classModel.getImpName()}.${getter}(${getSelfCallSignature(parameters)});
+                }
+                """.stripIndent(12))
+        } else {
+            a("""
+                public ${p.getApiType()} ${getter}() {
+                    return new ${p.getApiType()}(${classModel.getImpName()}.${getter}(${getSelfCallSignature(parameters)}));
+                }
+                """.stripIndent(12))
         }
-        a(")");
+
+        if (p.isWriteable()) {
+            parameters.add(p)
+            a("""
+                public void ${setter}(${getSignature(parameters)}) {        
+                    ${classModel.getImpName()}.${setter}(${getSelfCallSignature(parameters)});
+                }
+            """.stripIndent(12))
+        }
+
+
     }
 
-    private void writeSelfCallSignature(MethodModel m) throws IOException {
-        a("(");
+    private void writeSignature(MethodModel m) throws IOException {
+        a("(${getSignature(m.getParameters())})")
+    }
 
-        String del = ",";
+    private String getSignature(List<ParameterModel> parameters) throws IOException {
+        StringBuilder result = new StringBuilder()
 
-        a("toLong()");
-
-        for (ParameterModel p: m.getParameters()) {
-            a(del);
-
-            if (p.isJavaNative()) {
-                a(p.getName());
-
-            } else {
-                a(p.getName()).a(".toLong()");
-            }
-
+        String del = ''
+        for (ParameterModel p: parameters) {
+            result.append("${del}${p.getApiType()} ${p.getName()}")
+            del = ', '
         }
-        a(")");
+        result
+    }
+
+
+    private void writeSelfCallSignature(MethodModel m) throws IOException {
+        a("(${getSelfCallSignature(m.getParameters())})")
+    }
+
+
+    private String getSelfCallSignature(List<ParameterModel> parameters) throws IOException {
+        StringBuilder result = new StringBuilder()
+
+        result.append('toLong()')
+        for (ParameterModel p: parameters) {
+            if (p.isJavaNative()) {
+                result.append(", ${p.getName()}")
+            } else {
+                result.append(", ${p.getName()}.toLong()")
+            }
+        }
+        result
     }
 
 

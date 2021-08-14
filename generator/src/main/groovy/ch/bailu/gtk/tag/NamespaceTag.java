@@ -12,6 +12,8 @@ public class NamespaceTag extends NamedTag {
 
 
     private List<NamedTag> includes = new ArrayList<>();
+    private List<MethodTag> functions = new ArrayList<>();
+
     private NamedTag _package = new NamedTag(this);
 
     @Override
@@ -49,11 +51,21 @@ public class NamespaceTag extends NamedTag {
             return new AliasTag(this);
         }
 
+        if ("function".equals(name)) {
+            MethodTag f = new MethodTag(this);
+            functions.add(f);
+            return f;
+        }
+
         return ignore();
     }
 
     public List<NamedTag> getIncludes() {
         return includes;
+    }
+
+    public List<MethodTag> getFunctions() {
+        return functions;
     }
 
     public String getPackage() {
