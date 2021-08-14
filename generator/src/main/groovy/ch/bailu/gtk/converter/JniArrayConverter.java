@@ -2,7 +2,7 @@ package ch.bailu.gtk.converter;
 
 import ch.bailu.gtk.model.ParameterModel;
 
-public class JniArrayConverter extends JniTypeConverter{
+public class JniArrayConverter extends JniTypeConverter {
 
     private final ParameterModel model;
 
@@ -45,3 +45,5 @@ public class JniArrayConverter extends JniTypeConverter{
         return "unknown";
     }
 }
+
+

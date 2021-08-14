@@ -14,31 +14,26 @@ public class CType {
 
     public CType(String type) {
         if (type == null) {
-            type = "";
+            type = "void*";
         }
-        
+
+
         this.type = type;
 
         isPointer = P_POINTER.matcher(this.type).find();
         isConst = P_CONST.matcher(this.type).find();
     }
 
-    
     public boolean contains(String type) {
         return this.type.contains(type);
     }
 
-
-
     public boolean isSinglePointer() {
         return isPointer;
     }
-
     public boolean isConst() {
         return isConst;
     }
-
-    
     public String getName() {
         return type;
     }

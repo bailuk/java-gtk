@@ -15,13 +15,22 @@ public class JavaType {
 
     
     public JavaType(String namespace, ParameterTag parameter) {
-	this(namespace, parameter.getTypeName(), parameter.getType());
+	    this(namespace, parameter.getTypeName(), parameter.getType());
     }
     
     public JavaType(String namespace, String typeName, String type) {
-        if (isEnum(namespace, typeName)) {
+/*
+        if (typeName == null) typeName = "";
+        if (type == null) type = "";
+        if (typeName.contains("IconSize") || type.contains(("IconSize"))) {
+            System.out.println(typeName);
+            System.out.println(type);
+        }
+*/
+        if (isEnum(namespace, typeName) || isEnum(namespace, type)) {
             this.type = setType("int");
         } else {
+            PrimitivesTable.instance().convert(type);
             this.type = setType(PrimitivesTable.instance().convert(type));
         }
 	

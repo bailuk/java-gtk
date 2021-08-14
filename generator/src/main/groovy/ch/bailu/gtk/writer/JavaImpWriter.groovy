@@ -83,13 +83,13 @@ class JavaImpWriter extends CodeWriter {
         a("    static native void ").a(m.getSignalMethodName()).a("(long _self);\n");
         a("    static ").a(m.getReturnType().getImpType()).a(" ").a(m.getSignalCallbackName()); writeSignature(m); a(" {\n");
         a("        String signal = \"").a(m.getApiName()).a("\";\n");
-        a("        for (Object observer : ch.bailu.gtk.Signal.get(_self, signal)) {\n");
+        a("        for (java.lang.Object observer : ch.bailu.gtk.Signal.get(_self, signal)) {\n");
         a("            "); writeSignalInterfaceCall(c, m); a(";\n");
         a("        }\n");
         if (!m.getReturnType().isVoid()) {
             a("        return ").a(m.getReturnType().getImpDefaultConstant()); a(";\n");
         }
-        a("    }\n");
+        a("    }\n")
     }
 
     private void writeSignalInterfaceCall(ClassModel c, MethodModel s) throws IOException {
@@ -98,6 +98,10 @@ class JavaImpWriter extends CodeWriter {
         }
         a("((").a(c.getApiName()).a(".").a(s.getSignalInterfaceName()).a(")observer).").a(s.getSignalMethodName());
         writeSignalInterfaceCallSignature(s);
+
+        if (!s.getReturnType().isVoid() && !s.getReturnType().isJavaNative()) {
+            a(".toLong()")
+        }
 
     }
 

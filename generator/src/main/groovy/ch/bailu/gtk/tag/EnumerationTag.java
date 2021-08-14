@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnumerationTag extends NamedTag {
+public class EnumerationTag extends TypeTag {
 
     private final List<MemberTag> members = new ArrayList<>(5);
+
+    private String type = "";
 
     public EnumerationTag(Tag parent) {
         super(parent);

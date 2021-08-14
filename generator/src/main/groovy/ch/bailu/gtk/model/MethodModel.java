@@ -36,7 +36,7 @@ public class MethodModel extends Model {
         for (ParameterTag t : method.getParameters()) {
             var parameterModel = new ParameterModel(namespace, t);
             parameters.add(parameterModel);
-            setSupported("Parameter", parameterModel.isSupported());
+            setSupported(parameterModel.getSupportedState(), parameterModel.isSupported());
         }
 
         constructorType = "new".equals(method.getName());

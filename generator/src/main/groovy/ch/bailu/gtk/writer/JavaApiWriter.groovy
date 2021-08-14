@@ -1,36 +1,36 @@
 package ch.bailu.gtk.writer
 
+import ch.bailu.gtk.model.*
 
-import ch.bailu.gtk.model.ClassModel;
-import ch.bailu.gtk.model.MethodModel;
-import ch.bailu.gtk.model.Model;
-import ch.bailu.gtk.model.NameSpaceModel;
-import ch.bailu.gtk.model.ParameterModel;
+class JavaApiWriter extends CodeWriter {
 
-public class JavaApiWriter extends CodeWriter {
-
-    public JavaApiWriter(Writer writer) {
+    JavaApiWriter(Writer writer) {
         super(writer);
     }
 
     @Override
-    public void writeStart(ClassModel classModel, NameSpaceModel namespace) throws IOException {
-        a("/* this file is auto generated */\n").a("\n\n");
-        a("package ").a(namespace.getFullNamespace()).a(";\n");
+    void writeStart(ClassModel classModel, NameSpaceModel namespace) throws IOException {
+
+        a"""
+        /* this file is auto generated */
+
+
+        package ${namespace.getFullNamespace()};
+        """
         end(3);
     }
 
 
     @Override
     public void writeClass(ClassModel classModel) throws IOException {
-        start();
-        a("public class ").a(classModel.getApiName()).a(" extends ").a(classModel.getApiParentName()).a(" {\n");
+        start()
+        a "public class ${classModel.getApiName()} extends ${classModel.getApiParentName()} {\n"
     }
 
     @Override
     public void writeInterface(ClassModel classModel) throws IOException {
-        start();
-        a("public interface " + classModel.getApiName()  + " {\n");
+        start()
+        a"public interface ${classModel.getApiName()} {\n"
     }
 
     @Override

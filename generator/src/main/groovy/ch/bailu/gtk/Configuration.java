@@ -14,6 +14,8 @@ public class Configuration {
         {"gobject", "GObject-2.0.gir", "glib-2.0"},
         {"gtk", "Gtk-3.0.gir", "gtk-3.0"},
         {"gio", "Gio-2.0.gir"},
+        {"gdk", "Gdk-3.0.gir"},
+            {"cairo", "cairo-1.0.gir"}
 
 /*
         {"gtk", "/usr/share/gir-1.0/Gtk-3.0.gir"},

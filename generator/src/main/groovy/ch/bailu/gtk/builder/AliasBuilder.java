@@ -42,5 +42,6 @@ public class AliasBuilder implements BuilderInterface{
     @Override
     public void buildEnumeration(EnumerationTag enumeration) {
         EnumTable.instance().add(new NamespaceType(namespace, enumeration.getName()));
+        EnumTable.instance().add(new NamespaceType(namespace, enumeration.getType()));
     }
 }

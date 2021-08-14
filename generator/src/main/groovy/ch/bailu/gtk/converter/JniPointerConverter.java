@@ -33,7 +33,7 @@ public class JniPointerConverter extends JniTypeConverter{
 
     @Override
     public String getImpDefaultConstant() {
-        return "null";
+        return "0";
     }
 
     @Override

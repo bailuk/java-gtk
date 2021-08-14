@@ -185,7 +185,7 @@ JNIEXPORT void  JNICALL ${c.getJniSignalConnectMethodName(m)}(JNIEnv * _jenv, jc
     (*_jenv)->GetJavaVM(_jenv, &${getGlobalVMName(c)});
     ${getGlobalClassName(c)} = (jclass) (*_jenv)->NewGlobalRef(_jenv, _jclass);
     
-    g_signal_connect ((void *)_self, \"${m.getApiName()}\", G_CALLBACK (${c.getCSignalCallbackName(m)}), (void *) _self);
+    g_signal_connect ((void *)_self, \"${m.getApiName()}\", G_CALLBACK (${c.getCSignalCallbackName(m)}), NULL);
 }
 """)
     }
@@ -197,29 +197,29 @@ JNIEXPORT void  JNICALL ${c.getJniSignalConnectMethodName(m)}(JNIEnv * _jenv, jc
     private String getJNISignature(MethodModel m) {
         StringBuilder result = new StringBuilder()
 
-        result.append("(")
+        result.append '(J'
         for (ParameterModel p : m.getParameters()) {
-            result.append(p.getJniSignatureID())
+            result.append p.getJniSignatureID()
         }
-        result.append("J)")
-        result.append(m.getReturnType().getJniSignatureID())
-        result.toString()
+        result.append ')'
+        result.append m.getReturnType().getJniSignatureID()
+        result
     }
 
     private String getCallbackMethodCall(MethodModel m) {
         StringBuilder result = new StringBuilder()
 
         if (!m.getReturnType().isVoid()) {
-            result.append("return (${m.getReturnType().jniType})")
+            result.append "return (${m.getReturnType().jniType})"
         }
-        result.append("(*g_env)->${m.getReturnType().getJniCallbackMethodName()}(g_env, globalClass, callback, ")
+        result.append "(*g_env)->${m.getReturnType().getJniCallbackMethodName()}(g_env, globalClass, callback, (jlong)_self"
 
         for (ParameterModel p: m.getParameters()) {
-            result.append("(${p.jniType})${p.getName()}, ")
+            result.append ", (${p.jniType})${p.getName()}"
         }
 
-        result.append("(jlong)_self);");
-        result.toString()
+        result.append ')'
+        result
 
     }
 
@@ -227,12 +227,12 @@ JNIEXPORT void  JNICALL ${c.getJniSignalConnectMethodName(m)}(JNIEnv * _jenv, jc
     private String getCallBackSignature(MethodModel m) throws IOException {
         StringBuilder result = new StringBuilder();
 
-        result.append("(")
+        result.append '(void* _self, '
         for (ParameterModel p : m.getParameters()) {
             result.append("${p.getGtkType()} ${p.getName()}, ")
         }
-        result.append('long _self)')
-        return result;
+        result.append 'void* _data)'
+        result
     }
 
     private String getGlobalClassName(ClassModel c) {

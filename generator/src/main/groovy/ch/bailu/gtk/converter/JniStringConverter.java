@@ -46,4 +46,6 @@ public class JniStringConverter extends JniTypeConverter {
     public String getJniCallbackMethodName() {
         return "CallStaticObjectMethod";
     }
+
+
 }

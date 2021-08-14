@@ -15,7 +15,10 @@ public class ReservedTokenTable {
         {"default",  "xdefault"},
         {"private",  "xprivate"},
         {"...",      "xelipse"},
-        {"notify",   "xnotify"}
+        {"notify",   "xnotify"},
+        {"interface","xinterface"},
+        {"2BUTTON_PRESS", "TWO_BUTTON_PRESS"},
+        {"3BUTTON_PRESS", "TREE_BUTTON_PRESS"},
 };
 
 

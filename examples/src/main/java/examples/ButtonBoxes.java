@@ -1,6 +1,5 @@
 package examples;
 
-import ch.bailu.gtk.OnSignalInterface;
 import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.ApplicationWindow;

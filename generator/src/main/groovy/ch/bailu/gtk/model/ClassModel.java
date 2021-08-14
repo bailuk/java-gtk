@@ -35,7 +35,7 @@ public class ClassModel extends Model {
         this.nameSpace = nameSpace;
         type = structure.getType();
         name = structure.getName();
-        parent = new ClassModel(nameSpace.getNamespace(), structure.getParentName());
+        parent = new ClassModel(nameSpace.getNamespace(), structure.getParentName(), type);
 
 
         for (MethodTag m: structure.getConstructors()) {
@@ -85,10 +85,15 @@ public class ClassModel extends Model {
 
 
     // parent initializer
-    private ClassModel(String defaultNamespace, String className) {
+    private ClassModel(String defaultNamespace, String className, String structType) {
 	    if (className == null) {
             nameSpace = new NameSpaceModel();
-            name = nameSpace.getFullNamespace() + ".Pointer";
+
+            if ("record".equalsIgnoreCase(structType)) {
+                name = nameSpace.getFullNamespace() + ".Record";
+            } else {
+                name = nameSpace.getFullNamespace() + ".Pointer";
+            }
 
         } else {
             NamespaceType type = new NamespaceType(defaultNamespace, className);
