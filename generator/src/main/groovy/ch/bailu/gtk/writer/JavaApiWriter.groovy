@@ -87,7 +87,7 @@ class JavaApiWriter extends CodeWriter {
             
             """.stripIndent(8))
 
-        if (c.isRecord()) {
+        if (c.isRecord() && c.hasDefaultConstructor() == false) {
             a("""
             public ${c.getApiName()}() {
                 super(${c.getImpName()}.newFromMalloc());
@@ -187,6 +187,34 @@ class JavaApiWriter extends CodeWriter {
 
     }
 
+    @Override
+    void writeFunction(ClassModel c, MethodModel m) {
+        start(1);
+        a("""
+            public static ${m.getReturnType().getApiType()} ${m.getApiName()}(${getSignature(m.getParameters())}) {
+                ${getFunctionCall(c, m)};
+            }
+
+        """.stripIndent(8))
+    }
+
+
+    private String getFunctionCall(ClassModel c, MethodModel m) {
+        StringBuilder result = new StringBuilder();
+        String signature = getCallSignature(m.getParameters(), '')
+
+        if (m.getReturnType().isVoid()) {
+            result.append("${c.getImpName()}.${m.getApiName()}(${signature})")
+
+        } else if (m.getReturnType().isJavaNative()) {
+            result.append("return ${c.getImpName()}.${m.getApiName()}(${signature})")
+
+        } else {
+            result.append("return new ${m.getReturnType().getApiType()}(${c.getImpName()}.${m.getApiName()}(${signature}))")
+        }
+        result
+    }
+
     private void writeSignature(MethodModel m) throws IOException {
         a("(${getSignature(m.getParameters())})")
     }
@@ -209,15 +237,19 @@ class JavaApiWriter extends CodeWriter {
 
 
     private String getSelfCallSignature(List<ParameterModel> parameters) throws IOException {
+        "toLong()${getCallSignature(parameters, ', ')}"
+    }
+
+    private String getCallSignature(List<ParameterModel> parameters, String del) throws IOException {
         StringBuilder result = new StringBuilder()
 
-        result.append('toLong()')
         for (ParameterModel p: parameters) {
             if (p.isJavaNative()) {
-                result.append(", ${p.getName()}")
+                result.append("${del}${p.getName()}")
             } else {
-                result.append(", ${p.getName()}.toLong()")
+                result.append("${del}${p.getName()}.toLong()")
             }
+            del = ', '
         }
         result
     }

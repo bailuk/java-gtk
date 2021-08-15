@@ -34,7 +34,7 @@ abstract class CodeWriter  implements Append {
     abstract void writeNativeMethod(ClassModel c, MethodModel m) throws IOException;
     abstract void writeSignal(ClassModel classModel, MethodModel signal) throws IOException;
     abstract void writeField(ClassModel classModel, ParameterModel p)
-
+    abstract void writeFunction(ClassModel classModel, MethodModel m)
     abstract void writeUnsupported(Model m) throws IOException;
 
     abstract void writeEnd() throws IOException;
@@ -65,6 +65,7 @@ abstract class CodeWriter  implements Append {
         group.end(i);
         return this;
     }
+
 
 }
 

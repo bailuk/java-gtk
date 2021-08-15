@@ -192,6 +192,11 @@ JNIEXPORT void  JNICALL ${c.getJniSignalConnectMethodName(m)}(JNIEnv * _jenv, jc
 
     }
 
+    @Override
+    void writeFunction(ClassModel classModel, MethodModel m) {
+
+    }
+
     private String getCallbackMethodID(MethodModel m) {
         "(*g_env)->GetStaticMethodID(g_env, globalClass, \"${m.getSignalCallbackName()}\", \"${getJNISignature(m)}\")"
     }

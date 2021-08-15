@@ -10,25 +10,19 @@ public class Configuration {
 
     public static final String JNI_METHOD_NAME_BASE = "Java_ch_bailu_gtk_";
 
-    public  final static String[][] GIR_FILES= {
-        {"gobject", "GObject-2.0.gir", "glib-2.0"},
-        {"gtk", "Gtk-3.0.gir", "gtk-3.0"},
-        {"gio", "Gio-2.0.gir"},
-        {"gdk", "Gdk-3.0.gir"},
-            {"cairo", "cairo-1.0.gir"}
+    public  final static String[] GIR_FILES= {
+            "GObject-2.0.gir",
+            "Gtk-3.0.gir",
+            "Gio-2.0.gir",
+            "Gdk-3.0.gir",
+            "PangoCairo-1.0.gir",
+            "cairo-1.0.gir",
 
-/*
-        {"gtk", "/usr/share/gir-1.0/Gtk-3.0.gir"},
-        {"gio", "/usr/share/gir-1.0/Gio-2.0.gir"},
-        {"glib", "/usr/share/gir-1.0/GLib-2.0.gir"},
+            "GLib-2.0.gir",
+            "Atk-1.0.gir",
+            "Pango-1.0.gir",
+            "GdkPixbuf-2.0.gir",
 
-        {"atk", "/usr/share/gir-1.0/Atk-1.0.gir"},
-
-
-        {"pango", "/usr/share/gir-1.0/Pango-1.0.gir"},
-        {"gdk", "/usr/share/gir-1.0/Gdk-3.0.gir"},
-        {"gdkpixbuf", "GdkPixbuf-2.0.gir"},
-*/
 };
 
     private File javaBaseDir, cBaseDir, girBaseDir;

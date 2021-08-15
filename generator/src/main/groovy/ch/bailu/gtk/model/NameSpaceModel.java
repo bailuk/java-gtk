@@ -39,7 +39,7 @@ public class NameSpaceModel extends Model implements NamespaceInterface {
         setSupported("Namespace", NamespaceTable.instance().contains(this.namespace));
     }
 
-
+/*
     public static String expandNamespace(String className) {
         String[] names = className.split("\\.");
 
@@ -58,7 +58,7 @@ public class NameSpaceModel extends Model implements NamespaceInterface {
             className = Configuration.BASE_NAME_SPACE_DOT + className;
         }
         return className;
-    }
+    }*/
 
 
     public File getJavaSourceDirectory() {

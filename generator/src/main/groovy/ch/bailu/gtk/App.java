@@ -30,8 +30,8 @@ public class App {
 
 
     public static void parse(BuilderInterface builder) throws IOException, XmlPullParserException {
-        for (String[] girFile : Configuration.GIR_FILES) {
-            new Parser(new File(Configuration.instance().getGirBaseDir(),girFile[1]), builder);
+        for (String girFile : Configuration.GIR_FILES) {
+            new Parser(new File(Configuration.instance().getGirBaseDir(),girFile), builder);
         }
     }
 

@@ -22,6 +22,11 @@ public class Filter {
             return false;
         }
 
+        if ("Coverage".equals(classModel.getApiName()) && "ref".equals(methodModel.getApiName())) {
+            return false;
+        }
+
+
 
         return true;
     }

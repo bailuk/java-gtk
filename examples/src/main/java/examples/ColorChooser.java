@@ -1,6 +1,6 @@
 package examples;
 
-import ch.bailu.gtk.cairo.Context;
+import ch.bailu.gtk.gdk.Gdk;
 import ch.bailu.gtk.gdk.RGBA;
 import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gtk.Align;
@@ -9,13 +9,11 @@ import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.Box;
 import ch.bailu.gtk.gtk.Button;
 import ch.bailu.gtk.gtk.ColorChooserDialog;
-import ch.bailu.gtk.gtk.Dialog;
 import ch.bailu.gtk.gtk.DrawingArea;
 import ch.bailu.gtk.gtk.Frame;
 import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.ResponseType;
 import ch.bailu.gtk.gtk.ShadowType;
-import ch.bailu.gtk.gtk.Widget;
 
 public class ColorChooser {
     public ColorChooser(String[] argv) {
@@ -41,15 +39,14 @@ public class ColorChooser {
         vbox.packStart(frame, 1,1,0);
 
         var da = new DrawingArea();
+        //var rgba = new RGBA();
 
-        da.onDraw(new Widget.OnDraw() {
-                      @Override
-                      public int onDraw(Context cr) {
-                          System.out.println("onDraw()");
+        da.onDraw(cr -> {
+            System.out.println("onDraw()");
+            //Gdk.cairoSetSourceRgba(cr, rgba);
 
-                          return 1;
-                      }
-                  });
+            return 1;
+        });
 
 
         da.setSizeRequest(200, 200);
@@ -69,13 +66,12 @@ public class ColorChooser {
             dialog.onResponse(response_id -> {
                 if (response_id == ResponseType.OK) {
                     System.out.println("Color selected");
-                    //var color = new ch.bailu.gtk.gtk.ColorChooser(dialog.toLong());
-                    //var rgba = new RGBA();
-                    //System.out.println(color.getRgba(););
+                    var color = new ch.bailu.gtk.gtk.ColorChooser(dialog.toLong());
+                    //color.getRgba(rgba);
+                } else {
+                    dialog.destroy();
                 }
-                System.out.println(response_id);
-
-                dialog.destroy();
+                //System.out.println(response_id);
             });
             dialog.showAll();
         });

@@ -19,7 +19,11 @@ public class ReservedTokenTable {
         {"interface","xinterface"},
         {"2BUTTON_PRESS", "TWO_BUTTON_PRESS"},
         {"3BUTTON_PRESS", "TREE_BUTTON_PRESS"},
-};
+            {"2BIG", "_2_BIG"},
+        {"false", "FALSE"},
+        {"true", "TRUE"},
+
+    };
 
 
     private final Map<String, String> table = new HashMap<>();

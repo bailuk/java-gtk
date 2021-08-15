@@ -6,7 +6,6 @@ import java.io.Writer;
 import ch.bailu.gtk.model.ClassModel;
 import ch.bailu.gtk.model.NameSpaceModel;
 import ch.bailu.gtk.tag.AliasTag;
-import ch.bailu.gtk.tag.CallbackTag;
 import ch.bailu.gtk.tag.EnumerationTag;
 import ch.bailu.gtk.tag.NamespaceTag;
 import ch.bailu.gtk.tag.StructureTag;
@@ -55,17 +54,25 @@ public class ModelBuilder implements BuilderInterface {
 
 
     @Override
-    public void buildNamespace(NamespaceTag namespace) {
+    public void buildNamespaceStart(NamespaceTag namespace) {
         this.namespace = new NameSpaceModel(namespace);
+    }
+
+    @Override
+    public void buildNamespaceEnd(NamespaceTag namespace) throws IOException {
+        ClassModel model = new ClassModel(namespace);
+        writeJavaFile(model);
+
+        if (model.hasNativeCalls()) {
+            writeCFile(model);
+            writeJavaImpFile(model);
+        }
     }
 
 
     @Override
     public void buildAlias(AliasTag alias) {}
 
-
-    @Override
-    public void buildCallback(CallbackTag callback) {}
 
     @Override
     public void buildEnumeration(EnumerationTag enumeration) throws IOException {

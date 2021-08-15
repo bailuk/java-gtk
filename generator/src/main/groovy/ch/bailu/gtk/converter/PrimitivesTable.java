@@ -37,7 +37,7 @@ public class PrimitivesTable {
         {"const gchar*",  "String"},
         {"void",          "void"},
         {"int",           "int"},
-        {"char**",        "String[]"}
+        {"char**",        "String[]"},
     };
 
     private final Map<String, String> table = new HashMap<>(50);

@@ -19,6 +19,17 @@ public class JavaNames {
         return fixToken(result.toString());
     }
 
+    public static String toClassName(String name) {
+        StringBuilder result = new StringBuilder();
+
+        String[] names = name.split("_");
+
+        for (int i = 0; i<names.length; i++) {
+            toFirstUpper(result, names[i]);
+        }
+        return fixToken(result.toString());
+    }
+
     private static void toFirstUpper(StringBuilder result, String s) {
         if (s.length() > 0) {
             result.append(Character.toUpperCase(s.charAt(0)));
@@ -51,10 +62,10 @@ public class JavaNames {
     }
 
     public static String getSetterName(String name) {
-        return toJavaMethodName("set_" + name);
+        return toJavaMethodName("set_field_" + name);
     }
 
     public static String getGetterName(String name) {
-        return toJavaMethodName("get_" + name);
+        return toJavaMethodName("get_field_" + name);
     }
 }

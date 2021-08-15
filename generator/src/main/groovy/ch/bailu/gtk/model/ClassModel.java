@@ -7,10 +7,12 @@ import java.util.List;
 
 import ch.bailu.gtk.Configuration;
 import ch.bailu.gtk.converter.Filter;
+import ch.bailu.gtk.converter.JavaNames;
 import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.tag.EnumerationTag;
 import ch.bailu.gtk.tag.MemberTag;
 import ch.bailu.gtk.tag.MethodTag;
+import ch.bailu.gtk.tag.NamespaceTag;
 import ch.bailu.gtk.tag.ParameterTag;
 import ch.bailu.gtk.tag.StructureTag;
 import ch.bailu.gtk.writer.CodeWriter;
@@ -26,6 +28,8 @@ public class ClassModel extends Model {
     private List<MethodModel> constructors = new ArrayList();
     private List<MethodModel> methods = new ArrayList();
     private List<MethodModel> signals = new ArrayList();
+    private List<MethodModel> functions = new ArrayList();
+
     private List<ParameterModel> fields = new ArrayList();
     private List<Model>       unsupported = new ArrayList();
 
@@ -67,6 +71,22 @@ public class ClassModel extends Model {
         }
     }
 
+    /**
+     * Gets calleed from builder when namespace ends
+     * Create static class for package scoped functions
+     * @param namespace
+     */
+    public ClassModel(NamespaceTag namespace) {
+        this.nameSpace = new NameSpaceModel(namespace);
+        type = "package";
+        name = JavaNames.toClassName(nameSpace.getNamespace());
+        parent = new ClassModel(nameSpace.getNamespace(), null, type);
+
+        for (MethodTag m : namespace.getFunctions()) {
+            addIfSupported(functions, new MethodModel(nameSpace.getNamespace(), m));
+        }
+    }
+
     private Model filter(MethodModel methodModel) {
         methodModel.setSupported("Filter", Filter.method(this, methodModel));
         return methodModel;
@@ -99,6 +119,8 @@ public class ClassModel extends Model {
 
             if ("record".equalsIgnoreCase(structType)) {
                 name = nameSpace.getFullNamespace() + ".Record";
+            } else if ("package".equalsIgnoreCase(structType)) {
+                name = nameSpace.getFullNamespace() + ".Package";
             } else {
                 name = nameSpace.getFullNamespace() + ".Pointer";
             }
@@ -123,7 +145,18 @@ public class ClassModel extends Model {
 
 
     public boolean hasNativeCalls() {
-        return isNameSpaceSupported() && isClassType() && (methods.size() >0 || privateFactories.size() > 0 || signals.size()>0 || fields.size()>0);
+        if (isNameSpaceSupported()) {
+            if (isRecord()) {
+                return true;
+            } else if (isPackage() || isClassType()) {
+                return (   methods.size() >0
+                        || privateFactories.size() > 0
+                        || signals.size()>0
+                        || fields.size()>0
+                        || functions.size()>0);
+            }
+        }
+        return false;
     }
 
     private boolean isClassType() {
@@ -173,6 +206,18 @@ public class ClassModel extends Model {
             for (MethodModel s : signals) {
                 writer.writeSignal(this, s);
             }
+
+            writer.next();
+            for(MethodModel m : functions) {
+                writer.writeFunction(this, m);
+            }
+
+        } else if (isPackage()) {
+            writer.writeClass(this);
+            writer.next();
+            for(MethodModel m : functions) {
+                writer.writeFunction(this, m);
+            }
         } else {
             writer.writeInterface(this);
 
@@ -188,6 +233,10 @@ public class ClassModel extends Model {
         }
 
         writer.writeEnd();
+    }
+
+    private boolean isPackage() {
+        return "package".equals(type);
     }
 
     public String getImpName() {
@@ -225,5 +274,14 @@ public class ClassModel extends Model {
 
     public boolean isRecord() {
         return "record".equals(type);
+    }
+
+    public boolean hasDefaultConstructor() {
+        for (MethodModel m : constructors) {
+            if (m.getParameters().size()==0) {
+                return true;
+            }
+        }
+        return false;
     }
 }

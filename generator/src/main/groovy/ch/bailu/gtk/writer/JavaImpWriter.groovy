@@ -40,7 +40,7 @@ class JavaImpWriter extends CodeWriter {
     @Override
     void writeNativeMethod(ClassModel classModel, MethodModel m) throws IOException {
         start();
-        a("    static native ${m.getReturnType().getImpType()} ${m.getApiName()}(${getSignature(m.getParameters())});\n")
+        a("    static native ${m.getReturnType().getImpType()} ${m.getApiName()}(${getSelfSignature(m.getParameters())});\n")
         end(1);
     }
 
@@ -83,22 +83,21 @@ class JavaImpWriter extends CodeWriter {
 
         a("""
             static native void ${m.getSignalMethodName()}(long _self);
-            static ${m.getReturnType().getImpType()} ${m.getSignalCallbackName()}(${getSignature(m.getParameters())}) {
+            static ${m.getReturnType().getImpType()} ${m.getSignalCallbackName()}(${getSelfSignature(m.getParameters())}) {
                 String signal = \"${m.getApiName()}\";
                 for (java.lang.Object observer : ch.bailu.gtk.Signal.get(_self, signal)) {
                    ${getSignalInterfaceCall(c, m)};
                 }
                 ${getDefaultReturn(m)}
             }
-        """.stripIndent(4))
+        """.stripIndent(8))
     }
 
     private String getDefaultReturn(MethodModel m) {
         if (!m.getReturnType().isVoid()) {
-            "        return ${m.getReturnType().getImpDefaultConstant()};"
-        } else {
-            ""
+            return "        return ${m.getReturnType().getImpDefaultConstant()};"
         }
+        return ""
     }
 
     @Override
@@ -106,12 +105,20 @@ class JavaImpWriter extends CodeWriter {
         List<ParameterModel> parameters = new ArrayList<>()
 
         start();
-        a("    static native ${p.getImpType()} ${JavaNames.getGetterName(p.getName())}(${getSignature(parameters)});\n")
+        a("    static native ${p.getImpType()} ${JavaNames.getGetterName(p.getName())}(${getSelfSignature(parameters)});\n")
 
         parameters.add(p)
-        a("    static native void ${JavaNames.getSetterName(p.getName())}(${getSignature(parameters)});\n")
+        a("    static native void ${JavaNames.getSetterName(p.getName())}(${getSelfSignature(parameters)});\n")
 
         end(1);
+    }
+
+    @Override
+    void writeFunction(ClassModel classModel, MethodModel m) {
+        start();
+        a("    static native ${m.getReturnType().getImpType()} ${m.getApiName()}(${getSignature(m.getParameters(), '')});\n")
+        end(1);
+
     }
 
     private String getSignalInterfaceCall(ClassModel c, MethodModel s) throws IOException {
@@ -125,7 +132,7 @@ class JavaImpWriter extends CodeWriter {
         if (!s.getReturnType().isVoid() && !s.getReturnType().isJavaNative()) {
             result.append(".toLong()")
         }
-
+        result
     }
 
     private String getSignalInterfaceCallSignature(MethodModel s) throws IOException {
@@ -159,13 +166,18 @@ class JavaImpWriter extends CodeWriter {
         a(")");
     }
 
-    private String getSignature(List<ParameterModel> parameters) throws IOException {
+    private String getSelfSignature(List<ParameterModel> parameters) throws IOException {
+        "long _self${getSignature(parameters, ', ')}"
+    }
+
+    private String getSignature(List<ParameterModel> parameters, String del) throws IOException {
         StringBuilder result = new StringBuilder()
 
-        result.append('long _self')
         for (ParameterModel p: parameters) {
-            result.append(", ${p.getImpType()} ${p.getName()}")
+            result.append("${del}${p.getImpType()} ${p.getName()}")
+            del = ', '
         }
         result
     }
+
 }

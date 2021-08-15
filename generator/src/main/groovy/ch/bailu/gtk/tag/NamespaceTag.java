@@ -18,7 +18,13 @@ public class NamespaceTag extends NamedTag {
 
     @Override
     public void started() throws IOException {
-        getBuilder().buildNamespace(this);
+        getBuilder().buildNamespaceStart(this);
+    }
+
+
+    @Override
+    public void end() throws IOException {
+        getBuilder().buildNamespaceEnd(this);
     }
 
     @Override
@@ -33,10 +39,6 @@ public class NamespaceTag extends NamedTag {
 
         if ("interface".equals(name)) {
             return new StructureTag(this, name);
-        }
-
-        if ("callback".equals(name)) {
-            return new CallbackTag(this);
         }
 
         if ("enumeration".equals(name)) {

@@ -14,6 +14,7 @@ public class StructureTag extends NamedTag {
 
     private String parent;
     private final String type;
+    private boolean disguised = false;
 
 
     private final List<NamedTag> implementsList = new ArrayList<>();
@@ -60,14 +61,18 @@ public class StructureTag extends NamedTag {
 
     @Override
     public void end() throws IOException {
-        getBuilder().buildStructure(this);
+        if (this.isDisguised() == false) {
+            getBuilder().buildStructure(this);
+        }
     }
 
 
     @Override
     public void setAttribute(String name, String value) {
-        if ("parent".equalsIgnoreCase(name)) {
+        if ("parent".equals(name)) {
             this.parent = value;
+        } else if ("disguised".equals(name)) {
+            disguised = "1".equals(value);
         } else {
             super.setAttribute(name, value);
         }
@@ -102,5 +107,9 @@ public class StructureTag extends NamedTag {
 
     public List<ParameterTag> getFields() {
         return fields;
+    }
+
+    public boolean isDisguised() {
+        return disguised;
     }
 }
