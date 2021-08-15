@@ -27,9 +27,7 @@ public class Spinner {
         app.onActivate(() -> {
             String helloString = "Hello world!";
 
-            // Create a new window
-
-            Dialog window =
+            var window = new ApplicationWindow(app);
 
             window.setTitle(helloString);
             doSpinner(window);
@@ -39,7 +37,7 @@ public class Spinner {
 
         app.run(argv.length, argv);
     }
-    private Widget doSpinner(Dialog window) {
+    private Widget doSpinner(Window window) {
 /*
         window = gtk_dialog_new_with_buttons ("Spinner",
                 GTK_WINDOW (do_widget),
@@ -58,11 +56,9 @@ public class Spinner {
                 G_CALLBACK (gtk_widget_destroyed), &window);
 */
 
-        Box contentArea = window.getContentArea();
-
         Box vbox = new Box(Orientation.VERTICAL, 5);
-        contentArea.packStart(vbox, 1,1,0);
         vbox.setBorderWidth(5);
+        window.add(vbox);
 
         /* Sensitive */
         Box hbox = new Box(Orientation.HORIZONTAL, 5);
@@ -80,7 +76,7 @@ public class Spinner {
         hbox.add(new Entry());
         vbox.add(hbox);
         hbox.setSensitive(0);
-        Button button = Button.newWithLabelButton("_Play");
+        Button button = Button.newWithLabelButton("Play");
         button.onClicked(()->{
             spinnerSensitive.start();
             spinner_unsensitive.start();

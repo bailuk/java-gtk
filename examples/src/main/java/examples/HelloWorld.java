@@ -9,6 +9,7 @@ public class HelloWorld {
         //new HeaderBarSample(argv);
         //new ColorChooser(argv);
         //new ButtonBoxes(argv);
-        new Spinner(argv);
+        //new Spinner(argv);
+        new LinksSample(argv);
     }
 }
