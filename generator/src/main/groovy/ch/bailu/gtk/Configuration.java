@@ -16,12 +16,12 @@ public class Configuration {
             "Gio-2.0.gir",
             "Gdk-3.0.gir",
             "PangoCairo-1.0.gir",
-            "cairo-1.0.gir",
+            "cairo-custom.gir",
 
             "GLib-2.0.gir",
             "Atk-1.0.gir",
             "Pango-1.0.gir",
-            "GdkPixbuf-2.0.gir",
+            //"GdkPixbuf-2.0.gir",
 
 };
 

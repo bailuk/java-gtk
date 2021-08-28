@@ -33,18 +33,21 @@ public class ColorChooser {
         vbox.setBorderWidth(8);
         window.add(vbox);
 
-
+        window.setTitle("Color Chooser");
         var frame = new Frame("");
         frame.setShadowType(ShadowType.IN);
         vbox.packStart(frame, 1,1,0);
 
         var da = new DrawingArea();
-        //var rgba = new RGBA();
+        var rgba = new RGBA();
+        rgba.setFieldRed(0d);
+        rgba.setFieldBlue(1d);
+        rgba.setFieldGreen(0d);
+        rgba.setFieldAlpha(1d);
 
         da.onDraw(cr -> {
-            System.out.println("onDraw()");
-            //Gdk.cairoSetSourceRgba(cr, rgba);
-
+            Gdk.cairoSetSourceRgba(cr, rgba);
+            cr.paint();
             return 1;
         });
 
@@ -60,18 +63,15 @@ public class ColorChooser {
 
         button.onClicked(() -> {
 
-            var dialog = new ColorChooserDialog("Chnaging color", window);
+            var dialog = new ColorChooserDialog("Changing color", window);
             dialog.setModal(1);
 
             dialog.onResponse(response_id -> {
                 if (response_id == ResponseType.OK) {
-                    System.out.println("Color selected");
                     var color = new ch.bailu.gtk.gtk.ColorChooser(dialog.toLong());
-                    //color.getRgba(rgba);
-                } else {
-                    dialog.destroy();
+                    color.getRgba(rgba);
                 }
-                //System.out.println(response_id);
+                dialog.destroy();
             });
             dialog.showAll();
         });

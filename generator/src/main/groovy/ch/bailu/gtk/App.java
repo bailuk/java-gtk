@@ -31,8 +31,27 @@ public class App {
 
     public static void parse(BuilderInterface builder) throws IOException, XmlPullParserException {
         for (String girFile : Configuration.GIR_FILES) {
-            new Parser(new File(Configuration.instance().getGirBaseDir(),girFile), builder);
+            File file = getExistingFile(girFile);
+            new Parser(file, builder);
         }
+    }
+
+    private static File getExistingFile(String girFile) throws IOException {
+        File result = new File("src/main/resources",girFile);
+
+
+        if (result.exists()) {
+            System.out.println("local:" + result);
+
+        } else {
+            result = new File(Configuration.instance().getGirBaseDir(),girFile);
+            if (result.exists()) {
+                System.out.println("system: " + result);
+            } else {
+                throw new IOException("File does not exist " + result);
+            }
+        }
+        return result;
     }
 
 }

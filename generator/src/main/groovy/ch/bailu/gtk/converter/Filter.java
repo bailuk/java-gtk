@@ -26,8 +26,27 @@ public class Filter {
             return false;
         }
 
+        if ("Cairo".equals(classModel.getApiName()) && "imageSurfaceCreate".equals(methodModel.getApiName())) {
+            return false;
+        }
+
 
 
         return true;
+    }
+
+    private static final String[] MALLOC = {
+            "RGBA"
+    };
+
+
+    public static boolean createMalloc(ClassModel classModel) {
+        for (String s : MALLOC) {
+            if (s.equals(classModel.getApiName())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

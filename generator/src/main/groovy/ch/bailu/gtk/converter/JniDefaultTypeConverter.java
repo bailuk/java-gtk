@@ -11,7 +11,7 @@ public class JniDefaultTypeConverter extends JniTypeConverter{
 
     @Override
     public String getAllocateResourceString() {
-        return "    const "+ model.getGtkType() + " __" + model.getName() + " = (" + model.getGtkType() + ")" + " " + model.getName() + ";\n";
+        return "const "+ model.getGtkType() + " __" + model.getName() + " = (" + model.getGtkType() + ")" + " " + model.getName() + ";\n";
     }
 
     @Override

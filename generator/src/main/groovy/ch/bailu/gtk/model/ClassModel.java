@@ -1,7 +1,6 @@
 package ch.bailu.gtk.model;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +17,8 @@ import ch.bailu.gtk.tag.StructureTag;
 import ch.bailu.gtk.writer.CodeWriter;
 
 public class ClassModel extends Model {
+
+
     private String name;
     private NameSpaceModel nameSpace;
 
@@ -35,14 +36,15 @@ public class ClassModel extends Model {
 
     private List<ParameterModel> constants = new ArrayList();
 
-    private String type;  // record, enum, class, interface, bitfield
-
+    private String structureType;  // record, enum, class, interface, bitfield
+    private String cType;  // C type
 
     public ClassModel(StructureTag structure, NameSpaceModel nameSpace) {
+        cType = structure.getType();
         this.nameSpace = nameSpace;
-        type = structure.getType();
+        structureType = structure.getStructureType();
         name = structure.getName();
-        parent = new ClassModel(nameSpace.getNamespace(), structure.getParentName(), type);
+        parent = new ClassModel(nameSpace.getNamespace(), structure.getParentName(), structureType);
 
 
         for (MethodTag m: structure.getConstructors()) {
@@ -78,12 +80,12 @@ public class ClassModel extends Model {
      */
     public ClassModel(NamespaceTag namespace) {
         this.nameSpace = new NameSpaceModel(namespace);
-        type = "package";
+        structureType = "package";
         name = JavaNames.toClassName(nameSpace.getNamespace());
-        parent = new ClassModel(nameSpace.getNamespace(), null, type);
+        parent = new ClassModel(nameSpace.getNamespace(), null, structureType);
 
         for (MethodTag m : namespace.getFunctions()) {
-            addIfSupported(functions, new MethodModel(nameSpace.getNamespace(), m));
+            addIfSupported(functions, filter(new MethodModel(nameSpace.getNamespace(), m)));
         }
     }
 
@@ -94,7 +96,7 @@ public class ClassModel extends Model {
 
     public ClassModel(EnumerationTag enumeration, NameSpaceModel namespace) {
         this.nameSpace = namespace;
-        type = "enumeration";
+        structureType = "enumeration";
         name = enumeration.getName();
 
         for (MemberTag m : enumeration.getMembers()) {
@@ -146,7 +148,7 @@ public class ClassModel extends Model {
 
     public boolean hasNativeCalls() {
         if (isNameSpaceSupported()) {
-            if (isRecord()) {
+            if (isRecord() && Filter.createMalloc(this)) {
                 return true;
             } else if (isPackage() || isClassType()) {
                 return (   methods.size() >0
@@ -160,7 +162,7 @@ public class ClassModel extends Model {
     }
 
     private boolean isClassType() {
-        return "class".equals(type) || "record".equals(type) || "interface".equals(type);
+        return "class".equals(structureType) || "record".equals(structureType) || "interface".equals(structureType);
     }
 
     private boolean isNameSpaceSupported() {
@@ -186,6 +188,10 @@ public class ClassModel extends Model {
 
             writer.next();
             writer.writeInternalConstructor(this);
+
+            if (isRecord() && Filter.createMalloc(this)) {
+                writer.writeMallocConstructor(this);
+            }
 
             writer.next();
             for (MethodModel m : constructors) {
@@ -236,7 +242,7 @@ public class ClassModel extends Model {
     }
 
     private boolean isPackage() {
-        return "package".equals(type);
+        return "package".equals(structureType);
     }
 
     public String getImpName() {
@@ -257,7 +263,11 @@ public class ClassModel extends Model {
     }
 
     public String getJniMethodName(MethodModel m) {
-            return Configuration.JNI_METHOD_NAME_BASE + nameSpace.getNamespace()  +"_" + getImpName() + "_" + m.getApiName();
+            return getJniMethodName(m.getApiName());
+    }
+
+    public String getJniMethodName(String apiName) {
+        return Configuration.JNI_METHOD_NAME_BASE + nameSpace.getNamespace()  +"_" + getImpName() + "_" + apiName;
     }
 
     public String getJniSignalConnectMethodName(MethodModel m) {
@@ -273,7 +283,7 @@ public class ClassModel extends Model {
     }
 
     public boolean isRecord() {
-        return "record".equals(type);
+        return "record".equals(structureType);
     }
 
     public boolean hasDefaultConstructor() {
@@ -283,5 +293,9 @@ public class ClassModel extends Model {
             }
         }
         return false;
+    }
+
+    public String getCType() {
+        return cType;
     }
 }

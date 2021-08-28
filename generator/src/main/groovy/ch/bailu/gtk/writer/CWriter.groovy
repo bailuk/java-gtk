@@ -1,6 +1,6 @@
 package ch.bailu.gtk.writer
 
-
+import ch.bailu.gtk.converter.JavaNames
 import ch.bailu.gtk.model.ClassModel;
 import ch.bailu.gtk.model.MethodModel;
 import ch.bailu.gtk.model.Model;
@@ -46,162 +46,192 @@ class CWriter extends CodeWriter {
         _writeNativeMethod(classModel, m, true);
     }
 
-    private void writeFreeParameters(MethodModel m) throws IOException {
+    private String getFreeParameters(MethodModel m) throws IOException {
+        StringBuilder result = new StringBuilder()
+        result.append('\n')
+
         for (ParameterModel p : m.getParameters()) {
-            a(p.getFreeResourcesString());
+            result.append("                ")
+            result.append(p.getFreeResourcesString())
         }
+        result
     }
 
-    private void writeAllocateParameters(MethodModel m) throws IOException {
-        for (ParameterModel p : m.getParameters()) {
-            a(p.getAllocateResourceString());
-        }
+    private String getAllocateParameters(MethodModel m) throws IOException {
+        StringBuilder result = new StringBuilder()
+        result.append('\n')
 
+        for (ParameterModel p : m.getParameters()) {
+            result.append("                ")
+            result.append(p.getAllocateResourceString())
+        }
+        result
     }
 
-    private void writeGtkCallSignature(MethodModel m, boolean self) throws IOException {
-        String del = "";
+    private String getGtkCallSignature(MethodModel m, boolean self) throws IOException {
+        StringBuilder result = new StringBuilder()
 
-        a("(");
+        String del = ''
 
         if (self) {
-            a("(void*) _self");
-            del = ",";
+            result.append("(void*) _self")
+            del = ', '
         }
         
         for (ParameterModel p : m.getParameters()) {
-            a(del).a(p.getCallSignatureString());
-            del = ",";
+            result.append("${del}${p.getCallSignatureString()}")
+            del = ', '
         }
 
         if (m.throwsError()) {
-            a(del).a("NULL");
+            result.append("${del}NULL")
         }
-        
-        a(")");
+        result
     }
 
-    private void writeJniSignature(MethodModel m, boolean self) throws IOException {
-        String del = ", ";
-
-        a("(").a("JNIEnv * _jenv, jclass _jself");
+    String getJniSignature(MethodModel m, boolean self) throws IOException {
+        StringBuilder result = new StringBuilder()
+        result.append('JNIEnv * _jenv, jclass _jself')
 
         if (self) {
-            a(del).a("jlong _self");
+            result.append(', jlong _self')
         }
+
         for (ParameterModel p : m.getParameters()) {
-            a(del).a(p.getJniType()).a(" ").a(p.getName());
-            
+            result.append(", ${p.getJniType()} ${p.getName()}")
         }
-        a(")");
+        result
     }
 
 
     @Override
-    public void writeInternalConstructor(ClassModel c) throws IOException {}
+    void writeInternalConstructor(ClassModel c) throws IOException {}
 
     @Override
-    public void writeConstructor(ClassModel c, MethodModel m) throws IOException {}
+    void writeConstructor(ClassModel c, MethodModel m) throws IOException {}
 
     @Override
-    public void writeFactory(ClassModel c, MethodModel m) throws IOException {
-    }
+    void writeFactory(ClassModel c, MethodModel m) throws IOException {}
 
     @Override
-    public void writePrivateFactory(ClassModel c, MethodModel m) throws IOException {
+    void writePrivateFactory(ClassModel c, MethodModel m) throws IOException {
         _writeNativeMethod(c, m, false);
     }
 
     private void _writeNativeMethod(ClassModel c, MethodModel m, boolean self) throws IOException {
-        start(1);
-        a("\nJNIEXPORT ").a(m.getReturnType().getJniType()).a(" JNICALL ").a(c.getJniMethodName(m));
-        writeJniSignature(m, self);
-
-
-        a(" {\n");
-        writeAllocateParameters(m);
-        a("\n");
-
-        a("    ");
-        if (!m.getReturnType().isVoid()) {
-
-
-            if (m.getReturnType().isJavaNative()) {
-                a("return (" + m.getReturnType().getJniType() + ") ");
-            } else {
-                a("return (jlong) ");
+        start(1)
+        a """
+            JNIEXPORT ${m.getReturnType().getJniType()} JNICALL ${c.getJniMethodName(m)}(${getJniSignature(m, self)})
+            {
+                ${getAllocateParameters(m)}
+                ${getReturnStatement(m)} ${m.getGtkName()}(${getGtkCallSignature(m, self)});
+                ${getFreeParameters(m)}
             }
-
-
-        }
-        a(m.getGtkName() + "");
-        writeGtkCallSignature(m, self);
-        a(";\n");
-        writeFreeParameters(m);
-        a("}\n");
-
+            """.stripIndent(12)
     }
 
-  
+
+    private String getReturnStatement(MethodModel m) {
+        if (!m.getReturnType().isVoid()) {
+            if (m.getReturnType().isJavaNative()) {
+                return "return (${m.getReturnType().getJniType()}) "
+            } else {
+                return "return (jlong) "
+            }
+        } else {
+            return ""
+        }
+    }
+
 
     @Override
-    public void writeConstant(ParameterModel p) throws IOException {}
+    void writeConstant(ParameterModel p) throws IOException {}
 
     @Override
     void writeEnd() throws IOException {}
+
+    @Override
+    void writeMallocConstructor(ClassModel c) {
+        start(1)
+        a("""
+            JNIEXPORT jlong JNICALL ${c.getJniMethodName("newFromMalloc")}(JNIEnv * _jenv, jclass _jclass)
+            {
+                return (jlong) calloc(1, sizeof(${c.getCType()}));
+            }
+
+        """.stripIndent(12))
+    }
 
     @Override
     void writeSignal(ClassModel c, MethodModel m) throws IOException {
         start(1)
 
         a("""
-static ${m.getReturnType().gtkType} ${c.getCSignalCallbackName(m)}${getCallBackSignature(m)}
-{
-    JavaVM* globalVM    = ${getGlobalVMName(c)};
-    jclass  globalClass = ${getGlobalClassName(c)};
-    JNIEnv* g_env;
-    int     envStat     = (*globalVM)->GetEnv(globalVM, (void **)&g_env, JNI_VERSION_1_6);
+            static ${m.getReturnType().gtkType} ${c.getCSignalCallbackName(m)}${getCallBackSignature(m)}
+            {
+                JavaVM* globalVM    = ${getGlobalVMName(c)};
+                jclass  globalClass = ${getGlobalClassName(c)};
+                JNIEnv* g_env;
+                int     envStat     = (*globalVM)->GetEnv(globalVM, (void **)&g_env, JNI_VERSION_1_6);
 
-    printf(\"JNI received: ${m.getApiName()}\\n\");
+                printf(\"JNI received: ${m.getApiName()}\\n\");
 
-    if (envStat == JNI_OK) {
-        jmethodID callback = ${getCallbackMethodID(m)};
-        ${getCallbackMethodCall(m)};
+                if (envStat == JNI_OK) {
+                    jmethodID callback = ${getCallbackMethodID(m)};
+                    ${getCallbackMethodCall(m)};
         
-        (*globalVM)->DetachCurrentThread(globalVM);
+                    (*globalVM)->DetachCurrentThread(globalVM);
         
-    } else {
-        printf(\"ERROR: JNI is not initialized\\n\");
-    }
-}
+                } else {
+                    printf(\"ERROR: JNI is not initialized\\n\");
+                }
+            }
     
-JNIEXPORT void  JNICALL ${c.getJniSignalConnectMethodName(m)}(JNIEnv * _jenv, jclass _jclass, jlong _self) 
-{
-    printf(\"JNI connect: ${m.getApiName()}\\n\");
+            JNIEXPORT void  JNICALL ${c.getJniSignalConnectMethodName(m)}(JNIEnv * _jenv, jclass _jclass, jlong _self) 
+            {
+                printf(\"JNI connect: ${m.getApiName()}\\n\");
 
-    (*_jenv)->GetJavaVM(_jenv, &${getGlobalVMName(c)});
-    ${getGlobalClassName(c)} = (jclass) (*_jenv)->NewGlobalRef(_jenv, _jclass);
+                (*_jenv)->GetJavaVM(_jenv, &${getGlobalVMName(c)});
+                ${getGlobalClassName(c)} = (jclass) (*_jenv)->NewGlobalRef(_jenv, _jclass);
     
-    g_signal_connect ((void *)_self, \"${m.getApiName()}\", G_CALLBACK (${c.getCSignalCallbackName(m)}), NULL);
-}
-""")
+                g_signal_connect ((void *)_self, \"${m.getApiName()}\", G_CALLBACK (${c.getCSignalCallbackName(m)}), NULL);
+            }
+            """.stripIndent(12))
     }
 
     @Override
-    void writeField(ClassModel classModel, ParameterModel p) {
+    void writeField(ClassModel c, ParameterModel p) {
+        String getter = JavaNames.getGetterName(p.getName())
+        String setter = JavaNames.getSetterName(p.getName())
 
+        a """
+            JNIEXPORT ${p.getJniType()} JNICALL ${c.getJniMethodName(getter)}(JNIEnv * _jenv, jclass _jclass, jlong _self)
+            {
+                const ${c.getCType()}* __self = (${c.getCType()}*) _self;
+                return (${p.getJniType()}) __self->${p.getName()};
+            }
+
+
+            JNIEXPORT void JNICALL ${c.getJniMethodName(setter)}(JNIEnv * _jenv, jclass _jclass, jlong _self, ${p.getJniType()} _${p.getName()})
+            {
+                ${c.getCType()}* __self = (${c.getCType()}*) _self;
+                __self->${p.getName()} = (${p.getGtkType()}) _${p.getName()};
+            }
+            
+            
+        """.stripIndent(12)
     }
 
     @Override
-    void writeFunction(ClassModel classModel, MethodModel m) {
-
+    void writeFunction(ClassModel c, MethodModel m) {
+        _writeNativeMethod(c, m, false)
     }
 
     private String getCallbackMethodID(MethodModel m) {
-        "(*g_env)->GetStaticMethodID(g_env, globalClass, \"${m.getSignalCallbackName()}\", \"${getJNISignature(m)}\")"
+        "(*g_env)->GetStaticMethodID(g_env, globalClass, \"${m.getSignalCallbackName()}\", \"${getJniIdSignature(m)}\")"
     }
 
-    private String getJNISignature(MethodModel m) {
+    private String getJniIdSignature(MethodModel m) {
         StringBuilder result = new StringBuilder()
 
         result.append '(J'

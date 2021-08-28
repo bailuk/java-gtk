@@ -67,6 +67,7 @@ abstract class CodeWriter  implements Append {
     }
 
 
+    abstract void writeMallocConstructor(ClassModel classModel)  throws IOException
 }
 
 

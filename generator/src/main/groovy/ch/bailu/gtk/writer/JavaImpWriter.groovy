@@ -29,6 +29,8 @@ class JavaImpWriter extends CodeWriter {
     @Override
     void writeInterface(ClassModel classModel) {}
 
+    @Override
+    void writeInternalConstructor(ClassModel classModel) throws IOException {}
 
     @Override
     void writeUnsupported(Model m) throws IOException {
@@ -44,13 +46,12 @@ class JavaImpWriter extends CodeWriter {
         end(1);
     }
 
+
     @Override
-    void writeInternalConstructor(ClassModel c) {
-        if (c.isRecord()) {
-            start();
-            a("    static native long newFromMalloc();\n")
-            end(1);
-        }
+    void writeMallocConstructor(ClassModel classModel) {
+        start()
+        a"    static native long newFromMalloc();\n"
+        end(1)
     }
 
     @Override
@@ -78,6 +79,7 @@ class JavaImpWriter extends CodeWriter {
         a("}\n");
     }
 
+
     @Override
     void writeSignal(ClassModel c, MethodModel m) throws IOException {
 
@@ -95,7 +97,7 @@ class JavaImpWriter extends CodeWriter {
 
     private String getDefaultReturn(MethodModel m) {
         if (!m.getReturnType().isVoid()) {
-            return "        return ${m.getReturnType().getImpDefaultConstant()};"
+            return "return ${m.getReturnType().getImpDefaultConstant()};"
         }
         return ""
     }

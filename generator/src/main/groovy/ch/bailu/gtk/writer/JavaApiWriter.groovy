@@ -35,7 +35,7 @@ class JavaApiWriter extends CodeWriter {
     @Override
     void writeUnsupported(Model m) throws IOException {
         start (1)
-        a("    /* Unsupported:" + m.toString() + " */\n");
+        a "    /* Unsupported:${m.toString()} */\n"
     }
 
     @Override
@@ -79,22 +79,28 @@ class JavaApiWriter extends CodeWriter {
 
     @Override
     void writeInternalConstructor(ClassModel c) throws IOException {
-        start(1);
+        start(1)
         a("""
             public ${c.getApiName()}(long pointer) {
                 super(pointer);
             }
             
             """.stripIndent(8))
+    }
 
-        if (c.isRecord() && c.hasDefaultConstructor() == false) {
-            a("""
+
+    @Override
+    void writeMallocConstructor(ClassModel c) throws IOException {
+        if (c.hasDefaultConstructor() == false) {
+            start(1)
+            a """
             public ${c.getApiName()}() {
                 super(${c.getImpName()}.newFromMalloc());
             }
-            """.stripIndent(8))
+            """.stripIndent(8)
         }
     }
+
 
     @Override
     public void writeConstructor(ClassModel classModel, MethodModel m) throws IOException {

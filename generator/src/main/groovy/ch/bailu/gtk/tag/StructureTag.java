@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.bailu.gtk.model.ParameterModel;
-
 
 /**
  * Record, interface, class
@@ -13,8 +11,10 @@ import ch.bailu.gtk.model.ParameterModel;
 public class StructureTag extends NamedTag {
 
     private String parent;
-    private final String type;
+    private final String structureType;
     private boolean disguised = false;
+
+    private String type = "";
 
 
     private final List<NamedTag> implementsList = new ArrayList<>();
@@ -26,9 +26,9 @@ public class StructureTag extends NamedTag {
     private final List<MethodTag> signals = new ArrayList<>();
     private final List<ParameterTag> fields = new ArrayList<>();
 
-    public StructureTag(Tag parent, String type) {
+    public StructureTag(Tag parent, String structureType) {
         super(parent);
-        this.type = type;
+        this.structureType = structureType;
     }
 
     @Override
@@ -73,6 +73,8 @@ public class StructureTag extends NamedTag {
             this.parent = value;
         } else if ("disguised".equals(name)) {
             disguised = "1".equals(value);
+        } else if ("type".equals(name)) {
+            this.type = value;
         } else {
             super.setAttribute(name, value);
         }
@@ -82,8 +84,8 @@ public class StructureTag extends NamedTag {
     public String getParentName() {
         return parent;
     }
-    public String getType() {
-        return type;
+    public String getStructureType() {
+        return structureType;
     }
     public List<NamedTag> getImplementsList() {
         return implementsList;
@@ -111,5 +113,9 @@ public class StructureTag extends NamedTag {
 
     public boolean isDisguised() {
         return disguised;
+    }
+
+    public String getType() {
+        return type;
     }
 }

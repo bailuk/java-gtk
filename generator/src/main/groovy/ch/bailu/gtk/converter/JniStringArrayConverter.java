@@ -13,7 +13,7 @@ public class JniStringArrayConverter extends JniTypeConverter {
 
     @Override
     public String getAllocateResourceString() {
-        return "     const " + model.getGtkType() + " " + PREFIX +model.getName() + " = {\"hello\",\"test\"};\n";
+        return "const " + model.getGtkType() + " " + PREFIX +model.getName() + " = {\"hello\",\"test\"};\n";
     }
 
     @Override
