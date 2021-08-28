@@ -1,4 +1,3 @@
-
 plugins {
     `java-library`
     `maven-publish`
@@ -61,14 +60,12 @@ sourceSets {
         resources {
             val res = File(project(":glue").buildDir, "lib/main/release")
             srcDir(res)
-
-
         }
     }
 }
 
 tasks.named("jar") {
-    dependsOn(":glue:linkReleaseLinuxX86-64")
+    dependsOn(":glue:linkRelease")
 }
 
 

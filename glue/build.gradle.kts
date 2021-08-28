@@ -52,9 +52,9 @@ val includes = listOf(
 // gradle: the most chaotic build system ever
 // https://discuss.gradle.org/t/how-to-pass-arguments-to-the-linker-when-building-a-cpp-application/30855/8
 library {
-    targetMachines.add(machines.os("linux").architecture("x86-64"))
-    targetMachines.add(machines.os("windows").architecture("x86-64"))
-    targetMachines.add(machines.os("android").architecture("armv7"))
+//    targetMachines.add(machines.os("linux").architecture("x86-64"))
+//    targetMachines.add(machines.os("windows").architecture("x86-64"))
+//    targetMachines.add(machines.os("android").architecture("armv7"))
 
 
     binaries.configureEach {

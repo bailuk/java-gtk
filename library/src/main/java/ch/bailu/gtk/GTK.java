@@ -13,6 +13,7 @@ public class GTK {
     
     public static void init() throws IOException {
         try {
+            System.out.println(System.getProperty("java.library.path"));
             System.loadLibrary("glue");
         } catch (UnsatisfiedLinkError e) {
             loadLibrary();
