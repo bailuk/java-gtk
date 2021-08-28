@@ -1,29 +1,29 @@
 
 plugins {
-    id 'java-library'
-    id 'maven-publish'
+    `java-library`
+    `maven-publish`
 }
 
-group = 'ch.bailu.java-gtk'
-version = '0.1'
+group = "ch.bailu.java-gtk"
+version = "0.1"
 
+// https://docs.gradle.org/current/userguide/publishing_maven.html
 publishing {
     publications {
-        mavenJava(MavenPublication) {
-            artifactId = 'java-gtk'
-            from components.java
+        create<MavenPublication>("java-gtk") {
+            artifactId = "java-gtk"
+            from(components["java"])
             versionMapping {
-                usage('java-api') {
-                    fromResolutionOf('runtimeClasspath')
+                usage("java-api") {
+                    fromResolutionOf("runtimeClasspath")
                 }
-                usage('java-runtime') {
+                usage("java-runtime") {
                     fromResolutionResult()
                 }
-
             }
             pom {
-                name = 'java-gtk'
-                description = 'Java bindings for GTK'
+                name.set("java-gtk")
+                description.set("Java bindings for GTK")
             }
         }
 
@@ -37,31 +37,42 @@ repositories {
 
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
 }
 
 
-test {
-    dependsOn  ':glue:linkDebug'
+tasks.test {
+    val libraryPath = file("${project(":glue").buildDir}/lib/main/debug").absolutePath
+
+    dependsOn( ":glue:linkDebug")
     useJUnitPlatform()
-    systemProperty "java.library.path", file("${project(":glue").buildDir}/lib/main/debug").absolutePath
-
+    systemProperty( "java.library.path", libraryPath)
 }
+
 
 
 sourceSets {
     main {
-        java.srcDirs += 'build/generated/src/main/java'
-        resources.srcDirs += "${project(":glue").buildDir}/lib/main/release"
+        java {
+            val src = File(project(":library").buildDir,"generated/src/main/java")
+            srcDir(src)
+        }
+
+        resources {
+            val res = File(project(":glue").buildDir, "lib/main/release")
+            srcDir(res)
+
+
+        }
     }
 }
 
-jar {
-    dependsOn ':glue:linkRelease'
+tasks.named("jar") {
+    dependsOn(":glue:linkReleaseLinuxX86-64")
 }
 
 
-compileJava {
-    dependsOn ':generator:generate'
+tasks.named("compileJava") {
+    dependsOn(":generator:generate")
 }
 

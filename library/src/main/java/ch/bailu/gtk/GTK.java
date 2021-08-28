@@ -13,7 +13,7 @@ public class GTK {
     
     public static void init() throws IOException {
         try {
-            System.loadLibrary(LIB_NAME);
+            System.loadLibrary("glue");
         } catch (UnsatisfiedLinkError e) {
             loadLibrary();
         }
