@@ -2,44 +2,37 @@ package ch.bailu.gtk.writer
 
 import ch.bailu.gtk.converter.JavaNames
 import ch.bailu.gtk.model.*
+import java.io.Writer
 
-class JavaApiWriter extends CodeWriter {
 
-    JavaApiWriter(Writer writer) {
-        super(writer);
-    }
+class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
-    @Override
-    void writeStart(ClassModel classModel, NameSpaceModel namespace) throws IOException {
+    override fun writeStart(classModel : ClassModel, namespace : NameSpaceModel) {
         super.writeStart(classModel, namespace)
-        a"""
+        a("""
             
             package ${namespace.getFullNamespace()};
-        """.stripIndent()
+        """/*.stripIndent()*/)
         end(3)
     }
 
 
-    @Override
-    void writeClass(ClassModel classModel) throws IOException {
+    override fun writeClass(classModel : ClassModel) {
         start()
-        a "public class ${classModel.getApiName()} extends ${classModel.getApiParentName()} {\n"
+        a("public class ${classModel.getApiName()} extends ${classModel.getApiParentName()} {\n")
     }
 
-    @Override
-    void writeInterface(ClassModel classModel) throws IOException {
+    override fun writeInterface(classModel : ClassModel) {
         start()
-        a"public interface ${classModel.getApiName()} {\n"
+        a("public interface ${classModel.getApiName()} {\n")
     }
 
-    @Override
-    void writeUnsupported(Model m) throws IOException {
+    override fun writeUnsupported(m: Model) {
         start (1)
-        a "    /* Unsupported:${m.toString()} */\n"
+        a ("    /* Unsupported:${m.toString()} */\n")
     }
 
-    @Override
-    void writeNativeMethod(ClassModel classModel, MethodModel m) throws IOException {
+    override fun writeNativeMethod(classModel : ClassModel, m : MethodModel) {
         start(1);
         a("    public ${m.getReturnType().getApiType()} ${m.getApiName()}")
         writeSignature(m)
@@ -77,79 +70,75 @@ class JavaApiWriter extends CodeWriter {
 
 
 
-    @Override
-    void writeInternalConstructor(ClassModel c) throws IOException {
+    override fun writeInternalConstructor(c : ClassModel) {
         start(1)
         a("""
             public ${c.getApiName()}(long pointer) {
                 super(pointer);
             }
             
-            """.stripIndent(8))
+            """) //.stripIndent(8))
     }
 
 
-    @Override
-    void writeMallocConstructor(ClassModel c) throws IOException {
+    override
+    fun writeMallocConstructor(c : ClassModel) {
         if (c.hasDefaultConstructor() == false) {
             start(1)
-            a """
+            a ("""
             public ${c.getApiName()}() {
                 super(${c.getImpName()}.newFromMalloc());
             }
-            """.stripIndent(8)
+            """) //.stripIndent(8)
         }
     }
 
 
-    @Override
-    public void writeConstructor(ClassModel classModel, MethodModel m) throws IOException {
+    override fun writeConstructor(classModel : ClassModel, m : MethodModel) {
         start(1);
         a("    public " + classModel.getApiName());
         writeSignature(m);
         a(" {\n");
 
-        m = m.getCall();
+        var m = m.getCall();
         a("        super(").a(classModel.getImpName()).a(".").a(m.getApiName());
         writeFactoryCallSignature(m);
         a(");\n    }\n");
     }
 
-    @Override
-    void writeFactory(ClassModel classModel, MethodModel m) throws IOException {
+    override fun writeFactory(classModel : ClassModel, m : MethodModel) {
         start(1);
         a("    public static ").a(classModel.getApiName()).a(" ").a(m.getCall().getApiName() + classModel.getApiName());
         writeSignature(m);
         a(" {\n");
 
-        m = m.getCall();
+        var m = m.getCall();
         a("        return new ").a(classModel.getApiName()).a("(").a(classModel.getImpName()).a(".").a(m.getApiName());
         writeFactoryCallSignature(m);
         a(");\n    }\n");
     }
 
-    @Override
-    void writePrivateFactory(ClassModel c, MethodModel m) {}
+    override
+    fun writePrivateFactory(c : ClassModel, m : MethodModel) {}
 
 
-    @Override
-    void writeConstant(ParameterModel p) throws IOException {
+    override fun writeConstant(p : ParameterModel) {
         start(1);
         a("    " + p.getApiType() + " " + p.getName() + " = " + p.getValue()+ ";\n");
     }
 
-    @Override
-    void writeEnd() throws IOException {
+    override
+    fun writeEnd() {
         start();
         a("}\n");
     }
 
 
 
-    @Override
-    void writeSignal(ClassModel c, MethodModel m) throws IOException {
+    override
+    fun writeSignal(c : ClassModel, m : MethodModel) {
         start(1);
-        a("    public void ").a(m.getSignalMethodName()).a("(").a(m.getSignalInterfaceName()).a(" observer) {\n");
+        a("    public fun ").a(m.getSignalMethodName()).a("(").a(m.getSignalInterfaceName()).a(" observer) {\n");
         a("        ch.bailu.gtk.Signal.put(toLong(), \"").a(m.getApiName()).a("\", observer);\n");
         a("        ").a(c.getImpName()).a(".").a(m.getSignalMethodName()).a("(toLong());\n");
         a("    }\n");
@@ -158,12 +147,12 @@ class JavaApiWriter extends CodeWriter {
         a("    }\n");
     }
 
-    @Override
-    void writeField(ClassModel classModel, ParameterModel p) {
-        List<ParameterModel> parameters = new ArrayList()
+    override
+    fun writeField(classModel : ClassModel, p : ParameterModel) {
+        val parameters : MutableList<ParameterModel> = ArrayList()
 
-        String getter = JavaNames.getGetterName(p.getName())
-        String setter = JavaNames.getSetterName(p.getName())
+        val getter = JavaNames.getGetterName(p.getName())
+        val setter = JavaNames.getSetterName(p.getName())
 
         start(1)
 
@@ -172,42 +161,42 @@ class JavaApiWriter extends CodeWriter {
                 public ${p.getApiType()} ${getter}() {
                     return ${classModel.getImpName()}.${getter}(${getSelfCallSignature(parameters)});
                 }
-                """.stripIndent(12))
+                """)//.stripIndent(12))
         } else {
             a("""
                 public ${p.getApiType()} ${getter}() {
                     return new ${p.getApiType()}(${classModel.getImpName()}.${getter}(${getSelfCallSignature(parameters)}));
                 }
-                """.stripIndent(12))
+                """) //.stripIndent(12))
         }
 
         if (p.isWriteable()) {
             parameters.add(p)
             a("""
-                public void ${setter}(${getSignature(parameters)}) {        
+                public fun ${setter}(${getSignature(parameters)}) {        
                     ${classModel.getImpName()}.${setter}(${getSelfCallSignature(parameters)});
                 }
-            """.stripIndent(12))
+            """) //.stripIndent(12))
         }
 
 
     }
 
-    @Override
-    void writeFunction(ClassModel c, MethodModel m) {
+    override
+    fun writeFunction(c : ClassModel, m : MethodModel) {
         start(1);
         a("""
             public static ${m.getReturnType().getApiType()} ${m.getApiName()}(${getSignature(m.getParameters())}) {
                 ${getFunctionCall(c, m)};
             }
 
-        """.stripIndent(8))
+        """) //.stripIndent(8))
     }
 
 
-    private String getFunctionCall(ClassModel c, MethodModel m) {
-        StringBuilder result = new StringBuilder();
-        String signature = getCallSignature(m.getParameters(), '')
+    private fun getFunctionCall(c : ClassModel, m : MethodModel) : String {
+        val result = StringBuilder();
+        val signature = getCallSignature(m.getParameters(), "")
 
         if (m.getReturnType().isVoid()) {
             result.append("${c.getImpName()}.${m.getApiName()}(${signature})")
@@ -218,55 +207,56 @@ class JavaApiWriter extends CodeWriter {
         } else {
             result.append("return new ${m.getReturnType().getApiType()}(${c.getImpName()}.${m.getApiName()}(${signature}))")
         }
-        result
+        return result.toString()
     }
 
-    private void writeSignature(MethodModel m) throws IOException {
+    private fun writeSignature(m : MethodModel) {
         a("(${getSignature(m.getParameters())})")
     }
 
-    private String getSignature(List<ParameterModel> parameters) throws IOException {
-        StringBuilder result = new StringBuilder()
+    private fun getSignature(parameters : List<ParameterModel>) : String{
+        val result = StringBuilder()
 
-        String del = ''
-        for (ParameterModel p: parameters) {
+        var del = ""
+        for (p in parameters) {
             result.append("${del}${p.getApiType()} ${p.getName()}")
-            del = ', '
+            del = ", "
         }
-        result
+        return result.toString()
     }
 
 
-    private void writeSelfCallSignature(MethodModel m) throws IOException {
+    private fun writeSelfCallSignature(m : MethodModel) {
         a("(${getSelfCallSignature(m.getParameters())})")
     }
 
 
-    private String getSelfCallSignature(List<ParameterModel> parameters) throws IOException {
-        "toLong()${getCallSignature(parameters, ', ')}"
+    private fun getSelfCallSignature(parameters : List<ParameterModel>) : String {
+        return "toLong()${getCallSignature(parameters, ", ")}"
     }
 
-    private String getCallSignature(List<ParameterModel> parameters, String del) throws IOException {
-        StringBuilder result = new StringBuilder()
+    private fun getCallSignature(parameters : List<ParameterModel>, del : String) : String{
+        val result = StringBuilder()
+        var del = del
 
-        for (ParameterModel p: parameters) {
+        for (p in parameters) {
             if (p.isJavaNative()) {
                 result.append("${del}${p.getName()}")
             } else {
                 result.append("${del}${p.getName()}.toLong()")
             }
-            del = ', '
+            del = ", "
         }
-        result
+        return result.toString()
     }
 
 
-    private void writeFactoryCallSignature(MethodModel m) throws IOException {
+    private fun writeFactoryCallSignature(m : MethodModel) {
         a("(");
 
-        String del = " ";
+        var del = " ";
 
-        for (ParameterModel p: m.getParameters()) {
+        for (p in m.getParameters()) {
             a(del);
 
             if (p.isJavaNative()) {
@@ -278,6 +268,4 @@ class JavaApiWriter extends CodeWriter {
         }
         a(")");
     }
-
-
 }

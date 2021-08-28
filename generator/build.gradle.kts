@@ -1,6 +1,9 @@
 
 plugins {
-    groovy
+    java
+    
+    // https://kotlinlang.org/docs/gradle.html#targeting-the-jvm
+    kotlin("jvm") version "1.5.30"    
 }
 
 repositories {
@@ -15,9 +18,6 @@ dependencies {
      *  xml parser implementation
      */
     implementation("net.sf.kxml:kxml2:2.3.0")
-
-    // https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-all
-    implementation("org.codehaus.groovy:groovy-all:3.0.8")
 
 }
 
