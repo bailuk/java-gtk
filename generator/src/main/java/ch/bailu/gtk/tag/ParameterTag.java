@@ -54,7 +54,13 @@ package ch.bailu.gtk.tag;
  */
 public class ParameterTag extends NamedTag {
 
+    private String value = "";
 
+
+
+    public String getValue() {
+        return value;
+    }
     private final TypeTag type = new TypeTag(this);
     private boolean isArray = false;
 
@@ -77,7 +83,6 @@ public class ParameterTag extends NamedTag {
             isArray = true;
             return type;
         }
-
         return ignore();
     }
 
@@ -85,8 +90,13 @@ public class ParameterTag extends NamedTag {
     public void setAttribute(String name, String value) {
         if ("writable".equals(name)) {
             isWriteable = "1".equals(value);
+
         } else if ("private".equals(name)) {
             isPrivate = "1".equals(value);
+
+        } else if ("value".equals(name)) {
+            this.value = value;
+
         } else {
             super.setAttribute(name, value);
         }

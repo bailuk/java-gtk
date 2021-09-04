@@ -7,12 +7,10 @@ import java.io.Writer
 
 class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
-    override fun writeStart(classModel : ClassModel, namespace : NameSpaceModel) {
+    override fun writeStart(classModel : ClassModel, namespace : NamespaceModel) {
         super.writeStart(classModel, namespace)
-        a("""
-            
-            package ${namespace.getFullNamespace()};
-        """/*.stripIndent()*/)
+        start(3)
+        a("package ${namespace.getFullNamespace()};")
         end(3)
     }
 
@@ -82,25 +80,25 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
 
     override
-    fun writeMallocConstructor(c : ClassModel) {
-        if (c.hasDefaultConstructor() == false) {
+    fun writeMallocConstructor(classModel : ClassModel) {
+        if (classModel.hasDefaultConstructor() == false) {
             start(1)
             a ("""
-            public ${c.getApiName()}() {
-                super(${c.getImpName()}.newFromMalloc());
+            public ${classModel.getApiName()}() {
+                super(${classModel.getImpName()}.newFromMalloc());
             }
             """) //.stripIndent(8)
         }
     }
 
 
-    override fun writeConstructor(classModel : ClassModel, m : MethodModel) {
+    override fun writeConstructor(classModel : ClassModel, methodModel : MethodModel) {
         start(1);
         a("    public " + classModel.getApiName());
-        writeSignature(m);
+        writeSignature(methodModel);
         a(" {\n");
 
-        var m = m.getCall();
+        var m = methodModel.getCall();
         a("        super(").a(classModel.getImpName()).a(".").a(m.getApiName());
         writeFactoryCallSignature(m);
         a(");\n    }\n");
@@ -122,9 +120,23 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
     fun writePrivateFactory(c : ClassModel, m : MethodModel) {}
 
 
-    override fun writeConstant(p : ParameterModel) {
-        start(1);
-        a("    " + p.getApiType() + " " + p.getName() + " = " + p.getValue()+ ";\n");
+    override fun writeConstant(parameterModel : ParameterModel) {
+        start(1)
+
+        var value = parameterModel.value
+
+
+        if (parameterModel.apiType == "String") {
+            value = "\"$value\"";
+        } else if ("true".equals(value)){
+            value = "ch.bailu.gtk.GTK.TRUE"
+
+        } else if ("false".equals(value)){
+            value = "ch.bailu.gtk.GTK.FALSE"
+        }
+
+    a("    " + parameterModel.apiType + " " + parameterModel.name + " = " + value + ";\n");
+
     }
 
     override
@@ -138,7 +150,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
     override
     fun writeSignal(c : ClassModel, m : MethodModel) {
         start(1);
-        a("    public fun ").a(m.getSignalMethodName()).a("(").a(m.getSignalInterfaceName()).a(" observer) {\n");
+        a("    public void ").a(m.getSignalMethodName()).a("(").a(m.getSignalInterfaceName()).a(" observer) {\n");
         a("        ch.bailu.gtk.Signal.put(toLong(), \"").a(m.getApiName()).a("\", observer);\n");
         a("        ").a(c.getImpName()).a(".").a(m.getSignalMethodName()).a("(toLong());\n");
         a("    }\n");
@@ -147,36 +159,41 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
         a("    }\n");
     }
 
-    override
-    fun writeField(classModel : ClassModel, p : ParameterModel) {
+    override fun writeField(classModel : ClassModel, parameterModel : ParameterModel) {
         val parameters : MutableList<ParameterModel> = ArrayList()
 
-        val getter = JavaNames.getGetterName(p.getName())
-        val setter = JavaNames.getSetterName(p.getName())
+        val getter = JavaNames.getGetterName(parameterModel.getName())
+        val setter = JavaNames.getSetterName(parameterModel.getName())
 
         start(1)
 
-        if (p.isJavaNative()) {
+        if (parameterModel.isJavaNative()) {
             a("""
-                public ${p.getApiType()} ${getter}() {
-                    return ${classModel.getImpName()}.${getter}(${getSelfCallSignature(parameters)});
-                }
-                """)//.stripIndent(12))
+                
+    public ${parameterModel.getApiType()} ${getter}() {
+        return ${classModel.getImpName()}.${getter}(${getSelfCallSignature(parameters)});
+    } 
+    """)
+
         } else {
             a("""
-                public ${p.getApiType()} ${getter}() {
-                    return new ${p.getApiType()}(${classModel.getImpName()}.${getter}(${getSelfCallSignature(parameters)}));
-                }
-                """) //.stripIndent(12))
+                
+    public ${parameterModel.getApiType()} ${getter}() {
+        return new ${parameterModel.getApiType()}(${classModel.getImpName()}.${getter}(${getSelfCallSignature(parameters)}));
+    }
+    """)
+
         }
 
-        if (p.isWriteable()) {
-            parameters.add(p)
+        if (parameterModel.isWriteable()) {
+            parameters.add(parameterModel)
             a("""
-                public fun ${setter}(${getSignature(parameters)}) {        
-                    ${classModel.getImpName()}.${setter}(${getSelfCallSignature(parameters)});
-                }
-            """) //.stripIndent(12))
+                
+    public void ${setter}(${getSignature(parameters)}) {        
+        ${classModel.getImpName()}.${setter}(${getSelfCallSignature(parameters)});
+    }
+    """)
+
         }
 
 
@@ -186,11 +203,13 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
     fun writeFunction(c : ClassModel, m : MethodModel) {
         start(1);
         a("""
-            public static ${m.getReturnType().getApiType()} ${m.getApiName()}(${getSignature(m.getParameters())}) {
-                ${getFunctionCall(c, m)};
-            }
+    
+    public static ${m.getReturnType().getApiType()} ${m.getApiName()}(${getSignature(m.getParameters())}) {
+        ${getFunctionCall(c, m)};
+    }
+        """)
 
-        """) //.stripIndent(8))
+
     }
 
 

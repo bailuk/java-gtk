@@ -11,8 +11,9 @@ public class NamespaceTag extends NamedTag {
     }
 
 
-    private List<NamedTag> includes = new ArrayList<>();
-    private List<MethodTag> functions = new ArrayList<>();
+    private final List<NamedTag> includes = new ArrayList<>();
+    private final List<MethodTag> functions = new ArrayList<>();
+    private final List<ParameterTag> constants = new ArrayList<>();
 
     private NamedTag _package = new NamedTag(this);
 
@@ -45,6 +46,12 @@ public class NamespaceTag extends NamedTag {
             return new EnumerationTag(this);
         }
 
+        if ("constant".equals(name)) {
+            ParameterTag c = new ParameterTag(this);
+            constants.add(c);
+            return c;
+        }
+
         if ("bitfield".equals(name)) {
             return new EnumerationTag(this);
         }
@@ -68,6 +75,10 @@ public class NamespaceTag extends NamedTag {
 
     public List<MethodTag> getFunctions() {
         return functions;
+    }
+
+    public List<ParameterTag> getConstants() {
+        return constants;
     }
 
     public String getPackage() {

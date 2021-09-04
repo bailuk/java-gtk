@@ -1,23 +1,19 @@
 package ch.bailu.gtk.tag;
 
-public class MemberTag extends NamedTag {
-    private String value = null;
-
+public class MemberTag extends ParameterTag {
     public MemberTag(Tag parent) {
         super(parent);
     }
 
+    public String getType() {
+        if (super.getType() == null)
+            return "int";
 
-    @Override
-    public void setAttribute(String name, String value) {
-        if ("value".equals(name)) {
-            this.value = value;
-        } else {
-            super.setAttribute(name, value);
-        }
+        return super.getType();
     }
 
-    public String getValue() {
-        return value;
+    @Override
+    public String getName() {
+        return super.getName().toUpperCase();
     }
 }

@@ -13,7 +13,11 @@ public class JniStringConverter extends JniTypeConverter {
 
     @Override
     public String getAllocateResourceString() {
-        return "const "+ model.getGtkType() + " "+ PREFIX + model.getName() + " = (*_jenv)->GetStringUTFChars(_jenv, " + model.getName() + ", NULL);\n";
+        return
+                model.getGtkType() + " " + PREFIX + model.getName() + " = NULL;\n" +
+                "if (" + model.getName() + "!= NULL) {\n" +
+                "    " +PREFIX + model.getName() + " = (*_jenv)->GetStringUTFChars(_jenv, " + model.getName() + ", NULL);\n" +
+                "}\n";
     }
 
     @Override

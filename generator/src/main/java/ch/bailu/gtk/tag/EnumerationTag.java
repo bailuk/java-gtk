@@ -6,9 +6,7 @@ import java.util.List;
 
 public class EnumerationTag extends TypeTag {
 
-    private final List<MemberTag> members = new ArrayList<>(5);
-
-    private String type = "";
+    private final List<ParameterTag> members = new ArrayList<>(5);
 
     public EnumerationTag(Tag parent) {
         super(parent);
@@ -27,7 +25,7 @@ public class EnumerationTag extends TypeTag {
         getBuilder().buildEnumeration(this);
     }
 
-    public List<MemberTag> getMembers() {
+    public List<ParameterTag> getMembers() {
         return members;
     }
 }

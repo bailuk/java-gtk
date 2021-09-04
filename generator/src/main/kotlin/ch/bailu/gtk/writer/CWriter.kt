@@ -6,7 +6,7 @@ import java.io.Writer
 
 
 class CWriter (writer : Writer) : CodeWriter(writer) {
-    override fun writeStart(classModel : ClassModel, namespace : NameSpaceModel) {
+    override fun writeStart(classModel : ClassModel, namespace : NamespaceModel) {
         super.writeStart(classModel, namespace)
 
         a("#include <jni.h>\n\n")
@@ -67,7 +67,7 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         var del = ""
 
         if (self) {
-            result.append("(fun*) _self")
+            result.append("(void*) _self")
             del = ", "
         }
         
@@ -108,13 +108,13 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
     private fun _writeNativeMethod(c : ClassModel, m : MethodModel, self : Boolean) {
         start(1)
         a ("""
-            JNIEXPORT ${m.getReturnType().getJniType()} JNICALL ${c.getJniMethodName(m)}(${getJniSignature(m, self)})
-            {
-                ${getAllocateParameters(m)}
-                ${getReturnStatement(m)} ${m.getGtkName()}(${getGtkCallSignature(m, self)});
-                ${getFreeParameters(m)}
-            }
-            """)
+JNIEXPORT ${m.getReturnType().getJniType()} JNICALL ${c.getJniMethodName(m)}(${getJniSignature(m, self)})
+{
+    ${getAllocateParameters(m)}
+    ${getReturnStatement(m)} ${m.getGtkName()}(${getGtkCallSignature(m, self)});
+    ${getFreeParameters(m)}
+}
+""")
     }
 
 
@@ -134,11 +134,10 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
     override fun writeMallocConstructor(c : ClassModel) {
         start(1)
         a("""
-            JNIEXPORT jlong JNICALL ${c.getJniMethodName("newFromMalloc")}(JNIEnv * _jenv, jclass _jclass)
-            {
-                return (jlong) calloc(1, sizeof(${c.getCType()}));
-            }
-
+JNIEXPORT jlong JNICALL ${c.getJniMethodName("newFromMalloc")}(JNIEnv * _jenv, jclass _jclass)
+{
+    return (jlong) calloc(1, sizeof(${c.getCType()}));
+}
         """)
     }
 
@@ -146,36 +145,34 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         start(1)
 
         a("""
-            static ${m.getReturnType().gtkType} ${c.getCSignalCallbackName(m)}${getCallBackSignature(m)}
-            {
-                JavaVM* globalVM    = ${getGlobalVMName(c)};
-                jclass  globalClass = ${getGlobalClassName(c)};
-                JNIEnv* g_env;
-                int     envStat     = (*globalVM)->GetEnv(globalVM, (fun **)&g_env, JNI_VERSION_1_6);
+static ${m.getReturnType().gtkType} ${c.getCSignalCallbackName(m)}${getCallBackSignature(m)}
+{
+    JavaVM* globalVM    = ${getGlobalVMName(c)};
+    jclass  globalClass = ${getGlobalClassName(c)};
+    JNIEnv* g_env;
+    int     envStat     = (*globalVM)->GetEnv(globalVM, (void **)&g_env, JNI_VERSION_1_6);
 
-                printf(\"JNI received: ${m.getApiName()}\\n\");
-
-                if (envStat == JNI_OK) {
-                    jmethodID callback = ${getCallbackMethodID(m)};
-                    ${getCallbackMethodCall(m)};
+    if (envStat == JNI_OK) {
+        jmethodID callback = ${getCallbackMethodID(m)};
+        ${getCallbackMethodCall(m)};
         
-                    (*globalVM)->DetachCurrentThread(globalVM);
+        (*globalVM)->DetachCurrentThread(globalVM);
         
-                } else {
-                    printf(\"ERROR: JNI is not initialized\\n\");
-                }
-            }
+    } else {
+        printf("ERROR: JNI is not initialized\\n");
+    }
+}
     
-            JNIEXPORT fun  JNICALL ${c.getJniSignalConnectMethodName(m)}(JNIEnv * _jenv, jclass _jclass, jlong _self) 
-            {
-                printf(\"JNI connect: ${m.getApiName()}\\n\");
+JNIEXPORT void JNICALL ${c.getJniSignalConnectMethodName(m)}(JNIEnv * _jenv, jclass _jclass, jlong _self) 
+{
+    printf("JNI connect: ${m.getApiName()}\n");
 
-                (*_jenv)->GetJavaVM(_jenv, &${getGlobalVMName(c)});
-                ${getGlobalClassName(c)} = (jclass) (*_jenv)->NewGlobalRef(_jenv, _jclass);
+    (*_jenv)->GetJavaVM(_jenv, &${getGlobalVMName(c)});
+    ${getGlobalClassName(c)} = (jclass) (*_jenv)->NewGlobalRef(_jenv, _jclass);
     
-                g_signal_connect ((fun *)_self, \"${m.getApiName()}\", G_CALLBACK (${c.getCSignalCallbackName(m)}), NULL);
-            }
-            """)
+    g_signal_connect ((void *)_self, "${m.getApiName()}", G_CALLBACK (${c.getCSignalCallbackName(m)}), NULL);
+}
+    """)
     }
 
     override fun writeField(c : ClassModel, p : ParameterModel) {
@@ -183,21 +180,18 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         val setter = JavaNames.getSetterName(p.getName())
 
         a ("""
-            JNIEXPORT ${p.getJniType()} JNICALL ${c.getJniMethodName(getter)}(JNIEnv * _jenv, jclass _jclass, jlong _self)
-            {
-                const ${c.getCType()}* __self = (${c.getCType()}*) _self;
-                return (${p.getJniType()}) __self->${p.getName()};
-            }
+JNIEXPORT ${p.getJniType()} JNICALL ${c.getJniMethodName(getter)}(JNIEnv * _jenv, jclass _jclass, jlong _self)
+{
+    const ${c.getCType()}* __self = (${c.getCType()}*) _self;
+    return (${p.getJniType()}) __self->${p.getName()};
+}
 
-
-            JNIEXPORT fun JNICALL ${c.getJniMethodName(setter)}(JNIEnv * _jenv, jclass _jclass, jlong _self, ${p.getJniType()} _${p.getName()})
-            {
-                ${c.getCType()}* __self = (${c.getCType()}*) _self;
-                __self->${p.getName()} = (${p.getGtkType()}) _${p.getName()};
-            }
-            
-            
-        """)
+JNIEXPORT void JNICALL ${c.getJniMethodName(setter)}(JNIEnv * _jenv, jclass _jclass, jlong _self, ${p.getJniType()} _${p.getName()})
+{
+    ${c.getCType()}* __self = (${c.getCType()}*) _self;
+    __self->${p.getName()} = (${p.getGtkType()}) _${p.getName()};
+}
+    """)
     }
 
     override fun writeFunction(c : ClassModel, m : MethodModel) {
@@ -248,11 +242,11 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
     private fun getCallBackSignature(m : MethodModel) : String {
         val result = StringBuilder()
 
-        result.append("(fun* _self, ")
+        result.append("(void* _self, ")
         for (p in m.getParameters()) {
             result.append("${p.getGtkType()} ${p.getName()}, ")
         }
-        result.append("fun* _data)")
+        result.append("void* _data)")
         return result.toString()
     }
 

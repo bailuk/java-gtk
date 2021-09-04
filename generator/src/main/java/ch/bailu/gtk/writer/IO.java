@@ -14,17 +14,17 @@ import java.io.Writer;
 
 import ch.bailu.gtk.Configuration;
 import ch.bailu.gtk.model.ClassModel;
-import ch.bailu.gtk.model.NameSpaceModel;
+import ch.bailu.gtk.model.NamespaceModel;
 
 public class IO {
 
 
-    public static Writer getJavaWriter(String className, NameSpaceModel nameSpaceModel) throws IOException {
+    public static Writer getJavaWriter(String className, NamespaceModel nameSpaceModel) throws IOException {
         return new BufferedWriter(new FileWriter(getJavaFile(className, nameSpaceModel)));
     }
 
 
-    private static File getJavaFile(String className, NameSpaceModel nameSpaceModel) throws IOException {
+    private static File getJavaFile(String className, NamespaceModel nameSpaceModel) throws IOException {
         return new File(createDirectory(nameSpaceModel.getJavaSourceDirectory()), className + ".java");
     }
 
@@ -45,11 +45,11 @@ public class IO {
         return new BufferedReader(new InputStreamReader(new FileInputStream(file)));
     }
 
-    public static Writer getCWriter(ClassModel model, NameSpaceModel namespace) throws IOException {
+    public static Writer getCWriter(ClassModel model, NamespaceModel namespace) throws IOException {
         return new BufferedWriter(new FileWriter(getCFile(model.getImpName(), namespace)));
     }
 
-    private static File getCFile(String name, NameSpaceModel namespace) throws IOException {
+    private static File getCFile(String name, NamespaceModel namespace) throws IOException {
         StringBuilder fn = new StringBuilder();
         fn.append(Configuration.HEADER_FILE_BASE).append(namespace.getNamespace()).append("_").append(name).append(".c");
 
@@ -57,7 +57,7 @@ public class IO {
         return new File(createDirectory(namespace.getCSourceDirectory()), fn.toString());
     }
 
-    public static Writer getJavaImpWriter(ClassModel classModel, NameSpaceModel namespace) throws IOException {
+    public static Writer getJavaImpWriter(ClassModel classModel, NamespaceModel namespace) throws IOException {
         return new BufferedWriter(new FileWriter(getJavaFile(classModel.getImpName(), namespace)));
     }
 }

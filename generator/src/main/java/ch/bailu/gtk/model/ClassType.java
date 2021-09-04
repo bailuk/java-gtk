@@ -3,19 +3,20 @@ package ch.bailu.gtk.model;
 import ch.bailu.gtk.Configuration;
 import ch.bailu.gtk.converter.AliasTable;
 import ch.bailu.gtk.converter.NamespaceType;
+import ch.bailu.gtk.converter.RelativeNamespaceType;
 import ch.bailu.gtk.converter.StructureTable;
 import ch.bailu.gtk.tag.ParameterTag;
 
 
 public class ClassType implements ClassTypeInterface {
 
-    private final NamespaceType type;
+    private final RelativeNamespaceType type;
 
     private boolean valid = true;
 
 
     public ClassType() {
-        type = new NamespaceType("", "");
+        type = new RelativeNamespaceType("", "");
         valid = false;
 
     }
@@ -30,12 +31,18 @@ public class ClassType implements ClassTypeInterface {
     }
     
     public ClassType(String namespace, String typeName, CType ctype) {
-        type = convertAlias(namespace, typeName);
+        type = convert(namespace, typeName);
         setValid(type.isValid() && isInTable(type) && ctype.isSinglePointer());
     }
 
-    private NamespaceType convertAlias(String namespace, String type) {
-        return new NamespaceType(namespace, AliasTable.instance().convert(namespace, type));
+    private RelativeNamespaceType convert(String namespace, String typeName) {
+        NamespaceType converted = AliasTable.instance().convert(new NamespaceType(namespace, typeName));
+        return new RelativeNamespaceType(namespace, converted);
+    }
+
+
+    private boolean isInTable(RelativeNamespaceType n) {
+        return StructureTable.instance().contains(n.getNamespace(), n.getName());
     }
 
     private boolean isInTable(NamespaceType n) {

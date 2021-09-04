@@ -7,8 +7,14 @@ import java.net.URL;
 import java.nio.file.Files;
 
 public class GTK {
+    public final static int TRUE = 1;
+    public final static int FALSE = 0;
+
+
     private final static String LIB_NAME = "glue.so";
     private final static String TMP_DIR = "java-gtk-library";
+
+
 
     
     public static void init() throws IOException {

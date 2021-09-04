@@ -30,11 +30,11 @@ public class MethodModel extends Model {
         name = method.getName();
 
 
-        returnType = new ParameterModel(namespace, method.getReturnValue());
+        returnType = new ParameterModel(namespace, method.getReturnValue(), false);
         setSupported("Return value", returnType.isSupported());
 
         for (ParameterTag t : method.getParameters()) {
-            var parameterModel = new ParameterModel(namespace, t);
+            var parameterModel = new ParameterModel(namespace, t, false);
             parameters.add(parameterModel);
             setSupported(parameterModel.getSupportedState(), parameterModel.isSupported());
         }

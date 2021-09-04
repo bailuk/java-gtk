@@ -7,7 +7,7 @@ import java.io.Writer
 class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
 
 
-    override fun writeStart(classModel : ClassModel, namespaceModel : NameSpaceModel) {
+    override fun writeStart(classModel : ClassModel, namespaceModel : NamespaceModel) {
         super.writeStart(classModel, namespaceModel)
         a("\npackage " + namespaceModel.fullNamespace + ";\n");
         end(3);
@@ -65,15 +65,17 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
     override fun writeSignal(c : ClassModel, m : MethodModel) {
 
         a("""
-            static native fun ${m.signalMethodName}(long _self);
-            static ${m.getReturnType().getImpType()} ${m.signalCallbackName}(${getSelfSignature(m.parameters)}) {
-                String signal = \"${m.apiName}\";
-                for (java.lang.Object observer : ch.bailu.gtk.Signal.get(_self, signal)) {
-                   ${getSignalInterfaceCall(c, m)};
-                }
-                ${getDefaultReturn(m)}
-            }
-        """/*.stripIndent(8)*/)
+            
+    static native void ${m.signalMethodName}(long _self);
+    static ${m.getReturnType().getImpType()} ${m.signalCallbackName}(${getSelfSignature(m.parameters)}) {
+        String signal = "${m.apiName}";
+        for (java.lang.Object observer : ch.bailu.gtk.Signal.get(_self, signal)) {
+            ${getSignalInterfaceCall(c, m)};
+        }
+        ${getDefaultReturn(m)}
+    }
+    
+        """.trimMargin())
     }
 
     private fun getDefaultReturn(m : MethodModel) : String {
@@ -87,10 +89,10 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
         val parameters : MutableList<ParameterModel> = ArrayList()
 
         start();
-        a("    static native ${p.getImpType()} ${JavaNames.getGetterName(p.getName())}(${getSelfSignature(parameters)});\n")
+        a("static native ${p.getImpType()} ${JavaNames.getGetterName(p.getName())}(${getSelfSignature(parameters)});\n")
 
         parameters.add(p)
-        a("    static native fun ${JavaNames.getSetterName(p.getName())}(${getSelfSignature(parameters)});\n")
+        a("static native void ${JavaNames.getSetterName(p.getName())}(${getSelfSignature(parameters)});\n")
 
         end(1);
     }

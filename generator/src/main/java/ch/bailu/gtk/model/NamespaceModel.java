@@ -7,18 +7,19 @@ import java.util.List;
 import ch.bailu.gtk.Configuration;
 import ch.bailu.gtk.converter.NamespaceTable;
 import ch.bailu.gtk.converter.NamespaceType;
+import ch.bailu.gtk.converter.RelativeNamespaceType;
 import ch.bailu.gtk.tag.NamedTag;
 import ch.bailu.gtk.tag.NamespaceTag;
 
 
-public class NameSpaceModel extends Model implements NamespaceInterface {
+public class NamespaceModel extends Model implements NamespaceInterface {
 
     private List<String> includes = new ArrayList<>();
 
     private final String namespace;
 
 
-    public NameSpaceModel(NamespaceTag namespace) {
+    public NamespaceModel(NamespaceTag namespace) {
         this.namespace = namespace.getName().toLowerCase();
 
         for (NamedTag i : namespace.getIncludes()) {
@@ -28,13 +29,13 @@ public class NameSpaceModel extends Model implements NamespaceInterface {
         setSupported("Namespace", NamespaceTable.instance().contains(this.namespace));
     }
 
-    public NameSpaceModel() {
+    public NamespaceModel() {
         this.namespace = "";
         setSupported("",true);
     }
 
 
-    public NameSpaceModel(NamespaceType type) {
+    public NamespaceModel(RelativeNamespaceType type) {
         namespace = type.getNamespace();
         setSupported("Namespace", NamespaceTable.instance().contains(this.namespace));
     }

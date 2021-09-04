@@ -7,7 +7,7 @@ dependencies {
 
     val glueBuild = project(":glue").dependencyProject.buildDir
     val libDir = "${glueBuild}/lib/main/debug/"
-    runtimeOnly(fileTree(libDir) {include("*.so*")})
+    implementation(fileTree(libDir) {include("*.so*")})
 }
 
 application {

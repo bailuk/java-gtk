@@ -1,9 +1,8 @@
 package ch.bailu.gtk.model;
 
 import ch.bailu.gtk.converter.Filter;
-import ch.bailu.gtk.converter.JniTypeConverter;
 import ch.bailu.gtk.converter.JavaNames;
-import ch.bailu.gtk.tag.MemberTag;
+import ch.bailu.gtk.converter.JniTypeConverter;
 import ch.bailu.gtk.tag.ParameterTag;
 
 public class ParameterModel extends Model {
@@ -18,13 +17,18 @@ public class ParameterModel extends Model {
     private JniTypeConverter jniConverter;
 
 
-    private boolean isWriteable=false;
+    final private boolean isWriteable;
 
 
-    public ParameterModel(String namespace, ParameterTag parameter) {
+    public ParameterModel(String namespace, ParameterTag parameter, boolean toUpper) {
 
-        name = JavaNames.fixToken(parameter.getName());
-        value = "";
+        if (toUpper) {
+            name = JavaNames.fixToken(parameter.getName().toUpperCase());
+         } else {
+            name = JavaNames.fixToken(parameter.getName());
+        }
+
+        value = parameter.getValue();
 
         classType = new ClassType(namespace, parameter);
         if (classType.isValid()) {
@@ -38,22 +42,12 @@ public class ParameterModel extends Model {
         jniConverter = JniTypeConverter.factory(this);
 
         //setSupported("private", parameter.isPrivate());
+        setSupported("value", Filter.values(name, value));
         setSupported("jType", jType.isValid());
 
         this.isWriteable = parameter.isWriteable();
     }
 
-    
-    public ParameterModel(MemberTag m) {
-        name = JavaNames.fixToken(m.getName().toUpperCase());
-        value = m.getValue();
-
-        jType = new JavaType("int");
-        cType = new CType("int");
-        classType = new ClassType();
-
-        setSupported("Filter", Filter.flags(name, value));
-    }
 
     public String getValue() {
         return saveString(value);
@@ -110,7 +104,7 @@ public class ParameterModel extends Model {
             supported = "(s)";
         }
 
-        return "[" + supported + getGtkType() + ":" + getApiType() + "]";
+        return "[" + supported + getGtkType() + ":" + getApiType() + ":" + getValue() + "]";
     }
 
     private static String saveString(String in) {

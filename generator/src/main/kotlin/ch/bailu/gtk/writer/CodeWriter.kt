@@ -8,7 +8,7 @@ abstract class CodeWriter(writer : Writer) : Append {
     private var out = writer
     private var group = GroupSpace(out) 
 
-    open fun writeStart(classModel : ClassModel, namespaceModel : NameSpaceModel) {
+    open fun writeStart(classModel : ClassModel, namespaceModel : NamespaceModel) {
         a ("/* this file is machine generated */\n")
     }
 

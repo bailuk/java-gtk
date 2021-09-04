@@ -3,8 +3,10 @@ package ch.bailu.gtk.converter;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.bailu.gtk.tag.AliasTag;
+
 public class AliasTable {
-    private final Map<String, Map<String, String>> table = new HashMap<>();
+    private final Map<NamespaceType, NamespaceType> table = new HashMap<>();
 
 
     private final static AliasTable INSTANCE = new AliasTable();
@@ -13,27 +15,30 @@ public class AliasTable {
         return INSTANCE;
     }
 
-    private AliasTable() {}
-
-    public void add(String namespace, String name, String to) {
-        getTable(namespace).put(name, to);
+    private AliasTable() {
+        NamespaceType from = new NamespaceType("glib", "String");
+        NamespaceType to = new NamespaceType("glib", "GString");
+        add(from, to);
     }
 
-    private Map<String, String> getTable(String namespace) {
-        Map<String, String> result = table.get(namespace);
+    public void add(NamespaceType from, NamespaceType to) {
+        table.put(from, to);
+    }
 
-        if (result == null) {
-            result = new HashMap<String, String>();
-            table.put(namespace, result);
+
+    public NamespaceType convert(NamespaceType from) {
+        NamespaceType to = table.get(from);
+        if (to == null) {
+            to = from;
         }
-        return result;
+        return to;
     }
 
-    public String convert(String namespace, String name) {
-        String result = getTable(namespace).get(name);
-        if (result == null) {
-            result = name;
-        }
-        return result;
+    public void add(String namespace, String fromName, String toName) {
+        var from = new NamespaceType(namespace, fromName);
+        var to = new NamespaceType(namespace, toName);
+        add(from, to);
     }
+
+
 }

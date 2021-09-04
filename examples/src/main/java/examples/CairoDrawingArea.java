@@ -1,197 +1,172 @@
 package examples;
 
+import ch.bailu.gtk.GTK;
+import ch.bailu.gtk.cairo.Content;
+import ch.bailu.gtk.cairo.Context;
 import ch.bailu.gtk.cairo.Surface;
+import ch.bailu.gtk.gdk.EventButton;
 import ch.bailu.gtk.gdk.EventConfigure;
+import ch.bailu.gtk.gdk.EventMask;
+import ch.bailu.gtk.gdk.EventMotion;
+import ch.bailu.gtk.gdk.Gdk;
+import ch.bailu.gtk.gdk.GdkConstants;
+import ch.bailu.gtk.gdk.ModifierType;
+import ch.bailu.gtk.gdk.Rectangle;
+import ch.bailu.gtk.gdk.Window;
+import ch.bailu.gtk.gio.ApplicationFlags;
+import ch.bailu.gtk.gtk.Application;
+import ch.bailu.gtk.gtk.ApplicationWindow;
+import ch.bailu.gtk.gtk.Box;
+import ch.bailu.gtk.gtk.DrawingArea;
+import ch.bailu.gtk.gtk.Frame;
+import ch.bailu.gtk.gtk.Label;
+import ch.bailu.gtk.gtk.Orientation;
+import ch.bailu.gtk.gtk.ShadowType;
 import ch.bailu.gtk.gtk.Widget;
 
 public class CairoDrawingArea {
 
-    private Widget window = null;
 
     /* Pixmap for scribble area, to store current scribbles */
     private Surface surface = null;
 
+
+    public CairoDrawingArea(String[] argv) {
+        var app = new Application("org.gtk.example", ApplicationFlags.FLAGS_NONE);
+        app.onActivate(() -> createDrawingArea(new ApplicationWindow(app)));
+        app.run(argv.length, argv);
+    }
+
+
     /* Create a new surface of the appropriate size to store our scribbles */
     private int scribbleConfigureEvent(Widget widget, EventConfigure event) {
-//        Allocation allocation;
-        Surface cr = null;
-
         if (surface != null) {
-/*
-            cairo_surface_destroy (surface);
+            surface.destroy();
+        }
 
-            gtk_widget_get_allocation (widget, &allocation);
-            surface = gdk_window_create_similar_surface (gtk_widget_get_window (widget),
-                    CAIRO_CONTENT_COLOR,
-                    allocation.width,
-                    allocation.height);
-*/
+        Rectangle rectangle = new Rectangle();
+        widget.getAllocation(rectangle);
 
-            /* Initialize the surface to white */
+        surface = widget.getWindow().createSimilarSurface(Content.COLOR, rectangle.getFieldWidth(), rectangle.getFieldHeight());
 
-            //cr = cairo_create (surface);
-
-            //cairo_set_source_rgb (cr, 1, 1, 1);
-            //cairo_paint (cr);
-
-            //cairo_destroy (cr);
-
-            /* We've handled the configure event, no need for further processing. *//*
-
-        return TRUE;
-
-    }
-}
-
+        /* Initialize the surface to white */
+        Context cr = surface.createContext();
+        cr.setSourceRgb(1, 1, 1);
+        cr.paint();
+        cr.destroy();
+        return GTK.TRUE;
     }
 
-    */
-            /* Redraw the screen from the surface *//*
 
-    static gboolean
-    scribble_draw (GtkWidget *widget,
-                   cairo_t   *cr,
-                   gpointer   data)
-    {
-        cairo_set_source_surface (cr, surface, 0, 0);
-        cairo_paint (cr);
-
-        return FALSE;
+    /* Redraw the screen from the surface */
+    private int drawScribble(Widget widget, Context cr) {
+        cr.setSourceSurface(surface,0,0);
+        cr.paint();
+        return GTK.FALSE;
     }
 
-    */
-            /* Draw a rectangle on the screen *//*
+    /* Draw a rectangle on the screen */
+    private void drawBrush(Widget widget, double x, double y) {
+        Rectangle update_rect = new Rectangle();
+        Context cr;
 
-    static void
-    draw_brush (GtkWidget *widget,
-                gdouble    x,
-                gdouble    y)
-    {
-        GdkRectangle update_rect;
-        cairo_t *cr;
+        update_rect.setFieldX((int) (x - 3));
+        update_rect.setFieldY((int) (y - 3));
+        update_rect.setFieldHeight(6);
+        update_rect.setFieldWidth(6);
 
-        update_rect.x = x - 3;
-        update_rect.y = y - 3;
-        update_rect.width = 6;
-        update_rect.height = 6;
+        /* Paint to the surface, where we store our state */
+        cr = surface.createContext();
+        Gdk.cairoRectangle(cr, update_rect);
+        cr.fill();
+        cr.destroy();
 
-        */
-            /* Paint to the surface, where we store our state *//*
-
-        cr = cairo_create (surface);
-
-        gdk_cairo_rectangle (cr, &update_rect);
-        cairo_fill (cr);
-
-        cairo_destroy (cr);
-
-        */
-            /* Now invalidate the affected region of the drawing area. *//*
-
-        gdk_window_invalidate_rect (gtk_widget_get_window (widget),
-                &update_rect,
-                FALSE);
+        /* Now invalidate the affected region of the drawing area. */
+        widget.getWindow().invalidateRect(update_rect, 0);
     }
 
-    static gboolean
-    scribble_button_press_event (GtkWidget      *widget,
-                                 GdkEventButton *event,
-                                 gpointer        data)
-    {
-        if (surface == NULL)
-            return FALSE; */
-            /* paranoia check, in case we haven't gotten a configure event *//*
+    private int scribbleButtonPressEvent(Widget widget, EventButton event) {
+        if (surface == null)
+            return GTK.FALSE;
+        /* paranoia check, in case we haven't gotten a configure event */
 
+        if (event.getFieldButton() == GdkConstants.BUTTON_PRIMARY) {
+            drawBrush(widget, event.getFieldX(), event.getFieldY());
+        }
 
-        if (event->button == GDK_BUTTON_PRIMARY)
-            draw_brush (widget, event->x, event->y);
-
-        */
-            /* We've handled the event, stop processing *//*
-
-        return TRUE;
+        /* We've handled the event, stop processing */
+        return GTK.TRUE;
     }
 
-    static gboolean
-    scribble_motion_notify_event (GtkWidget      *widget,
-                                  GdkEventMotion *event,
-                                  gpointer        data)
-    {
+    private int scribbleMotionNotifyEvent(Widget widget, EventMotion event) {
         int x, y;
-        GdkModifierType state;
+        int state;
 
-        if (surface == NULL)
-            return FALSE; */
-            /* paranoia check, in case we haven't gotten a configure event *//*
+        if (surface == null) {
+            return GTK.FALSE;
+            /* paranoia check, in case we haven't gotten a configure event */
+        }
 
+        /* This call is very important; it requests the next motion event.
+         * If you don't call gdk_window_get_pointer() you'll only get
+         * a single motion event. The reason is that we specified
+         * GDK_POINTER_MOTION_HINT_MASK to gtk_widget_set_events().
+         * If we hadn't specified that, we could just use event->x, event->y
+         * as the pointer location. But we'd also get deluged in events.
+         * By requesting the next event as we handle the current one,
+         * we avoid getting a huge number of events faster than we
+         * can cope.
+         */
+        // TODO implement Integer argument
+        Window window = event.getFieldWindow();
+        //gdk_window_get_device_position (event->window, event->device, &x, &y, &state);
 
-             */
-            /* This call is very important; it requests the next motion event.
-             * If you don't call gdk_window_get_pointer() you'll only get
-             * a single motion event. The reason is that we specified
-             * GDK_POINTER_MOTION_HINT_MASK to gtk_widget_set_events().
-             * If we hadn't specified that, we could just use event->x, event->y
-             * as the pointer location. But we'd also get deluged in events.
-             * By requesting the next event as we handle the current one,
-             * we avoid getting a huge number of events faster than we
-             * can cope.
-             *//*
+        x = (int) event.getFieldX();
+        y = (int) event.getFieldY();
+        state = event.getFieldState();
 
+        if ((state & ModifierType.BUTTON1_MASK) != 0) {
+            drawBrush(widget, x, y);
+        }
 
-        gdk_window_get_device_position (event->window, event->device, &x, &y, &state);
-
-        if (state & GDK_BUTTON1_MASK)
-            draw_brush (widget, x, y);
-
-        */
-            /* We've handled it, stop processing *//*
-
-        return TRUE;
+        /* We've handled it, stop processing */
+        return GTK.TRUE;
     }
 
+    private int drawCheckerBoard(Widget da, Context cr) {
+        int i, j, xcount, ycount, width, height;
 
-    static gboolean
-    checkerboard_draw (GtkWidget *da,
-                       cairo_t   *cr,
-                       gpointer   data)
-    {
-        gint i, j, xcount, ycount, width, height;
+        final int CHECK_SIZE = 10;
+        final int SPACING = 2;
 
-#define CHECK_SIZE 10
-#define SPACING 2
-
-        */
-            /* At the start of a draw handler, a clip region has been set on
-             * the Cairo context, and the contents have been cleared to the
-             * widget's background color. The docs for
-             * gdk_window_begin_paint_region() give more details on how this
-             * works.
-             *//*
-
+        /* At the start of a draw handler, a clip region has been set on
+         * the Cairo context, and the contents have been cleared to the
+         * widget's background color. The docs for
+         * gdk_window_begin_paint_region() give more details on how this
+         * works.
+         */
 
         xcount = 0;
-        width = gtk_widget_get_allocated_width (da);
-        height = gtk_widget_get_allocated_height (da);
+        width = da.getAllocatedWidth();
+        height = da.getAllocatedHeight();
         i = SPACING;
-        while (i < width)
-        {
+        while (i < width) {
             j = SPACING;
-            ycount = xcount % 2; */
-            /* start with even/odd depending on row *//*
+            ycount = xcount % 2;
+            /* start with even/odd depending on row */
 
-            while (j < height)
-            {
-                if (ycount % 2)
-                    cairo_set_source_rgb (cr, 0.45777, 0, 0.45777);
+            while (j < height) {
+                if ((ycount % 2) != 0)
+                    cr.setSourceRgb( 0.45777, 0, 0.45777);
                 else
-                    cairo_set_source_rgb (cr, 1, 1, 1);
+                    cr.setSourceRgb(1, 1, 1);
 
-                */
-            /* If we're outside the clip, this will do nothing.
-             *//*
 
-                cairo_rectangle (cr, i, j, CHECK_SIZE, CHECK_SIZE);
-                cairo_fill (cr);
+                /* If we're outside the clip, this will do nothing.
+                 */
+
+                cr.rectangle(i, j, CHECK_SIZE, CHECK_SIZE);
+                cr.fill();
 
                 j += CHECK_SIZE + SPACING;
                 ++ycount;
@@ -201,139 +176,86 @@ public class CairoDrawingArea {
             ++xcount;
         }
 
-        */
-            /* return TRUE because we've handled this event, so no
-             * further processing is required.
-             *//*
 
-        return TRUE;
+        /* return TRUE because we've handled this event, so no
+         * further processing is required.
+         */
+
+        return GTK.TRUE;
     }
 
-    static void
-    close_window (void)
-    {
-        window = NULL;
-
-        if (surface)
-            cairo_surface_destroy (surface);
-        surface = NULL;
-    }
-
-    GtkWidget *
-    do_drawingarea (GtkWidget *do_widget)
-    {
-        GtkWidget *frame;
-        GtkWidget *vbox;
-        GtkWidget *da;
-        GtkWidget *label;
-
-        if (!window)
-        {
-            window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-            gtk_window_set_screen (GTK_WINDOW (window),
-                    gtk_widget_get_screen (do_widget));
-            gtk_window_set_title (GTK_WINDOW (window), "Drawing Area");
-
-            g_signal_connect (window, "destroy",
-                    G_CALLBACK (close_window), NULL);
-
-            gtk_container_set_border_width (GTK_CONTAINER (window), 8);
-
-            vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 8);
-            gtk_container_set_border_width (GTK_CONTAINER (vbox), 8);
-            gtk_container_add (GTK_CONTAINER (window), vbox);
-
-            */
-            /*
-             * Create the checkerboard area
-             *//*
-
-
-            label = gtk_label_new (NULL);
-            gtk_label_set_markup (GTK_LABEL (label),
-                    "<u>Checkerboard pattern</u>");
-            gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
-
-            frame = gtk_frame_new (NULL);
-            gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
-            gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
-
-            da = gtk_drawing_area_new ();
-            */
-            /* set a minimum size *//*
-
-            gtk_widget_set_size_request (da, 100, 100);
-
-            gtk_container_add (GTK_CONTAINER (frame), da);
-
-            g_signal_connect (da, "draw",
-                    G_CALLBACK (checkerboard_draw), NULL);
-
-            */
-            /*
-             * Create the scribble area
-             *//*
-
-
-            label = gtk_label_new (NULL);
-            gtk_label_set_markup (GTK_LABEL (label),
-                    "<u>Scribble area</u>");
-            gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
-
-            frame = gtk_frame_new (NULL);
-            gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
-            gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
-
-            da = gtk_drawing_area_new ();
-            */
-            /* set a minimum size *//*
-
-            gtk_widget_set_size_request (da, 100, 100);
-
-            gtk_container_add (GTK_CONTAINER (frame), da);
-
-            */
-            /* Signals used to handle backing surface *//*
-
-
-            g_signal_connect (da, "draw",
-                    G_CALLBACK (scribble_draw), NULL);
-            g_signal_connect (da,"configure-event",
-                    G_CALLBACK (scribble_configure_event), NULL);
-
-            */
-            /* Event signals *//*
-
-
-            g_signal_connect (da, "motion-notify-event",
-                    G_CALLBACK (scribble_motion_notify_event), NULL);
-            g_signal_connect (da, "button-press-event",
-                    G_CALLBACK (scribble_button_press_event), NULL);
-
-
-            */
-            /* Ask to receive events the drawing area doesn't normally
-             * subscribe to
-             *//*
-
-            gtk_widget_set_events (da, gtk_widget_get_events (da)
-                    | GDK_LEAVE_NOTIFY_MASK
-                    | GDK_BUTTON_PRESS_MASK
-                    | GDK_POINTER_MOTION_MASK
-                    | GDK_POINTER_MOTION_HINT_MASK);
-
+    private void close_window () {
+        if (surface != null) {
+            surface.destroy();
         }
-
-        if (!gtk_widget_get_visible (window))
-            gtk_widget_show_all (window);
-        else
-            gtk_widget_destroy (window);
-
-        return window;
-    }
-*/
-        }
-        return 0;
+        surface = null;
     }
 
+    private void createDrawingArea(ch.bailu.gtk.gtk.Window window) {
+
+        window.setTitle("Drawing Area");
+        window.onDestroy(()->close_window());
+
+        window.setBorderWidth(8);
+
+        var vbox = new Box(Orientation.VERTICAL, 8);
+        vbox.setBorderWidth(8);
+        window.add(vbox);
+
+        /*
+         * Create the checkerboard area
+         */
+        var label = new Label(null);
+        label.setMarkup("<u>Checkerboard pattern</u>");
+        vbox.packStart(label, GTK.FALSE, GTK.FALSE, 0);
+
+        var frame = new Frame(null);
+        frame.setShadowType(ShadowType.IN);
+        vbox.packStart(frame, GTK.TRUE, GTK.TRUE, 0);
+
+        final var da = new DrawingArea();
+
+        /* set a minimum size */
+        da.setSizeRequest(100, 100);
+        frame.add(da);
+
+        da.onDraw(cr -> drawCheckerBoard(da, cr));
+
+        /*
+         * Create the scribble area
+         */
+        label = new Label(null);
+        label.setMarkup("<u>Scribble area</u>");
+        vbox.packStart(label, GTK.FALSE, GTK.FALSE, 0);
+
+        frame = new Frame(null);
+        frame.setShadowType(ShadowType.IN);
+        vbox.packStart(frame, GTK.TRUE, GTK.TRUE, 0);
+
+        final var scribbleArea = new DrawingArea();
+
+        /* set a minimum size */
+        scribbleArea.setSizeRequest(100, 100);
+        frame.add(scribbleArea);
+
+
+        /* Signals used to handle backing surface */
+        scribbleArea.onDraw(cr -> drawScribble(scribbleArea, cr));
+        scribbleArea.onConfigureEvent(event -> scribbleConfigureEvent(scribbleArea, event));
+
+        /* Event signals */
+        scribbleArea.onMotionNotifyEvent(event -> scribbleMotionNotifyEvent(scribbleArea, event));
+        scribbleArea.onButtonPressEvent(event -> scribbleButtonPressEvent(scribbleArea, event));
+
+        /* Ask to receive events the drawing area doesn't normally
+         * subscribe to
+         */
+        scribbleArea.setEvents(da.getEvents()
+                | EventMask.LEAVE_NOTIFY_MASK
+                | EventMask.BUTTON_PRESS_MASK
+                | EventMask.POINTER_MOTION_MASK
+                | EventMask.POINTER_MOTION_HINT_MASK);
+
+        window.showAll();
+    }
 }

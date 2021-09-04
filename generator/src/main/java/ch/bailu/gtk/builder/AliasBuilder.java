@@ -18,7 +18,11 @@ public class AliasBuilder implements BuilderInterface{
 
     @Override
     public void buildStructure(StructureTag structure) {
-        StructureTable.instance().add(namespace, structure.getName());
+        StructureTable.instance().add(namespace, convert(namespace, structure.getName()));
+    }
+
+    private String convert(String namespace, String name) {
+        return AliasTable.instance().convert(new NamespaceType(namespace, name)).getName();
     }
 
     @Override
@@ -34,7 +38,7 @@ public class AliasBuilder implements BuilderInterface{
 
     @Override
     public void buildAlias(AliasTag alias) {
-        AliasTable.instance().add(namespace, alias.getName(), alias.getType());
+        AliasTable.instance().add(namespace, alias.getName(), alias.getTypeName());
     }
 
     @Override

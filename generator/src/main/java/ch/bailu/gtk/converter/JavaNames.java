@@ -68,4 +68,8 @@ public class JavaNames {
     public static String getGetterName(String name) {
         return toJavaMethodName("get_field_" + name);
     }
+
+    public static String toInterfaceName(String namespace) {
+        return toClassName(namespace) + "Constants";
+    }
 }

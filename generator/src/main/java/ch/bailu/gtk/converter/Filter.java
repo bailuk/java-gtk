@@ -4,8 +4,14 @@ import ch.bailu.gtk.model.ClassModel;
 import ch.bailu.gtk.model.MethodModel;
 
 public class Filter {
-    public static boolean flags(String name, String value) {
-        return !"2147483648".equals(value);
+    public static boolean values(String name, String value) {
+        return     !"2147483648".equals(value)
+                && !"9223372036854775807".equals(value)
+                && !"4294967295".equals(value)
+                && !"18446744073709551615".equals(value)
+                && !"-9223372036854775808".equals(value)
+                && !"86400000000".equals(value)
+                && !"3600000000".equals(value);
     }
 
     public static boolean method(ClassModel classModel, MethodModel methodModel) {
@@ -35,8 +41,12 @@ public class Filter {
         return true;
     }
 
+    /**
+     * List of records that support malloc constructor
+     */
     private static final String[] MALLOC = {
-            "RGBA"
+            "RGBA",
+            "Rectangle"
     };
 
 

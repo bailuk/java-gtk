@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import ch.bailu.gtk.model.ClassModel;
-import ch.bailu.gtk.model.NameSpaceModel;
+import ch.bailu.gtk.model.NamespaceModel;
 import ch.bailu.gtk.tag.AliasTag;
 import ch.bailu.gtk.tag.EnumerationTag;
 import ch.bailu.gtk.tag.NamespaceTag;
@@ -17,7 +17,7 @@ import ch.bailu.gtk.writer.JavaImpWriter;
 public class ModelBuilder implements BuilderInterface {
 
 
-    private NameSpaceModel namespace;
+    private NamespaceModel namespace;
 
     @Override
     public void buildStructure(StructureTag structure) throws IOException {
@@ -55,11 +55,12 @@ public class ModelBuilder implements BuilderInterface {
 
     @Override
     public void buildNamespaceStart(NamespaceTag namespace) {
-        this.namespace = new NameSpaceModel(namespace);
+        this.namespace = new NamespaceModel(namespace);
     }
 
     @Override
     public void buildNamespaceEnd(NamespaceTag namespace) throws IOException {
+        // functions
         ClassModel model = new ClassModel(namespace);
         writeJavaFile(model);
 
@@ -67,6 +68,12 @@ public class ModelBuilder implements BuilderInterface {
             writeCFile(model);
             writeJavaImpFile(model);
         }
+
+
+        // constants
+        model = new ClassModel(new NamespaceModel(namespace), namespace.getConstants());
+        writeJavaFile(model);
+
     }
 
 
@@ -76,7 +83,7 @@ public class ModelBuilder implements BuilderInterface {
 
     @Override
     public void buildEnumeration(EnumerationTag enumeration) throws IOException {
-        ClassModel model = new ClassModel(enumeration, namespace);
+        ClassModel model = new ClassModel(namespace, enumeration);
         writeJavaFile(model);
     }
 
@@ -85,6 +92,7 @@ public class ModelBuilder implements BuilderInterface {
         Writer out = null;
         try {
             out = IO.getJavaWriter(model.getApiName(), namespace);
+
             model.write(new JavaApiWriter(out));
         } finally {
             IO.close(out);

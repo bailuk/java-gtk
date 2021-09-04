@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.bailu.gtk.Configuration;
+import ch.bailu.gtk.converter.AliasTable;
 import ch.bailu.gtk.converter.Filter;
 import ch.bailu.gtk.converter.JavaNames;
 import ch.bailu.gtk.converter.NamespaceType;
+import ch.bailu.gtk.converter.RelativeNamespaceType;
 import ch.bailu.gtk.tag.EnumerationTag;
-import ch.bailu.gtk.tag.MemberTag;
 import ch.bailu.gtk.tag.MethodTag;
 import ch.bailu.gtk.tag.NamespaceTag;
 import ch.bailu.gtk.tag.ParameterTag;
@@ -19,8 +20,8 @@ import ch.bailu.gtk.writer.CodeWriter;
 public class ClassModel extends Model {
 
 
-    private String name;
-    private NameSpaceModel nameSpace;
+    private final String name;
+    private NamespaceModel nameSpace;
 
     private ClassModel parent;
 
@@ -39,12 +40,13 @@ public class ClassModel extends Model {
     private String structureType;  // record, enum, class, interface, bitfield
     private String cType;  // C type
 
-    public ClassModel(StructureTag structure, NameSpaceModel nameSpace) {
+    public ClassModel(StructureTag structure, NamespaceModel nameSpace) {
         cType = structure.getType();
         this.nameSpace = nameSpace;
         structureType = structure.getStructureType();
-        name = structure.getName();
+        name = convert(nameSpace.getNamespace(), structure.getName());
         parent = new ClassModel(nameSpace.getNamespace(), structure.getParentName(), structureType);
+
 
 
         for (MethodTag m: structure.getConstructors()) {
@@ -68,9 +70,21 @@ public class ClassModel extends Model {
         }
 
         for (ParameterTag field: structure.getFields()) {
-            addIfSupported(fields, new ParameterModel(nameSpace.getNamespace(), field));
+            addIfSupported(fields, new ParameterModel(nameSpace.getNamespace(), field, false));
 
         }
+    }
+
+    private String convert(String namespace, String name) {
+        NamespaceType from = new NamespaceType(namespace, name);
+        var result = AliasTable.instance().convert(from).getName();
+        return result;
+    }
+
+
+    private Model filter(MethodModel methodModel) {
+        methodModel.setSupported("Filter", Filter.method(this, methodModel));
+        return methodModel;
     }
 
     /**
@@ -79,7 +93,7 @@ public class ClassModel extends Model {
      * @param namespace
      */
     public ClassModel(NamespaceTag namespace) {
-        this.nameSpace = new NameSpaceModel(namespace);
+        this.nameSpace = new NamespaceModel(namespace);
         structureType = "package";
         name = JavaNames.toClassName(nameSpace.getNamespace());
         parent = new ClassModel(nameSpace.getNamespace(), null, structureType);
@@ -89,20 +103,42 @@ public class ClassModel extends Model {
         }
     }
 
-    private Model filter(MethodModel methodModel) {
-        methodModel.setSupported("Filter", Filter.method(this, methodModel));
-        return methodModel;
+    /**
+     * This gets called from builder when namespace ends
+     * Create interface with package scoped constants
+     * @param namespace
+     * @param members
+     */
+    public ClassModel(NamespaceModel namespace, List<ParameterTag> members) {
+        this(namespace, JavaNames.toInterfaceName(namespace.getNamespace()), members, false);
     }
 
-    public ClassModel(EnumerationTag enumeration, NameSpaceModel namespace) {
+    /**
+     * Gets called from ModelBuilder
+     * Create interface with constants
+     * @param namespace
+     * @param enumeration
+     */
+    public ClassModel(NamespaceModel namespace, EnumerationTag enumeration) {
+        this(namespace, enumeration.getName(), enumeration.getMembers(), true);
+    }
+
+
+    /**
+     * Create interface with constants
+     * @param namespace
+     * @param name
+     * @param members
+     */
+    private ClassModel(NamespaceModel namespace, String name, List<ParameterTag> members, boolean toUpper) {
         this.nameSpace = namespace;
         structureType = "enumeration";
-        name = enumeration.getName();
+        this.name = name;
 
-        for (MemberTag m : enumeration.getMembers()) {
-            addIfSupported(constants, new ParameterModel(m));
+        for (ParameterTag m : members) {
+
+            addIfSupported(constants, new ParameterModel(namespace.getNamespace(), m, toUpper));
         }
-
     }
 
     private void addIfSupported(List models, Model model) {
@@ -117,7 +153,7 @@ public class ClassModel extends Model {
     // parent initializer
     private ClassModel(String defaultNamespace, String className, String structType) {
 	    if (className == null) {
-            nameSpace = new NameSpaceModel();
+            nameSpace = new NamespaceModel();
 
             if ("record".equalsIgnoreCase(structType)) {
                 name = nameSpace.getFullNamespace() + ".Record";
@@ -128,8 +164,8 @@ public class ClassModel extends Model {
             }
 
         } else {
-            NamespaceType type = new NamespaceType(defaultNamespace, className);
-            nameSpace = new NameSpaceModel(type);
+            RelativeNamespaceType type = new RelativeNamespaceType(defaultNamespace, className);
+            nameSpace = new NamespaceModel(type);
 
             if (nameSpace.isSupported()) {
                 if (type.hasCurrentNamespace()) {
@@ -139,7 +175,7 @@ public class ClassModel extends Model {
                 }
 
             } else {
-                nameSpace = new NameSpaceModel();
+                nameSpace = new NamespaceModel();
                 name = nameSpace.getFullNamespace() + ".Outsider";
             }
         }
