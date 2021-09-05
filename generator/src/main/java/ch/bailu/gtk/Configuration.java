@@ -21,7 +21,7 @@ public class Configuration {
             "GLib-2.0.gir",
             "Atk-1.0.gir",
             "Pango-1.0.gir",
-            //"GdkPixbuf-2.0.gir",
+            "GdkPixbuf-2.0.gir",
 
 };
 

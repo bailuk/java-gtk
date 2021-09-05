@@ -2,7 +2,7 @@ plugins {
     `java-library`
     `maven-publish`
 }
-
+/*
 group = "ch.bailu.java-gtk"
 version = "0.1"
 
@@ -26,6 +26,18 @@ publishing {
             }
         }
 
+    }
+}*/
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "ch.bailu.java-gtk"
+            artifactId = "java-gtk"
+            version = "0.1"
+
+            from(components["java"])
+        }
     }
 }
 

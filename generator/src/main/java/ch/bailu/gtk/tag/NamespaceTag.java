@@ -66,6 +66,10 @@ public class NamespaceTag extends NamedTag {
             return f;
         }
 
+        if ("callback".equals(name)) {
+            return new CallbackTag(this);
+        }
+
         return ignore();
     }
 

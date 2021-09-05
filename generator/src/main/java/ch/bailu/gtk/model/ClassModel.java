@@ -10,6 +10,7 @@ import ch.bailu.gtk.converter.Filter;
 import ch.bailu.gtk.converter.JavaNames;
 import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.converter.RelativeNamespaceType;
+import ch.bailu.gtk.tag.CallbackTag;
 import ch.bailu.gtk.tag.EnumerationTag;
 import ch.bailu.gtk.tag.MethodTag;
 import ch.bailu.gtk.tag.NamespaceTag;
@@ -30,6 +31,9 @@ public class ClassModel extends Model {
     private List<MethodModel> constructors = new ArrayList();
     private List<MethodModel> methods = new ArrayList();
     private List<MethodModel> signals = new ArrayList();
+    private List<MethodModel> callbacks = new ArrayList();
+
+
     private List<MethodModel> functions = new ArrayList();
 
     private List<ParameterModel> fields = new ArrayList();
@@ -37,7 +41,7 @@ public class ClassModel extends Model {
 
     private List<ParameterModel> constants = new ArrayList();
 
-    private String structureType;  // record, enum, class, interface, bitfield
+    private String structureType;  // record, enum, class, interface, bitfield, callback
     private String cType;  // C type
 
     public ClassModel(StructureTag structure, NamespaceModel nameSpace) {
@@ -50,19 +54,19 @@ public class ClassModel extends Model {
 
 
         for (MethodTag m: structure.getConstructors()) {
-            addIfSupported(privateFactories, filter(new MethodModel(nameSpace.getNamespace(), m)));
+            addIfSupported(privateFactories, filterConstructor(new MethodModel(nameSpace.getNamespace(), m)));
         }
 
         for (MethodModel factory: privateFactories) {
             if (factory.isConstructorType()) {
-                constructors.add(new MethodModel(name, factory));
+                constructors.add(new MethodModel(factory));
             } else {
-                factories.add(new MethodModel(name, factory));
+                factories.add(new MethodModel(factory));
             }
         }
 
         for (MethodTag method: structure.getMethods()) {
-            addIfSupported(methods, filter(new MethodModel(nameSpace.getNamespace(), method)));
+            addIfSupportedWithCallbacks(methods, filter(new MethodModel(nameSpace.getNamespace(), method)));
         }
 
         for (MethodTag signal: structure.getSignals()) {
@@ -70,10 +74,28 @@ public class ClassModel extends Model {
         }
 
         for (ParameterTag field: structure.getFields()) {
-            addIfSupported(fields, new ParameterModel(nameSpace.getNamespace(), field, false));
+            var fieldModel = new ParameterModel(nameSpace.getNamespace(), field, false);
+            addIfSupported(fields, filterField(fieldModel));
 
         }
     }
+
+
+    /**
+     * Gets called from builder when callback ends
+     * Create callback interface for package scoped callbacks
+     * @param callbackTag
+     * @param namespace
+     */
+    public ClassModel(CallbackTag callbackTag, NamespaceModel namespace) {
+        this.nameSpace = namespace;
+        name = convert(nameSpace.getNamespace(), callbackTag.getName());
+        structureType = "callback";
+        parent = new ClassModel(nameSpace.getNamespace(), null, structureType);
+
+        addIfSupportedWithCallbacks(functions, filter(new MethodModel(nameSpace.getNamespace(), callbackTag)));
+    }
+
 
     private String convert(String namespace, String name) {
         NamespaceType from = new NamespaceType(namespace, name);
@@ -82,13 +104,23 @@ public class ClassModel extends Model {
     }
 
 
-    private Model filter(MethodModel methodModel) {
+    private Model filterField(ParameterModel parameterModel) {
+        parameterModel.setSupported("Callback", !parameterModel.isCallback());
+        parameterModel.setSupported("Filter", Filter.field(this, parameterModel));
+        return parameterModel;
+    }
+
+    private MethodModel filterConstructor(MethodModel methodModel) {
+        methodModel.setSupported("Callback", !methodModel.hasCallback());
+        return filter(methodModel);
+    }
+    private MethodModel filter(MethodModel methodModel) {
         methodModel.setSupported("Filter", Filter.method(this, methodModel));
         return methodModel;
     }
 
     /**
-     * Gets calleed from builder when namespace ends
+     * Gets called from builder when namespace ends
      * Create static class for package scoped functions
      * @param namespace
      */
@@ -99,7 +131,7 @@ public class ClassModel extends Model {
         parent = new ClassModel(nameSpace.getNamespace(), null, structureType);
 
         for (MethodTag m : namespace.getFunctions()) {
-            addIfSupported(functions, filter(new MethodModel(nameSpace.getNamespace(), m)));
+            addIfSupportedWithCallbacks(functions, filter(new MethodModel(nameSpace.getNamespace(), m)));
         }
     }
 
@@ -141,6 +173,17 @@ public class ClassModel extends Model {
         }
     }
 
+
+    private void addIfSupportedWithCallbacks(List models, MethodModel model) {
+        addIfSupported(models, model);
+        if (model.isSupported()) {
+            for (MethodModel cb : model.getCallbackModel()) {
+                if (!callbacks.contains(cb))
+                    callbacks.add(cb);
+            }
+        }
+    }
+
     private void addIfSupported(List models, Model model) {
         if (model.isSupported()) {
             models.add(model);
@@ -159,6 +202,8 @@ public class ClassModel extends Model {
                 name = nameSpace.getFullNamespace() + ".Record";
             } else if ("package".equalsIgnoreCase(structType)) {
                 name = nameSpace.getFullNamespace() + ".Package";
+            } else if ("callback".equalsIgnoreCase(structType)) {
+                name = nameSpace.getFullNamespace() + ".Callback";
             } else {
                 name = nameSpace.getFullNamespace() + ".Pointer";
             }
@@ -213,6 +258,11 @@ public class ClassModel extends Model {
             writer.writeClass(this);
 
             writer.next();
+            for (MethodModel cb :callbacks) {
+                writer.writeCallback(this, cb);
+            }
+
+            writer.next();
             for (MethodModel m : privateFactories) {
                 writer.writePrivateFactory(this, m);
             }
@@ -249,6 +299,7 @@ public class ClassModel extends Model {
                 writer.writeSignal(this, s);
             }
 
+
             writer.next();
             for(MethodModel m : functions) {
                 writer.writeFunction(this, m);
@@ -256,10 +307,26 @@ public class ClassModel extends Model {
 
         } else if (isPackage()) {
             writer.writeClass(this);
+
             writer.next();
-            for(MethodModel m : functions) {
+            for (MethodModel cb :callbacks) {
+                writer.writeCallback(this, cb);
+            }
+
+            writer.next();
+            for (MethodModel m : functions) {
                 writer.writeFunction(this, m);
             }
+
+
+        } else if (isCallback()) {
+            writer.writeInterface(this);
+            writer.next();
+
+            for (MethodModel m : functions) {
+                writer.writeInterfaceMethod(this, m);
+            }
+
         } else {
             writer.writeInterface(this);
 
@@ -275,6 +342,10 @@ public class ClassModel extends Model {
         }
 
         writer.writeEnd();
+    }
+
+    private boolean isCallback() {
+        return "callback".equals(structureType);
     }
 
     private boolean isPackage() {

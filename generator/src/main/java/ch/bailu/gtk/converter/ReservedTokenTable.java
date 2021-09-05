@@ -22,6 +22,7 @@ public class ReservedTokenTable {
             {"2BIG", "_2_BIG"},
         {"false", "FALSE"},
         {"true", "TRUE"},
+        {"ch",   "CH"},
 
     };
 

@@ -1,15 +1,20 @@
 package ch.bailu.gtk;
 
 
+import ch.bailu.gtk.exception.AllocationError;
+
 public class Pointer {
 
     private final long pointer;
 
     public Pointer(long pointer) {
+        if (pointer == 0) {
+            System.out.println("WARN: Pointer is 0");
+        }
         this.pointer = pointer;
     }
 
-    public static Pointer[] toPointerArray(long[] in) {
+    public static Pointer[] toPointerArray(long[] in) throws AllocationError {
         Pointer[] result = new Pointer[in.length];
         for (int i =0; i < in.length; i++) {
             result[i] = new Pointer(in[i]);

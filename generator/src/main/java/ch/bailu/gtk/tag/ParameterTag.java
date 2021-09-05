@@ -63,6 +63,7 @@ public class ParameterTag extends NamedTag {
     }
     private final TypeTag type = new TypeTag(this);
     private boolean isArray = false;
+    private boolean isVarargs = false;
 
     private boolean isWriteable = false;
     private boolean isPrivate = false;
@@ -82,6 +83,11 @@ public class ParameterTag extends NamedTag {
         if ("array".equals(name)) {
             isArray = true;
             return type;
+        }
+        if ("varargs".equals(name)) {
+            isVarargs = true;
+            return ignore();
+
         }
         return ignore();
     }
@@ -122,5 +128,9 @@ public class ParameterTag extends NamedTag {
 
     public boolean isPrivate() {
         return isPrivate;
+    }
+
+    public boolean isVarargs() {
+        return isVarargs;
     }
 }

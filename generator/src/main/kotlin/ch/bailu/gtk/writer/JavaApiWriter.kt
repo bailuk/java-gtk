@@ -30,52 +30,79 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
         a ("    /* Unsupported:${m.toString()} */\n")
     }
 
-    override fun writeNativeMethod(classModel : ClassModel, m : MethodModel) {
+    override fun writeNativeMethod(classModel : ClassModel, methodModel : MethodModel) {
+        val impCall = "${classModel.getImpName()}.${methodModel.getApiName()}(${getSelfCallSignature(methodModel.parameters)})"
+
         start(1);
-        a("    public ${m.getReturnType().getApiType()} ${m.getApiName()}")
-        writeSignature(m)
+        a("""
+    public ${methodModel.getReturnType().getApiType()} ${methodModel.getApiName()}(${getSignature(methodModel.parameters)}) ${getThrowsExtension(methodModel)} {             
+""")
 
-        a(" {\n        ");
+        writeCallbackConnections(methodModel)
 
+        if (methodModel.getReturnType().isVoid()) {
+            a("        ${impCall};\n")
 
-        if (m.getReturnType().isVoid()) {
-                a(classModel.getImpName()).
-                    a(".").
-                    a(m.getApiName());
-            writeSelfCallSignature(m);
-
-        } else if (m.getReturnType().isJavaNative()) {
-            a("return ").
-                    a(classModel.getImpName()).
-                    a(".").
-                    a(m.getApiName());
-            writeSelfCallSignature(m);
+        } else if (methodModel.getReturnType().isJavaNative()) {
+            a("        return ${impCall};\n")
 
         } else {
-                a("return new ").
-                    a(m.getReturnType().getApiType()).
-                    a("(").
-                    a(classModel.getImpName()).
-                    a(".").
-                    a(m.getApiName());
-            writeSelfCallSignature(m);
-            a(")");
+            a("""
+        long pointerToObject = ${impCall};
+        
+        if (pointerToObject == 0) {
+            ${getThrowsOnNullSatement(classModel, methodModel)};
+        }
+        
+        return new ${methodModel.getReturnType().getApiType()}(pointerToObject);
+""")
         }
 
-        a(";\n    }\n");
+
+
+        a("    }\n\n")
     }
 
 
+    private fun writeCallbackConnections (methodModel: MethodModel) {
+        if (methodModel.hasCallback()) {
 
-
-    override fun writeInternalConstructor(c : ClassModel) {
-        start(1)
-        a("""
-            public ${c.getApiName()}(long pointer) {
-                super(pointer);
+            for (p in methodModel.parameters) {
+                if (p.isCallback) {
+                    a("        ch.bailu.gtk.Signal.put(0, \"${p.callbackModel.apiName}\", ${p.name});\n")
+                }
             }
-            
-            """) //.stripIndent(8))
+        }
+    }
+
+
+    private fun getThrowsExtension(methodModel : MethodModel) : String {
+        if (methodModel.throwsError()) {
+            return "throws ch.bailu.gtk.exception.AllocationError"
+        }
+        return ""
+    }
+
+
+    private fun getThrowsOnNullSatement(classModel: ClassModel, methodModel : MethodModel) : String {
+        val msg = "${classModel.apiName}:${methodModel.apiName}"
+
+        if (methodModel.throwsError()) {
+            return "throw new ch.bailu.gtk.exception.AllocationError(\"${msg}\")"
+        }
+        return "throw new NullPointerException(\"${msg}\")"
+    }
+
+
+    override fun writeInternalConstructor(classModel : ClassModel) {
+        start(1)
+
+        a("""
+    public ${classModel.getApiName()}(long pointer) {
+        super(pointer);
+    }
+        """)
+
     }
 
 
@@ -83,37 +110,50 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
     fun writeMallocConstructor(classModel : ClassModel) {
         if (classModel.hasDefaultConstructor() == false) {
             start(1)
+
             a ("""
-            public ${classModel.getApiName()}() {
-                super(${classModel.getImpName()}.newFromMalloc());
-            }
-            """) //.stripIndent(8)
+    public ${classModel.getApiName()}() {
+        super(${classModel.getImpName()}.newFromMalloc());
+    }
+        """)
+
         }
     }
+
+    override fun writeInterfaceMethod(classModel: ClassModel, m: MethodModel) {
+        start(1)
+        a("        public ${m.returnType.apiType} ${m.apiName}(${getSignature(m.parameters)});\n")
+    }
+
 
 
     override fun writeConstructor(classModel : ClassModel, methodModel : MethodModel) {
         start(1);
-        a("    public " + classModel.getApiName());
-        writeSignature(methodModel);
-        a(" {\n");
-
-        var m = methodModel.getCall();
-        a("        super(").a(classModel.getImpName()).a(".").a(m.getApiName());
-        writeFactoryCallSignature(m);
-        a(");\n    }\n");
+        a("""
+    public ${classModel.getApiName()}(${getSignature(methodModel.parameters)}) {
+        super(${classModel.impName}.${methodModel.apiName}(${getFactoryCallSignature(methodModel.parameters)}));
+    }
+            
+""")
     }
 
-    override fun writeFactory(classModel : ClassModel, m : MethodModel) {
+    override fun writeFactory(classModel : ClassModel, methodModel : MethodModel) {
         start(1);
-        a("    public static ").a(classModel.getApiName()).a(" ").a(m.getCall().getApiName() + classModel.getApiName());
-        writeSignature(m);
-        a(" {\n");
 
-        var m = m.getCall();
-        a("        return new ").a(classModel.getApiName()).a("(").a(classModel.getImpName()).a(".").a(m.getApiName());
-        writeFactoryCallSignature(m);
-        a(");\n    }\n");
+        a("""
+    public static ${classModel.apiName} ${methodModel.call.apiName}${classModel.apiName}(${getSignature(methodModel.parameters)}) ${getThrowsExtension(methodModel)} {
+        long pointerToObject = ${classModel.impName}.${methodModel.apiName}(${getFactoryCallSignature(methodModel.parameters)});
+               
+        if (pointerToObject == 0) {
+            ${getThrowsOnNullSatement(classModel, methodModel)};
+        }
+        
+        return new ${classModel.apiName}(pointerToObject);
+         
+    }        
+
+""")
+
     }
 
     override
@@ -157,6 +197,20 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
         a("    public interface ").a(m.getSignalInterfaceName()).a(" {\n");
         a("        ").a(m.getReturnType().getApiType()).a(" ").a(m.getSignalMethodName()); writeSignature(m); a(";\n");
         a("    }\n");
+    }
+
+
+    override fun writeCallback(classModel: ClassModel, methodModel: MethodModel) {
+        start(1)
+
+        a("""
+   public interface ${methodModel.signalInterfaceName} {
+      ${methodModel.returnType.apiType} ${methodModel.signalMethodName}(${getSignature(methodModel.parameters)});
+   }
+
+""")
+
+
     }
 
     override fun writeField(classModel : ClassModel, parameterModel : ParameterModel) {
@@ -245,11 +299,6 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
     }
 
 
-    private fun writeSelfCallSignature(m : MethodModel) {
-        a("(${getSelfCallSignature(m.getParameters())})")
-    }
-
-
     private fun getSelfCallSignature(parameters : List<ParameterModel>) : String {
         return "toLong()${getCallSignature(parameters, ", ")}"
     }
@@ -259,32 +308,34 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
         var del = del
 
         for (p in parameters) {
-            if (p.isJavaNative()) {
+            if (p.isJavaNative) {
                 result.append("${del}${p.getName()}")
-            } else {
+                del = ", "
+
+            } else if (!p.isCallback) {
                 result.append("${del}${p.getName()}.toLong()")
+                del = ", "
             }
-            del = ", "
+
         }
         return result.toString()
     }
 
 
-    private fun writeFactoryCallSignature(m : MethodModel) {
-        a("(");
-
+    private fun getFactoryCallSignature(parameters : List<ParameterModel>) : String {
+        val result = StringBuilder()
         var del = " ";
 
-        for (p in m.getParameters()) {
-            a(del);
+        for (p in parameters) {
+            result.append(del)
 
             if (p.isJavaNative()) {
-                a(p.getName());
+                result.append(p.getName())
             } else {
-                a(p.getName()).a(".toLong()");
+                result.append("${p.getName()}.toLong()")
             }
             del = ", ";
         }
-        a(")");
+        return result.toString()
     }
 }

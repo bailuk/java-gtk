@@ -57,6 +57,8 @@ abstract class CodeWriter(writer : Writer) : Append {
     }
 
     abstract fun writeMallocConstructor(classModel : ClassModel)
+    abstract fun writeInterfaceMethod(classModel: ClassModel, m: MethodModel)
+    abstract fun writeCallback(classModel: ClassModel, methodModel: MethodModel)
 }
 
 

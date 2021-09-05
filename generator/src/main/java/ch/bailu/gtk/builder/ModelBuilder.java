@@ -6,11 +6,12 @@ import java.io.Writer;
 import ch.bailu.gtk.model.ClassModel;
 import ch.bailu.gtk.model.NamespaceModel;
 import ch.bailu.gtk.tag.AliasTag;
+import ch.bailu.gtk.tag.CallbackTag;
 import ch.bailu.gtk.tag.EnumerationTag;
 import ch.bailu.gtk.tag.NamespaceTag;
 import ch.bailu.gtk.tag.StructureTag;
-import ch.bailu.gtk.writer.IO;
 import ch.bailu.gtk.writer.CWriter;
+import ch.bailu.gtk.writer.IO;
 import ch.bailu.gtk.writer.JavaApiWriter;
 import ch.bailu.gtk.writer.JavaImpWriter;
 
@@ -87,6 +88,8 @@ public class ModelBuilder implements BuilderInterface {
         writeJavaFile(model);
     }
 
+    @Override
+    public void buildCallback(CallbackTag callbackTag) {}
 
     private void writeJavaFile(ClassModel model) throws IOException {
         Writer out = null;

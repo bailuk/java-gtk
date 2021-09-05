@@ -13,6 +13,7 @@ public class HelloWorld {
         // new ButtonBoxes(argv);
         // new Spinner(argv);
         // new LinksSample(argv);
-        new CairoDrawingArea(argv);
+        //new CairoDrawingArea(argv);
+        new Pixbufs(argv);
     }
 }

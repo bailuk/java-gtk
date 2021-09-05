@@ -2,6 +2,7 @@ package ch.bailu.gtk.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import ch.bailu.gtk.converter.JavaNames;
 import ch.bailu.gtk.tag.MethodTag;
@@ -16,9 +17,9 @@ public class MethodModel extends Model {
 
     private MethodModel call;
 
-    private boolean constructorType;
-    private boolean throwsError = false;
-
+    private final boolean constructorType;
+    private final boolean throwsError;
+    private final List<MethodModel> callbackModel = new ArrayList<>();
 
     // simple method with return type and parameters can be a factory
     public MethodModel(String namespace, MethodTag method) {
@@ -32,18 +33,33 @@ public class MethodModel extends Model {
 
         returnType = new ParameterModel(namespace, method.getReturnValue(), false);
         setSupported("Return value", returnType.isSupported());
+        setSupported("Return cb", !returnType.isCallback());
 
         for (ParameterTag t : method.getParameters()) {
-            var parameterModel = new ParameterModel(namespace, t, false);
-            parameters.add(parameterModel);
-            setSupported(parameterModel.getSupportedState(), parameterModel.isSupported());
+            if (!t.isVarargs()) {
+                var parameterModel = new ParameterModel(namespace, t, false);
+                parameters.add(parameterModel);
+                setSupported(parameterModel.getSupportedState(), parameterModel.isSupported());
+
+                if (parameterModel.isCallback()) {
+                    callbackModel.add(parameterModel.getCallbackModel());
+                }
+            }
         }
 
         constructorType = "new".equals(method.getName());
     }
 
+    public boolean hasCallback() {
+        return !callbackModel.isEmpty();
+    }
+
+    public List<MethodModel> getCallbackModel() {
+        return callbackModel;
+    }
+
     // constructor with caller
-    public MethodModel(String name, MethodModel methodModel) {
+    public MethodModel(MethodModel methodModel) {
         throwsError = methodModel.throwsError();
         gtkName = methodModel.getGtkName();
         call = methodModel;
@@ -108,5 +124,22 @@ public class MethodModel extends Model {
 
     public String getSignalCallbackName() {
         return JavaNames.toJavaSignalName("callbackOn", name);
+    }
+
+
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MethodModel that = (MethodModel) o;
+        return Objects.equals(name, that.name) &&
+                Objects.equals(gtkName, that.gtkName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, gtkName);
     }
 }

@@ -2,6 +2,7 @@ package ch.bailu.gtk.converter;
 
 import ch.bailu.gtk.model.ClassModel;
 import ch.bailu.gtk.model.MethodModel;
+import ch.bailu.gtk.model.ParameterModel;
 
 public class Filter {
     public static boolean values(String name, String value) {
@@ -36,7 +37,27 @@ public class Filter {
             return false;
         }
 
+        if ("PrintSettings".equals(classModel.getApiName()) && "get".equals(methodModel.getApiName())) {
+            return false;
+        }
 
+
+        return true;
+    }
+
+
+    public static boolean field(ClassModel classModel, ParameterModel parameterModel) {
+        if ("PixbufFormat".equals(classModel.getApiName())) {
+            return false;
+        }
+
+        if ("PixbufModule".equals(classModel.getApiName())) {
+            return false;
+        }
+
+        if ("PixbufModulePattern".equals(classModel.getApiName())) {
+            return false;
+        }
 
         return true;
     }
@@ -59,4 +80,5 @@ public class Filter {
 
         return false;
     }
+
 }

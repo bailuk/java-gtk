@@ -37,6 +37,7 @@ public class PrimitivesTable {
         {"const gchar*",  "String"},
         {"void",          "void"},
         {"int",           "int"},
+        {"double",        "double"},
         {"char**",        "String[]"},
     };
 

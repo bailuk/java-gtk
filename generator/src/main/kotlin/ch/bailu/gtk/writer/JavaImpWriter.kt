@@ -28,9 +28,9 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
         end(1)
     }
 
-    override fun writeNativeMethod(classModel : ClassModel, m : MethodModel) {
+    override fun writeNativeMethod(classModel : ClassModel, methodModel : MethodModel) {
         start();
-        a("    static native ${m.returnType.impType} ${m.apiName}(${getSelfSignature(m.parameters)});\n")
+        a("    static native ${methodModel.returnType.impType} ${methodModel.apiName}(${getSelfSignature(methodModel.parameters)});\n")
         end(1);
     }
 
@@ -40,6 +40,8 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
         a("    static native long newFromMalloc();\n")
         end(1)
     }
+
+    override fun writeInterfaceMethod(classModel: ClassModel, m: MethodModel) {}
 
     override fun writeConstructor(c : ClassModel, m : MethodModel) {}
 
@@ -54,7 +56,7 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
         end(1);
     }
 
-    override fun writeConstant(p : ParameterModel) {}
+    override fun writeConstant(parameterModel : ParameterModel) {}
 
 
     override fun writeEnd() {
@@ -62,20 +64,35 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
     }
 
 
-    override fun writeSignal(c : ClassModel, m : MethodModel) {
+    override fun writeSignal(classModel : ClassModel, methodModel : MethodModel) {
 
         a("""
             
-    static native void ${m.signalMethodName}(long _self);
-    static ${m.getReturnType().getImpType()} ${m.signalCallbackName}(${getSelfSignature(m.parameters)}) {
-        String signal = "${m.apiName}";
+    static native void ${methodModel.signalMethodName}(long _self);
+    static ${methodModel.getReturnType().getImpType()} ${methodModel.signalCallbackName}(${getSelfSignature(methodModel.parameters)}) {
+        String signal = "${methodModel.apiName}";
         for (java.lang.Object observer : ch.bailu.gtk.Signal.get(_self, signal)) {
-            ${getSignalInterfaceCall(c, m)};
+            ${getSignalInterfaceCall(classModel, methodModel)};
         }
-        ${getDefaultReturn(m)}
+        ${getDefaultReturn(methodModel)}
     }
     
         """.trimMargin())
+    }
+
+    override fun writeCallback(classModel: ClassModel, methodModel: MethodModel) {
+        a("""
+            
+    static ${methodModel.getReturnType().getImpType()} ${methodModel.signalCallbackName}(${getSignature(methodModel.parameters, "")}) {
+        String signal = "${methodModel.apiName}";
+        for (java.lang.Object observer : ch.bailu.gtk.Signal.get(0, signal)) {
+            ${getSignalInterfaceCall(classModel, methodModel)};
+        }
+        ${getDefaultReturn(methodModel)}
+    }
+    
+        """.trimMargin())
+
     }
 
     private fun getDefaultReturn(m : MethodModel) : String {
@@ -159,8 +176,10 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
         var del = del
 
         for (p in parameters) {
-            result.append("${del}${p.impType} ${p.name}")
-            del = ", "
+            if (!p.isCallback) {
+                result.append("${del}${p.impType} ${p.name}")
+                del = ", "
+            }
         }
         return result.toString()
     }

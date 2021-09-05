@@ -3,6 +3,7 @@ package ch.bailu.gtk.model;
 import ch.bailu.gtk.converter.Filter;
 import ch.bailu.gtk.converter.JavaNames;
 import ch.bailu.gtk.converter.JniTypeConverter;
+import ch.bailu.gtk.tag.MethodTag;
 import ch.bailu.gtk.tag.ParameterTag;
 
 public class ParameterModel extends Model {
@@ -16,9 +17,9 @@ public class ParameterModel extends Model {
 
     private JniTypeConverter jniConverter;
 
-
     final private boolean isWriteable;
 
+    private MethodModel callbackModel = null;
 
     public ParameterModel(String namespace, ParameterTag parameter, boolean toUpper) {
 
@@ -39,15 +40,28 @@ public class ParameterModel extends Model {
             jType = new JavaType(namespace, parameter);
         }
 
+        if (classType.isCallback()) {
+            callbackModel = new MethodModel(namespace, classType.getCallbackTag());
+        }
+
+
         jniConverter = JniTypeConverter.factory(this);
 
         //setSupported("private", parameter.isPrivate());
         setSupported("value", Filter.values(name, value));
         setSupported("jType", jType.isValid());
+        setSupported("callback", isCallbackSupported());
 
         this.isWriteable = parameter.isWriteable();
     }
 
+
+    private boolean isCallbackSupported() {
+        if (isCallback()) {
+            return callbackModel.isSupported() && !callbackModel.hasCallback();
+        }
+        return true;
+    }
 
     public String getValue() {
         return saveString(value);
@@ -57,9 +71,14 @@ public class ParameterModel extends Model {
     }
 
     public String getApiType() {
+        if (isCallback()) {
+            return callbackModel.getSignalInterfaceName();
+        }
+
         if (classType.isValid()) {
             return classType.getFullName();
         }
+
         return jType.getName();
     }
 
@@ -125,8 +144,15 @@ public class ParameterModel extends Model {
         return jniConverter.getJniCallbackMethodName();
     }
 
-
     public boolean isWriteable() {
         return isWriteable;
+    }
+
+    public boolean isCallback() {
+        return classType.isCallback();
+    }
+
+    public MethodModel getCallbackModel() {
+        return callbackModel;
     }
 }

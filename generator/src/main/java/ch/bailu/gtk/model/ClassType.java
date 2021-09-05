@@ -2,9 +2,11 @@ package ch.bailu.gtk.model;
 
 import ch.bailu.gtk.Configuration;
 import ch.bailu.gtk.converter.AliasTable;
+import ch.bailu.gtk.converter.CallbackTable;
 import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.converter.RelativeNamespaceType;
 import ch.bailu.gtk.converter.StructureTable;
+import ch.bailu.gtk.tag.CallbackTag;
 import ch.bailu.gtk.tag.ParameterTag;
 
 
@@ -12,13 +14,13 @@ public class ClassType implements ClassTypeInterface {
 
     private final RelativeNamespaceType type;
 
-    private boolean valid = true;
+
+    private boolean valid = false;
+    private CallbackTag callbackTag = null;
 
 
     public ClassType() {
         type = new RelativeNamespaceType("", "");
-        valid = false;
-
     }
 
     
@@ -32,7 +34,8 @@ public class ClassType implements ClassTypeInterface {
     
     public ClassType(String namespace, String typeName, CType ctype) {
         type = convert(namespace, typeName);
-        setValid(type.isValid() && isInTable(type) && ctype.isSinglePointer());
+        callbackTag = getCallbackTagFromTable(type);
+        valid = (callbackTag != null) || (isInStructureTable(type) && ctype.isSinglePointer());
     }
 
     private RelativeNamespaceType convert(String namespace, String typeName) {
@@ -40,23 +43,28 @@ public class ClassType implements ClassTypeInterface {
         return new RelativeNamespaceType(namespace, converted);
     }
 
+    public CallbackTag getCallbackTag() {
+        return callbackTag;
+    }
 
-    private boolean isInTable(RelativeNamespaceType n) {
+    private CallbackTag getCallbackTagFromTable(RelativeNamespaceType n) {
+        return CallbackTable.instance().get(n.getNamespace(), n.getName());
+    }
+
+    private boolean isInStructureTable(RelativeNamespaceType n) {
         return StructureTable.instance().contains(n.getNamespace(), n.getName());
     }
 
-    private boolean isInTable(NamespaceType n) {
-        return StructureTable.instance().contains(n.getNamespace(), n.getName());
-    }
 
-
-    private void setValid(boolean v) {
-        valid = v && valid;
-    }
 
     public boolean isValid() {
         return valid;
     }
+
+    public boolean isCallback() {
+        return callbackTag != null;
+    }
+
 
     public String getFullName() {
         if (isValid() && !type.hasCurrentNamespace()) {
@@ -79,4 +87,6 @@ public class ClassType implements ClassTypeInterface {
     public String getName() {
         return type.getName();
     }
+
+
 }
