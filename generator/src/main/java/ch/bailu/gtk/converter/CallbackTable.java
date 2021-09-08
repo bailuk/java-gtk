@@ -25,7 +25,7 @@ public class CallbackTable {
         Map<String, CallbackTag> result = table.get(namespace);
 
         if (result == null) {
-            result = new HashMap();
+            result = new HashMap<>();
             table.put(namespace, result);
         }
         return result;

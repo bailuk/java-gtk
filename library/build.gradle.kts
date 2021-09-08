@@ -70,18 +70,23 @@ sourceSets {
         }
 
         resources {
+            compiledBy(":glue:linkRelease")
             val res = File(project(":glue").buildDir, "lib/main/release")
             srcDir(res)
         }
     }
 }
 
-tasks.named("jar") {
+tasks.named("processResources") {
     dependsOn(":glue:linkRelease")
 }
 
 
-tasks.named("compileJava") {
+tasks.compileJava {
+    if (this is JavaCompile) {
+        options.compilerArgs.add("-Xlint:deprecation")
+        options.compilerArgs.add("-Xlint:unchecked")
+    }
     dependsOn(":generator:generate")
 }
 

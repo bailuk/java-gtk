@@ -34,13 +34,11 @@ public class AliasBuilder implements BuilderInterface{
     }
 
     @Override
-    public void buildNamespaceEnd(NamespaceTag namespace) {
-
-    }
+    public void buildNamespaceEnd(NamespaceTag namespace) {}
 
     @Override
-    public void buildAlias(AliasTag alias) {
-        AliasTable.instance().add(namespace, alias.getName(), alias.getTypeName());
+    public void buildAlias(AliasTag aliasTag) {
+        AliasTable.instance().add(namespace, aliasTag.getName(), aliasTag.getTypeName());
     }
 
     @Override
@@ -52,6 +50,5 @@ public class AliasBuilder implements BuilderInterface{
     @Override
     public void buildCallback(CallbackTag callbackTag) {
         CallbackTable.instance().add(namespace, callbackTag);
-
     }
 }

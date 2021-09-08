@@ -18,11 +18,9 @@ import ch.bailu.gtk.model.NamespaceModel;
 
 public class IO {
 
-
     public static Writer getJavaWriter(String className, NamespaceModel nameSpaceModel) throws IOException {
         return new BufferedWriter(new FileWriter(getJavaFile(className, nameSpaceModel)));
     }
-
 
     private static File getJavaFile(String className, NamespaceModel nameSpaceModel) throws IOException {
         return new File(createDirectory(nameSpaceModel.getJavaSourceDirectory()), className + ".java");
@@ -52,7 +50,6 @@ public class IO {
     private static File getCFile(String name, NamespaceModel namespace) throws IOException {
         StringBuilder fn = new StringBuilder();
         fn.append(Configuration.HEADER_FILE_BASE).append(namespace.getNamespace()).append("_").append(name).append(".c");
-
 
         return new File(createDirectory(namespace.getCSourceDirectory()), fn.toString());
     }

@@ -21,6 +21,12 @@ dependencies {
 
 }
 
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions { jvmTarget = "11" }
+}
+
+
 tasks.test {
     useJUnitPlatform()
 }
@@ -38,3 +44,7 @@ tasks.register("generate", JavaExec::class) {
             "-c", "${project.getRootDir()}/glue/build/generated/src/main/c/"))
 }
 
+tasks.compileJava {
+    options.compilerArgs.add("-Xlint:deprecation")
+    options.compilerArgs.add("-Xlint:unchecked")
+}

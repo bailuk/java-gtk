@@ -6,7 +6,7 @@ import java.util.List;
 
 public class EnumerationTag extends TypeTag {
 
-    private final List<ParameterTag> members = new ArrayList<>(5);
+    private final List<ParameterTag> members = new ArrayList<>();
 
     public EnumerationTag(Tag parent) {
         super(parent);

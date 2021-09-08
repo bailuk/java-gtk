@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MMap <K1, K2, V> {
-    private Map <K1, Map<K2, V>> map = new HashMap();
+    private Map <K1, Map<K2, V>> map = new HashMap<>();
 
     public void put(K1 k1, K2 k2, V v) {
         if (!containsKey(k1)) {

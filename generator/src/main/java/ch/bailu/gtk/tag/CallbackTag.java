@@ -11,5 +11,4 @@ public class CallbackTag extends MethodTag {
     public void end() throws IOException {
         getBuilder().buildCallback(this);
     }
-
 }

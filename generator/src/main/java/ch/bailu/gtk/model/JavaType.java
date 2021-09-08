@@ -19,14 +19,6 @@ public class JavaType {
     }
     
     public JavaType(String namespace, String typeName, String type) {
-/*
-        if (typeName == null) typeName = "";
-        if (type == null) type = "";
-        if (typeName.contains("IconSize") || type.contains(("IconSize"))) {
-            System.out.println(typeName);
-            System.out.println(type);
-        }
-*/
         if (isEnum(namespace, typeName) || isEnum(namespace, type)) {
             this.type = setType("int");
         } else {

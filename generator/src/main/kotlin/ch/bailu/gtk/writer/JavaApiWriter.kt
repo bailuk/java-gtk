@@ -7,10 +7,10 @@ import java.io.Writer
 
 class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
-    override fun writeStart(classModel : ClassModel, namespace : NamespaceModel) {
-        super.writeStart(classModel, namespace)
+    override fun writeStart(classModel : ClassModel, namespaceModel : NamespaceModel) {
+        super.writeStart(classModel, namespaceModel)
         start(3)
-        a("package ${namespace.getFullNamespace()};")
+        a("package ${namespaceModel.getFullNamespace()};")
         end(3)
     }
 
@@ -25,9 +25,9 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
         a("public interface ${classModel.getApiName()} {\n")
     }
 
-    override fun writeUnsupported(m: Model) {
+    override fun writeUnsupported(model: Model) {
         start (1)
-        a ("    /* Unsupported:${m.toString()} */\n")
+        a ("    /* Unsupported:${model.toString()} */\n")
     }
 
     override fun writeNativeMethod(classModel : ClassModel, methodModel : MethodModel) {
@@ -157,7 +157,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
     }
 
     override
-    fun writePrivateFactory(c : ClassModel, m : MethodModel) {}
+    fun writePrivateFactory(classModel : ClassModel, methodModel : MethodModel) {}
 
 
     override fun writeConstant(parameterModel : ParameterModel) {
@@ -188,14 +188,14 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
 
     override
-    fun writeSignal(c : ClassModel, m : MethodModel) {
+    fun writeSignal(classModel : ClassModel, methodModel : MethodModel) {
         start(1);
-        a("    public void ").a(m.getSignalMethodName()).a("(").a(m.getSignalInterfaceName()).a(" observer) {\n");
-        a("        ch.bailu.gtk.Signal.put(toLong(), \"").a(m.getApiName()).a("\", observer);\n");
-        a("        ").a(c.getImpName()).a(".").a(m.getSignalMethodName()).a("(toLong());\n");
+        a("    public void ").a(methodModel.getSignalMethodName()).a("(").a(methodModel.getSignalInterfaceName()).a(" observer) {\n");
+        a("        ch.bailu.gtk.Signal.put(toLong(), \"").a(methodModel.getApiName()).a("\", observer);\n");
+        a("        ").a(classModel.getImpName()).a(".").a(methodModel.getSignalMethodName()).a("(toLong());\n");
         a("    }\n");
-        a("    public interface ").a(m.getSignalInterfaceName()).a(" {\n");
-        a("        ").a(m.getReturnType().getApiType()).a(" ").a(m.getSignalMethodName()); writeSignature(m); a(";\n");
+        a("    public interface ").a(methodModel.getSignalInterfaceName()).a(" {\n");
+        a("        ").a(methodModel.getReturnType().getApiType()).a(" ").a(methodModel.getSignalMethodName()); writeSignature(methodModel); a(";\n");
         a("    }\n");
     }
 
@@ -254,12 +254,12 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
     }
 
     override
-    fun writeFunction(c : ClassModel, m : MethodModel) {
+    fun writeFunction(classModel : ClassModel, methodModel : MethodModel) {
         start(1);
         a("""
     
-    public static ${m.getReturnType().getApiType()} ${m.getApiName()}(${getSignature(m.getParameters())}) {
-        ${getFunctionCall(c, m)};
+    public static ${methodModel.getReturnType().getApiType()} ${methodModel.getApiName()}(${getSignature(methodModel.getParameters())}) {
+        ${getFunctionCall(classModel, methodModel)};
     }
         """)
 
@@ -303,9 +303,9 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
         return "toLong()${getCallSignature(parameters, ", ")}"
     }
 
-    private fun getCallSignature(parameters : List<ParameterModel>, del : String) : String{
+    private fun getCallSignature(parameters : List<ParameterModel>, firstDel : String) : String{
         val result = StringBuilder()
-        var del = del
+        var del = firstDel
 
         for (p in parameters) {
             if (p.isJavaNative) {

@@ -23,15 +23,14 @@ public class MethodModel extends Model {
 
     // simple method with return type and parameters can be a factory
     public MethodModel(String namespace, MethodTag method) {
-        setSupported("Deprecated", !method.isDeprecated());
-
         throwsError = method.throwsError();
-
         gtkName = method.getIdentifier();
         name = method.getName();
 
 
         returnType = new ParameterModel(namespace, method.getReturnValue(), false);
+
+        setSupported("Deprecated", !method.isDeprecated());
         setSupported("Return value", returnType.isSupported());
         setSupported("Return cb", !returnType.isCallback());
 
@@ -113,7 +112,6 @@ public class MethodModel extends Model {
         return throwsError;
     }
 
-
     public String getSignalMethodName() {
         return JavaNames.toJavaSignalName("on", name);
     }
@@ -125,8 +123,6 @@ public class MethodModel extends Model {
     public String getSignalCallbackName() {
         return JavaNames.toJavaSignalName("callbackOn", name);
     }
-
-
 
 
     @Override

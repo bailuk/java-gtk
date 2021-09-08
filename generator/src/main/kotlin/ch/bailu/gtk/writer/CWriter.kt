@@ -6,15 +6,14 @@ import java.io.Writer
 
 
 class CWriter (writer : Writer) : CodeWriter(writer) {
-    override fun writeStart(classModel : ClassModel, namespace : NamespaceModel) {
-        super.writeStart(classModel, namespace)
+    override fun writeStart(classModel : ClassModel, namespaceModel : NamespaceModel) {
+        super.writeStart(classModel, namespaceModel)
 
         a("#include <jni.h>\n\n")
 
-        for (include in namespace.includes) {
+        for (include in namespaceModel.includes) {
             a("#include <${include}>\n")
         }
-
 
         a("\n#include \"${classModel.getHeaderFileName()}\"\n\n\n")
 
@@ -25,21 +24,16 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
     }
 
     override fun writeClass(classModel: ClassModel) {}
-
     override fun writeInterface(classModel: ClassModel) {}
-
     override fun writeInternalConstructor(classModel: ClassModel) {}
-
     override fun writeConstructor(classModel: ClassModel, methodModel: MethodModel) {}
-
     override fun writeFactory(classModel: ClassModel, methodModel: MethodModel) {}
-
 
     override fun writeNativeMethod(classModel : ClassModel, methodModel : MethodModel) {
         _writeNativeMethod(classModel, methodModel, true)
     }
 
-    fun getFreeParameters(m : MethodModel) : String {
+    private fun getFreeParameters(m : MethodModel) : String {
         val result = StringBuilder()
 
         for (p in m.getParameters()) {
@@ -99,8 +93,8 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
     }
 
 
-    override fun writePrivateFactory(c : ClassModel, m : MethodModel) {
-        _writeNativeMethod(c, m, false);
+    override fun writePrivateFactory(classModel : ClassModel, methodModel : MethodModel) {
+        _writeNativeMethod(classModel, methodModel, false);
     }
 
     override fun writeConstant(parameterModel: ParameterModel) {
@@ -133,12 +127,12 @@ JNIEXPORT ${methodModel.getReturnType().getJniType()} JNICALL ${classModel.getJn
     }
 
 
-    override fun writeMallocConstructor(c : ClassModel) {
+    override fun writeMallocConstructor(classModel : ClassModel) {
         start(1)
         a("""
-JNIEXPORT jlong JNICALL ${c.getJniMethodName("newFromMalloc")}(JNIEnv * _jenv, jclass _jclass)
+JNIEXPORT jlong JNICALL ${classModel.getJniMethodName("newFromMalloc")}(JNIEnv * _jenv, jclass _jclass)
 {
-    return (jlong) calloc(1, sizeof(${c.getCType()}));
+    return (jlong) calloc(1, sizeof(${classModel.getCType()}));
 }
         """)
     }
@@ -207,81 +201,75 @@ JNIEXPORT void JNICALL ${classModel.getJniSignalConnectMethodName(methodModel)}(
 
 
 
-    override fun writeField(c : ClassModel, p : ParameterModel) {
-        val getter = JavaNames.getGetterName(p.getName())
-        val setter = JavaNames.getSetterName(p.getName())
+    override fun writeField(classModel : ClassModel, parameterModel : ParameterModel) {
+        val getter = JavaNames.getGetterName(parameterModel.getName())
+        val setter = JavaNames.getSetterName(parameterModel.getName())
 
         a ("""
-JNIEXPORT ${p.getJniType()} JNICALL ${c.getJniMethodName(getter)}(JNIEnv * _jenv, jclass _jclass, jlong _self)
+JNIEXPORT ${parameterModel.getJniType()} JNICALL ${classModel.getJniMethodName(getter)}(JNIEnv * _jenv, jclass _jclass, jlong _self)
 {
-    const ${c.getCType()}* __self = (${c.getCType()}*) _self;
-    return (${p.getJniType()}) __self->${p.getName()};
+    const ${classModel.getCType()}* __self = (${classModel.getCType()}*) _self;
+    return (${parameterModel.getJniType()}) __self->${parameterModel.getName()};
 }
 
-JNIEXPORT void JNICALL ${c.getJniMethodName(setter)}(JNIEnv * _jenv, jclass _jclass, jlong _self, ${p.getJniType()} _${p.getName()})
+JNIEXPORT void JNICALL ${classModel.getJniMethodName(setter)}(JNIEnv * _jenv, jclass _jclass, jlong _self, ${parameterModel.getJniType()} _${parameterModel.getName()})
 {
-    ${c.getCType()}* __self = (${c.getCType()}*) _self;
-    __self->${p.getName()} = (${p.getGtkType()}) _${p.getName()};
+    ${classModel.getCType()}* __self = (${classModel.getCType()}*) _self;
+    __self->${parameterModel.getName()} = (${parameterModel.getGtkType()}) _${parameterModel.getName()};
 }
     """)
     }
 
-    override fun writeFunction(c : ClassModel, m : MethodModel) {
-        _writeNativeMethod(c, m, false)
+    override fun writeFunction(classModel : ClassModel, methodModel : MethodModel) {
+        _writeNativeMethod(classModel, methodModel, false)
     }
 
-    override fun writeUnsupported(model: Model) {
-        
+    override fun writeUnsupported(model: Model) {}
+    override fun writeEnd() {}
+
+    private fun getCallbackMethodID(methodModel : MethodModel) : String {
+        return "(*g_env)->GetStaticMethodID(g_env, globalClass, \"${methodModel.getSignalCallbackName()}\", \"${getJniIdSignature(methodModel)}\")"
     }
 
-    override fun writeEnd() {
-        
-    }
-
-
-    private fun getCallbackMethodID(m : MethodModel) : String {
-        return "(*g_env)->GetStaticMethodID(g_env, globalClass, \"${m.getSignalCallbackName()}\", \"${getJniIdSignature(m)}\")"
-    }
-
-    private fun getSignalCallbackMethodID(m : MethodModel) : String {
-        return "(*g_env)->GetStaticMethodID(g_env, globalClass, \"${m.getSignalCallbackName()}\", \"${getSignalJniIdSignature(m)}\")"
+    private fun getSignalCallbackMethodID(methodModel : MethodModel) : String {
+        return "(*g_env)->GetStaticMethodID(g_env, globalClass, \"${methodModel.getSignalCallbackName()}\", \"${getSignalJniIdSignature(methodModel)}\")"
     }
 
 
-    private fun getJniIdSignature(m : MethodModel) : String {
+    private fun getJniIdSignature(methodModel : MethodModel) : String {
         val result = StringBuilder()
 
         result.append("(")
-        for (p in m.getParameters()) {
+        for (p in methodModel.getParameters()) {
             result.append(p.getJniSignatureID())
         }
         result.append(")")
-        result.append(m.getReturnType().getJniSignatureID())
+        result.append(methodModel.getReturnType().getJniSignatureID())
         return result.toString()
     }
 
-    private fun getSignalJniIdSignature(m : MethodModel) : String {
+    private fun getSignalJniIdSignature(methodModel : MethodModel) : String {
         val result = StringBuilder()
 
         result.append("(J")
-        for (p in m.getParameters()) {
+        for (p in methodModel.getParameters()) {
             result.append(p.getJniSignatureID())
         }
         result.append(")")
-        result.append(m.getReturnType().getJniSignatureID())
+        result.append(methodModel.getReturnType().getJniSignatureID())
         return result.toString()
     }
 
 
-    private fun getCallbackMethodCall(m : MethodModel) : String {
+    private fun getCallbackMethodCall(methodModel : MethodModel) : String {
         val result = StringBuilder()
 
-        if (!m.getReturnType().isVoid()) {
-            result.append("return (${m.getReturnType().jniType})")
+        if (!methodModel.getReturnType().isVoid()) {
+            result.append("return (${methodModel.getReturnType().jniType})")
         }
-        result.append("(*g_env)->${m.getReturnType().getJniCallbackMethodName()}(g_env, globalClass, callback")
+        result.append("(*g_env)->${methodModel.getReturnType().getJniCallbackMethodName()}(g_env, globalClass, callback")
 
-        for (p in m.getParameters()) {
+        for (p in methodModel.getParameters()) {
             result.append(", (${p.jniType})${p.getName()}")
         }
 
@@ -290,15 +278,15 @@ JNIEXPORT void JNICALL ${c.getJniMethodName(setter)}(JNIEnv * _jenv, jclass _jcl
     }
 
 
-    private fun getSignalCallbackMethodCall(m : MethodModel) : String {
+    private fun getSignalCallbackMethodCall(methodModel : MethodModel) : String {
         val result = StringBuilder()
 
-        if (!m.getReturnType().isVoid()) {
-            result.append("return (${m.getReturnType().jniType})")
+        if (!methodModel.getReturnType().isVoid()) {
+            result.append("return (${methodModel.getReturnType().jniType})")
         }
-        result.append("(*g_env)->${m.getReturnType().getJniCallbackMethodName()}(g_env, globalClass, callback, (jlong)_self")
+        result.append("(*g_env)->${methodModel.getReturnType().getJniCallbackMethodName()}(g_env, globalClass, callback, (jlong)_self")
 
-        for (p in m.getParameters()) {
+        for (p in methodModel.getParameters()) {
             result.append(", (${p.jniType})${p.getName()}")
         }
 
@@ -307,13 +295,13 @@ JNIEXPORT void JNICALL ${c.getJniMethodName(setter)}(JNIEnv * _jenv, jclass _jcl
     }
 
 
-    private fun getCallbackSignature(m : MethodModel) : String {
+    private fun getCallbackSignature(methodModel : MethodModel) : String {
         val result = StringBuilder()
 
         var del = "";
 
         result.append("(")
-        for (p in m.getParameters()) {
+        for (p in methodModel.getParameters()) {
             result.append("${del}${p.getGtkType()} ${p.getName()}")
             del = ", "
         }
@@ -321,22 +309,22 @@ JNIEXPORT void JNICALL ${c.getJniMethodName(setter)}(JNIEnv * _jenv, jclass _jcl
         return result.toString()
     }
 
-    private fun getSignalCallbackSignature(m : MethodModel) : String {
+    private fun getSignalCallbackSignature(methodModel : MethodModel) : String {
         val result = StringBuilder()
 
         result.append("(void* _self, ")
-        for (p in m.getParameters()) {
+        for (p in methodModel.getParameters()) {
             result.append("${p.getGtkType()} ${p.getName()}, ")
         }
         result.append("void* _data)")
         return result.toString()
     }
 
-    private fun getGlobalClassName(c : ClassModel) : String {
-        return c.getGlobalName("class")
+    private fun getGlobalClassName(classModel : ClassModel) : String {
+        return classModel.getGlobalName("class")
     }
 
-    private fun getGlobalVMName(c : ClassModel) : String {
-        return c.getGlobalName("VM")
+    private fun getGlobalVMName(classModel : ClassModel) : String {
+        return classModel.getGlobalName("VM")
     }
 }

@@ -4,11 +4,10 @@ import java.io.File;
 
 public class Configuration {
 
-    public static final String BASE_NAME_SPACE_DOT = "ch.bailu.gtk.";
+    public static final String BASE_NAME_SPACE_DOT   = "ch.bailu.gtk.";
     public static final String BASE_NAME_SPACE_NODOT = "ch.bailu.gtk";
-    public static final String HEADER_FILE_BASE = "ch_bailu_gtk_";
-
-    public static final String JNI_METHOD_NAME_BASE = "Java_ch_bailu_gtk_";
+    public static final String HEADER_FILE_BASE      = "ch_bailu_gtk_";
+    public static final String JNI_METHOD_NAME_BASE  = "Java_ch_bailu_gtk_";
 
     public  final static String[] GIR_FILES= {
             "GObject-2.0.gir",
@@ -17,13 +16,11 @@ public class Configuration {
             "Gdk-3.0.gir",
             "PangoCairo-1.0.gir",
             "cairo-custom.gir",
-
             "GLib-2.0.gir",
             "Atk-1.0.gir",
             "Pango-1.0.gir",
             "GdkPixbuf-2.0.gir",
-
-};
+    };
 
     private File javaBaseDir, cBaseDir, girBaseDir;
     

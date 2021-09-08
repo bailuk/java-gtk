@@ -26,20 +26,19 @@ public class ClassModel extends Model {
 
     private ClassModel parent;
 
-    private List<MethodModel> privateFactories = new ArrayList();
-    private List<MethodModel> factories = new ArrayList();
-    private List<MethodModel> constructors = new ArrayList();
-    private List<MethodModel> methods = new ArrayList();
-    private List<MethodModel> signals = new ArrayList();
-    private List<MethodModel> callbacks = new ArrayList();
+    private final List<MethodModel> privateFactories = new ArrayList<>();
+    private final List<MethodModel> factories = new ArrayList<>();
+    private final List<MethodModel> constructors = new ArrayList<>();
+    private final List<MethodModel> methods = new ArrayList<>();
+    private final List<MethodModel> signals = new ArrayList<>();
+    private final List<MethodModel> callbacks = new ArrayList<>();
 
+    private final List<MethodModel> functions = new ArrayList<>();
 
-    private List<MethodModel> functions = new ArrayList();
+    private final List<ParameterModel> fields = new ArrayList<>();
+    private final List<Model>       unsupported = new ArrayList<>();
 
-    private List<ParameterModel> fields = new ArrayList();
-    private List<Model>       unsupported = new ArrayList();
-
-    private List<ParameterModel> constants = new ArrayList();
+    private final List<ParameterModel> constants = new ArrayList<>();
 
     private String structureType;  // record, enum, class, interface, bitfield, callback
     private String cType;  // C type
@@ -50,8 +49,6 @@ public class ClassModel extends Model {
         structureType = structure.getStructureType();
         name = convert(nameSpace.getNamespace(), structure.getName());
         parent = new ClassModel(nameSpace.getNamespace(), structure.getParentName(), structureType);
-
-
 
         for (MethodTag m: structure.getConstructors()) {
             addIfSupported(privateFactories, filterConstructor(new MethodModel(nameSpace.getNamespace(), m)));
@@ -78,22 +75,6 @@ public class ClassModel extends Model {
             addIfSupported(fields, filterField(fieldModel));
 
         }
-    }
-
-
-    /**
-     * Gets called from builder when callback ends
-     * Create callback interface for package scoped callbacks
-     * @param callbackTag
-     * @param namespace
-     */
-    public ClassModel(CallbackTag callbackTag, NamespaceModel namespace) {
-        this.nameSpace = namespace;
-        name = convert(nameSpace.getNamespace(), callbackTag.getName());
-        structureType = "callback";
-        parent = new ClassModel(nameSpace.getNamespace(), null, structureType);
-
-        addIfSupportedWithCallbacks(functions, filter(new MethodModel(nameSpace.getNamespace(), callbackTag)));
     }
 
 

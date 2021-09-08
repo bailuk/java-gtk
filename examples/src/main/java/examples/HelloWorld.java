@@ -15,7 +15,7 @@ public class HelloWorld {
             var window = new ApplicationWindow(app);
 
             // Create a new button
-            var button = Button.newWithLabelButton("Hello world!");
+            var button = Button.newWithLabelButton("Hello, World!");
 
             // When the button is clicked, close the window
             button.onClicked(() -> window.close());
@@ -25,5 +25,4 @@ public class HelloWorld {
 
         app.run(argv.length, argv);
     }
-
 }

@@ -31,8 +31,8 @@ abstract class CodeWriter(writer : Writer) : Append {
     abstract fun writeEnd() 
 
 
-    override fun a(toOut : String) : Append {
-        out.append(toOut)
+    override fun a(o : String) : Append {
+        out.append(o)
         return this
     }
 

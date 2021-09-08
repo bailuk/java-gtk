@@ -11,7 +11,7 @@ dependencies {
 }
 
 application {
-    val example = "examples.HelloWorld"
+    val example = "examples.App"
     mainClass.set(example)
 }
 

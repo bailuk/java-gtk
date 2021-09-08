@@ -43,15 +43,15 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
 
     override fun writeInterfaceMethod(classModel: ClassModel, m: MethodModel) {}
 
-    override fun writeConstructor(c : ClassModel, m : MethodModel) {}
+    override fun writeConstructor(classModel : ClassModel, methodModel : MethodModel) {}
 
-    override fun writeFactory(c : ClassModel, m : MethodModel) {}
+    override fun writeFactory(classModel : ClassModel, methodModel : MethodModel) {}
 
 
-    override fun writePrivateFactory(c : ClassModel, m : MethodModel) {
+    override fun writePrivateFactory(classModel : ClassModel, methodModel : MethodModel) {
         start();
-        a("    static native long " + m.getApiName());
-        writeFactorySignature(m);
+        a("    static native long " + methodModel.getApiName());
+        writeFactorySignature(methodModel);
         a(";\n");
         end(1);
     }
@@ -95,52 +95,52 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
 
     }
 
-    private fun getDefaultReturn(m : MethodModel) : String {
-        if (!m.getReturnType().isVoid()) {
-            return "return ${m.getReturnType().getImpDefaultConstant()};"
+    private fun getDefaultReturn(methodModel : MethodModel) : String {
+        if (!methodModel.getReturnType().isVoid()) {
+            return "return ${methodModel.getReturnType().getImpDefaultConstant()};"
         }
         return ""
     }
 
-    override fun writeField(classModel : ClassModel, p : ParameterModel) {
+    override fun writeField(classModel : ClassModel, parameterModel : ParameterModel) {
         val parameters : MutableList<ParameterModel> = ArrayList()
 
         start();
-        a("static native ${p.getImpType()} ${JavaNames.getGetterName(p.getName())}(${getSelfSignature(parameters)});\n")
+        a("static native ${parameterModel.getImpType()} ${JavaNames.getGetterName(parameterModel.getName())}(${getSelfSignature(parameters)});\n")
 
-        parameters.add(p)
-        a("static native void ${JavaNames.getSetterName(p.getName())}(${getSelfSignature(parameters)});\n")
+        parameters.add(parameterModel)
+        a("static native void ${JavaNames.getSetterName(parameterModel.getName())}(${getSelfSignature(parameters)});\n")
 
         end(1);
     }
 
     override
-    fun writeFunction(classModel : ClassModel, m : MethodModel) {
+    fun writeFunction(classModel : ClassModel, methodModel : MethodModel) {
         start();
-        a("    static native ${m.getReturnType().getImpType()} ${m.getApiName()}(${getSignature(m.getParameters(), "")});\n")
+        a("    static native ${methodModel.getReturnType().getImpType()} ${methodModel.getApiName()}(${getSignature(methodModel.getParameters(), "")});\n")
         end(1);
 
     }
 
-    private fun getSignalInterfaceCall(c : ClassModel, s : MethodModel) : String {
+    private fun getSignalInterfaceCall(classModel : ClassModel, methodModel : MethodModel) : String {
         val result = StringBuilder()
 
-        if (!s.getReturnType().isVoid()) {
+        if (!methodModel.getReturnType().isVoid()) {
             result.append("return ")
         }
-        result.append("((${c.getApiName()}.${s.getSignalInterfaceName()})observer).${s.getSignalMethodName()}(${getSignalInterfaceCallSignature(s)})")
+        result.append("((${classModel.getApiName()}.${methodModel.getSignalInterfaceName()})observer).${methodModel.getSignalMethodName()}(${getSignalInterfaceCallSignature(methodModel)})")
 
-        if (!s.returnType.isVoid && !s.returnType.isJavaNative) {
+        if (!methodModel.returnType.isVoid && !methodModel.returnType.isJavaNative) {
             result.append(".toLong()")
         }
         return result.toString()
     }
 
-    private fun getSignalInterfaceCallSignature(s : MethodModel) : String {
+    private fun getSignalInterfaceCallSignature(methodModel : MethodModel) : String {
         val result = StringBuilder()
         var del = " "
 
-        for (p in s.getParameters()) {
+        for (p in methodModel.getParameters()) {
             result.append(del)
             if (p.isJavaNative()) {
                 result.append(p.getName())
@@ -154,13 +154,13 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
     }
 
 
-    private fun writeFactorySignature(m : MethodModel) {
+    private fun writeFactorySignature(methodModel : MethodModel) {
         a("(");
 
         var del = " ";
 
 
-        for (p in m.getParameters()) {
+        for (p in methodModel.getParameters()) {
             a(del + p.impType + " " + p.name);
             del = ", ";
         }
@@ -171,9 +171,9 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
         return "long _self${getSignature(parameters, ", ")}"
     }
 
-    private fun getSignature(parameters : List<ParameterModel>, del : String) : String {
+    private fun getSignature(parameters : List<ParameterModel>, firstDel : String) : String {
         val result = StringBuilder()
-        var del = del
+        var del = firstDel
 
         for (p in parameters) {
             if (!p.isCallback) {
