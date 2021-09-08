@@ -77,12 +77,20 @@ sourceSets {
     }
 }
 
-tasks.named("processResources") {
+tasks.processResources {
+    doFirst {
+        println("process resources")
+    }
+
     dependsOn(":glue:linkRelease")
 }
 
 
 tasks.compileJava {
+    doFirst {
+        println("compile Java")
+    }
+
     if (this is JavaCompile) {
         options.compilerArgs.add("-Xlint:deprecation")
         options.compilerArgs.add("-Xlint:unchecked")

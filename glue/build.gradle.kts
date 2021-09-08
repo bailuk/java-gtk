@@ -11,14 +11,11 @@ plugins {
     `cpp-library`
 }
 
-dependencies {
-    val jniHeaders = "${project(":library").dependencyProject.buildDir}/generated/sources/headers/java/main"
+dependencies {}
 
-/*
-    implementation(files(jniHeaders) {
-        builtBy(":library:compileJava")
-    })
-*/
+
+tasks.withType(CppCompile::class.java) {
+    dependsOn(":library:compileJava")
 }
 
 
