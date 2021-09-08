@@ -82,7 +82,6 @@ public class Configuration {
     public String getCBaseDir() {
     	return cBaseDir.getAbsolutePath();
     }
-    
 
     public File getGirBaseDir() {
         return girBaseDir;

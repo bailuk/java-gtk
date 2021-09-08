@@ -28,13 +28,13 @@ public class TestAlias {
         assertEquals("Rectangle", test.getName());
         assertEquals("gdk", test.getNamespace());
     }
-
+/*
     @Test void aliasParser() throws IOException, XmlPullParserException {
         var from = new NamespaceType("gdk", "Rectangle");
         var to = new NamespaceType("gtk", "Allocation");
 
         String[] args = {"-i", "/usr/share/gir-1.0",
-                "-j", "${project.getRootDir()}/library/build/generated/src/main/java/ch/bailu/gtk/",
+                "-j", "library/build/generated/src/main/java/ch/bailu/gtk/",
                 "-c", "${project.getRootDir()}/glue/build/generated/src/main/c/"};
         Configuration.init(args);
 
@@ -50,4 +50,6 @@ public class TestAlias {
         assertEquals("GString", classType.getFullName());
 
     }
+    */
+
 }
