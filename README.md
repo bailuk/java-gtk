@@ -50,10 +50,10 @@ Compile Java and C library, generate JAR archive and copy JAR archive as artifac
 
  
  ## Modules
- | `generator/` | Java/Kotlin application that generates C and Java code from GIR files (xml parser -> model builder -> writer). GIR files are taken from Debian dev packages. |
- | `library/`   | java-gtk library depends on generated Java code. |
- | `glue/`      | JNI C-Library. Depends on generated C code. |
- | `examples/`  | Some examples to test the bindings. Mostly ported from [https://gitlab.gnome.org/GNOME/gtk/-/tree/gtk-3-24/demos/gtk-demo](https://gitlab.gnome.org/GNOME/gtk/-/tree/gtk-3-24/demos/gtk-demo). |
+ - `generator/`: Java/Kotlin application that generates C and Java code from GIR files (xml parser -> model builder -> writer). GIR files are taken from Debian dev packages.
+ - `library/`  : java-gtk library depends on generated Java code.
+ - `glue/`     : JNI C-Library. Depends on generated C code.
+ - `examples/` : Some examples to test the bindings. Mostly ported from [https://gitlab.gnome.org/GNOME/gtk/-/tree/gtk-3-24/demos/gtk-demo](https://gitlab.gnome.org/GNOME/gtk/-/tree/gtk-3-24/demos/gtk-demo).
  
  ## License
  - Files in [generator/src/resources/gir/](generator/src/resources/gir/) are comming from the [GTK project](https://gitlab.gnome.org/GNOME/gtk) and are therefore licensed under the GNU Library General Public License.
