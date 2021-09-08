@@ -1,5 +1,5 @@
 # Java-GTK
-Experimental GTK 3 bindings for java
+Experimental GTK 3 bindings for Java
 
 ## Example
 ```java
@@ -34,26 +34,26 @@ public class HelloWorld {
 ```
 
 ## Build
-`./gradlew generate`
+`./gradlew generate`  
 Compiles and runs the code generator. This will generate Java and C code from [GIR](https://gi.readthedocs.io/en/latest/) files.
-Input: `generator/src/resources/gir/*`
-Output Java: `library/build/generated/src/main/java/[...]/*.java`
-Output C: `glue/build/generated/src/main/c/*.c`
-Configuration: [generator/src/main/java/ch/bailu/gtk/Configuration.java](generator/src/main/java/ch/bailu/gtk/Configuration.java)
+- Input: `generator/src/resources/gir/*`
+- Output Java: `library/build/generated/src/main/java/[...]/*.java`
+- Output C: `glue/build/generated/src/main/c/*.c`
+- Configuration: [generator/src/main/java/ch/bailu/gtk/Configuration.java](generator/src/main/java/ch/bailu/gtk/Configuration.java)
 
-`./gradlew run`
+`./gradlew run`  
 Compile everything and run the default demo application.
 The default demo application can be selected in [examples/src/main/java/examples/App.java](examples/src/main/java/examples/App.java)
 
-`./gradlew publishToMavenLocal`
+`./gradlew publishToMavenLocal`  
 Compile Java and C library, generate JAR archive and copy JAR archive as artifact to local Maven repository (`~/.m2/repository`).
 
  
  ## Modules
- | `generator/` | Java/Kotlin application that generates C and Java code from GIR files (xml parser -> model builder -> writer). GIR files are taken from Debian dev packages.
- | `library/`   | java-gtk library depends on generated Java code.
- | `glue/`      | JNI C-Library. Depends on generated C code  .
- | `examples/`  | Some examples to test the bindings. Mostly ported from [https://gitlab.gnome.org/GNOME/gtk/-/tree/gtk-3-24/demos/gtk-demo](https://gitlab.gnome.org/GNOME/gtk/-/tree/gtk-3-24/demos/gtk-demo).
+ | `generator/` | Java/Kotlin application that generates C and Java code from GIR files (xml parser -> model builder -> writer). GIR files are taken from Debian dev packages. |
+ | `library/`   | java-gtk library depends on generated Java code. |
+ | `glue/`      | JNI C-Library. Depends on generated C code. |
+ | `examples/`  | Some examples to test the bindings. Mostly ported from [https://gitlab.gnome.org/GNOME/gtk/-/tree/gtk-3-24/demos/gtk-demo](https://gitlab.gnome.org/GNOME/gtk/-/tree/gtk-3-24/demos/gtk-demo). |
  
  ## License
  - Files in [generator/src/resources/gir/](generator/src/resources/gir/) are comming from the [GTK project](https://gitlab.gnome.org/GNOME/gtk) and are therefore licensed under the GNU Library General Public License.
