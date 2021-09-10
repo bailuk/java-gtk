@@ -1,3 +1,5 @@
+[![Java CI with Gradle](https://github.com/bailuk/java-gtk/actions/workflows/gradle.yml/badge.svg)](https://github.com/bailuk/java-gtk/actions/workflows/gradle.yml)
+
 # Java-GTK
 Experimental GTK 3 bindings for Java
 
