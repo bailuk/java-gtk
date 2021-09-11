@@ -1,5 +1,6 @@
 package ch.bailu.gtk.converter;
 
+import ch.bailu.gtk.model.ClassModel;
 import ch.bailu.gtk.model.ParameterModel;
 
 public class JniArrayConverter extends JniTypeConverter {
@@ -11,7 +12,7 @@ public class JniArrayConverter extends JniTypeConverter {
     }
 
     @Override
-    public String getAllocateResourceString() {
+    public String getAllocateResourceString(ClassModel classModel) {
         return "// to array\n";
     }
 
@@ -21,7 +22,7 @@ public class JniArrayConverter extends JniTypeConverter {
     }
 
     @Override
-    public String getCallSignatureString() {
+    public String getCallSignatureString(ClassModel classModel) {
         return model.getName();
     }
 

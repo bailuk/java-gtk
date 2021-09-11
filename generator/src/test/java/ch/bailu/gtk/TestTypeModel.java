@@ -1,16 +1,15 @@
 package ch.bailu.gtk;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.Test;
 
-import ch.bailu.gtk.converter.EnumTable;
 import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.converter.RelativeNamespaceType;
 import ch.bailu.gtk.converter.StructureTable;
 import ch.bailu.gtk.model.CType;
 import ch.bailu.gtk.model.ClassType;
 import ch.bailu.gtk.model.JavaType;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestTypeModel {
 
@@ -56,33 +55,33 @@ public class TestTypeModel {
 	void testJavaType() {
 		JavaType jtype = new JavaType("int");
 
-		assertEquals("int", jtype.getName());
+		assertEquals("int", jtype.getType());
 		assertEquals(true, jtype.isValid());
 
 
-		jtype = new JavaType("namespace", "none", "void");
-		assertEquals("void", jtype.getName());
-		assertEquals(true, jtype.isValid());
-		assertEquals(true, jtype.isVoid());
-
-
-		jtype = new JavaType("namespace", "none", "void");
-		assertEquals("void", jtype.getName());
+		jtype = new JavaType("void");
+		assertEquals("void", jtype.getType());
 		assertEquals(true, jtype.isValid());
 		assertEquals(true, jtype.isVoid());
 
-		jtype = new JavaType("namespace", "guint8", "guint8");
-		assertEquals("int", jtype.getName());
+
+		jtype = new JavaType("void");
+		assertEquals("void", jtype.getType());
+		assertEquals(true, jtype.isValid());
+		assertEquals(true, jtype.isVoid());
+
+		jtype = new JavaType("guint8");
+		assertEquals("int", jtype.getType());
 		assertEquals(true, jtype.isValid());
 		assertEquals(false, jtype.isVoid());
 
-
+/*
 		EnumTable.instance().add(new NamespaceType("namespace", "DateDMY"));
 		jtype = new JavaType("namespace", "DateDMY", "GDateDMY");
 		assertEquals("int", jtype.getName());
 		assertEquals(true, jtype.isValid());
 		assertEquals(false, jtype.isVoid());
-
+*/
 	}
 
 	@Test

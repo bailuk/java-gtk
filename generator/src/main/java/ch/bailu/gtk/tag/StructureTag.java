@@ -1,7 +1,6 @@
 package ch.bailu.gtk.tag;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -17,14 +16,14 @@ public class StructureTag extends NamedTag {
     private String type = "";
 
 
-    private final List<NamedTag> implementsList = new ArrayList<>();
-    private final List<MethodTag> constructors = new ArrayList<>();
+    private final TagList<NamedTag> implementsList = new TagList<>();
+    private final TagList<MethodTag> constructors = new TagList<>();
 
-    private final List<MethodTag> virtuals = new ArrayList<>();
-    private final List<MethodTag> methods = new ArrayList<>();
+    private final TagList<MethodTag> virtuals = new TagList<>();
+    private final TagList<MethodTag> methods = new TagList<>();
 
-    private final List<MethodTag> signals = new ArrayList<>();
-    private final List<ParameterTag> fields = new ArrayList<>();
+    private final TagList<MethodTag> signals = new TagList<>();
+    private final TagList<ParameterTag> fields = new TagList<>();
 
     public StructureTag(Tag parent, String structureType) {
         super(parent);
@@ -34,26 +33,26 @@ public class StructureTag extends NamedTag {
     @Override
     public Tag getChild(String name, String prefix) {
         if ("field".equals(name)) {
-            return add(fields, new ParameterTag(this));
+            return fields.addTag(new ParameterTag(this));
         }
         if ("implements".equals(name)) {
-             return add(implementsList, new NamedTag(this));
+             return implementsList.addTag(new NamedTag(this));
         }
 
         if ("constructor".equals(name)) {
-            return add(constructors, new MethodTag(this));
+            return constructors.addTag(new MethodTag(this));
         }
 
         if ("virtual-method".equals(name)) {
-            return add(virtuals, new MethodTag(this));
+            return virtuals.addTag(new MethodTag(this));
         }
 
         if ("method".equals(name)) {
-            return add(methods, new MethodTag(this));
+            return methods.addTag(new MethodTag(this));
         }
 
         if ("signal".equals(name)) {
-            return add(signals, new MethodTag(this));
+            return signals.addTag(new MethodTag(this));
         }
 
         return ignore();

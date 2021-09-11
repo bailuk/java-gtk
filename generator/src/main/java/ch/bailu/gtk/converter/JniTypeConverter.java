@@ -1,10 +1,14 @@
 package ch.bailu.gtk.converter;
 
+import ch.bailu.gtk.model.ClassModel;
 import ch.bailu.gtk.model.ParameterModel;
 
 public abstract class JniTypeConverter {
     public static JniTypeConverter factory(ParameterModel parameter) {
-        if (parameter.isJavaNative()) {
+        if (parameter.isCallback()) {
+            return new JniCallbackConverter(parameter);
+
+        } else if (parameter.isJavaNative()) {
             if ("String[]".equals(parameter.getImpType())) {
                 return new JniStringArrayConverter(parameter);
             } else  if ("String".equals(parameter.getImpType())) {
@@ -17,9 +21,9 @@ public abstract class JniTypeConverter {
         }
     }
 
-    public abstract String getAllocateResourceString();
+    public abstract String getAllocateResourceString(ClassModel classModel);
     public abstract String getFreeResourcesString();
-    public abstract String getCallSignatureString();
+    public abstract String getCallSignatureString(ClassModel classModel);
 
     public abstract String getJniType();
 

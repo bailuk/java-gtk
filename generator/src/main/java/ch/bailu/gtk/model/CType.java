@@ -17,7 +17,6 @@ public class CType {
             type = "void*";
         }
 
-
         this.type = type;
 
         isPointer = P_POINTER.matcher(this.type).find();

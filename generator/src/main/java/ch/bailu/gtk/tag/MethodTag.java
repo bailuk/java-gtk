@@ -1,13 +1,12 @@
 package ch.bailu.gtk.tag;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MethodTag extends NamedTag {
     private final ParameterTag returnValue =  new ParameterTag(this);
 
-    private final List<ParameterTag> parameters = new ArrayList<>(3);
-    private final List<ParameterTag> instanceParameters = new ArrayList<>(3);
+    private final TagList<ParameterTag> parameters = new TagList<>();
+    private final TagList<ParameterTag> instanceParameters = new TagList<>();
 
     private String identifier = "";
 
@@ -27,10 +26,10 @@ public class MethodTag extends NamedTag {
         @Override
         public Tag getChild(String name, String prefix) {
             if ("parameter".equals(name)) {
-                return add(parameters, new ParameterTag(this));
+                return parameters.addTag(new ParameterTag(this));
             }
             if ("instance-parameter".equals(name)) {
-                return add(instanceParameters, new ParameterTag(this));
+                return instanceParameters.addTag(new ParameterTag(this));
             }
             return ignore();
         }

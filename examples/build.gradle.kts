@@ -4,14 +4,16 @@ plugins {
 
 dependencies {
     implementation(project(":library"))
-
-    val glueBuild = project(":glue").dependencyProject.buildDir
-    val libDir = "${glueBuild}/lib/main/debug/"
-    implementation(fileTree(libDir) {include("*.so*")})
 }
 
 application {
     val example = "examples.App"
     mainClass.set(example)
+}
+
+tasks.withType(JavaExec::class.java) {
+    val libraryPath = file("${project(":glue").buildDir}/lib/main/debug").absolutePath
+    systemProperty( "java.library.path", libraryPath)
+    dependsOn( ":glue:linkDebug")
 }
 

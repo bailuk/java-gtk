@@ -42,11 +42,11 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         return result.toString()
     }
 
-    private fun getAllocateParameters(m : MethodModel) : String {
+    private fun getAllocateParameters(classModel: ClassModel, methodModel : MethodModel) : String {
         val result = StringBuilder()
 
-        for (p in m.getParameters()) {
-            result.append(p.getAllocateResourceString())
+        for (p in methodModel.getParameters()) {
+            result.append(p.jniConverter.getAllocateResourceString(classModel))
         }
         return result.toString()
     }
@@ -61,12 +61,8 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
             del = ", "
         }
         
-        for (p in methodModel.getParameters()) {
-            if (p.isCallback) {
-                result.append("${del}${classModel.getCSignalCallbackName(p.callbackModel)}")
-            } else {
-                result.append("${del}${p.getCallSignatureString()}")
-            }
+        for (parameterModel in methodModel.getParameters()) {
+            result.append("${del}${parameterModel.jniConverter.getCallSignatureString(classModel)}")
             del = ", "
         }
 
@@ -106,7 +102,7 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         a ("""
 JNIEXPORT ${methodModel.getReturnType().getJniType()} JNICALL ${classModel.getJniMethodName(methodModel)}(${getJniSignature(methodModel, self)})
 {
-    ${getAllocateParameters(methodModel)}
+    ${getAllocateParameters(classModel, methodModel)}
     ${getReturnStatement(methodModel)} ${methodModel.getGtkName()}(${getGtkCallSignature(classModel, methodModel, self)});
     ${getFreeParameters(methodModel)}
 }
@@ -142,7 +138,7 @@ JNIEXPORT jlong JNICALL ${classModel.getJniMethodName("newFromMalloc")}(JNIEnv *
         start(1)
 
         a("""
-static ${methodModel.getReturnType().gtkType} ${classModel.getCSignalCallbackName(methodModel)}${getCallbackSignature(methodModel)}
+static ${methodModel.getReturnType().gtkType} ${getCSignalCallbackName(classModel, methodModel)}${getCallbackSignature(methodModel)}
 {
     JavaVM* globalVM    = ${getGlobalVMName(classModel)};
     jclass  globalClass = ${getGlobalClassName(classModel)};
@@ -168,7 +164,7 @@ static ${methodModel.getReturnType().gtkType} ${classModel.getCSignalCallbackNam
         start(1)
 
         a("""
-static ${methodModel.getReturnType().gtkType} ${classModel.getCSignalCallbackName(methodModel)}${getSignalCallbackSignature(methodModel)}
+static ${methodModel.getReturnType().gtkType} ${getCSignalCallbackName(classModel, methodModel)}${getSignalCallbackSignature(methodModel)}
 {
     JavaVM* globalVM    = ${getGlobalVMName(classModel)};
     jclass  globalClass = ${getGlobalClassName(classModel)};
@@ -193,7 +189,7 @@ JNIEXPORT void JNICALL ${classModel.getJniSignalConnectMethodName(methodModel)}(
     (*_jenv)->GetJavaVM(_jenv, &${getGlobalVMName(classModel)});
     ${getGlobalClassName(classModel)} = (jclass) (*_jenv)->NewGlobalRef(_jenv, _jclass);
     
-    g_signal_connect ((void *)_self, "${methodModel.getApiName()}", G_CALLBACK (${classModel.getCSignalCallbackName(methodModel)}), NULL);
+    g_signal_connect ((void *)_self, "${methodModel.getApiName()}", G_CALLBACK (${getCSignalCallbackName(classModel, methodModel)}), NULL);
 }
     """)
     }
@@ -265,7 +261,7 @@ JNIEXPORT void JNICALL ${classModel.getJniMethodName(setter)}(JNIEnv * _jenv, jc
         val result = StringBuilder()
 
         if (!methodModel.getReturnType().isVoid()) {
-            result.append("return (${methodModel.getReturnType().jniType})")
+            result.append("return (${methodModel.getReturnType().gtkType})")
         }
         result.append("(*g_env)->${methodModel.getReturnType().getJniCallbackMethodName()}(g_env, globalClass, callback")
 

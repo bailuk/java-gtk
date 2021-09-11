@@ -1,7 +1,6 @@
 package ch.bailu.gtk.model;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import ch.bailu.gtk.Configuration;
@@ -10,7 +9,6 @@ import ch.bailu.gtk.converter.Filter;
 import ch.bailu.gtk.converter.JavaNames;
 import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.converter.RelativeNamespaceType;
-import ch.bailu.gtk.tag.CallbackTag;
 import ch.bailu.gtk.tag.EnumerationTag;
 import ch.bailu.gtk.tag.MethodTag;
 import ch.bailu.gtk.tag.NamespaceTag;
@@ -26,19 +24,16 @@ public class ClassModel extends Model {
 
     private ClassModel parent;
 
-    private final List<MethodModel> privateFactories = new ArrayList<>();
-    private final List<MethodModel> factories = new ArrayList<>();
-    private final List<MethodModel> constructors = new ArrayList<>();
-    private final List<MethodModel> methods = new ArrayList<>();
-    private final List<MethodModel> signals = new ArrayList<>();
-    private final List<MethodModel> callbacks = new ArrayList<>();
-
-    private final List<MethodModel> functions = new ArrayList<>();
-
-    private final List<ParameterModel> fields = new ArrayList<>();
-    private final List<Model>       unsupported = new ArrayList<>();
-
-    private final List<ParameterModel> constants = new ArrayList<>();
+    private final ModelList<Model>       unsupported = new ModelList<Model>();
+    private final ModelList<MethodModel> privateFactories = new ModelList<MethodModel>(unsupported);
+    private final ModelList<MethodModel> factories = new ModelList<MethodModel>(unsupported);
+    private final ModelList<MethodModel> constructors = new ModelList<MethodModel>(unsupported);
+    private final ModelList<MethodModel> methods = new ModelList<MethodModel>(unsupported);
+    private final ModelList<MethodModel> signals = new ModelList<MethodModel>(unsupported);
+    private final ModelList<MethodModel> callbacks = new ModelList<MethodModel>(unsupported);
+    private final ModelList<MethodModel> functions = new ModelList<MethodModel>(unsupported);
+    private final ModelList<ParameterModel> fields = new ModelList<ParameterModel>(unsupported);
+    private final ModelList<ParameterModel> constants = new ModelList<ParameterModel>(unsupported);
 
     private String structureType;  // record, enum, class, interface, bitfield, callback
     private String cType;  // C type
@@ -51,7 +46,7 @@ public class ClassModel extends Model {
         parent = new ClassModel(nameSpace.getNamespace(), structure.getParentName(), structureType);
 
         for (MethodTag m: structure.getConstructors()) {
-            addIfSupported(privateFactories, filterConstructor(new MethodModel(nameSpace.getNamespace(), m)));
+            privateFactories.addIfSupported(filterConstructor(new MethodModel(nameSpace.getNamespace(), m)));
         }
 
         for (MethodModel factory: privateFactories) {
@@ -67,12 +62,12 @@ public class ClassModel extends Model {
         }
 
         for (MethodTag signal: structure.getSignals()) {
-            addIfSupported(signals, new MethodModel(nameSpace.getNamespace(), signal));
+            signals.addIfSupported(new MethodModel(nameSpace.getNamespace(), signal));
         }
 
         for (ParameterTag field: structure.getFields()) {
             var fieldModel = new ParameterModel(nameSpace.getNamespace(), field, false);
-            addIfSupported(fields, filterField(fieldModel));
+            fields.addIfSupported(filterField(fieldModel));
 
         }
     }
@@ -85,7 +80,7 @@ public class ClassModel extends Model {
     }
 
 
-    private Model filterField(ParameterModel parameterModel) {
+    private ParameterModel filterField(ParameterModel parameterModel) {
         parameterModel.setSupported("Callback", !parameterModel.isCallback());
         parameterModel.setSupported("Filter", Filter.field(this, parameterModel));
         return parameterModel;
@@ -148,28 +143,19 @@ public class ClassModel extends Model {
         structureType = "enumeration";
         this.name = name;
 
-        for (ParameterTag m : members) {
-
-            addIfSupported(constants, new ParameterModel(namespace.getNamespace(), m, toUpper));
+        for (ParameterTag parameterTag : members) {
+            constants.addIfSupported(new ParameterModel(namespace.getNamespace(), parameterTag, toUpper));
         }
     }
 
 
-    private void addIfSupportedWithCallbacks(List models, MethodModel model) {
-        addIfSupported(models, model);
+    private void addIfSupportedWithCallbacks(ModelList<MethodModel> models, MethodModel model) {
+        models.addIfSupported(model);
         if (model.isSupported()) {
             for (MethodModel cb : model.getCallbackModel()) {
                 if (!callbacks.contains(cb))
                     callbacks.add(cb);
             }
-        }
-    }
-
-    private void addIfSupported(List models, Model model) {
-        if (model.isSupported()) {
-            models.add(model);
-        } else {
-            unsupported.add(model);
         }
     }
 
@@ -362,9 +348,6 @@ public class ClassModel extends Model {
         return Configuration.JNI_METHOD_NAME_BASE + nameSpace.getNamespace()  +"_" + getImpName() + "_" + m.getSignalMethodName();
     }
 
-    public String getCSignalCallbackName(MethodModel m) {
-        return nameSpace.getNamespace()  +"_" + getImpName() + "_" + m.getSignalMethodName();
-    }
 
     public String getGlobalName(String name) {
         return nameSpace.getNamespace() + "_" + getImpName() + "_" + name;
@@ -385,5 +368,9 @@ public class ClassModel extends Model {
 
     public String getCType() {
         return cType;
+    }
+
+    public NamespaceModel getNameSpaceModel() {
+        return nameSpace;
     }
 }

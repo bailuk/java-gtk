@@ -3,6 +3,7 @@ package ch.bailu.gtk.model;
 import ch.bailu.gtk.Configuration;
 import ch.bailu.gtk.converter.AliasTable;
 import ch.bailu.gtk.converter.CallbackTable;
+import ch.bailu.gtk.converter.EnumTable;
 import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.converter.RelativeNamespaceType;
 import ch.bailu.gtk.converter.StructureTable;

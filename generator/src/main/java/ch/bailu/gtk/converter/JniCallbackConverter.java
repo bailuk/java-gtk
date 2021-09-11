@@ -1,23 +1,20 @@
 package ch.bailu.gtk.converter;
 
 import ch.bailu.gtk.model.ClassModel;
-import ch.bailu.gtk.model.MethodModel;
 import ch.bailu.gtk.model.ParameterModel;
 
-public class JniCallbackConverter extends JniTypeConverter{
-    private final ParameterModel parameterModel;
-    private final ClassModel classModel;
-    private final MethodModel methodModel;
+import static ch.bailu.gtk.writer.NamesKt.getCCallbackName;
 
-    public JniCallbackConverter(ParameterModel parameterModel, MethodModel methodModel, ClassModel classModel) {
-        this.methodModel = methodModel;
+public class JniCallbackConverter extends JniTypeConverter {
+    private final ParameterModel parameterModel;
+
+    public JniCallbackConverter(ParameterModel parameterModel) {
         this.parameterModel = parameterModel;
-        this.classModel = classModel;
     }
 
     @Override
-    public String getAllocateResourceString() {
-        return "";
+    public String getAllocateResourceString(ClassModel classModel) {
+        return "    const "+ parameterModel.getGtkType() + " __" + parameterModel.getName() + " = (" + parameterModel.getGtkType() + ")" + " " + getCCallbackName(classModel, parameterModel) + ";\n";
     }
 
     @Override
@@ -26,8 +23,8 @@ public class JniCallbackConverter extends JniTypeConverter{
     }
 
     @Override
-    public String getCallSignatureString() {
-        return "G_CALLBACK (" + classModel.getCSignalCallbackName(methodModel)+ parameterModel.getName()+ ")";
+    public String getCallSignatureString(ClassModel classModel) {
+        return " __" + parameterModel.getName();
     }
 
     @Override

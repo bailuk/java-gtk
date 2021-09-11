@@ -54,12 +54,10 @@ dependencies {
 
 tasks.test {
     val libraryPath = file("${project(":glue").buildDir}/lib/main/debug").absolutePath
-
+    systemProperty( "java.library.path", libraryPath)
     dependsOn( ":glue:linkDebug")
     useJUnitPlatform()
-    systemProperty( "java.library.path", libraryPath)
 }
-
 
 
 sourceSets {
@@ -78,19 +76,11 @@ sourceSets {
 }
 
 tasks.processResources {
-    doFirst {
-        println("process resources")
-    }
-
     dependsOn(":glue:linkRelease")
 }
 
 
 tasks.compileJava {
-    doFirst {
-        println("compile Java")
-    }
-
     if (this is JavaCompile) {
         options.compilerArgs.add("-Xlint:deprecation")
         options.compilerArgs.add("-Xlint:unchecked")

@@ -1,5 +1,6 @@
 package ch.bailu.gtk.converter;
 
+import ch.bailu.gtk.model.ClassModel;
 import ch.bailu.gtk.model.ParameterModel;
 
 public class JniDefaultTypeConverter extends JniTypeConverter{
@@ -10,8 +11,8 @@ public class JniDefaultTypeConverter extends JniTypeConverter{
     }
 
     @Override
-    public String getAllocateResourceString() {
-        return "const "+ model.getGtkType() + " __" + model.getName() + " = (" + model.getGtkType() + ")" + " " + model.getName() + ";\n";
+    public String getAllocateResourceString(ClassModel classModel) {
+        return "    const "+ model.getGtkType() + " __" + model.getName() + " = (" + model.getGtkType() + ")" + " " + model.getName() + ";\n";
     }
 
     @Override
@@ -20,7 +21,7 @@ public class JniDefaultTypeConverter extends JniTypeConverter{
     }
 
     @Override
-    public String getCallSignatureString() {
+    public String getCallSignatureString(ClassModel classModel) {
         return "__" + model.getName();
     }
 

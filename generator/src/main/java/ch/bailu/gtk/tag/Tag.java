@@ -31,11 +31,6 @@ public abstract class Tag {
         return new IgnoreTag(this);
     }
 
-    protected static Tag add(List list, Tag tag) {
-        list.add(tag);
-        return tag;
-    }
-
     public BuilderInterface getBuilder() {
         return parent.getBuilder();
     }

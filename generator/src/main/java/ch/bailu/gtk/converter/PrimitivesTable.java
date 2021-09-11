@@ -36,6 +36,7 @@ public class PrimitivesTable {
         {"time_t",        "long"},
         {"const gchar*",  "String"},
         {"void",          "void"},
+        {"long",          "long"},
         {"int",           "int"},
         {"double",        "double"},
         {"char**",        "String[]"},

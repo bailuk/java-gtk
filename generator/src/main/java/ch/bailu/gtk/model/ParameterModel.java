@@ -1,9 +1,10 @@
 package ch.bailu.gtk.model;
 
+import ch.bailu.gtk.converter.EnumTable;
 import ch.bailu.gtk.converter.Filter;
 import ch.bailu.gtk.converter.JavaNames;
 import ch.bailu.gtk.converter.JniTypeConverter;
-import ch.bailu.gtk.tag.MethodTag;
+import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.tag.ParameterTag;
 
 public class ParameterModel extends Model {
@@ -15,7 +16,7 @@ public class ParameterModel extends Model {
 
     private final String value;
 
-    private JniTypeConverter jniConverter;
+    private final JniTypeConverter jniConverter;
 
     final private boolean isWriteable;
 
@@ -35,9 +36,14 @@ public class ParameterModel extends Model {
         if (classType.isValid()) {
             cType = new CType("void*");
             jType = new JavaType("long");
+
+        } else if (isEnum(namespace, parameter)) {
+            cType = new CType("int");
+            jType = new JavaType("int");
+
         } else {
             cType = new CType(parameter.getType());
-            jType = new JavaType(namespace, parameter);
+            jType = new JavaType(parameter.getType());
         }
 
         if (classType.isCallback()) {
@@ -53,6 +59,14 @@ public class ParameterModel extends Model {
         setSupported("callback", isCallbackSupported());
 
         this.isWriteable = parameter.isWriteable();
+    }
+
+    private boolean isEnum(String namespace, ParameterTag parameter) {
+        return (isEnum(namespace, parameter.getTypeName()) || isEnum(namespace, parameter.getType()));
+    }
+
+    private boolean isEnum(String namespace, String typeName) {
+        return EnumTable.instance().contains(new NamespaceType(namespace, typeName));
     }
 
 
@@ -79,11 +93,11 @@ public class ParameterModel extends Model {
             return classType.getFullName();
         }
 
-        return jType.getName();
+        return jType.getType();
     }
 
     public String getImpType() {
-        return jType.getName();
+        return jType.getType();
     }
 
     public boolean isVoid() {
@@ -108,13 +122,7 @@ public class ParameterModel extends Model {
         return jniConverter.getFreeResourcesString();
     }
 
-    public String getAllocateResourceString() {
-        return jniConverter.getAllocateResourceString();
-    }
 
-    public String getCallSignatureString() {
-        return jniConverter.getCallSignatureString();
-    }
 
     @Override
     public String toString() {
@@ -154,5 +162,9 @@ public class ParameterModel extends Model {
 
     public MethodModel getCallbackModel() {
         return callbackModel;
+    }
+
+    public JniTypeConverter getJniConverter() {
+        return jniConverter;
     }
 }
