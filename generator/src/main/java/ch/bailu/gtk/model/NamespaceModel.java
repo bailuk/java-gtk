@@ -53,9 +53,6 @@ public class NamespaceModel extends Model implements NamespaceInterface {
         return includes;
     }
 
-    public String getHeaderFileBase() {
-        return Configuration.HEADER_FILE_BASE + namespace + "_";
-    }
 
     @Override
     public String getNamespace() {

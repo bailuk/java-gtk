@@ -3,7 +3,6 @@ package ch.bailu.gtk.model;
 import java.io.IOException;
 import java.util.List;
 
-import ch.bailu.gtk.Configuration;
 import ch.bailu.gtk.converter.AliasTable;
 import ch.bailu.gtk.converter.Filter;
 import ch.bailu.gtk.converter.JavaNames;
@@ -15,6 +14,8 @@ import ch.bailu.gtk.tag.NamespaceTag;
 import ch.bailu.gtk.tag.ParameterTag;
 import ch.bailu.gtk.tag.StructureTag;
 import ch.bailu.gtk.writer.CodeWriter;
+
+import static ch.bailu.gtk.writer.NamesKt.getImpPrefix;
 
 public class ClassModel extends Model {
 
@@ -320,7 +321,7 @@ public class ClassModel extends Model {
     }
 
     public String getImpName() {
-        return "Imp" + name;
+        return getImpPrefix() + name;
     }
 
     public String getApiName() {
@@ -329,28 +330,6 @@ public class ClassModel extends Model {
 
     public String getApiParentName() {
         return parent.getApiName();
-    }
-
-
-    public String getHeaderFileName() {
-        return nameSpace.getHeaderFileBase() + getImpName() + ".h";
-    }
-
-    public String getJniMethodName(MethodModel m) {
-            return getJniMethodName(m.getApiName());
-    }
-
-    public String getJniMethodName(String apiName) {
-        return Configuration.JNI_METHOD_NAME_BASE + nameSpace.getNamespace()  +"_" + getImpName() + "_" + apiName;
-    }
-
-    public String getJniSignalConnectMethodName(MethodModel m) {
-        return Configuration.JNI_METHOD_NAME_BASE + nameSpace.getNamespace()  +"_" + getImpName() + "_" + m.getSignalMethodName();
-    }
-
-
-    public String getGlobalName(String name) {
-        return nameSpace.getNamespace() + "_" + getImpName() + "_" + name;
     }
 
     public boolean isRecord() {

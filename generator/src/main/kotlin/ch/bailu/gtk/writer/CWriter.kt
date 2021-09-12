@@ -15,7 +15,7 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
             a("#include <${include}>\n")
         }
 
-        a("\n#include \"${classModel.getHeaderFileName()}\"\n\n\n")
+        a("\n#include \"${getHeaderFileName(classModel)}\"\n\n\n")
 
         a("jclass ${getGlobalClassName(classModel)};\n")
         a("JavaVM* ${getGlobalVMName(classModel)};\n")
@@ -100,7 +100,7 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
     private fun _writeNativeMethod(classModel : ClassModel, methodModel : MethodModel, self : Boolean) {
         start(1)
         a ("""
-JNIEXPORT ${methodModel.getReturnType().getJniType()} JNICALL ${classModel.getJniMethodName(methodModel)}(${getJniSignature(methodModel, self)})
+JNIEXPORT ${methodModel.getReturnType().getJniType()} JNICALL ${getJniMethodName(classModel, methodModel)}(${getJniSignature(methodModel, self)})
 {
     ${getAllocateParameters(classModel, methodModel)}
     ${getReturnStatement(methodModel)} ${methodModel.getGtkName()}(${getGtkCallSignature(classModel, methodModel, self)});
@@ -126,7 +126,7 @@ JNIEXPORT ${methodModel.getReturnType().getJniType()} JNICALL ${classModel.getJn
     override fun writeMallocConstructor(classModel : ClassModel) {
         start(1)
         a("""
-JNIEXPORT jlong JNICALL ${classModel.getJniMethodName("newFromMalloc")}(JNIEnv * _jenv, jclass _jclass)
+JNIEXPORT jlong JNICALL ${getJniMethodName(classModel, "newFromMalloc")}(JNIEnv * _jenv, jclass _jclass)
 {
     return (jlong) calloc(1, sizeof(${classModel.getCType()}));
 }
@@ -182,7 +182,7 @@ static ${methodModel.getReturnType().gtkType} ${getCSignalCallbackName(classMode
     }
 }
     
-JNIEXPORT void JNICALL ${classModel.getJniSignalConnectMethodName(methodModel)}(JNIEnv * _jenv, jclass _jclass, jlong _self) 
+JNIEXPORT void JNICALL ${getJniSignalConnectMethodName(classModel, methodModel)}(JNIEnv * _jenv, jclass _jclass, jlong _self) 
 {
     printf("JNI connect: ${methodModel.getApiName()}\n");
 
@@ -202,13 +202,13 @@ JNIEXPORT void JNICALL ${classModel.getJniSignalConnectMethodName(methodModel)}(
         val setter = JavaNames.getSetterName(parameterModel.getName())
 
         a ("""
-JNIEXPORT ${parameterModel.getJniType()} JNICALL ${classModel.getJniMethodName(getter)}(JNIEnv * _jenv, jclass _jclass, jlong _self)
+JNIEXPORT ${parameterModel.getJniType()} JNICALL ${getJniMethodName(classModel, getter)}(JNIEnv * _jenv, jclass _jclass, jlong _self)
 {
     const ${classModel.getCType()}* __self = (${classModel.getCType()}*) _self;
     return (${parameterModel.getJniType()}) __self->${parameterModel.getName()};
 }
 
-JNIEXPORT void JNICALL ${classModel.getJniMethodName(setter)}(JNIEnv * _jenv, jclass _jclass, jlong _self, ${parameterModel.getJniType()} _${parameterModel.getName()})
+JNIEXPORT void JNICALL ${getJniMethodName(classModel, setter)}(JNIEnv * _jenv, jclass _jclass, jlong _self, ${parameterModel.getJniType()} _${parameterModel.getName()})
 {
     ${classModel.getCType()}* __self = (${classModel.getCType()}*) _self;
     __self->${parameterModel.getName()} = (${parameterModel.getGtkType()}) _${parameterModel.getName()};
@@ -317,10 +317,10 @@ JNIEXPORT void JNICALL ${classModel.getJniMethodName(setter)}(JNIEnv * _jenv, jc
     }
 
     private fun getGlobalClassName(classModel : ClassModel) : String {
-        return classModel.getGlobalName("class")
+        return getGlobalName(classModel,"class")
     }
 
     private fun getGlobalVMName(classModel : ClassModel) : String {
-        return classModel.getGlobalName("VM")
+        return getGlobalName(classModel,"VM")
     }
 }
