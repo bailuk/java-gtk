@@ -11,9 +11,15 @@ import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.Button;
+import ch.bailu.gtk.GTK;
 
 public class HelloWorld {
-    public HelloWorld(String[] argv) {
+    public static void main(String[] args) {
+        GTK.init();
+        new HelloWorld(args);
+    }   
+
+    public HelloWorld(String[] args) {
         var app = new Application("com.example.GtkApplication",
                 ApplicationFlags.FLAGS_NONE);
 
@@ -30,7 +36,7 @@ public class HelloWorld {
             window.showAll();
         });
 
-        app.run(argv.length, argv);
+        app.run(args.length, args);
     }
 }
 ```
