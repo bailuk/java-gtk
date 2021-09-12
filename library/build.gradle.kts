@@ -1,41 +1,28 @@
 plugins {
     `java-library`
     `maven-publish`
+    id("pl.allegro.tech.build.axion-release") version "1.13.3"
 }
-/*
-group = "ch.bailu.java-gtk"
-version = "0.1"
 
-// https://docs.gradle.org/current/userguide/publishing_maven.html
+project.version = scmVersion.version
+
+group = "ch.bailu.java-gtk"
+
+
 publishing {
-    publications {
-        create<MavenPublication>("java-gtk") {
-            artifactId = "java-gtk"
-            from(components["java"])
-            versionMapping {
-                usage("java-api") {
-                    fromResolutionOf("runtimeClasspath")
-                }
-                usage("java-runtime") {
-                    fromResolutionResult()
-                }
-            }
-            pom {
-                name.set("java-gtk")
-                description.set("Java bindings for GTK")
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/bailuk/java-gtk")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
+
             }
         }
-
     }
-}*/
-
-publishing {
     publications {
-        create<MavenPublication>("maven") {
-            groupId = "ch.bailu.java-gtk"
-            artifactId = "java-gtk"
-            version = "0.1"
-
+        register<MavenPublication>("gpr") {
             from(components["java"])
         }
     }
