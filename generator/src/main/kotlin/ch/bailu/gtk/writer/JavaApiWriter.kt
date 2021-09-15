@@ -191,8 +191,8 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
     fun writeSignal(classModel : ClassModel, methodModel : MethodModel) {
         start(1);
         a("    public void ").a(methodModel.getSignalMethodName()).a("(").a(methodModel.getSignalInterfaceName()).a(" observer) {\n");
-        a("        ch.bailu.gtk.Signal.put(toLong(), \"").a(methodModel.getApiName()).a("\", observer);\n");
-        a("        ").a(classModel.getImpName()).a(".").a(methodModel.getSignalMethodName()).a("(toLong());\n");
+        a("        ch.bailu.gtk.Signal.put(getCPointer(), \"").a(methodModel.getApiName()).a("\", observer);\n");
+        a("        ").a(classModel.getImpName()).a(".").a(methodModel.getSignalMethodName()).a("(getCPointer());\n");
         a("    }\n");
         a("    public interface ").a(methodModel.getSignalInterfaceName()).a(" {\n");
         a("        ").a(methodModel.getReturnType().getApiType()).a(" ").a(methodModel.getSignalMethodName()); writeSignature(methodModel); a(";\n");
@@ -300,7 +300,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
 
     private fun getSelfCallSignature(parameters : List<ParameterModel>) : String {
-        return "toLong()${getCallSignature(parameters, ", ")}"
+        return "getCPointer()${getCallSignature(parameters, ", ")}"
     }
 
     private fun getCallSignature(parameters : List<ParameterModel>, firstDel : String) : String{
@@ -313,7 +313,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
                 del = ", "
 
             } else if (!p.isCallback) {
-                result.append("${del}${p.getName()}.toLong()")
+                result.append("${del}${p.getName()}.getCPointer()")
                 del = ", "
             }
 
@@ -332,7 +332,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
             if (p.isJavaNative()) {
                 result.append(p.getName())
             } else {
-                result.append("${p.getName()}.toLong()")
+                result.append("${p.getName()}.getCPointer()")
             }
             del = ", ";
         }

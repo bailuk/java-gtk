@@ -1,5 +1,6 @@
 package examples;
 
+import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.gdk.Gdk;
 import ch.bailu.gtk.gdk.RGBA;
 import ch.bailu.gtk.gio.ApplicationFlags;
@@ -34,7 +35,7 @@ public class ColorChooser {
         window.add(vbox);
 
         window.setTitle("Color Chooser");
-        var frame = new Frame("");
+        var frame = new Frame(null);
         frame.setShadowType(ShadowType.IN);
         vbox.packStart(frame, 1,1,0);
 
@@ -48,7 +49,7 @@ public class ColorChooser {
         da.onDraw(cr -> {
             Gdk.cairoSetSourceRgba(cr, rgba);
             cr.paint();
-            return 1;
+            return GTK.TRUE;
         });
 
 
@@ -68,7 +69,7 @@ public class ColorChooser {
 
             dialog.onResponse(response_id -> {
                 if (response_id == ResponseType.OK) {
-                    var color = new ch.bailu.gtk.gtk.ColorChooser(dialog.toLong());
+                    var color = new ch.bailu.gtk.gtk.ColorChooser(dialog.getCPointer());
                     color.getRgba(rgba);
                 }
                 dialog.destroy();

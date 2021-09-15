@@ -35,7 +35,7 @@ public class HeaderBarSample {
 
         var button = new Button();
         var icon = new ThemedIcon("mail-send-receive-symbolic");
-        var image = Image.newFromGiconImage(new Icon(icon.toLong()), IconSize.BUTTON);
+        var image = Image.newFromGiconImage(new Icon(icon.getCPointer()), IconSize.BUTTON);
         icon.unref();
 
         button.add(image);

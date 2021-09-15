@@ -131,7 +131,7 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
         result.append("((${classModel.getApiName()}.${methodModel.getSignalInterfaceName()})observer).${methodModel.getSignalMethodName()}(${getSignalInterfaceCallSignature(methodModel)})")
 
         if (!methodModel.returnType.isVoid && !methodModel.returnType.isJavaNative) {
-            result.append(".toLong()")
+            result.append(".getCPointer()")
         }
         return result.toString()
     }

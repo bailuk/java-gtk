@@ -8,9 +8,9 @@ public class App {
 
     public static void main (String[] argv) throws IOException {
         GTK.init();
-        new HelloWorld(argv);
+        //new HelloWorld(argv);
         // new HeaderBarSample(argv);
-        // new ColorChooser(argv);
+        new ColorChooser(argv);
         // new ButtonBoxes(argv);
         // new Spinner(argv);
         // new LinksSample(argv);

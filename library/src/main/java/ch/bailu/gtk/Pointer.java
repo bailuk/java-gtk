@@ -1,8 +1,6 @@
 package ch.bailu.gtk;
 
 
-import ch.bailu.gtk.exception.AllocationError;
-
 public class Pointer {
 
     private final long pointer;
@@ -13,7 +11,7 @@ public class Pointer {
         }
         this.pointer = pointer;
     }
-
+/*
     public static Pointer[] toPointerArray(long[] in) throws AllocationError {
         Pointer[] result = new Pointer[in.length];
         for (int i =0; i < in.length; i++) {
@@ -31,8 +29,8 @@ public class Pointer {
         }
         return result;
     }
-
-    public long toLong() {
+*/
+    public long getCPointer() {
         return pointer;
     }
 

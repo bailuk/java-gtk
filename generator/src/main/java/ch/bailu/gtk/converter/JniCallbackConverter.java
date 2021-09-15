@@ -14,7 +14,7 @@ public class JniCallbackConverter extends JniTypeConverter {
 
     @Override
     public String getAllocateResourceString(ClassModel classModel) {
-        return "    const "+ parameterModel.getGtkType() + " __" + parameterModel.getName() + " = (" + parameterModel.getGtkType() + ")" + " " + getCCallbackName(classModel, parameterModel) + ";\n";
+        return "\n    const "+ parameterModel.getGtkType() + " __" + parameterModel.getName() + " = (" + parameterModel.getGtkType() + ")" + " " + getCCallbackName(classModel, parameterModel) + ";\n";
     }
 
     @Override

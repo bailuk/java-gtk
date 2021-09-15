@@ -33,9 +33,11 @@ public class Filter {
             return false;
         }
 
+/*
         if ("Cairo".equals(classModel.getApiName()) && "imageSurfaceCreate".equals(methodModel.getApiName())) {
             return false;
         }
+*/
 
         if ("PrintSettings".equals(classModel.getApiName()) && "get".equals(methodModel.getApiName())) {
             return false;

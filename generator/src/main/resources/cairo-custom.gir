@@ -909,12 +909,62 @@
                 <type name="gint" c:type="gint"/>
             </field>
         </record>
+
+
+
         <function name="image_surface_create" c:identifier="cairo_image_surface_create">
-            <return-value transfer-ownership="none">
-                <type name="none" c:type="void"/>
+            <return-value transfer-ownership="full">
+                <type name="Surface" c:type="cairo_surface_t*"/>
             </return-value>
-            <parameters>
-            </parameters>
+
+            <!-- custom -->
+                <parameters>
+                    <parameter name="format" transfer-ownership="none">
+                        <type name="Format" c:type="cairo_format_t"/>
+                    </parameter>
+                    <parameter name="width" transfer-ownership="none">
+                        <type name="gint" c:type="gint"/>
+                    </parameter>
+                    <parameter name="height" transfer-ownership="none">
+                        <type name="gint" c:type="gint"/>
+                    </parameter>
+
+                </parameters>
+
+
         </function>
+
+
+
+
+
+        <function name="image_surface_create_for_data" c:identifier="cairo_image_surface_create_for_data">
+            <return-value transfer-ownership="full">
+                <type name="Surface" c:type="cairo_surface_t*"/>
+            </return-value>
+
+            <!-- custom -->
+            <parameters>
+                <parameter name="data" transfer-ownership="none">
+                    <type name="unsigned char*" c:type="unsigned char*"/>
+                </parameter>
+                <parameter name="format" transfer-ownership="none">
+                    <type name="Format" c:type="cairo_format_t"/>
+                </parameter>
+                <parameter name="width" transfer-ownership="none">
+                    <type name="gint" c:type="gint"/>
+                </parameter>
+                <parameter name="height" transfer-ownership="none">
+                    <type name="gint" c:type="gint"/>
+                </parameter>
+                <parameter name="stride" transfer-ownership="none">
+                    <type name="gint" c:type="gint"/>
+                </parameter>
+
+            </parameters>
+
+
+        </function>
+
     </namespace>
 </repository>
