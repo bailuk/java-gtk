@@ -3,9 +3,6 @@ package ch.bailu.gtk;
 import org.junit.jupiter.api.Test;
 
 import ch.bailu.gtk.gdk.RGBA;
-import ch.bailu.gtk.gobject.ValueArray;
-import ch.bailu.gtk.gtk.Application;
-import ch.bailu.gtk.gio.ApplicationFlags;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
