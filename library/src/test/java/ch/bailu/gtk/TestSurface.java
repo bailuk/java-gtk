@@ -16,12 +16,12 @@ public class TestSurface {
     @Test
     public void testSurface() {
         Surface surface = Cairo.imageSurfaceCreate(Format.A8, 256,256);
-        assertNotEquals(0, surface.toLong());
+        assertNotEquals(0, surface.getCPointer());
         surface.destroy();
 
         byte[] bytes = new byte[256*256];
         surface = Cairo.imageSurfaceCreateForData(bytes, Format.A8, 256, 256, 256);
-        assertNotEquals(0, surface.toLong());
+        assertNotEquals(0, surface.getCPointer());
     }
 
 }
