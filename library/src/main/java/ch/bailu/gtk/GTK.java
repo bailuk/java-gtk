@@ -26,6 +26,16 @@ public class GTK {
         }
     }
 
+    public static boolean is(int bool) {
+        return bool == TRUE;
+    }
+
+    public static int is(boolean bool) {
+        if (bool) {
+            return TRUE;
+        }
+        return FALSE;
+    }
 
     private static void loadLibrary() throws IOException {
         URL src = GTK.class.getResource("/lib" + LIB_NAME);

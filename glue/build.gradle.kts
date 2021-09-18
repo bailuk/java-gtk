@@ -93,19 +93,9 @@ library {
                 val library: CppSharedLibrary = this
                 library.linkTask.get().linkerArgs.set(setOf("-pthread",
                         "-lglib-2.0",
-                        "-lz",
-                        "/usr/lib/x86_64-linux-gnu/libgtk-3.so",
-                        "/usr/lib/x86_64-linux-gnu/libgdk-3.so",
-                        "/usr/lib/x86_64-linux-gnu/libpangocairo-1.0.so",
-                        "/usr/lib/x86_64-linux-gnu/libpango-1.0.so",
-                        "/usr/lib/x86_64-linux-gnu/libharfbuzz.so",
-                        "/usr/lib/x86_64-linux-gnu/libatk-1.0.so",
-                        "/usr/lib/x86_64-linux-gnu/libcairo-gobject.so",
-                        "/usr/lib/x86_64-linux-gnu/libcairo.so",
-                        "/usr/lib/x86_64-linux-gnu/libgdk_pixbuf-2.0.so",
-                        "/usr/lib/x86_64-linux-gnu/libgio-2.0.so",
-                        "/usr/lib/x86_64-linux-gnu/libgobject-2.0.so",
-                        "/usr/lib/x86_64-linux-gnu/libglib-2.0.so"))
+                        "-lz"))
+
+                library.linkTask.get().linkerArgs.addAll(libraries);
             }
         }
 

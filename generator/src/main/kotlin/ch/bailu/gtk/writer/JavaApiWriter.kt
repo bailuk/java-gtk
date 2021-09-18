@@ -69,7 +69,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
             for (p in methodModel.parameters) {
                 if (p.isCallback) {
-                    a("        ch.bailu.gtk.Signal.put(0, \"${p.callbackModel.apiName}\", ${p.name});\n")
+                    a("        ch.bailu.gtk.Callback.put(0, \"${p.callbackModel.apiName}\", ${p.name});\n")
                 }
             }
         }
@@ -191,7 +191,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
     fun writeSignal(classModel : ClassModel, methodModel : MethodModel) {
         start(1);
         a("    public void ").a(methodModel.getSignalMethodName()).a("(").a(methodModel.getSignalInterfaceName()).a(" observer) {\n");
-        a("        ch.bailu.gtk.Signal.put(getCPointer(), \"").a(methodModel.getApiName()).a("\", observer);\n");
+        a("        ch.bailu.gtk.Callback.put(getCPointer(), \"").a(methodModel.getApiName()).a("\", observer);\n");
         a("        ").a(classModel.getImpName()).a(".").a(methodModel.getSignalMethodName()).a("(getCPointer());\n");
         a("    }\n");
         a("    public interface ").a(methodModel.getSignalInterfaceName()).a(" {\n");

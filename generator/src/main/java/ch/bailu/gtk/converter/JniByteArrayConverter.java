@@ -19,16 +19,21 @@ public class JniByteArrayConverter extends JniTypeConverter{
     @Override
     public String getAllocateResourceString(ClassModel classModel) {
 
-        return  "\n" +
+        return
                 "    " + model.getGtkType() + " " + var + " = NULL;\n" +
-                "    if (" + var + "!= NULL) {\n" +
+
+                "    if (" + model.getName() + " != NULL) {\n" +
+                "         printf(\"not null\\n\");\n" +
                 "         " + var + " = (*_jenv)->GetByteArrayElements(_jenv, " + model.getName() + ", NULL);\n" +
+                "    }\n" +
+                "    if (" + var + " != NULL) {\n" +
+                "         printf(\"not null\\n\");\n" +
                 "    }\n";
     }
 
     @Override
     public String getFreeResourcesString() {
-        return "    // (*_jenv)->ReleaseByteArrayElements(_jenv, " + model.getName() + ", bufferPtr, 0);";
+        return " //   (*_jenv)->ReleaseByteArrayElements(_jenv, " + model.getName() + ", "+ var + ", 0);";
     }
 
     @Override

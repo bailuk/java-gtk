@@ -71,7 +71,7 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
     static native void ${methodModel.signalMethodName}(long _self);
     static ${methodModel.getReturnType().getImpType()} ${methodModel.signalCallbackName}(${getSelfSignature(methodModel.parameters)}) {
         String signal = "${methodModel.apiName}";
-        for (java.lang.Object observer : ch.bailu.gtk.Signal.get(_self, signal)) {
+        for (java.lang.Object observer : ch.bailu.gtk.Callback.get(_self, signal)) {
             ${getSignalInterfaceCall(classModel, methodModel)};
         }
         ${getDefaultReturn(methodModel)}
@@ -85,7 +85,7 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
             
     static ${methodModel.getReturnType().getImpType()} ${methodModel.signalCallbackName}(${getSignature(methodModel.parameters, "")}) {
         String signal = "${methodModel.apiName}";
-        for (java.lang.Object observer : ch.bailu.gtk.Signal.get(0, signal)) {
+        for (java.lang.Object observer : ch.bailu.gtk.Callback.get(0, signal)) {
             ${getSignalInterfaceCall(classModel, methodModel)};
         }
         ${getDefaultReturn(methodModel)}

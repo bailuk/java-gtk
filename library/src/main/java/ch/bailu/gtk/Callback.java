@@ -3,7 +3,7 @@ package ch.bailu.gtk;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Signal {
+public class Callback {
 
     private final static MMap<Long, String, List<Object>> observers = new MMap<>();
 
