@@ -63,6 +63,9 @@ public class PangoTextMask {
         pattern.destroy();
 
         cr.setSourceRgb(0,0,0);
+        cr.setLineWidth(0.5);
+        cr.stroke();
+        cr.restore();
         return GTK.TRUE;
 
     }
