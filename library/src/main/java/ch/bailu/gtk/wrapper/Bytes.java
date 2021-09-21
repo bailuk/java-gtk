@@ -1,4 +1,6 @@
-package ch.bailu.gtk;
+package ch.bailu.gtk.wrapper;
+
+import ch.bailu.gtk.Pointer;
 
 public class Bytes extends Pointer {
 

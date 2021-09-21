@@ -69,7 +69,8 @@ public class Filter {
      */
     private static final String[] MALLOC = {
             "RGBA",
-            "Rectangle"
+            "Rectangle",
+            "Matrix"
     };
 
 

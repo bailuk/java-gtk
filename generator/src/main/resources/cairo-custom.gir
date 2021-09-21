@@ -15,6 +15,29 @@
             glib:type-name="CairoContext"
             glib:get-type="cairo_gobject_context_get_type">
 
+
+            <method name="save" c:identifier="cairo_save">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                </parameters>
+            </method>
+
+            <method name="restore" c:identifier="cairo_restore">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                </parameters>
+            </method>
+
             <method name="paint" c:identifier="cairo_paint">
                 <return-value transfer-ownership="none">
                     <type name="none" c:type="void"/>
@@ -46,6 +69,37 @@
                     </parameter>
                 </parameters>
             </method>
+
+
+            <method name="set_source" c:identifier="cairo_set_source">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                    <parameter name="source">
+                        <type name="Pattern" c:type="cairo_pattern_t*"/>
+                    </parameter>
+                </parameters>
+            </method>
+
+
+            <method name="set_operator" c:identifier="cairo_set_operator">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                    <parameter name="operator">
+                        <type name="Operator" c:type="cairo_operator_t*"/>
+                    </parameter>
+                </parameters>
+            </method>
+
 
             <method name="set_line_width" c:identifier="cairo_set_line_width">
                 <return-value transfer-ownership="none">
@@ -121,6 +175,17 @@
             </method>
 
             <method name="fill" c:identifier="cairo_fill">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                </parameters>
+            </method>
+
+            <method name="fill_preserve" c:identifier="cairo_fill_preserve">
                 <return-value transfer-ownership="none">
                     <type name="none" c:type="void"/>
                 </return-value>
@@ -211,6 +276,79 @@
             </method>
 
 
+            <method name="reset_clip" c:identifier="cairo_reset_clip">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                </parameters>
+            </method>
+
+
+            <method name="clip" c:identifier="cairo_clip">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                </parameters>
+            </method>
+
+            <method name="new_path" c:identifier="cairo_new_path">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                </parameters>
+            </method>
+
+            <method name="set_matrix" c:identifier="cairo_set_matrix">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                    <parameter name="matrix" transfer-ownership="non">
+                        <type name="Matrix" c:type="const mcario_matrix_t*"/>
+                    </parameter>
+                </parameters>
+            </method>
+
+
+            <method name="identity_matrix" c:identifier="cairo_identity_matrix">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                </parameters>
+            </method>
+
+            <method name="show_text" c:identifier="cairo_show_text">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                    <parameter name="utf8" transfer-ownership="none">
+                        <type name="const char*" c:type="const char*"/>
+                    </parameter>
+                </parameters>
+            </method>
 
         </record>
 
@@ -250,10 +388,240 @@
                 </parameters>
             </method>
         </record>
-        <record name="Matrix" c:type="cairo_matrix_t" foreign="1"/>
+
+
+
+
+        <record name="Matrix" c:type="cairo_matrix_t" foreign="1">
+            <method name="init_identity" c:identifier="cairo_matrix_init_identity">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="matrix" transfer-ownership="none">
+                        <type name="Matrix" c:type="cairo_matrix_t*"/>
+                    </instance-parameter>
+                </parameters>
+            </method>
+
+
+            <method name="translate" c:identifier="cairo_matrix_translate">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="matrix" transfer-ownership="none">
+                        <type name="Matrix" c:type="cairo_matrix_t*"/>
+                    </instance-parameter>
+
+                    <parameter name="tx">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                    <parameter name="ty">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                </parameters>
+            </method>
+
+            <method name="scale" c:identifier="cairo_matrix_scale">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="matrix" transfer-ownership="none">
+                        <type name="Matrix" c:type="cairo_matrix_t*"/>
+                    </instance-parameter>
+
+                    <parameter name="sx">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                    <parameter name="sy">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                </parameters>
+            </method>
+
+
+            <method name="rotate" c:identifier="cairo_matrix_rotate">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="matrix" transfer-ownership="none">
+                        <type name="Matrix" c:type="cairo_matrix_t*"/>
+                    </instance-parameter>
+
+                    <parameter name="radians">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                </parameters>
+            </method>
+
+
+            <method name="invert" c:identifier="cairo_matrix_invert">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="matrix" transfer-ownership="none">
+                        <type name="Matrix" c:type="cairo_matrix_t*"/>
+                    </instance-parameter>
+                </parameters>
+            </method>
+
+
+            <method name="multiply" c:identifier="cairo_matrix_multiply">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="matrix" transfer-ownership="none">
+                        <type name="Matrix" c:type="cairo_matrix_t*"/>
+                    </instance-parameter>
+
+                    <parameter name="a">
+                        <type name="Matrix" c:type="cairo_matrix_t*"/>
+                    </parameter>
+                    <parameter name="b">
+                        <type name="Matrix" c:type="cairo_matrix_t*"/>
+                    </parameter>
+                </parameters>
+            </method>
+
+            <method name="distance" c:identifier="cairo_matrix_distance">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="matrix" transfer-ownership="none">
+                        <type name="Matrix" c:type="cairo_matrix_t*"/>
+                    </instance-parameter>
+
+                    <parameter name="dx">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                    <parameter name="dy">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                </parameters>
+            </method>
+
+
+            <method name="transform_point" c:identifier="cairo_matrix_transform_point">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="matrix" transfer-ownership="none">
+                        <type name="Matrix" c:type="cairo_matrix_t*"/>
+                    </instance-parameter>
+
+                    <parameter name="x">
+                        <type name="double*" c:type="double*"/>
+                    </parameter>
+                    <parameter name="y">
+                        <type name="double*" c:type="double*"/>
+                    </parameter>
+                </parameters>
+            </method>
+
+
+        </record>
+
+
+
+
+
+
         <record name="Pattern" c:type="cairo_pattern_t" foreign="1"
             glib:type-name="CairoPattern"
-            glib:get-type="cairo_gobject_pattern_get_type"/>
+            glib:get-type="cairo_gobject_pattern_get_type">
+
+
+            <constructor name="new" c:identifier="cairo_pattern_create_linear">
+                <return-value transfer-ownership="none">
+                    <type name="Pattern" c:type="cairo_pattern_t*"/>
+                </return-value>
+                <parameters>
+                    <parameter name="x0">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                    <parameter name="y0">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                    <parameter name="x1">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                    <parameter name="y1">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                </parameters>
+            </constructor>
+
+            <method name="add_color_stop_rgb" c:identifier="cairo_pattern_add_color_stop_rgb">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="pattern" transfer-ownership="none">
+                        <type name="Pattern" c:type="cairo_pattern_t*"/>
+                    </instance-parameter>
+
+                    <parameter name="offset">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                    <parameter name="red">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                    <parameter name="green">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                    <parameter name="blue">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                </parameters>
+            </method>
+
+            <method name="add_color_stop_rgba" c:identifier="cairo_pattern_add_color_stop_rgba">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="pattern" transfer-ownership="none">
+                        <type name="Pattern" c:type="cairo_pattern_t*"/>
+                    </instance-parameter>
+
+                    <parameter name="offset">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                    <parameter name="red">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                    <parameter name="green">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                    <parameter name="blue">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                    <parameter name="alpha">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                </parameters>
+            </method>
+
+            <method name="destroy" c:identifier="cairo_pattern_destroy">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="pattern" transfer-ownership="none">
+                        <type name="Pattern" c:type="cairo_pattern_t*"/>
+                    </instance-parameter>
+                </parameters>
+            </method>
+        </record>
+
+
         <record name="Region" c:type="cairo_region_t" foreign="1"
             glib:type-name="CairoRegion"
             glib:get-type="cairo_gobject_region_get_type"/>
@@ -876,7 +1244,15 @@
         <record name="ScaledFont" c:type="cairo_scaled_font_t" foreign="1"
             glib:type-name="CairoScaledFont"
             glib:get-type="cairo_gobject_scaled_font_get_type"/>
-        <record name="Path" c:type="cairo_path_t" foreign="1"/>
+
+
+
+        <record name="Path" c:type="cairo_path_t" foreign="1">
+
+
+        </record>
+
+
         <record name="Rectangle" c:type="cairo_rectangle_t"
             glib:type-name="CairoRectangle"
             glib:get-type="cairo_gobject_rectangle_get_type">

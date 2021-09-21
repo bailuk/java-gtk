@@ -122,27 +122,27 @@ public class TestTypeModel {
 	void testClassType() {
 		ClassType classType = new ClassType();
 
-		assertEquals(false, classType.isValid());
+		assertEquals(false, classType.isClass());
 
 
 		classType = new ClassType("namespace", "Application", "GtkApplication");
-		assertEquals(false, classType.isValid());
+		assertEquals(false, classType.isClass());
 
 		StructureTable.instance().add("namespace", "Application");
 		classType = new ClassType("namespace", "Application", "GtkApplication");
-		assertEquals(false, classType.isValid());
+		assertEquals(false, classType.isClass());
 
 		StructureTable.instance().add("namespace", "Application");
 		classType = new ClassType("namespace", "Application", "GtkApplication*");
-		assertEquals(true, classType.isValid());
+		assertEquals(true, classType.isClass());
 		assertEquals("Application", classType.getFullName());
 
 		classType = new ClassType("mynamespace", "Application", "GtkApplication*");
-		assertEquals(false, classType.isValid());
+		assertEquals(false, classType.isClass());
 
 		classType = new ClassType("mynamespace", "namespace.Application", "GtkApplication*");
 		assertEquals("ch.bailu.gtk.namespace.Application", classType.getFullName());
-		assertEquals(true, classType.isValid());
+		assertEquals(true, classType.isClass());
 
 	}
 }

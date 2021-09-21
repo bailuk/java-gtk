@@ -33,7 +33,7 @@ public class ParameterModel extends Model {
         value = parameter.getValue();
 
         classType = new ClassType(namespace, parameter);
-        if (classType.isValid()) {
+        if (classType.isClass()) {
             cType = new CType("void*");
             jType = new JavaType("long");
 
@@ -89,7 +89,7 @@ public class ParameterModel extends Model {
             return callbackModel.getSignalInterfaceName();
         }
 
-        if (classType.isValid()) {
+        if (classType.isClass()) {
             return classType.getFullName();
         }
 
@@ -105,7 +105,7 @@ public class ParameterModel extends Model {
     }
 
     public boolean isJavaNative() {
-        return classType.isValid() == false;
+        return classType.isClass() == false;
     }
 
     public String getJniType() {

@@ -40,7 +40,7 @@ public class PrimitivesTable {
         {"int",           "int"},
         {"double",        "double"},
         {"char**",        "String[]"},
-        {"unsigned char*","byte[]"}
+       // {"unsigned char*","wrapper.Bytes*"}
     };
 
     private final Map<String, String> table = new HashMap<>(50);

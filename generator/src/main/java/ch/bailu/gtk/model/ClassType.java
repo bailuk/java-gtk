@@ -3,10 +3,10 @@ package ch.bailu.gtk.model;
 import ch.bailu.gtk.Configuration;
 import ch.bailu.gtk.converter.AliasTable;
 import ch.bailu.gtk.converter.CallbackTable;
-import ch.bailu.gtk.converter.EnumTable;
 import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.converter.RelativeNamespaceType;
 import ch.bailu.gtk.converter.StructureTable;
+import ch.bailu.gtk.converter.WrapperTable;
 import ch.bailu.gtk.tag.CallbackTag;
 import ch.bailu.gtk.tag.ParameterTag;
 
@@ -34,9 +34,15 @@ public class ClassType implements ClassTypeInterface {
     }
     
     public ClassType(String namespace, String typeName, CType ctype) {
+        typeName = convert(typeName);
+
         type = convert(namespace, typeName);
         callbackTag = getCallbackTagFromTable(type);
         valid = (callbackTag != null) || (isInStructureTable(type) && ctype.isSinglePointer());
+    }
+
+    private String convert(String typeName) {
+        return WrapperTable.instance().convert(typeName);
     }
 
     private RelativeNamespaceType convert(String namespace, String typeName) {
@@ -58,7 +64,7 @@ public class ClassType implements ClassTypeInterface {
 
 
 
-    public boolean isValid() {
+    public boolean isClass() {
         return valid;
     }
 
@@ -68,7 +74,7 @@ public class ClassType implements ClassTypeInterface {
 
 
     public String getFullName() {
-        if (isValid() && !type.hasCurrentNamespace()) {
+        if (isClass() && !type.hasCurrentNamespace()) {
                 return getFullNamespace() + "." + type.getName();
         }
         return getName();

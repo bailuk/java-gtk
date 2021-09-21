@@ -2,6 +2,8 @@ package ch.bailu.gtk;
 
 import org.junit.jupiter.api.Test;
 
+import ch.bailu.gtk.wrapper.Bytes;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestBytes {
