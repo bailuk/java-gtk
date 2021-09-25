@@ -18,6 +18,11 @@ public class WrapperTable {
 
     private WrapperTable() {
         add("unsigned char*", "Bytes");
+        add("gchar*",         "Str");
+        add("const char*",    "Str");
+        add("const gchar*",   "Str");
+        add("utf8",           "Str");
+        add("filename",       "Str");
     }
 
 
@@ -36,6 +41,4 @@ public class WrapperTable {
         }
         return typeName;
     }
-
-
 }

@@ -164,9 +164,10 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
         start(1)
 
         var value = parameterModel.value
+        var type  = parameterModel.apiType
 
-
-        if (parameterModel.apiType == "String") {
+        if (parameterModel.apiType.endsWith("Str")) {
+            type = "String"
             value = "\"$value\"";
         } else if ("true".equals(value)){
             value = "ch.bailu.gtk.GTK.TRUE"
@@ -175,7 +176,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
             value = "ch.bailu.gtk.GTK.FALSE"
         }
 
-    a("    " + parameterModel.apiType + " " + parameterModel.name + " = " + value + ";\n");
+        a("    " + type + " " + parameterModel.name + " = " + value + ";\n");
 
     }
 

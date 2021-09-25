@@ -5,28 +5,6 @@ import java.util.Map;
 
 public class ReservedTokenTable {
     
-
-    private final static String[][] TABLE = {
-        {"native",   "xnative"},
-        {"continue", "xcontinue"},
-        {"double",   "xdouble"},
-        {"int",      "xint"},
-        {"new",      "xnew"},
-        {"default",  "xdefault"},
-        {"private",  "xprivate"},
-        {"...",      "xelipse"},
-        {"notify",   "xnotify"},
-        {"interface","xinterface"},
-        {"2BUTTON_PRESS", "TWO_BUTTON_PRESS"},
-        {"3BUTTON_PRESS", "TREE_BUTTON_PRESS"},
-            {"2BIG", "_2_BIG"},
-        {"false", "FALSE"},
-        {"true", "TRUE"},
-        {"ch",   "CH"},
-
-    };
-
-
     private final Map<String, String> table = new HashMap<>();
 
     private static ReservedTokenTable INSTANCE = null;
@@ -39,9 +17,28 @@ public class ReservedTokenTable {
     }
 
     private ReservedTokenTable() {
-        for (String[] a : TABLE) {
-            table.put(a[0], a[1]);
-        }
+        add("native",   "xnative");
+        add("continue", "xcontinue");
+        add("double",   "xdouble");
+        add("int",      "xint");
+        add("new",      "xnew");
+        add("default",  "xdefault");
+        add("private",  "xprivate");
+        add("...",      "xelipse");
+        add("notify",   "xnotify");
+        add("interface","xinterface");
+        add("2BUTTON_PRESS", "TWO_BUTTON_PRESS");
+        add("3BUTTON_PRESS", "TREE_BUTTON_PRESS");
+        add("2BIG", "_2_BIG");
+        add("false", "FALSE");
+        add("true", "TRUE");
+        add("ch",   "CH");
+        add("toString", "toStr");
+    }
+
+
+    private void add(String reserved, String replacement) {
+        table.put(reserved, replacement);
     }
 
     public String convert(String token) {

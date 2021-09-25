@@ -5,11 +5,12 @@ import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.Label;
 import ch.bailu.gtk.gtk.Window;
+import ch.bailu.gtk.wrapper.Str;
 
 public class LinksSample {
 
     public LinksSample(String[] argv) {
-        var app = new Application("com.example.GtkApplication",
+        var app = new Application(new Str("com.example.GtkApplication"),
                 ApplicationFlags.FLAGS_NONE);
 
         app.onActivate(() -> {
@@ -42,9 +43,9 @@ public class LinksSample {
                 .append("<span color=\"#F2B50F\">o</span><span color=\"#0266C8\">g</span>")
                 .append("<span color=\"#00933B\">l</span><span color=\"#F90101\">e</span>")
                 .append("</a>.");
-        window.setTitle("Links");
+        window.setTitle(new Str("Links"));
         window.setBorderWidth(12);
-        Label label = new Label(labelString.toString());
+        Label label = new Label(new Str(labelString.toString()));
 
         label.setUseMarkup(1);
         label.onActivateLink(uri -> {

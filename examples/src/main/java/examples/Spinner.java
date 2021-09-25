@@ -11,6 +11,7 @@ import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.VBox;
 import ch.bailu.gtk.gtk.Widget;
 import ch.bailu.gtk.gtk.Window;
+import ch.bailu.gtk.wrapper.Str;
 
 public class Spinner {
 
@@ -21,7 +22,7 @@ public class Spinner {
 
 
     public Spinner(String[] argv) {
-        var app = new Application("com.example.GtkApplication",
+        var app = new Application(new Str("com.example.GtkApplication"),
                 ApplicationFlags.FLAGS_NONE);
 
         app.onActivate(() -> {
@@ -29,7 +30,7 @@ public class Spinner {
 
             var window = new ApplicationWindow(app);
 
-            window.setTitle(helloString);
+            window.setTitle(new Str(helloString));
             doSpinner(window);
             window.showAll();
 
@@ -76,14 +77,14 @@ public class Spinner {
         hbox.add(new Entry());
         vbox.add(hbox);
         hbox.setSensitive(0);
-        Button button = Button.newWithLabelButton("Play");
+        Button button = Button.newWithLabelButton(new Str("Play"));
         button.onClicked(()->{
             spinnerSensitive.start();
             spinner_unsensitive.start();
         });
         vbox.add(button);
 
-        button = Button.newWithLabelButton("Stop");
+        button = Button.newWithLabelButton(new Str("Stop"));
         button.onClicked((()->{
             spinnerSensitive.stop();
             spinner_unsensitive.stop();

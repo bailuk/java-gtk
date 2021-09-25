@@ -13,11 +13,12 @@ import ch.bailu.gtk.gtk.Image;
 import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.TextView;
 import ch.bailu.gtk.gtk.Window;
+import ch.bailu.gtk.wrapper.Str;
 
 public class HeaderBarSample {
 
     public HeaderBarSample(String argv[]) {
-        Application app = new Application("org.gtk.example", ApplicationFlags.FLAGS_NONE);
+        Application app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
 
         app.onActivate(() -> show(new ApplicationWindow(app)));
         app.run(argv.length, argv);
@@ -30,11 +31,11 @@ public class HeaderBarSample {
         var header = new HeaderBar();
 
         header.setShowCloseButton(1);
-        header.setTitle("Welcome to GTK");
+        header.setTitle(new Str("Welcome to GTK"));
         header.setHasSubtitle(0);
 
         var button = new Button();
-        var icon = new ThemedIcon("mail-send-receive-symbolic");
+        var icon = new ThemedIcon(new Str("mail-send-receive-symbolic"));
         var image = Image.newFromGiconImage(new Icon(icon.getCPointer()), IconSize.BUTTON);
         icon.unref();
 
@@ -42,14 +43,14 @@ public class HeaderBarSample {
         header.packEnd(button);
 
         var box = new Box(Orientation.HORIZONTAL, 0);
-        box.getStyleContext().addClass("linked");
+        box.getStyleContext().addClass(new Str("linked"));
 
         var button1 = new Button();
-        button1.add(Image.newFromIconNameImage("pan-start-symbolic", IconSize.BUTTON));
+        button1.add(Image.newFromIconNameImage(new Str("pan-start-symbolic"), IconSize.BUTTON));
         box.add(button1);
 
         var button2 = new Button();
-        button2.add(Image.newFromIconNameImage("pan-end-symbolic", IconSize.BUTTON));
+        button2.add(Image.newFromIconNameImage(new Str("pan-end-symbolic"), IconSize.BUTTON));
         box.add(button2);
 
         header.packStart(box);

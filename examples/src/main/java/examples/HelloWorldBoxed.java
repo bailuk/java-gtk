@@ -6,26 +6,27 @@ import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.Button;
 import ch.bailu.gtk.gtk.ButtonBox;
 import ch.bailu.gtk.gtk.Orientation;
+import ch.bailu.gtk.wrapper.Str;
 
 public class HelloWorldBoxed {
 
 
     public HelloWorldBoxed(String[] args) {
 
-        Application app = new Application("org.gtk.example", ApplicationFlags.FLAGS_NONE);
+        Application app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
 
         app.onActivate(() -> {
 
             var window = new ApplicationWindow(app);
-            window.setTitle("Window");
+            window.setTitle(new Str("Window"));
             window.setDefaultSize(200,200);
 
             var buttonBox = new ButtonBox(Orientation.HORIZONTAL);
             window.add(buttonBox);
 
-            var button = Button.newWithLabelButton("Hello World");
+            var button = Button.newWithLabelButton(new Str("Hello World"));
 
-            button.onClicked(() -> System.out.println("Hello"));
+            button.onClicked(() -> System.out.println(new Str("Hello")));
 
 
             buttonBox.add(button);

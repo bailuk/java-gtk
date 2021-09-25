@@ -19,6 +19,7 @@ import ch.bailu.gtk.gtk.DrawingArea;
 import ch.bailu.gtk.gtk.MessageDialog;
 import ch.bailu.gtk.gtk.MessageType;
 import ch.bailu.gtk.gtk.Widget;
+import ch.bailu.gtk.wrapper.Str;
 
 /*
     Pixbufs
@@ -58,7 +59,7 @@ public class Pixbufs {
 
 
     public Pixbufs(String[] argv) {
-        var app = new Application("org.gtk.example", ApplicationFlags.FLAGS_NONE);
+        var app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
         app.onActivate(() -> doPixbufs(new ApplicationWindow(app)));
         app.run(argv.length, argv);
 
@@ -66,13 +67,13 @@ public class Pixbufs {
     }
 
     void loadPixbufs() throws AllocationError {
-        background = Pixbuf.newFromFilePixbuf(BACKGROUND_NAME);
+        background = Pixbuf.newFromFilePixbuf(new Str(BACKGROUND_NAME));
 
         backWidth = background.getWidth();
         backHeight = background.getHeight();
 
         for (int i = 0; i < images.length; i++) {
-            images[i] = Pixbuf.newFromFilePixbuf(IMAGE_NAMES[i]);
+            images[i] = Pixbuf.newFromFilePixbuf(new Str(IMAGE_NAMES[i]));
         }
     }
 
@@ -163,7 +164,7 @@ public class Pixbufs {
     }
 
     private Widget doPixbufs(ApplicationWindow window) {
-        window.setTitle("Pixbufs");
+        window.setTitle(new Str("Pixbufs"));
         window.setResizable(GTK.FALSE);
         System.out.println("Working Directory = " + System.getProperty("user.dir"));
         try  {
@@ -184,7 +185,7 @@ public class Pixbufs {
                     DialogFlags.DESTROY_WITH_PARENT,
                     MessageType.ERROR,
                     ButtonsType.CLOSE,
-                    "Failed to load an image: " + e.getMessage());
+                    new Str("Failed to load an image: " + e.getMessage()));
 
             dialog.onResponse(response_id -> window.destroy());
             dialog.show();

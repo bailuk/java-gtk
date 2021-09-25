@@ -12,11 +12,12 @@ import ch.bailu.gtk.pango.FontDescription;
 import ch.bailu.gtk.pango.Layout;
 import ch.bailu.gtk.pango.Pango;
 import ch.bailu.gtk.pangocairo.Pangocairo;
+import ch.bailu.gtk.wrapper.Str;
 
 public class PangoTextMask {
     public PangoTextMask(String[] argv) {
 
-        var app = new Application("org.gtk.example", ApplicationFlags.FLAGS_NONE);
+        var app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
         app.onActivate(() -> doTextmask(new ApplicationWindow(app)));
         app.run(argv.length, argv);
 
@@ -25,7 +26,7 @@ public class PangoTextMask {
     void doTextmask(ApplicationWindow window) {
         window.setResizable(GTK.TRUE);
         window.setSizeRequest(400,200);
-        window.setTitle("Text Mask");
+        window.setTitle(new Str("Text Mask"));
 
         DrawingArea da = new DrawingArea();
         window.add(da);
@@ -37,8 +38,8 @@ public class PangoTextMask {
     private int drawText(Widget da, Context cr) {
         cr.save();
 
-        Layout layout = da.createPangoLayout("Pango power!\nPango power!\nPango power!");
-        FontDescription desc = Pango.fontDescriptionFromString("sans bold 34");
+        Layout layout = da.createPangoLayout(new Str("Pango power!\nPango power!\nPango power!"));
+        FontDescription desc = Pango.fontDescriptionFromString(new Str("sans bold 34"));
         layout.setFontDescription(desc);
         desc.free();
 

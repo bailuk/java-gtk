@@ -15,11 +15,12 @@ import ch.bailu.gtk.gtk.Frame;
 import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.ResponseType;
 import ch.bailu.gtk.gtk.ShadowType;
+import ch.bailu.gtk.wrapper.Str;
 
 public class ColorChooser {
     public ColorChooser(String[] argv) {
 
-        var app = new Application("org.gtk.example", ApplicationFlags.FLAGS_NONE);
+        var app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
         app.onActivate(() -> colorSelection(new ApplicationWindow(app)));
         app.run(argv.length, argv);
 
@@ -34,7 +35,7 @@ public class ColorChooser {
         vbox.setBorderWidth(8);
         window.add(vbox);
 
-        window.setTitle("Color Chooser");
+        window.setTitle(new Str("Color Chooser"));
         var frame = new Frame(null);
         frame.setShadowType(ShadowType.IN);
         vbox.packStart(frame, 1,1,0);
@@ -56,7 +57,7 @@ public class ColorChooser {
         da.setSizeRequest(200, 200);
         frame.add(da);
 
-        var button = Button.newWithMnemonicButton("_Change the above color");
+        var button = Button.newWithMnemonicButton(new Str("_Change the above color"));
         button.setHalign(Align.END);
         button.setValign(Align.CENTER);
 
@@ -64,7 +65,7 @@ public class ColorChooser {
 
         button.onClicked(() -> {
 
-            var dialog = new ColorChooserDialog("Changing color", window);
+            var dialog = new ColorChooserDialog(new Str("Changing color"), window);
             dialog.setModal(1);
 
             dialog.onResponse(response_id -> {

@@ -23,6 +23,7 @@ import ch.bailu.gtk.gtk.Label;
 import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.ShadowType;
 import ch.bailu.gtk.gtk.Widget;
+import ch.bailu.gtk.wrapper.Str;
 
 public class CairoDrawingArea {
 
@@ -32,7 +33,7 @@ public class CairoDrawingArea {
 
 
     public CairoDrawingArea(String[] argv) {
-        var app = new Application("org.gtk.example", ApplicationFlags.FLAGS_NONE);
+        var app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
         app.onActivate(() -> createDrawingArea(new ApplicationWindow(app)));
         app.run(argv.length, argv);
     }
@@ -193,7 +194,7 @@ public class CairoDrawingArea {
 
     private void createDrawingArea(ch.bailu.gtk.gtk.Window window) {
 
-        window.setTitle("Drawing Area");
+        window.setTitle(new Str("Drawing Area"));
         window.onDestroy(()->close_window());
 
         window.setBorderWidth(8);
@@ -206,7 +207,7 @@ public class CairoDrawingArea {
          * Create the checkerboard area
          */
         var label = new Label(null);
-        label.setMarkup("<u>Checkerboard pattern</u>");
+        label.setMarkup(new Str("<u>Checkerboard pattern</u>"));
         vbox.packStart(label, GTK.FALSE, GTK.FALSE, 0);
 
         var frame = new Frame(null);
@@ -225,7 +226,7 @@ public class CairoDrawingArea {
          * Create the scribble area
          */
         label = new Label(null);
-        label.setMarkup("<u>Scribble area</u>");
+        label.setMarkup(new Str("<u>Scribble area</u>"));
         vbox.packStart(label, GTK.FALSE, GTK.FALSE, 0);
 
         frame = new Frame(null);

@@ -11,11 +11,12 @@ import ch.bailu.gtk.gtk.Frame;
 import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.Widget;
 import ch.bailu.gtk.gtk.Window;
+import ch.bailu.gtk.wrapper.Str;
 
 public class ButtonBoxes {
 
     public ButtonBoxes(String argv[]) {
-        Application app = new Application("org.gtk.example", ApplicationFlags.FLAGS_NONE);
+        Application app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
 
         app.onActivate(() -> creatButtonBox(new ApplicationWindow(app)));
         app.run(argv.length, argv);
@@ -24,7 +25,7 @@ public class ButtonBoxes {
 
 
     public Widget createBBox(boolean horizontal, String title, int spacing, int layout) {
-        var frame = new Frame(title);
+        var frame = new Frame(new Str(title));
         ButtonBox bbox;
 
         if (horizontal) {
@@ -39,16 +40,16 @@ public class ButtonBoxes {
         bbox.setLayout(layout);
         bbox.setSpacing(spacing);
 
-        bbox.add(Button.newWithLabelButton("OK"));
-        bbox.add(Button.newWithLabelButton("Cancel"));
-        bbox.add(Button.newWithLabelButton("Help"));
+        bbox.add(Button.newWithLabelButton(new Str("OK")));
+        bbox.add(Button.newWithLabelButton(new Str("Cancel")));
+        bbox.add(Button.newWithLabelButton(new Str("Help")));
         return frame;
     }
 
 
     public Widget creatButtonBox(Window window) {
 
-        window.setTitle("Button Boxes");
+        window.setTitle(new Str("Button Boxes"));
 
 
         window.setBorderWidth(10);
@@ -56,7 +57,7 @@ public class ButtonBoxes {
         var mainVBox = new Box(Orientation.VERTICAL,0);
         window.add(mainVBox);
 
-        var frameHorz = new Frame("Horizontal Button Boxes");
+        var frameHorz = new Frame(new Str("Horizontal Button Boxes"));
         mainVBox.packStart(frameHorz, 1,1,10);
 
         var vbox = new Box(Orientation.VERTICAL, 0);
@@ -70,7 +71,7 @@ public class ButtonBoxes {
         vbox.packStart(createBBox(true, "Center", 40, ButtonBoxStyle.CENTER), 1,1,5);
         vbox.packStart(createBBox(true, "Expand", 0, ButtonBoxStyle.EXPAND), 1,1,5);
 
-        var frameVert = new Frame("Vertical Button Boxes");
+        var frameVert = new Frame(new Str("Vertical Button Boxes"));
         mainVBox.packStart(frameVert, 1,1,10);
 
         var hbox = new Box(Orientation.HORIZONTAL, 0);
