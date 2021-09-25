@@ -1,12 +1,12 @@
 package ch.bailu.gtk.model;
 
 import ch.bailu.gtk.Configuration;
-import ch.bailu.gtk.converter.AliasTable;
-import ch.bailu.gtk.converter.CallbackTable;
+import ch.bailu.gtk.table.AliasTable;
+import ch.bailu.gtk.table.CallbackTable;
 import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.converter.RelativeNamespaceType;
-import ch.bailu.gtk.converter.StructureTable;
-import ch.bailu.gtk.converter.WrapperTable;
+import ch.bailu.gtk.table.StructureTable;
+import ch.bailu.gtk.table.WrapperTable;
 import ch.bailu.gtk.tag.CallbackTag;
 import ch.bailu.gtk.tag.ParameterTag;
 

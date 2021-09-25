@@ -11,10 +11,6 @@ public abstract class JniTypeConverter {
         } else if (parameter.isJavaNative()) {
             if ("byte[]".equals(parameter.getImpType())) {
                 return new JniByteArrayConverter(parameter);
-            } else if ("String[]".equals(parameter.getImpType())) {
-                return new JniStringArrayConverter(parameter);
-            } else  if ("String".equals(parameter.getImpType())) {
-                return new JniStringConverter(parameter);
             } else {
                 return new JniDefaultTypeConverter(parameter);
             }

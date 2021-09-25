@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.bailu.gtk.Configuration;
-import ch.bailu.gtk.converter.NamespaceTable;
+import ch.bailu.gtk.table.NamespaceTable;
 import ch.bailu.gtk.converter.RelativeNamespaceType;
 import ch.bailu.gtk.tag.NamedTag;
 import ch.bailu.gtk.tag.NamespaceTag;

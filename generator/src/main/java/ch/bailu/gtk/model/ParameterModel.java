@@ -1,6 +1,6 @@
 package ch.bailu.gtk.model;
 
-import ch.bailu.gtk.converter.EnumTable;
+import ch.bailu.gtk.table.EnumTable;
 import ch.bailu.gtk.converter.Filter;
 import ch.bailu.gtk.converter.JavaNames;
 import ch.bailu.gtk.converter.JniTypeConverter;

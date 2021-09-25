@@ -1,6 +1,6 @@
 package ch.bailu.gtk.model;
 
-import ch.bailu.gtk.converter.PrimitivesTable;
+import ch.bailu.gtk.table.PrimitivesTable;
 import ch.bailu.gtk.tag.ParameterTag;
 
 public class JavaType {

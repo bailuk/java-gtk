@@ -1,16 +1,9 @@
 package ch.bailu.gtk;
 
 import org.junit.jupiter.api.Test;
-import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.IOException;
-
-import ch.bailu.gtk.builder.AliasBuilder;
-import ch.bailu.gtk.converter.AliasTable;
+import ch.bailu.gtk.table.AliasTable;
 import ch.bailu.gtk.converter.NamespaceType;
-import ch.bailu.gtk.converter.RelativeNamespaceType;
-import ch.bailu.gtk.converter.StructureTable;
-import ch.bailu.gtk.model.ClassType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

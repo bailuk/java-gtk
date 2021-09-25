@@ -2,7 +2,7 @@ package ch.bailu.gtk;
 
 import org.junit.jupiter.api.Test;
 
-import ch.bailu.gtk.converter.PrimitivesTable;
+import ch.bailu.gtk.table.PrimitivesTable;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

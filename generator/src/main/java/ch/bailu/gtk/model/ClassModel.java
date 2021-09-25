@@ -3,7 +3,7 @@ package ch.bailu.gtk.model;
 import java.io.IOException;
 import java.util.List;
 
-import ch.bailu.gtk.converter.AliasTable;
+import ch.bailu.gtk.table.AliasTable;
 import ch.bailu.gtk.converter.Filter;
 import ch.bailu.gtk.converter.JavaNames;
 import ch.bailu.gtk.converter.NamespaceType;

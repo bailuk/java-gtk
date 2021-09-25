@@ -1,9 +1,9 @@
-package ch.bailu.gtk.converter;
+package ch.bailu.gtk.table;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.bailu.gtk.tag.AliasTag;
+import ch.bailu.gtk.converter.NamespaceType;
 
 public class AliasTable {
     private final Map<NamespaceType, NamespaceType> table = new HashMap<>();

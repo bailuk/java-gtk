@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.converter.RelativeNamespaceType;
-import ch.bailu.gtk.converter.StructureTable;
+import ch.bailu.gtk.table.StructureTable;
 import ch.bailu.gtk.model.CType;
 import ch.bailu.gtk.model.ClassType;
 import ch.bailu.gtk.model.JavaType;
