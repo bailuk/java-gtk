@@ -49,11 +49,6 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
         } else {
             a("""
         long pointerToObject = ${impCall};
-        
-        if (pointerToObject == 0) {
-            ${getThrowsOnNullSatement(classModel, methodModel)};
-        }
-        
         return new ${methodModel.getReturnType().getApiType()}(pointerToObject);
 """)
         }

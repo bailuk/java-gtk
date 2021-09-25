@@ -12,7 +12,6 @@ import ch.bailu.gtk.gdk.Gdk;
 import ch.bailu.gtk.gdk.GdkConstants;
 import ch.bailu.gtk.gdk.ModifierType;
 import ch.bailu.gtk.gdk.Rectangle;
-import ch.bailu.gtk.gdk.Window;
 import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.ApplicationWindow;
@@ -23,6 +22,7 @@ import ch.bailu.gtk.gtk.Label;
 import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.ShadowType;
 import ch.bailu.gtk.gtk.Widget;
+import ch.bailu.gtk.wrapper.Int;
 import ch.bailu.gtk.wrapper.Str;
 import ch.bailu.gtk.wrapper.Strs;
 
@@ -61,7 +61,7 @@ public class CairoDrawingArea {
 
 
     /* Redraw the screen from the surface */
-    private int drawScribble(Widget widget, Context cr) {
+    private int drawScribble(Context cr) {
         cr.setSourceSurface(surface,0,0);
         cr.paint();
         return GTK.FALSE;
@@ -100,9 +100,11 @@ public class CairoDrawingArea {
         return GTK.TRUE;
     }
 
+
+    private final Int x = new Int();
+    private final Int y = new Int();
+    private final Int state = new Int();
     private int scribbleMotionNotifyEvent(Widget widget, EventMotion event) {
-        int x, y;
-        int state;
 
         if (surface == null) {
             return GTK.FALSE;
@@ -119,16 +121,14 @@ public class CairoDrawingArea {
          * we avoid getting a huge number of events faster than we
          * can cope.
          */
-        // TODO implement Integer argument
-        Window window = event.getFieldWindow();
-        //gdk_window_get_device_position (event->window, event->device, &x, &y, &state);
+        var window = event.getFieldWindow();
+        var device = event.getFieldDevice();
+        if (window.getCPointer() != 0 && device.getCPointer() != 0) {
+            window.getDevicePosition(device, x, y, state);
+        }
 
-        x = (int) event.getFieldX();
-        y = (int) event.getFieldY();
-        state = event.getFieldState();
-
-        if ((state & ModifierType.BUTTON1_MASK) != 0) {
-            drawBrush(widget, x, y);
+        if ((state.get() & ModifierType.BUTTON1_MASK) != 0) {
+            drawBrush(widget, x.get(), y.get());
         }
 
         /* We've handled it, stop processing */
@@ -207,11 +207,11 @@ public class CairoDrawingArea {
         /*
          * Create the checkerboard area
          */
-        var label = new Label(null);
+        var label = new Label(Str.NULL);
         label.setMarkup(new Str("<u>Checkerboard pattern</u>"));
         vbox.packStart(label, GTK.FALSE, GTK.FALSE, 0);
 
-        var frame = new Frame(null);
+        var frame = new Frame(Str.NULL);
         frame.setShadowType(ShadowType.IN);
         vbox.packStart(frame, GTK.TRUE, GTK.TRUE, 0);
 
@@ -226,11 +226,11 @@ public class CairoDrawingArea {
         /*
          * Create the scribble area
          */
-        label = new Label(null);
+        label = new Label(Str.NULL);
         label.setMarkup(new Str("<u>Scribble area</u>"));
         vbox.packStart(label, GTK.FALSE, GTK.FALSE, 0);
 
-        frame = new Frame(null);
+        frame = new Frame(Str.NULL);
         frame.setShadowType(ShadowType.IN);
         vbox.packStart(frame, GTK.TRUE, GTK.TRUE, 0);
 
@@ -242,7 +242,7 @@ public class CairoDrawingArea {
 
 
         /* Signals used to handle backing surface */
-        scribbleArea.onDraw(cr -> drawScribble(scribbleArea, cr));
+        scribbleArea.onDraw(cr -> drawScribble(cr));
         scribbleArea.onConfigureEvent(event -> scribbleConfigureEvent(scribbleArea, event));
 
         /* Event signals */

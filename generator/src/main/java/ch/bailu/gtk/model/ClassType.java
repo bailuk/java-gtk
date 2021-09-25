@@ -1,6 +1,7 @@
 package ch.bailu.gtk.model;
 
 import ch.bailu.gtk.Configuration;
+import ch.bailu.gtk.converter.Util;
 import ch.bailu.gtk.table.AliasTable;
 import ch.bailu.gtk.table.CallbackTable;
 import ch.bailu.gtk.converter.NamespaceType;
@@ -28,16 +29,22 @@ public class ClassType implements ClassTypeInterface {
 
     
     public ClassType(String namespace, ParameterTag parameter) {
-        this(namespace, parameter.getTypeName(), parameter.getType());
+        this(   namespace,
+                parameter.getTypeName(),
+                new CType(parameter.getType()),
+                parameter.isOutDirection() && Util.isEnum(namespace, parameter));
     }
 
     public ClassType(String namespace, String typeName, String ctype) {
-        this(namespace, typeName, new CType(ctype));
+        this(namespace, typeName, new CType(ctype), false);
     }
     
-    public ClassType(String namespace, String typeName, CType ctype) {
+    private ClassType(String namespace, String typeName, CType ctype, boolean isOutEnum) {
         if (WrapperTable.instance().contains(ctype.getName())) {
             typeName = WrapperTable.instance().convert(ctype.getName());
+            wrapper = true;
+        } else if (isOutEnum) {
+            typeName = WrapperTable.instance().convert("gint*");
             wrapper = true;
         }
 

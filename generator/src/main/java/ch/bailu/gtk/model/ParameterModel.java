@@ -1,5 +1,6 @@
 package ch.bailu.gtk.model;
 
+import ch.bailu.gtk.converter.Util;
 import ch.bailu.gtk.table.EnumTable;
 import ch.bailu.gtk.converter.Filter;
 import ch.bailu.gtk.converter.JavaNames;
@@ -37,7 +38,7 @@ public class ParameterModel extends Model {
             cType = new CType("void*");
             jType = new JavaType("long");
 
-        } else if (isEnum(namespace, parameter)) {
+        } else if (Util.isEnum(namespace, parameter)) {
             cType = new CType("int");
             jType = new JavaType("int");
 
@@ -59,14 +60,6 @@ public class ParameterModel extends Model {
         setSupported("callback", isCallbackSupported());
 
         this.isWriteable = parameter.isWriteable();
-    }
-
-    private boolean isEnum(String namespace, ParameterTag parameter) {
-        return (isEnum(namespace, parameter.getTypeName()) || isEnum(namespace, parameter.getType()));
-    }
-
-    private boolean isEnum(String namespace, String typeName) {
-        return EnumTable.instance().contains(new NamespaceType(namespace, typeName));
     }
 
 

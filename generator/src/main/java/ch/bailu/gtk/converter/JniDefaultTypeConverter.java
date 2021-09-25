@@ -30,7 +30,6 @@ public class JniDefaultTypeConverter extends JniTypeConverter{
         if (model.isVoid()) {
             return "void";
         }
-
         return "j" + model.getImpType().toLowerCase();
     }
 

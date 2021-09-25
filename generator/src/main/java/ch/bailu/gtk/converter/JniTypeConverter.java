@@ -9,11 +9,7 @@ public abstract class JniTypeConverter {
             return new JniCallbackConverter(parameter);
 
         } else if (parameter.isJavaNative()) {
-            if ("byte[]".equals(parameter.getImpType())) {
-                return new JniByteArrayConverter(parameter);
-            } else {
-                return new JniDefaultTypeConverter(parameter);
-            }
+            return new JniDefaultTypeConverter(parameter);
         } else {
             return new JniPointerConverter(parameter);
         }

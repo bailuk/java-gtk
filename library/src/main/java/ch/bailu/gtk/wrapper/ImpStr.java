@@ -1,5 +1,5 @@
 package ch.bailu.gtk.wrapper;
 
-public class StrImp {
+public class ImpStr {
     public static native long createStr(String str);
 }

@@ -29,6 +29,7 @@ public class WrapperTable {
         add("const gchar*",   "Str");
         add("filename",       "Str");
         add("char**",         "Strs");
+        add("gint*",          "Int");
     }
 
 

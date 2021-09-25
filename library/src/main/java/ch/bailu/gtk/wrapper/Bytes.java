@@ -12,7 +12,7 @@ public class Bytes extends Pointer {
     }
 
     public Bytes(byte[] bytes) {
-        super(BytesImp.createBytes(bytes));
+        super(ImpBytes.createBytes(bytes));
 
         if (getCPointer() != 0) {
             size = bytes.length;
@@ -27,12 +27,12 @@ public class Bytes extends Pointer {
 
     public byte getByte(int index) {
         checkLimit(index);
-        return BytesImp.getByte(getCPointer(), index);
+        return ImpBytes.getByte(getCPointer(), index);
     }
 
     public void destroy() {
         if (size != 0) {
-            UtilImp.destroy(getCPointer());
+            ImpUtil.destroy(getCPointer());
             size = 0;
         }
     }

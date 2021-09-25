@@ -16,7 +16,7 @@ public class Strs extends Pointer {
 
 
     private Strs(String[] strings, Str[] strs) {
-        this(strings, strs, UtilImp.createPointerArray(Util.toPointerArray(strs)));
+        this(strings, strs, ImpUtil.createPointerArray(Util.toPointerArray(strs)));
     }
 
     public Strs(String[] strings, Str[] strs, long pointers) {
@@ -45,9 +45,9 @@ public class Strs extends Pointer {
     public void destroy() {
         if (strs != null) {
             for (Pointer pointer : strs) {
-                UtilImp.destroy(pointer.getCPointer());
+                ImpUtil.destroy(pointer.getCPointer());
             }
-            UtilImp.destroy(getCPointer());
+            ImpUtil.destroy(getCPointer());
         }
         strs = null;
     }

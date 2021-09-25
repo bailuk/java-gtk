@@ -1,5 +1,7 @@
 package ch.bailu.gtk.converter;
 
+import ch.bailu.gtk.model.ReservedTokenTable;
+
 public class JavaNames {
 
     public static String toJavaMethodName(String name) {

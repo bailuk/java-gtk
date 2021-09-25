@@ -55,6 +55,7 @@ package ch.bailu.gtk.tag;
 public class ParameterTag extends NamedTag {
 
     private String value = "";
+    private boolean in = true;
 
 
 
@@ -87,7 +88,6 @@ public class ParameterTag extends NamedTag {
         if ("varargs".equals(name)) {
             isVarargs = true;
             return ignore();
-
         }
         return ignore();
     }
@@ -103,6 +103,8 @@ public class ParameterTag extends NamedTag {
         } else if ("value".equals(name)) {
             this.value = value;
 
+        } else if ("direction".equals(name)) {
+            in = "in".equals(value);
         } else {
             super.setAttribute(name, value);
         }
@@ -133,5 +135,13 @@ public class ParameterTag extends NamedTag {
 
     public boolean isVarargs() {
         return isVarargs;
+    }
+
+    public boolean isInDirection() {
+        return in;
+    }
+
+    public boolean isOutDirection() {
+        return !in;
     }
 }

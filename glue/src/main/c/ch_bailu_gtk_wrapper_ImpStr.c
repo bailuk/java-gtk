@@ -2,13 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "ch_bailu_gtk_wrapper_StrImp.h"
+#include "ch_bailu_gtk_wrapper_ImpStr.h"
 
 
 /**
     Copy a Java String to a heap memory region in c-space
 */
-JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_wrapper_StrImp_createStr
+JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_wrapper_ImpStr_createStr
 (JNIEnv * _jenv, jclass _class, jstring _str)
 {
     const char* src  = (*_jenv)->GetStringUTFChars(_jenv, _str, NULL);

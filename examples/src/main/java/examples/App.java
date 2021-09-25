@@ -14,8 +14,8 @@ public class App {
         //new ButtonBoxes(argv);
         //new Spinner(argv);
         //new LinksSample(argv);
-        //new CairoDrawingArea(argv);
+        new CairoDrawingArea(argv);
         //new Pixbufs(argv);
-        new PangoTextMask(argv);
+        //new PangoTextMask(argv);
     }
 }

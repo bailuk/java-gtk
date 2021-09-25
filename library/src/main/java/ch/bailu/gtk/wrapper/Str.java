@@ -3,6 +3,7 @@ package ch.bailu.gtk.wrapper;
 import ch.bailu.gtk.Pointer;
 
 public class Str extends Pointer {
+    public static final Str NULL = new Str(0);
     private int size = 0;
 
     public Str(long pointer) {
@@ -10,7 +11,7 @@ public class Str extends Pointer {
     }
 
     public Str(String str) {
-        super(StrImp.createStr(str));
+        super(ImpStr.createStr(str));
 
         if (getCPointer() != 0) {
             size = str.length()+1;
@@ -25,7 +26,7 @@ public class Str extends Pointer {
 
     public void destroy() {
         if (size != 0) {
-            UtilImp.destroy(getCPointer());
+            ImpUtil.destroy(getCPointer());
             size = 0;
         }
     }

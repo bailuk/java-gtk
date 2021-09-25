@@ -1,4 +1,4 @@
-package ch.bailu.gtk.converter;
+package ch.bailu.gtk.model;
 
 import java.util.HashMap;
 import java.util.Map;
