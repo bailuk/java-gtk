@@ -7,6 +7,7 @@ import ch.bailu.gtk.gtk.Button;
 import ch.bailu.gtk.gtk.ButtonBox;
 import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.wrapper.Str;
+import ch.bailu.gtk.wrapper.Strs;
 
 public class HelloWorldBoxed {
 
@@ -33,7 +34,7 @@ public class HelloWorldBoxed {
             window.showAll();
         });
 
-        app.run(args.length, args);
+        app.run(args.length, new Strs(args));
     }
 
 }

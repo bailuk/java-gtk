@@ -25,7 +25,7 @@ public class Str extends Pointer {
 
     public void destroy() {
         if (size != 0) {
-            StrImp.destroy(getCPointer());
+            UtilImp.destroy(getCPointer());
             size = 0;
         }
     }

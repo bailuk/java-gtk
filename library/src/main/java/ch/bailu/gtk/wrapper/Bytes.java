@@ -32,7 +32,7 @@ public class Bytes extends Pointer {
 
     public void destroy() {
         if (size != 0) {
-            BytesImp.destroy(getCPointer());
+            UtilImp.destroy(getCPointer());
             size = 0;
         }
     }

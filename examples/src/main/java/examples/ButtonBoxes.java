@@ -12,6 +12,7 @@ import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.Widget;
 import ch.bailu.gtk.gtk.Window;
 import ch.bailu.gtk.wrapper.Str;
+import ch.bailu.gtk.wrapper.Strs;
 
 public class ButtonBoxes {
 
@@ -19,7 +20,7 @@ public class ButtonBoxes {
         Application app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
 
         app.onActivate(() -> creatButtonBox(new ApplicationWindow(app)));
-        app.run(argv.length, argv);
+        app.run(argv.length, new Strs(argv));
 
     }
 

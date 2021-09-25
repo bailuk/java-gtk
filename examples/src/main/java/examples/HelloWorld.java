@@ -5,6 +5,7 @@ import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.Button;
 import ch.bailu.gtk.wrapper.Str;
+import ch.bailu.gtk.wrapper.Strs;
 
 public class HelloWorld {
     public HelloWorld(String[] argv) {
@@ -24,6 +25,6 @@ public class HelloWorld {
             window.showAll();
         });
 
-        app.run(argv.length, argv);
+        app.run(argv.length, new Strs(argv));
     }
 }

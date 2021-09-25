@@ -17,6 +17,8 @@ public class ClassType implements ClassTypeInterface {
 
 
     private boolean valid = false;
+    private boolean wrapper = false;
+
     private CallbackTag callbackTag = null;
 
 
@@ -34,16 +36,17 @@ public class ClassType implements ClassTypeInterface {
     }
     
     public ClassType(String namespace, String typeName, CType ctype) {
-        typeName = convert(typeName);
+        if (WrapperTable.instance().contains(ctype.getName())) {
+            typeName = WrapperTable.instance().convert(ctype.getName());
+            wrapper = true;
+        }
 
         type = convert(namespace, typeName);
         callbackTag = getCallbackTagFromTable(type);
-        valid = (callbackTag != null) || (isInStructureTable(type) && ctype.isSinglePointer());
+        valid = wrapper || (callbackTag != null) || (isInStructureTable(type) && ctype.isSinglePointer());
     }
 
-    private String convert(String typeName) {
-        return WrapperTable.instance().convert(typeName);
-    }
+
 
     private RelativeNamespaceType convert(String namespace, String typeName) {
         NamespaceType converted = AliasTable.instance().convert(new NamespaceType(namespace, typeName));

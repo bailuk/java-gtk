@@ -20,6 +20,7 @@ import ch.bailu.gtk.gtk.MessageDialog;
 import ch.bailu.gtk.gtk.MessageType;
 import ch.bailu.gtk.gtk.Widget;
 import ch.bailu.gtk.wrapper.Str;
+import ch.bailu.gtk.wrapper.Strs;
 
 /*
     Pixbufs
@@ -61,7 +62,7 @@ public class Pixbufs {
     public Pixbufs(String[] argv) {
         var app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
         app.onActivate(() -> doPixbufs(new ApplicationWindow(app)));
-        app.run(argv.length, argv);
+        app.run(argv.length, new Strs(argv));
 
 
     }

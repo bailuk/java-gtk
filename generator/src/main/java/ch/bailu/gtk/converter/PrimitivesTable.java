@@ -5,44 +5,6 @@ import java.util.Map;
 
 public class PrimitivesTable {
     
-    private final static String[][] TABLE = {
-        {"none",          "void"},
-        {"gboolean",      "int"},
-        {"gint",          "int"},
-        {"glong",         "long"},
-        {"guint",         "int"},
-        {"gdouble",       "double"},
-        {"guint16",       "int"},
-        {"gfloat",        "float"},
-      //  {"gchar*",        "String"},
-        {"guint32",       "int"},
-        {"gssize",        "long"},
-        {"gpointer",      "long"},
-        {"gulong",        "long"},
-        {"gsize",         "long"},
-        {"gchar",         "char"},
-        {"gunichar",      "char"},
-    //    {"filename",      "String"},
-        {"gint64",        "long"},
-        {"gint32",        "int"},
-        {"gint16",        "int"},
-        {"gint8",         "int"},
-        {"guint64",       "long"},
-        {"guint32",       "int"},
-        {"guint16",       "int"},
-        {"guint8",        "int"},
-        {"time_t",        "long"},
-    //    {"const char*",   "String"},
-        {"time_t",        "long"},
-     //   {"const gchar*",  "String"},
-        {"void",          "void"},
-        {"long",          "long"},
-        {"int",           "int"},
-        {"double",        "double"},
-        {"char**",        "String[]"},
-       // {"unsigned char*","wrapper.Bytes*"}
-    };
-
     private final Map<String, String> table = new HashMap<>(50);
 
     private static PrimitivesTable INSTANCE = null;
@@ -55,9 +17,46 @@ public class PrimitivesTable {
     }
 
     private PrimitivesTable() {
-        for (String[] a : TABLE) {
-            table.put(a[0], a[1]);
-        }
+        add("none",          "void");
+        add("gboolean",      "int");
+        add("gint",          "int");
+        add("glong",         "long");
+        add("guint",         "int");
+        add("gdouble",       "double");
+        add("guint16",       "int");
+        add("gfloat",        "float");
+        //  add("gchar*",        "String");
+        add("guint32",       "int");
+        add("gssize",        "long");
+        add("gpointer",      "long");
+        add("gulong",        "long");
+        add("gsize",         "long");
+        add("gchar",         "char");
+        add("gunichar",      "char");
+        //    add("filename",      "String");
+        add("gint64",        "long");
+        add("gint32",        "int");
+        add("gint16",        "int");
+        add("gint8",         "int");
+        add("guint64",       "long");
+        add("guint32",       "int");
+        add("guint16",       "int");
+        add("guint8",        "int");
+        add("time_t",        "long");
+        //    add("const char*",   "String");
+        add("time_t",        "long");
+        //   add("const gchar*",  "String");
+        add("void",          "void");
+        add("long",          "long");
+        add("int",           "int");
+        add("double",        "double");
+        // add("char**",        "String[]");
+        // add("unsigned char*","wrapper.Bytes*"}
+
+    }
+
+    private void add(String cType, String jType) {
+        table.put(cType, jType);
     }
 
     public boolean contains(String cType) {

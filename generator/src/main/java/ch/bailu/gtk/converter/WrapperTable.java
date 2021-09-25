@@ -21,8 +21,9 @@ public class WrapperTable {
         add("gchar*",         "Str");
         add("const char*",    "Str");
         add("const gchar*",   "Str");
-        add("utf8",           "Str");
+        //add("utf8",           "Str");
         add("filename",       "Str");
+        add("char**",         "Strs");
     }
 
 

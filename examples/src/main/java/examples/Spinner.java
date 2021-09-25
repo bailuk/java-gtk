@@ -12,6 +12,7 @@ import ch.bailu.gtk.gtk.VBox;
 import ch.bailu.gtk.gtk.Widget;
 import ch.bailu.gtk.gtk.Window;
 import ch.bailu.gtk.wrapper.Str;
+import ch.bailu.gtk.wrapper.Strs;
 
 public class Spinner {
 
@@ -36,7 +37,7 @@ public class Spinner {
 
         });
 
-        app.run(argv.length, argv);
+        app.run(argv.length, new Strs(argv));
     }
     private Widget doSpinner(Window window) {
 /*

@@ -24,6 +24,7 @@ import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.ShadowType;
 import ch.bailu.gtk.gtk.Widget;
 import ch.bailu.gtk.wrapper.Str;
+import ch.bailu.gtk.wrapper.Strs;
 
 public class CairoDrawingArea {
 
@@ -35,7 +36,7 @@ public class CairoDrawingArea {
     public CairoDrawingArea(String[] argv) {
         var app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
         app.onActivate(() -> createDrawingArea(new ApplicationWindow(app)));
-        app.run(argv.length, argv);
+        app.run(argv.length, new Strs(argv));
     }
 
 

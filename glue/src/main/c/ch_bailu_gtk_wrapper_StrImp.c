@@ -26,12 +26,3 @@ JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_wrapper_StrImp_createStr
 
 }
 
-
-/**
-    Free c-space string copy
-*/
-JNIEXPORT void JNICALL Java_ch_bailu_gtk_wrapper_StrImp_destroy
-  (JNIEnv * _jenv, jclass _class, jlong _pointer)
-{
-    free((void*) _pointer);
-}

@@ -32,10 +32,3 @@ JNIEXPORT jbyte JNICALL Java_ch_bailu_gtk_wrapper_BytesImp_getByte
     return (jbyte) bytes[_index];
 }
 
-
-
-JNIEXPORT void JNICALL Java_ch_bailu_gtk_wrapper_BytesImp_destroy
-  (JNIEnv * _env, jclass _class, jlong _pointer)
-{
-    free((void*) _pointer);
-}
