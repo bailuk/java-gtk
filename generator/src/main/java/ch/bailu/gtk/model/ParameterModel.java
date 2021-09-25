@@ -118,11 +118,6 @@ public class ParameterModel extends Model {
         return cType.getName();
     }
 
-    public String getFreeResourcesString() {
-        return jniConverter.getFreeResourcesString();
-    }
-
-
 
     @Override
     public String toString() {

@@ -6,16 +6,17 @@ import java.io.Writer
 
 
 class CWriter (writer : Writer) : CodeWriter(writer) {
+
     override fun writeStart(classModel : ClassModel, namespaceModel : NamespaceModel) {
         super.writeStart(classModel, namespaceModel)
 
-        a("#include <jni.h>\n\n")
+        a("\n#include <jni.h>\n")
 
         for (include in namespaceModel.includes) {
             a("#include <${include}>\n")
         }
 
-        a("\n#include \"${getHeaderFileName(classModel)}\"\n\n\n")
+        a("#include \"${getHeaderFileName(classModel)}\"\n\n\n")
 
         a("jclass ${getGlobalClassName(classModel)};\n")
         a("JavaVM* ${getGlobalVMName(classModel)};\n")
@@ -23,54 +24,34 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         end(3)
     }
 
-    override fun writeClass(classModel: ClassModel) {}
-    override fun writeInterface(classModel: ClassModel) {}
-    override fun writeInternalConstructor(classModel: ClassModel) {}
-    override fun writeConstructor(classModel: ClassModel, methodModel: MethodModel) {}
-    override fun writeFactory(classModel: ClassModel, methodModel: MethodModel) {}
 
     override fun writeNativeMethod(classModel : ClassModel, methodModel : MethodModel) {
         _writeNativeMethod(classModel, methodModel, true)
     }
 
-    private fun getFreeParameters(m : MethodModel) : String {
-        val result = StringBuilder()
 
-        for (p in m.getParameters()) {
-            result.append(p.getFreeResourcesString())
-        }
-        return result.toString()
+    override fun writePrivateFactory(classModel : ClassModel, methodModel : MethodModel) {
+        _writeNativeMethod(classModel, methodModel, false);
     }
 
-    private fun getAllocateParameters(classModel: ClassModel, methodModel : MethodModel) : String {
-        val result = StringBuilder()
-
-        for (p in methodModel.getParameters()) {
-            result.append(p.jniConverter.getAllocateResourceString(classModel))
-        }
-        return result.toString()
-    }
-
-    private fun getGtkCallSignature(classModel: ClassModel, methodModel : MethodModel, self : Boolean): String {
-        val result = StringBuilder()
-
-        var del = ""
-
-        if (self) {
-            result.append("(void*) _self")
-            del = ", "
-        }
+    override fun writeConstant(parameterModel: ParameterModel) {
         
-        for (parameterModel in methodModel.getParameters()) {
-            result.append("${del}${parameterModel.jniConverter.getCallSignatureString(classModel)}")
-            del = ", "
-        }
-
-        if (methodModel.throwsError()) {
-            result.append("${del}NULL")
-        }
-        return result.toString()
     }
+
+    private fun _writeNativeMethod(classModel : ClassModel, methodModel : MethodModel, self : Boolean) {
+        start(1)
+        a ("""
+        JNIEXPORT ${methodModel.getReturnType().getJniType()} JNICALL ${getJniMethodName(classModel, methodModel)}(${getJniSignature(methodModel, self)})
+        {
+            ${getAllocateParameters(classModel, methodModel)}
+            ${getReturnStatement(methodModel)} ${methodModel.getGtkName()}(${getGtkCallSignature(classModel, methodModel, self)});
+            ${getFreeParameters(methodModel)}
+        }
+        """.trimIndent())
+        end(2)
+        next()
+    }
+
 
     fun getJniSignature(methodModel : MethodModel, self : Boolean) : String {
         val result = StringBuilder()
@@ -89,33 +70,66 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
     }
 
 
-    override fun writePrivateFactory(classModel : ClassModel, methodModel : MethodModel) {
-        _writeNativeMethod(classModel, methodModel, false);
+    private fun getAllocateParameters(classModel: ClassModel, methodModel : MethodModel) : String {
+        val result = StringBuilder()
+        var del = ""
+
+        for (p in methodModel.getParameters()) {
+            del = appendIntendLine(result, p.jniConverter.getAllocateResourceString(classModel), del)
+        }
+        return result.toString()
     }
 
-    override fun writeConstant(parameterModel: ParameterModel) {
-        
+
+    private fun getFreeParameters(m : MethodModel) : String {
+        val result = StringBuilder()
+        var del = ""
+
+        for (p in m.getParameters()) {
+            del = appendIntendLine(result, p.jniConverter.freeResourcesString, del)
+        }
+        return result.toString()
     }
 
-    private fun _writeNativeMethod(classModel : ClassModel, methodModel : MethodModel, self : Boolean) {
-        start(1)
-        a ("""
-JNIEXPORT ${methodModel.getReturnType().getJniType()} JNICALL ${getJniMethodName(classModel, methodModel)}(${getJniSignature(methodModel, self)})
-{
-    ${getAllocateParameters(classModel, methodModel)}
-    ${getReturnStatement(methodModel)} ${methodModel.getGtkName()}(${getGtkCallSignature(classModel, methodModel, self)});
-    ${getFreeParameters(methodModel)}
-}
-""")
+    private fun appendIntendLine(result : StringBuilder, line : String, del : String) : String {
+        if (line.isNotEmpty()) {
+            result.append(del)
+            result.append(line)
+            if (del.isEmpty()) {
+                return "\n" + " ".repeat(12)
+            }
+        }
+        return del
+    }
+
+    private fun getGtkCallSignature(classModel: ClassModel, methodModel : MethodModel, self : Boolean): String {
+        val result = StringBuilder()
+
+        var del = ""
+
+        if (self) {
+            result.append("(void*) _self")
+            del = ", "
+        }
+
+        for (parameterModel in methodModel.getParameters()) {
+            result.append("${del}${parameterModel.jniConverter.getCallSignatureString(classModel)}")
+            del = ", "
+        }
+
+        if (methodModel.throwsError()) {
+            result.append("${del}NULL")
+        }
+        return result.toString()
     }
 
 
     private fun getReturnStatement(m : MethodModel) : String {
         if (!m.getReturnType().isVoid()) {
             if (m.getReturnType().isJavaNative()) {
-                return "return (${m.getReturnType().getJniType()}) "
+                return "return (${m.getReturnType().getJniType()})"
             } else {
-                return "return (jlong) "
+                return "return (jlong)"
             }
         } else {
             return ""
@@ -323,4 +337,13 @@ JNIEXPORT void JNICALL ${getJniMethodName(classModel, setter)}(JNIEnv * _jenv, j
     private fun getGlobalVMName(classModel : ClassModel) : String {
         return getGlobalName(classModel,"VM")
     }
+
+
+
+    override fun writeClass(classModel: ClassModel) {}
+    override fun writeInterface(classModel: ClassModel) {}
+    override fun writeInternalConstructor(classModel: ClassModel) {}
+    override fun writeConstructor(classModel: ClassModel, methodModel: MethodModel) {}
+    override fun writeFactory(classModel: ClassModel, methodModel: MethodModel) {}
+
 }
