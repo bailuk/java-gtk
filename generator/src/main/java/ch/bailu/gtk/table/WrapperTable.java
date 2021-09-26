@@ -30,6 +30,8 @@ public class WrapperTable {
         add("filename",       "Str");
         add("char**",         "Strs");
         add("gint*",          "Int");
+        add("int*",           "Int");
+        add("gdouble*",       "Dbl");
     }
 
 

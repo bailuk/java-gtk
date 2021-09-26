@@ -38,6 +38,21 @@
                 </parameters>
             </method>
 
+            <method name="rotate" c:identifier="cairo_rotate">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="matrix" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+
+                    <parameter name="angle">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                </parameters>
+            </method>
+
             <method name="paint" c:identifier="cairo_paint">
                 <return-value transfer-ownership="none">
                     <type name="none" c:type="void"/>
@@ -85,6 +100,16 @@
                 </parameters>
             </method>
 
+            <method name="close_path" c:identifier="cairo_close_path">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                </parameters>
+            </method>
 
             <method name="set_operator" c:identifier="cairo_set_operator">
                 <return-value transfer-ownership="none">
@@ -158,6 +183,36 @@
                         <type name="gdouble" c:type="gdouble"/>
                     </parameter>
                     <parameter name="y">
+                        <type name="gdouble" c:type="gdouble"/>
+                    </parameter>
+                </parameters>
+            </method>
+
+
+            <method name="curve_to" c:identifier="cairo_curve_to">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                    <parameter name="x1">
+                        <type name="gdouble" c:type="gdouble"/>
+                    </parameter>
+                    <parameter name="y1">
+                        <type name="gdouble" c:type="gdouble"/>
+                    </parameter>
+                    <parameter name="x2">
+                        <type name="gdouble" c:type="gdouble"/>
+                    </parameter>
+                    <parameter name="y2">
+                        <type name="gdouble" c:type="gdouble"/>
+                    </parameter>
+                    <parameter name="x3">
+                        <type name="gdouble" c:type="gdouble"/>
+                    </parameter>
+                    <parameter name="y3">
                         <type name="gdouble" c:type="gdouble"/>
                     </parameter>
                 </parameters>
@@ -350,6 +405,57 @@
                 </parameters>
             </method>
 
+
+            <method name="get_current_point" c:identifier="cairo_get_current_point">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                    <parameter name="x">
+                        <type name="gdouble*" c:type="gdouble*"/>
+                    </parameter>
+                    <parameter name="y">
+                        <type name="gdouble*" c:type="gdouble*"/>
+                    </parameter>
+                </parameters>
+            </method>
+
+            <method name="translate" c:identifier="cairo_translate">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                    <parameter name="x">
+                        <type name="gdouble" c:type="gdouble"/>
+                    </parameter>
+                    <parameter name="y">
+                        <type name="gdouble" c:type="gdouble"/>
+                    </parameter>
+                </parameters>
+            </method>
+
+            <method name="scale" c:identifier="cairo_scale">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                    <parameter name="x">
+                        <type name="gdouble" c:type="gdouble"/>
+                    </parameter>
+                    <parameter name="y">
+                        <type name="gdouble" c:type="gdouble"/>
+                    </parameter>
+                </parameters>
+            </method>
         </record>
 
 
@@ -524,8 +630,6 @@
                     </parameter>
                 </parameters>
             </method>
-
-
         </record>
 
 
