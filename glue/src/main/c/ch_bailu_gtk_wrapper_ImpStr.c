@@ -26,3 +26,16 @@ JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_wrapper_ImpStr_createStr
 
 }
 
+
+
+/**
+    Creates and returns a Java String containing the heap memory string.
+    Assumes that the c-space string is null terminated.
+    The returned Java String is a copy of the c-space string.
+*/
+JNIEXPORT jstring JNICALL Java_ch_bailu_gtk_wrapper_ImpStr_toString
+(JNIEnv * _jenv, jclass _class, jlong _pointer)
+{
+    const char* src  = (char*) _pointer;
+    return (*_jenv)->NewStringUTF(_jenv, src);
+}

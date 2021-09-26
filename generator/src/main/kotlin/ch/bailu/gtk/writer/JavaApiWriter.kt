@@ -101,16 +101,20 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
     }
 
 
-    override
-    fun writeMallocConstructor(classModel : ClassModel) {
+    override fun writeMallocConstructor(classModel : ClassModel) {
         if (classModel.hasDefaultConstructor() == false) {
             start(1)
 
             a ("""
-    public ${classModel.getApiName()}() {
-        super(${classModel.getImpName()}.newFromMalloc());
-    }
-        """)
+                
+                public ${classModel.getApiName()}() {
+                    super(${classModel.getImpName()}.newFromMalloc());
+                }
+                
+                public void destroy() {
+                    ch.bailu.gtk.wrapper.ImpUtil.destroy(getCPointer());
+                }
+            """.replaceIndent(" ".repeat(4)))
 
         }
     }
@@ -175,16 +179,12 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
     }
 
-    override
-    fun writeEnd() {
+    override fun writeEnd() {
         start();
         a("}\n");
     }
 
-
-
-    override
-    fun writeSignal(classModel : ClassModel, methodModel : MethodModel) {
+    override  fun writeSignal(classModel : ClassModel, methodModel : MethodModel) {
         start(1);
         a("    public void ").a(methodModel.getSignalMethodName()).a("(").a(methodModel.getSignalInterfaceName()).a(" observer) {\n");
         a("        ch.bailu.gtk.Callback.put(getCPointer(), \"").a(methodModel.getApiName()).a("\", observer);\n");
@@ -249,8 +249,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
     }
 
-    override
-    fun writeFunction(classModel : ClassModel, methodModel : MethodModel) {
+    override fun writeFunction(classModel : ClassModel, methodModel : MethodModel) {
         start(1);
         a("""
     

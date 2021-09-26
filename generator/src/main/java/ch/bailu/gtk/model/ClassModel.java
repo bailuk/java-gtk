@@ -69,7 +69,10 @@ public class ClassModel extends Model {
         for (ParameterTag field: structure.getFields()) {
             var fieldModel = new ParameterModel(nameSpace.getNamespace(), field, false);
             fields.addIfSupported(filterField(fieldModel));
+        }
 
+        for (MethodTag m : structure.getFunctions()) {
+            addIfSupportedWithCallbacks(functions, filter(new MethodModel(nameSpace.getNamespace(), m)));
         }
     }
 

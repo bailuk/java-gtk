@@ -1,6 +1,7 @@
 package ch.bailu.gtk.tag;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,6 +19,8 @@ public class StructureTag extends NamedTag {
 
     private final TagList<NamedTag> implementsList = new TagList<>();
     private final TagList<MethodTag> constructors = new TagList<>();
+    private final TagList<MethodTag> functions = new TagList<>();
+
 
     private final TagList<MethodTag> virtuals = new TagList<>();
     private final TagList<MethodTag> methods = new TagList<>();
@@ -53,6 +56,12 @@ public class StructureTag extends NamedTag {
 
         if ("signal".equals(name)) {
             return signals.addTag(new MethodTag(this));
+        }
+
+        if ("function".equals(name)) {
+            MethodTag f = new MethodTag(this);
+            functions.add(f);
+            return f;
         }
 
         return ignore();
@@ -108,6 +117,10 @@ public class StructureTag extends NamedTag {
 
     public List<ParameterTag> getFields() {
         return fields;
+    }
+
+    public List<MethodTag> getFunctions() {
+        return functions;
     }
 
     public boolean isDisguised() {

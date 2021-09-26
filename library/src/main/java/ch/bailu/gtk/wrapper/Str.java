@@ -4,10 +4,16 @@ import ch.bailu.gtk.Pointer;
 
 public class Str extends Pointer {
     public static final Str NULL = new Str(0);
-    private int size = 0;
+    private int size;
 
     public Str(long pointer) {
         super(pointer);
+
+        if (pointer == 0) {
+            size = 0;
+        } else {
+            size = -1;
+        }
     }
 
     public Str(String str) {
@@ -25,9 +31,19 @@ public class Str extends Pointer {
     }
 
     public void destroy() {
-        if (size != 0) {
+        if (size > 0) {
             ImpUtil.destroy(getCPointer());
             size = 0;
         }
+    }
+
+    @Override
+    public String toString() {
+        String result = "";
+
+        if (getCPointer() != 0) {
+            result = ImpStr.toString(getCPointer());
+        }
+        return result;
     }
 }
