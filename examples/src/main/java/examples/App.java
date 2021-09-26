@@ -3,7 +3,6 @@ package examples;
 import java.io.IOException;
 
 import ch.bailu.gtk.GTK;
-import ch.bailu.gtk.pango.Pango;
 
 public class App {
 
@@ -23,6 +22,6 @@ public class App {
         //new PangoRotatedText(argv);
 
 
-        new PixbufTest();
+        new ImageBridge(argv);
     }
 }

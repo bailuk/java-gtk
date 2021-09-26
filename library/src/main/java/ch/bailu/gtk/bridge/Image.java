@@ -9,9 +9,9 @@ import ch.bailu.gtk.gdkpixbuf.Pixbuf;
 import ch.bailu.gtk.gio.Cancellable;
 import ch.bailu.gtk.gio.MemoryInputStream;
 
-public class ImageLoader {
+public class Image {
 
-    public static Pixbuf loadImage(InputStream inputStream) throws IOException, AllocationError {
+    public static Pixbuf load(InputStream inputStream) throws IOException, AllocationError {
         final Bytes bytes = new Bytes(inputStream.readAllBytes());
         final MemoryInputStream stream = MemoryInputStream.newFromBytesMemoryInputStream(bytes);
         final Pixbuf result = Pixbuf.newFromStreamPixbuf(stream, new Cancellable(0));
@@ -20,7 +20,11 @@ public class ImageLoader {
         return result;
     }
 
-    public static Pixbuf loadImage(InputStream inputStream, int width, int height, boolean preserveAspectRatio) throws IOException, AllocationError {
+    public static Pixbuf load(InputStream inputStream, int width, int height) throws IOException, AllocationError {
+        return load(inputStream, width, height, false);
+    }
+
+    public static Pixbuf load(InputStream inputStream, int width, int height, boolean preserveAspectRatio) throws IOException, AllocationError {
         final int keepAspect = GTK.is(preserveAspectRatio);
         final Bytes bytes = new Bytes(inputStream.readAllBytes());
         final MemoryInputStream stream = MemoryInputStream.newFromBytesMemoryInputStream(bytes);

@@ -30,4 +30,18 @@ public class Pointer {
     public String toString() {
         return this.getClass().toString();
     }
+
+
+    public void throwNullPointerException(String msg) {
+        final String name = this.getClass().getCanonicalName();
+        msg = name + ": " + msg;
+        System.out.println(msg);
+        throw new NullPointerException(msg);
+    }
+
+    public void throwNullPointerExceptionIfNull() {
+        if (pointer == 0) {
+            throwNullPointerException("pointer == 0");
+        }
+    }
 }

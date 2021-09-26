@@ -3,6 +3,8 @@
 # Java-GTK
 Experimental GTK 3 bindings for Java
 
+[![POC screenshot](screenshot.png)](examples/src/main/java/examples/ImageBridge.java)
+
 ## Example
 ```java
 package examples;
@@ -12,6 +14,7 @@ import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.Button;
 import ch.bailu.gtk.wrapper.Str;
+import ch.bailu.gtk.wrapper.Strs;
 import ch.bailu.gtk.GTK;
 
 public class HelloWorld {
@@ -37,7 +40,7 @@ public class HelloWorld {
             window.showAll();
         });
 
-        app.run(args.length, args);
+        app.run(args.length, new Strs(args));
     }
 }
 ```
