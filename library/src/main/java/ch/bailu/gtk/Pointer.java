@@ -39,7 +39,7 @@ public class Pointer {
         throw new NullPointerException(msg);
     }
 
-    public void throwNullPointerExceptionIfNull() {
+    public void throwIfNull() {
         if (pointer == 0) {
             throwNullPointerException("pointer == 0");
         }

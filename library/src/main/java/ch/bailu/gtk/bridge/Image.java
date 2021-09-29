@@ -16,7 +16,10 @@ public class Image {
         final MemoryInputStream stream = MemoryInputStream.newFromBytesMemoryInputStream(bytes);
         final Pixbuf result = Pixbuf.newFromStreamPixbuf(stream, new Cancellable(0));
 
-        result.throwNullPointerExceptionIfNull();
+        stream.close(new Cancellable(0));
+        stream.unref();
+        bytes.unref();
+        result.throwIfNull();
         return result;
     }
 
@@ -29,9 +32,13 @@ public class Image {
         final Bytes bytes = new Bytes(inputStream.readAllBytes());
         final MemoryInputStream stream = MemoryInputStream.newFromBytesMemoryInputStream(bytes);
 
+
         final Pixbuf result = Pixbuf.newFromStreamAtScalePixbuf(stream, width, height, keepAspect, new Cancellable(0));
 
-        result.throwNullPointerExceptionIfNull();
+        stream.close(new Cancellable(0));
+        stream.unref();
+        bytes.unref();
+        result.throwIfNull();
         return result;
     }
 
