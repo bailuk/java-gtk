@@ -27,65 +27,97 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
     override fun writeUnsupported(model: Model) {
         start (1)
-        a ("    /* Unsupported:${model.toString()} */\n")
+        a ("    /* Unsupported:${model} */\n")
     }
+
 
     override fun writeNativeMethod(classModel : ClassModel, methodModel : MethodModel) {
-        val impCall = "${classModel.getImpName()}.${methodModel.getApiName()}(${getSelfCallSignature(methodModel.parameters)})"
-
-        start(1);
-        a("""
-    public ${methodModel.getReturnType().getApiType()} ${methodModel.getApiName()}(${getSignature(methodModel.parameters)}) ${getThrowsExtension(methodModel)} {             
-""")
-
-        writeCallbackConnections(methodModel)
-
-        if (methodModel.getReturnType().isVoid()) {
-            a("        ${impCall};\n")
-
-        } else if (methodModel.getReturnType().isJavaNative()) {
-            a("        return ${impCall};\n")
-
-        } else {
-            a("""
-        long pointerToObject = ${impCall};
-        return new ${methodModel.getReturnType().getApiType()}(pointerToObject);
-""")
-        }
-
-
-
-        a("    }\n\n")
+        start(2)
+        writeFunctionCall(classModel, methodModel, true)
+        next()
     }
 
 
-    private fun writeCallbackConnections (methodModel: MethodModel) {
+    private fun writeFunctionCall(classModel : ClassModel, methodModel : MethodModel, selfCall: Boolean) {
+        a("""
+            public ${getStatic(selfCall)} ${methodModel.getReturnType().apiType} ${methodModel.apiName}(${getSignature(methodModel.parameters)}) ${getThrowsExtension(methodModel)} {
+                ${getCallbackConnections(methodModel)}
+                ${getFunctionCall(classModel, methodModel, selfCall)};
+            }
+            """.replaceIndent(" ".repeat(4)))
+    }
+
+    private fun getStatic(selfCall : Boolean) : String {
+        return if (selfCall) {
+            ""
+        } else {
+            "static"
+        }
+    }
+    override fun writeFunction(classModel : ClassModel, methodModel : MethodModel) {
+        start(2)
+        writeFunctionCall(classModel, methodModel, false)
+        next()
+    }
+
+    private fun getCallSignature(m : MethodModel, selfCall : Boolean) : String {
+        return if (selfCall) {
+            getSelfCallSignature(m.parameters);
+        } else {
+            getCallSignature(m.getParameters(), "")
+        }
+    }
+
+    private fun getFunctionCall(c : ClassModel, m : MethodModel, selfCall : Boolean) : String {
+        val result = StringBuilder();
+        val signature = getCallSignature(m, selfCall);
+
+        if (m.getReturnType().isVoid()) {
+            result.append("${c.getImpName()}.${m.getApiName()}(${signature})")
+
+        } else if (m.getReturnType().isJavaNative()) {
+            result.append("return ${c.getImpName()}.${m.getApiName()}(${signature})")
+
+        } else {
+            result.append("return new ${m.getReturnType().getApiType()}(${c.getImpName()}.${m.getApiName()}(${signature}))")
+        }
+        return result.toString()
+    }
+
+
+    private fun getCallbackConnections (methodModel: MethodModel) : String {
+        var result = StringBuilder()
+        var del = "";
         if (methodModel.hasCallback()) {
 
             for (p in methodModel.parameters) {
                 if (p.isCallback) {
-                    a("        ch.bailu.gtk.Callback.put(0, \"${p.callbackModel.apiName}\", ${p.name});\n")
+                    result.append("${del}ch.bailu.gtk.Callback.put(0, \"${p.callbackModel.apiName}\", ${p.name});\n")
+                    del = " ".repeat(16)
                 }
             }
         }
+        return result.toString()
     }
 
 
     private fun getThrowsExtension(methodModel : MethodModel) : String {
-        if (methodModel.throwsError()) {
-            return "throws ch.bailu.gtk.exception.AllocationError"
+        return if (methodModel.throwsError()) {
+            "throws ch.bailu.gtk.exception.AllocationError"
+        } else {
+            ""
         }
-        return ""
     }
 
 
     private fun getThrowsOnNullSatement(classModel: ClassModel, methodModel : MethodModel) : String {
         val msg = "${classModel.apiName}:${methodModel.apiName}"
 
-        if (methodModel.throwsError()) {
-            return "throw new ch.bailu.gtk.exception.AllocationError(\"${msg}\")"
+        return if (methodModel.throwsError()) {
+            "throw new ch.bailu.gtk.exception.AllocationError(\"${msg}\")"
+        } else {
+            "throw new NullPointerException(\"${msg}\")"
         }
-        return "throw new NullPointerException(\"${msg}\")"
     }
 
 
@@ -93,10 +125,10 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
         start(1)
 
         a("""
-    public ${classModel.getApiName()}(long pointer) {
-        super(pointer);
-    }
-        """)
+            public ${classModel.getApiName()}(long pointer) {
+                super(pointer);
+            }
+        """.replaceIndent(" ".repeat(4)))
 
     }
 
@@ -249,34 +281,6 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
     }
 
-    override fun writeFunction(classModel : ClassModel, methodModel : MethodModel) {
-        start(1);
-        a("""
-    
-    public static ${methodModel.getReturnType().getApiType()} ${methodModel.getApiName()}(${getSignature(methodModel.getParameters())}) {
-        ${getFunctionCall(classModel, methodModel)};
-    }
-        """)
-
-
-    }
-
-
-    private fun getFunctionCall(c : ClassModel, m : MethodModel) : String {
-        val result = StringBuilder();
-        val signature = getCallSignature(m.getParameters(), "")
-
-        if (m.getReturnType().isVoid()) {
-            result.append("${c.getImpName()}.${m.getApiName()}(${signature})")
-
-        } else if (m.getReturnType().isJavaNative()) {
-            result.append("return ${c.getImpName()}.${m.getApiName()}(${signature})")
-
-        } else {
-            result.append("return new ${m.getReturnType().getApiType()}(${c.getImpName()}.${m.getApiName()}(${signature}))")
-        }
-        return result.toString()
-    }
 
     private fun writeSignature(m : MethodModel) {
         a("(${getSignature(m.getParameters())})")

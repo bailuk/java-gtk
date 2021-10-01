@@ -44,6 +44,7 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         JNIEXPORT ${methodModel.getReturnType().getJniType()} JNICALL ${getJniMethodName(classModel, methodModel)}(${getJniSignature(methodModel, self)})
         {
             ${getAllocateParameters(classModel, methodModel)}
+            ${getEnvironmentInit(classModel, methodModel)}
             ${getReturnStatement(methodModel)} ${methodModel.getGtkName()}(${getGtkCallSignature(classModel, methodModel, self)});
             ${getFreeParameters(methodModel)}
         }
@@ -140,11 +141,11 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
     override fun writeMallocConstructor(classModel : ClassModel) {
         start(1)
         a("""
-JNIEXPORT jlong JNICALL ${getJniMethodName(classModel, "newFromMalloc")}(JNIEnv * _jenv, jclass _jclass)
-{
-    return (jlong) calloc(1, sizeof(${classModel.getCType()}));
-}
-        """)
+        JNIEXPORT jlong JNICALL ${getJniMethodName(classModel, "newFromMalloc")}(JNIEnv * _jenv, jclass _jclass)
+        {
+            return (jlong) calloc(1, sizeof(${classModel.getCType()}));
+        }
+        """.trimIndent())
     }
 
     override fun writeInterfaceMethod(classModel: ClassModel, m: MethodModel) {}
@@ -152,24 +153,24 @@ JNIEXPORT jlong JNICALL ${getJniMethodName(classModel, "newFromMalloc")}(JNIEnv 
         start(1)
 
         a("""
-static ${methodModel.getReturnType().gtkType} ${getCSignalCallbackName(classModel, methodModel)}${getCallbackSignature(methodModel)}
-{
-    JavaVM* globalVM    = ${getGlobalVMName(classModel)};
-    jclass  globalClass = ${getGlobalClassName(classModel)};
-    JNIEnv* g_env;
-    int     envStat     = (*globalVM)->GetEnv(globalVM, (void **)&g_env, JNI_VERSION_1_6);
+        static ${methodModel.getReturnType().gtkType} ${getCSignalCallbackName(classModel, methodModel)}${getCallbackSignature(methodModel)}
+        {
+            JavaVM* globalVM    = ${getGlobalVMName(classModel)};
+            jclass  globalClass = ${getGlobalClassName(classModel)};
+            JNIEnv* g_env;
+            int     envStat     = (*globalVM)->GetEnv(globalVM, (void **)&g_env, JNI_VERSION_1_6);
 
-    if (envStat == JNI_OK) {
-        jmethodID callback = ${getCallbackMethodID(methodModel)};
-        ${getCallbackMethodCall(methodModel)};
+            if (envStat == JNI_OK) {
+                jmethodID callback = ${getCallbackMethodID(methodModel)};
+                ${getCallbackMethodCall(methodModel)};
         
-        (*globalVM)->DetachCurrentThread(globalVM);
+                (*globalVM)->DetachCurrentThread(globalVM);
         
-    } else {
-        printf("ERROR: JNI is not initialized\\n");
-    }
-}
-    """)
+            } else {
+                printf("ERROR: JNI is not initialized\\n");
+            }
+        }
+        """.trimIndent())
 
 
     }
@@ -178,37 +179,41 @@ static ${methodModel.getReturnType().gtkType} ${getCSignalCallbackName(classMode
         start(1)
 
         a("""
-static ${methodModel.getReturnType().gtkType} ${getCSignalCallbackName(classModel, methodModel)}${getSignalCallbackSignature(methodModel)}
-{
-    JavaVM* globalVM    = ${getGlobalVMName(classModel)};
-    jclass  globalClass = ${getGlobalClassName(classModel)};
-    JNIEnv* g_env;
-    int     envStat     = (*globalVM)->GetEnv(globalVM, (void **)&g_env, JNI_VERSION_1_6);
+        static ${methodModel.getReturnType().gtkType} ${getCSignalCallbackName(classModel, methodModel)}${getSignalCallbackSignature(methodModel)}
+        {
+            JavaVM* globalVM    = ${getGlobalVMName(classModel)};
+            jclass  globalClass = ${getGlobalClassName(classModel)};
+            JNIEnv* g_env;
+            int     envStat     = (*globalVM)->GetEnv(globalVM, (void **)&g_env, JNI_VERSION_1_6);
 
-    if (envStat == JNI_OK) {
-        jmethodID callback = ${getSignalCallbackMethodID(methodModel)};
-        ${getSignalCallbackMethodCall(methodModel)};
+            if (envStat == JNI_OK) {
+                jmethodID callback = ${getSignalCallbackMethodID(methodModel)};
+                ${getSignalCallbackMethodCall(methodModel)};
         
-        (*globalVM)->DetachCurrentThread(globalVM);
+                (*globalVM)->DetachCurrentThread(globalVM);
         
-    } else {
-        printf("ERROR: JNI is not initialized\\n");
-    }
-}
+            } else {
+                printf("ERROR: JNI is not initialized\\n");
+            }
+        }
     
-JNIEXPORT void JNICALL ${getJniSignalConnectMethodName(classModel, methodModel)}(JNIEnv * _jenv, jclass _jclass, jlong _self) 
-{
-    printf("JNI connect: ${methodModel.getApiName()}\n");
-
-    (*_jenv)->GetJavaVM(_jenv, &${getGlobalVMName(classModel)});
-    ${getGlobalClassName(classModel)} = (jclass) (*_jenv)->NewGlobalRef(_jenv, _jclass);
-    
-    g_signal_connect ((void *)_self, "${methodModel.getApiName()}", G_CALLBACK (${getCSignalCallbackName(classModel, methodModel)}), NULL);
-}
-    """)
+        JNIEXPORT void JNICALL ${getJniSignalConnectMethodName(classModel, methodModel)}(JNIEnv * _jenv, jclass _jclass, jlong _self) 
+        {
+            printf("JNI connect: ${methodModel.getApiName()}\n");
+            ${getEnvironmentInit(classModel, methodModel)}    
+            g_signal_connect ((void *)_self, "${methodModel.getApiName()}", G_CALLBACK (${getCSignalCallbackName(classModel, methodModel)}), NULL);
+        }
+        """.trimIndent())
     }
 
 
+    private fun getEnvironmentInit(classModel: ClassModel, methodModel: MethodModel) : String {
+        return if (methodModel.hasCallback()) {
+            "(*_jenv)->GetJavaVM(_jenv, &${getGlobalVMName(classModel)});\n            ${getGlobalClassName(classModel)} = (jclass) (*_jenv)->NewGlobalRef(_jenv, _jclass);"
+        } else {
+            "";
+        }
+    }
 
 
     override fun writeField(classModel : ClassModel, parameterModel : ParameterModel) {
@@ -216,18 +221,18 @@ JNIEXPORT void JNICALL ${getJniSignalConnectMethodName(classModel, methodModel)}
         val setter = JavaNames.getSetterName(parameterModel.getName())
 
         a ("""
-JNIEXPORT ${parameterModel.getJniType()} JNICALL ${getJniMethodName(classModel, getter)}(JNIEnv * _jenv, jclass _jclass, jlong _self)
-{
-    const ${classModel.getCType()}* __self = (${classModel.getCType()}*) _self;
-    return (${parameterModel.getJniType()}) __self->${parameterModel.getName()};
-}
+        JNIEXPORT ${parameterModel.getJniType()} JNICALL ${getJniMethodName(classModel, getter)}(JNIEnv * _jenv, jclass _jclass, jlong _self)
+        {
+            const ${classModel.getCType()}* __self = (${classModel.getCType()}*) _self;
+            return (${parameterModel.getJniType()}) __self->${parameterModel.getName()};
+        }
 
-JNIEXPORT void JNICALL ${getJniMethodName(classModel, setter)}(JNIEnv * _jenv, jclass _jclass, jlong _self, ${parameterModel.getJniType()} _${parameterModel.getName()})
-{
-    ${classModel.getCType()}* __self = (${classModel.getCType()}*) _self;
-    __self->${parameterModel.getName()} = (${parameterModel.getGtkType()}) _${parameterModel.getName()};
-}
-    """)
+        JNIEXPORT void JNICALL ${getJniMethodName(classModel, setter)}(JNIEnv * _jenv, jclass _jclass, jlong _self, ${parameterModel.getJniType()} _${parameterModel.getName()})
+        {
+            ${classModel.getCType()}* __self = (${classModel.getCType()}*) _self;
+            __self->${parameterModel.getName()} = (${parameterModel.getGtkType()}) _${parameterModel.getName()};
+        }
+        """.trimIndent())
     }
 
     override fun writeFunction(classModel : ClassModel, methodModel : MethodModel) {

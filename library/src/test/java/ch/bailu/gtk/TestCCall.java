@@ -3,6 +3,9 @@ package ch.bailu.gtk;
 import org.junit.jupiter.api.Test;
 
 import ch.bailu.gtk.gdk.RGBA;
+import ch.bailu.gtk.glib.Glib;
+import ch.bailu.gtk.glib.MainContext;
+import ch.bailu.gtk.glib.MainLoop;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -29,5 +32,35 @@ public class TestCCall {
         assertEquals(0.2d, rgba.getFieldRed(),0d);
         assertEquals(0.3d, rgba.getFieldGreen(),0d);
         assertEquals(0.4d, rgba.getFieldBlue(),0d);
+    }
+
+    @Test
+    public void testStaticcallback() throws InterruptedException {
+        var loop = new MainLoop(new MainContext(0), GTK.TRUE);
+
+
+        Glib.timeoutAdd(100, user_data -> {
+            System.out.println("test");
+            return GTK.FALSE;
+        }, 0);
+/*
+        Glib.idleAdd(user_data -> {
+            System.out.println("test");
+            return GTK.FALSE;
+        }, 0);
+
+        Glib.timeoutAdd(100, user_data -> {
+            System.out.println("test");
+            return GTK.TRUE;
+        }, 0);
+
+        Glib.idleAdd(user_data -> {
+            System.out.println("test");
+            loop.quit();
+            return GTK.TRUE;
+        }, 0);
+*/
+        loop.run();
+
     }
 }
