@@ -47,7 +47,7 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         JNIEXPORT ${methodModel.getReturnType().getJniType()} JNICALL ${getJniMethodName(classModel, methodModel)}(${getJniSignature(methodModel, self)})
         {
             ${getAllocateParameters(classModel, methodModel)}
-            ${getEnvironmentInit(classModel, methodModel)}
+            ${getEnvironmentInit(classModel, methodModel, false)}
             ${getReturnStatement(methodModel)} ${methodModel.getGtkName()}(${getGtkCallSignature(classModel, methodModel, self)});
             ${getFreeParameters(methodModel)}
         }
@@ -201,15 +201,16 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         JNIEXPORT void JNICALL ${getJniSignalConnectMethodName(classModel, methodModel)}(JNIEnv * _jenv, jclass _jself, jlong _self) 
         {
             printf("JNI connect: ${methodModel.getApiName()}\n");
-            ${getEnvironmentInit(classModel, methodModel)}    
+            ${getEnvironmentInit(classModel, methodModel, true)}    
             g_signal_connect ((void *)_self, "${methodModel.getApiName()}", G_CALLBACK (${getCSignalCallbackName(classModel, methodModel)}), NULL);
         }
         """.trimIndent())
     }
 
 
-    private fun getEnvironmentInit(classModel: ClassModel, methodModel: MethodModel) : String {
-        return if (methodModel.hasCallback()) {
+    private fun getEnvironmentInit(classModel: ClassModel, methodModel: MethodModel, isSignal : Boolean) : String {
+        // TODO move isSignal to methodModel (for example to hasCallback())
+        return if (isSignal || methodModel.hasCallback()) {
             "(*_jenv)->GetJavaVM(_jenv, &${getGlobalVMName(classModel)});\n            ${getGlobalClassName(classModel)} = (jclass) (*_jenv)->NewGlobalRef(_jenv, _jself);"
         } else {
             "";
