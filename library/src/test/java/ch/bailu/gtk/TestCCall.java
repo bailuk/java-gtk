@@ -34,33 +34,28 @@ public class TestCCall {
         assertEquals(0.4d, rgba.getFieldBlue(),0d);
     }
 
+    private int i = 0;
     @Test
-    public void testStaticcallback() throws InterruptedException {
-        var loop = new MainLoop(new MainContext(0), GTK.TRUE);
+    public void testMainLoop()  {
+        //https://docs.huihoo.com/symbian/nokia-symbian3-developers-library-v0.8/GUID-7FD05006-09C1-4EF4-A2EB-AD98C2FA8866.html
+        i = 0;
 
-
+        final long timeExpectMin = 100*10;
+        final long start = System.currentTimeMillis();
+        final var loop = new MainLoop(new MainContext(0), GTK.TRUE);
         Glib.timeoutAdd(100, user_data -> {
-            System.out.println("test");
-            return GTK.FALSE;
-        }, 0);
-/*
-        Glib.idleAdd(user_data -> {
-            System.out.println("test");
-            return GTK.FALSE;
-        }, 0);
-
-        Glib.timeoutAdd(100, user_data -> {
-            System.out.println("test");
+            i++;
+            if (i==10) {
+                loop.quit();
+                return GTK.FALSE;
+            }
             return GTK.TRUE;
         }, 0);
-
-        Glib.idleAdd(user_data -> {
-            System.out.println("test");
-            loop.quit();
-            return GTK.TRUE;
-        }, 0);
-*/
+        assertEquals(0, i);
         loop.run();
+        assertEquals(10, i);
+        assertEquals(true, System.currentTimeMillis() - start >= timeExpectMin);
+        loop.unref();
 
     }
 }
