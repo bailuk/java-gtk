@@ -189,6 +189,33 @@
             </method>
 
 
+            <method name="arc" c:identifier="cairo_arc">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                    <parameter name="xc">
+                        <type name="gdouble" c:type="gdouble"/>
+                    </parameter>
+                    <parameter name="yc">
+                        <type name="gdouble" c:type="gdouble"/>
+                    </parameter>
+                    <parameter name="radius">
+                        <type name="gdouble" c:type="gdouble"/>
+                    </parameter>
+                    <parameter name="angle1">
+                        <type name="gdouble" c:type="gdouble"/>
+                    </parameter>
+                    <parameter name="angle2">
+                        <type name="gdouble" c:type="gdouble"/>
+                    </parameter>
+                </parameters>
+            </method>
+
+
             <method name="curve_to" c:identifier="cairo_curve_to">
                 <return-value transfer-ownership="none">
                     <type name="none" c:type="void"/>
