@@ -498,6 +498,16 @@
                 </parameters>
             </method>
 
+            <method name="get_source" c:identifier="cairo_get_source">
+                <return-value transfer-ownership="none">
+                    <type name="Pattern" c:type="cairo_pattern_t*"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                </parameters>
+            </method>
 
             <method name="get_current_point" c:identifier="cairo_get_current_point">
                 <return-value transfer-ownership="none">
@@ -802,6 +812,20 @@
                     </parameter>
                     <parameter name="alpha">
                         <type name="double" c:type="double"/>
+                    </parameter>
+                </parameters>
+            </method>
+
+            <method name="set_extend" c:identifier="cairo_pattern_set_extend">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="pattern" transfer-ownership="none">
+                        <type name="Pattern" c:type="cairo_pattern_t*"/>
+                    </instance-parameter>
+                    <parameter name="extend">
+                        <type name="Extend" c:type="cairo_extend_t"/>
                     </parameter>
                 </parameters>
             </method>
