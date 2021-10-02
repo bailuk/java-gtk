@@ -1,45 +1,26 @@
 package ch.bailu.gtk.wrapper;
 
-import ch.bailu.gtk.Pointer;
-
-public class Bytes extends Pointer {
-
-    private int size = 0;
+public class Bytes extends Ary {
 
 
     public Bytes(long pointer) {
-        super(pointer);
+        super(pointer, 1, 0);
     }
 
     public Bytes(byte[] bytes) {
-        super(ImpBytes.createBytes(bytes));
+        super(createBytes(bytes), 1, bytes.length);
 
-        if (getCPointer() != 0) {
-            size = bytes.length;
-        } else {
-            size = 0;
-        }
     }
 
-    public int getSize() {
-        return size;
+    private static long createBytes(byte[] bytes) {
+        if (bytes.length == 0) {
+            return 0;
+        }
+        return ImpBytes.createBytes(bytes);
     }
 
     public byte getByte(int index) {
         checkLimit(index);
         return ImpBytes.getByte(getCPointer(), index);
-    }
-
-    public void destroy() {
-        if (size != 0) {
-            ImpUtil.destroy(getCPointer());
-            size = 0;
-        }
-    }
-
-    private void checkLimit(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("size: " + size + " index: " + index);
-        }
     }
 }

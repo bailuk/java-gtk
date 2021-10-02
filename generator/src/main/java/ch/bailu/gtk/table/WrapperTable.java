@@ -24,6 +24,7 @@ public class WrapperTable {
 
     private WrapperTable() {
         add("unsigned char*", "Bytes");
+        add("const double*",  "Dbls");
         add("gchar*",         "Str");
         add("const char*",    "Str");
         add("const gchar*",   "Str");
@@ -31,7 +32,7 @@ public class WrapperTable {
         add("char**",         "Strs");
         add("gint*",          "Int");
         add("int*",           "Int");
-        add("gdouble*",       "Dbl");
+        add("gdouble*",       "Dbls");
     }
 
 

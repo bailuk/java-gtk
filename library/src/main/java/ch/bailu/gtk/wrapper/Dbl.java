@@ -1,23 +1,21 @@
 package ch.bailu.gtk.wrapper;
 
-import ch.bailu.gtk.Pointer;
+public class Dbl extends Dbls {
 
-public class Dbl extends Pointer {
-
-    private boolean created;
+    public Dbl(double d) {
+        super(createDbl(d), 1);
+    }
 
     public Dbl() {
-        this(createDbl(0d));
+        super(createDbl(0),1);
     }
 
     public Dbl(long pointer) {
         super(pointer);
-        created = pointer != 0;
     }
 
-
     private static long createDbl(double value) {
-        return ImpDbl.createDbl(value);
+        return ImpDbls.createDbl(value);
     }
 
     public static Dbl create(double value) {
@@ -25,17 +23,10 @@ public class Dbl extends Pointer {
     }
 
     public void set(double i) {
-        ImpDbl.set(getCPointer(), i);
+        setAt(0,i);
     }
 
     public double get() {
-        return ImpDbl.get(getCPointer());
-    }
-
-    public void destroy() {
-        if (created) {
-            ImpUtil.destroy(getCPointer());
-            created = false;
-        }
+        return getAt(0);
     }
 }
