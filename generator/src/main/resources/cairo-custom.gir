@@ -216,6 +216,21 @@
             </method>
 
 
+
+            <method name="set_fill_rule" c:identifier="cairo_set_fill_rule">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                    <parameter name="fill_rule">
+                        <type name="FillRule" c:type="cairo_fill_rule_t"/>
+                    </parameter>
+                </parameters>
+            </method>
+
             <method name="curve_to" c:identifier="cairo_curve_to">
                 <return-value transfer-ownership="none">
                     <type name="none" c:type="void"/>
@@ -301,6 +316,57 @@
                     </parameter>
                 </parameters>
             </method>
+
+            <method name="set_dash" c:identifier="cairo_set_dash">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                    <parameter name="dashes">
+                        <type name="const double*" c:type="const double*"/>
+                    </parameter>
+                    <parameter name="num_dashes">
+                        <type name="int" c:type="int"/>
+                    </parameter>
+                    <parameter name="offset">
+                        <type name="gdouble" c:type="gdouble"/>
+                    </parameter>
+                </parameters>
+            </method>
+
+
+
+            <method name="set_line_cap" c:identifier="cairo_set_line_cap">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                    <parameter name="line_cap">
+                        <type name="LineCap" c:type="cairo_line_cap_t"/>
+                    </parameter>
+                </parameters>
+            </method>
+
+            <method name="set_line_join" c:identifier="cairo_set_line_join">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                    <parameter name="line_join">
+                        <type name="LineJoin" c:type="cairo_line_join_t"/>
+                    </parameter>
+                </parameters>
+            </method>
+
 
             <method name="set_source_rgba" c:identifier="cairo_set_source_rgba">
                 <return-value transfer-ownership="none">
@@ -401,7 +467,7 @@
                         <type name="Context" c:type="cairo_t*"/>
                     </instance-parameter>
                     <parameter name="matrix" transfer-ownership="non">
-                        <type name="Matrix" c:type="const mcario_matrix_t*"/>
+                        <type name="Matrix" c:type="const cario_matrix_t*"/>
                     </parameter>
                 </parameters>
             </method>
