@@ -1,12 +1,10 @@
 package ch.bailu.gtk.type;
 
-import ch.bailu.gtk.type.Pointer;
-
-public abstract class Ary extends Pointer {
+public abstract class Array extends Pointer {
     private int length;
     private final int bytes;
 
-    public Ary(long pointer, int bytes, int length) {
+    public Array(long pointer, int bytes, int length) {
         super(pointer);
         this.bytes = bytes;
         if (pointer == 0) {

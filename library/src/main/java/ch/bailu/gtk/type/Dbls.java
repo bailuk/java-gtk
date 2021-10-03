@@ -1,6 +1,6 @@
 package ch.bailu.gtk.type;
 
-public class Dbls extends Ary {
+public class Dbls extends Array {
 
     private final static int BYTES = 4;
 

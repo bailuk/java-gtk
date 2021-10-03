@@ -32,3 +32,16 @@ JNIEXPORT jbyte JNICALL Java_ch_bailu_gtk_type_ImpBytes_getByte
     return (jbyte) bytes[_index];
 }
 
+
+/**
+    Creates and returns a java byte array containing the heap memory byte array.
+    The returned java array is a copy of the c-space array.
+*/
+JNIEXPORT jbyteArray JNICALL Java_ch_bailu_gtk_type_ImpBytes_toBytes
+  (JNIEnv * _env, jclass _class, jlong _pointer, jint _start, jint _size)
+{
+    const void* src = (void*)_pointer;
+    jbyteArray result = (*_env)->NewByteArray(_env, _size);
+    (*_env)->SetByteArrayRegion(_env, result, _start, _size, src);
+    return result;
+}

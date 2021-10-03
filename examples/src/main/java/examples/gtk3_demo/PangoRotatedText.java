@@ -35,6 +35,7 @@ public class PangoRotatedText {
     private final static String HEART = "♥";
     private final static String TEXT = "I ♥ GTK+";
 
+    private final static Str STEXT = new Str(TEXT);
     private final Int width = new Int();
     private final Int height = new Int();
 
@@ -95,11 +96,13 @@ public class PangoRotatedText {
 
 
         for (; true; /*p = text; (p = strstr (p, HEART)); p += strlen (HEART)*/) {
-            Attribute attr =  AttrShape.newWithData(ink_rect, logical_rect, new Bytes(p), null, null);
-
+          //  Attribute attr =  AttrShape.newWithData(ink_rect, logical_rect, new Bytes(p), null, null);
+/*
             attr.setFieldStartIndex(p-text);
             attr.setFieldEndIndex((p-text) + HEART.getSize()-1);
-            attrs.insert(attr);
+
+ */
+            //attrs.insert(attr);
             break;
         }
         return attrs;
@@ -134,7 +137,7 @@ public class PangoRotatedText {
 
         /* Create a PangoLayout, set the text, font, and attributes */
         Layout layout = new Layout(context);
-        layout.setText(TEXT, -1);
+        layout.setText(STEXT, -1);
         var desc = Pango.fontDescriptionFromString(new Str(FONT));
         layout.setFontDescription(desc);
         var attrs = createFancyAttrListForLayout(layout);
@@ -176,7 +179,7 @@ public class PangoRotatedText {
         drawing_area.onDraw(cr -> rotatedTextDraw(drawing_area, cr));
 
         /* And a label */
-        var label = new Label(TEXT);
+        var label = new Label(new Str(TEXT));
         box.add(label);
         label.setAngle(45d);
 

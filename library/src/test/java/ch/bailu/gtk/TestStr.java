@@ -13,10 +13,11 @@ public class TestStr {
 
     @Test
     public void testStr() {
-        Str s = new Str("test");
+        final String TEXT = "I ♥ GTK+";
+        Str s = new Str(TEXT);
 
-        assertEquals("test", s.toString());
-        assertEquals("test".length()+1, s.getSize());
+        assertEquals(TEXT, s.toString());
+        assertEquals(TEXT.getBytes().length, s.getSize());
         s.destroy();
         assertEquals(0, s.getSize());
     }

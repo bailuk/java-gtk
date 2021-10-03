@@ -207,11 +207,11 @@ public class CairoDrawingArea {
         /*
          * Create the checkerboard area
          */
-        var label = new Label(Str.NULL);
+        var label = new Label(null);
         label.setMarkup(new Str("<u>Checkerboard pattern</u>"));
         vbox.packStart(label, GTK.FALSE, GTK.FALSE, 0);
 
-        var frame = new Frame(Str.NULL);
+        var frame = new Frame(null);
         frame.setShadowType(ShadowType.IN);
         vbox.packStart(frame, GTK.TRUE, GTK.TRUE, 0);
 
@@ -226,11 +226,11 @@ public class CairoDrawingArea {
         /*
          * Create the scribble area
          */
-        label = new Label(Str.NULL);
+        label = new Label(null);
         label.setMarkup(new Str("<u>Scribble area</u>"));
         vbox.packStart(label, GTK.FALSE, GTK.FALSE, 0);
 
-        frame = new Frame(Str.NULL);
+        frame = new Frame(null);
         frame.setShadowType(ShadowType.IN);
         vbox.packStart(frame, GTK.TRUE, GTK.TRUE, 0);
 

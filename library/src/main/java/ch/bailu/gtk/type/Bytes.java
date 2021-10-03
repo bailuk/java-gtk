@@ -1,6 +1,6 @@
 package ch.bailu.gtk.type;
 
-public class Bytes extends Ary {
+public class Bytes extends Array {
 
 
     public Bytes(long pointer) {
@@ -22,5 +22,17 @@ public class Bytes extends Ary {
     public byte getByte(int index) {
         checkLimit(index);
         return ImpBytes.getByte(getCPointer(), index);
+    }
+
+    public byte[] toBytes() {
+        return toBytes(0, getSize()-1);
+    }
+
+    public byte[] toBytes(int start, int end) {
+        final int size = end - start + 1;
+        checkLimit(start);
+        checkLimit(end);
+        if (size <= 0) return new byte[]{};
+        return ImpBytes.toBytes(getCPointer(), start, size);
     }
 }
