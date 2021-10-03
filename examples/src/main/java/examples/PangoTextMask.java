@@ -12,8 +12,8 @@ import ch.bailu.gtk.pango.FontDescription;
 import ch.bailu.gtk.pango.Layout;
 import ch.bailu.gtk.pango.Pango;
 import ch.bailu.gtk.pangocairo.Pangocairo;
-import ch.bailu.gtk.wrapper.Str;
-import ch.bailu.gtk.wrapper.Strs;
+import ch.bailu.gtk.type.Str;
+import ch.bailu.gtk.type.Strs;
 
 public class PangoTextMask {
     public PangoTextMask(String[] argv) {

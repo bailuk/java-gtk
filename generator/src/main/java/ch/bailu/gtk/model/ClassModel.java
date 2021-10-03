@@ -170,13 +170,13 @@ public class ClassModel extends Model {
             nameSpace = new NamespaceModel();
 
             if ("record".equalsIgnoreCase(structType)) {
-                name = nameSpace.getFullNamespace() + ".Record";
+                name = nameSpace.getFullNamespace() + ".type.Record";
             } else if ("package".equalsIgnoreCase(structType)) {
-                name = nameSpace.getFullNamespace() + ".Package";
+                name = nameSpace.getFullNamespace() + ".type.Package";
             } else if ("callback".equalsIgnoreCase(structType)) {
-                name = nameSpace.getFullNamespace() + ".Callback";
+                name = nameSpace.getFullNamespace() + ".type.Callback";
             } else {
-                name = nameSpace.getFullNamespace() + ".Pointer";
+                name = nameSpace.getFullNamespace() + ".type.Pointer";
             }
 
         } else {
@@ -192,7 +192,7 @@ public class ClassModel extends Model {
 
             } else {
                 nameSpace = new NamespaceModel();
-                name = nameSpace.getFullNamespace() + ".Outsider";
+                name = nameSpace.getFullNamespace() + ".type.Outsider";
             }
         }
     }

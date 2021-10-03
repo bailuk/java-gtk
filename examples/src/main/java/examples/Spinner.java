@@ -3,16 +3,11 @@ package examples;
 import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.ApplicationWindow;
-import ch.bailu.gtk.gtk.Box;
 import ch.bailu.gtk.gtk.Button;
 import ch.bailu.gtk.gtk.Dialog;
-import ch.bailu.gtk.gtk.Entry;
-import ch.bailu.gtk.gtk.Orientation;
-import ch.bailu.gtk.gtk.VBox;
-import ch.bailu.gtk.gtk.Widget;
 import ch.bailu.gtk.gtk.Window;
-import ch.bailu.gtk.wrapper.Str;
-import ch.bailu.gtk.wrapper.Strs;
+import ch.bailu.gtk.type.Str;
+import ch.bailu.gtk.type.Strs;
 
 public class Spinner {
 
@@ -26,43 +21,46 @@ public class Spinner {
         var app = new Application(new Str("com.example.GtkApplication"),
                 ApplicationFlags.FLAGS_NONE);
 
+
+
         app.onActivate(() -> {
-            String helloString = "Hello world!";
-
             var window = new ApplicationWindow(app);
-
-            window.setTitle(new Str(helloString));
-            doSpinner(window);
+            var button = new Button();
+            button.setLabel(new Str("run"));
+            button.onClicked(() -> doSpinner(window));
+            window.add(button);
             window.showAll();
-
         });
 
         app.run(argv.length, new Strs(argv));
     }
-    private Widget doSpinner(Window window) {
-/*
-        window = gtk_dialog_new_with_buttons ("Spinner",
-                GTK_WINDOW (do_widget),
-                0,
-                _("_Close"),
-                GTK_RESPONSE_NONE,
-                NULL);
-*/
+    private void doSpinner(Window parent) {
 
-        window.setResizable(0);
-
+        var dialog =  Dialog.newWithButtonsDialog(new Str("Spinner"), parent, 0, new Str("Close"));
 /*
-        g_signal_connect (window, "response",
-                G_CALLBACK (gtk_widget_destroy), NULL);
-        g_signal_connect (window, "destroy",
-                G_CALLBACK (gtk_widget_destroyed), &window);
-*/
+
+        dialog.setResizable(GTK.FALSE);
+        dialog.onResponse(new Dialog.OnResponse() {
+            @Override
+            public void onResponse(int response_id) {
+                dialog.close();
+            }
+        });
+
+        dialog.onDestroy(new Widget.OnDestroy() {
+            @Override
+            public void onDestroy() {
+
+            }
+        });
 
         Box vbox = new Box(Orientation.VERTICAL, 5);
         vbox.setBorderWidth(5);
-        window.add(vbox);
+        dialog.add(vbox);
 
-        /* Sensitive */
+        */
+/* Sensitive *//*
+
         Box hbox = new Box(Orientation.HORIZONTAL, 5);
         spinnerSensitive = new ch.bailu.gtk.gtk.Spinner();
         hbox.add(spinnerSensitive);
@@ -70,7 +68,9 @@ public class Spinner {
         vbox.add(hbox);
 
 
-        /* Disabled */
+        */
+/* Disabled *//*
+
         hbox = new Box(Orientation.HORIZONTAL, 5);
         spinner_unsensitive = new ch.bailu.gtk.gtk.Spinner();
 
@@ -93,13 +93,16 @@ public class Spinner {
 
         vbox.add(button);
 
-        /* Start by default to test for:
-         * https://bugzilla.gnome.org/show_bug.cgi?id=598496 */
+        */
+/* Start by default to test for:
+         * https://bugzilla.gnome.org/show_bug.cgi?id=598496 *//*
+
         spinnerSensitive.start();
         spinner_unsensitive.start();
 
-        window.showAll();
+        dialog.showAll();
 
-        return window;
+        return dialog;
+*/
     }
 }

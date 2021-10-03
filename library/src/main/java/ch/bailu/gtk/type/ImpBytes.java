@@ -1,4 +1,4 @@
-package ch.bailu.gtk.wrapper;
+package ch.bailu.gtk.type;
 
 public class ImpBytes {
     public static native long createBytes(byte[] bytes);

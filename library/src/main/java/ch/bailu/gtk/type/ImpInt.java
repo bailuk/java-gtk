@@ -1,4 +1,4 @@
-package ch.bailu.gtk.wrapper;
+package ch.bailu.gtk.type;
 
 public class ImpInt {
     public static native long createInt(int value);

@@ -1,6 +1,6 @@
-package ch.bailu.gtk.wrapper;
+package ch.bailu.gtk.type;
 
-import ch.bailu.gtk.Pointer;
+import ch.bailu.gtk.type.Pointer;
 
 public class Util {
 

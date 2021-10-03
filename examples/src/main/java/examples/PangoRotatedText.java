@@ -21,10 +21,10 @@ import ch.bailu.gtk.pango.Layout;
 import ch.bailu.gtk.pango.Pango;
 import ch.bailu.gtk.pango.Rectangle;
 import ch.bailu.gtk.pangocairo.Pangocairo;
-import ch.bailu.gtk.wrapper.Dbl;
-import ch.bailu.gtk.wrapper.Int;
-import ch.bailu.gtk.wrapper.Str;
-import ch.bailu.gtk.wrapper.Strs;
+import ch.bailu.gtk.type.Dbl;
+import ch.bailu.gtk.type.Int;
+import ch.bailu.gtk.type.Str;
+import ch.bailu.gtk.type.Strs;
 
 public class PangoRotatedText {
     private final static int RADIUS  = 150;
@@ -92,8 +92,10 @@ public class PangoRotatedText {
 
         /* Set fancy shape attributes for all hearts */
         for (; true; /*p = text; (p = strstr (p, HEART)); p += strlen (HEART)*/) {
-            Attribute attr = new Attribute(0);
+            Attribute attr =  new Attribute(0);
+           // var attr = new AttrShape()
             // FIXME implement constructor
+
 /*            attr = pango_attr_shape_new_with_data (&ink_rect,
                                              &logical_rect,
                     GUINT_TO_POINTER (g_utf8_get_char (p)),

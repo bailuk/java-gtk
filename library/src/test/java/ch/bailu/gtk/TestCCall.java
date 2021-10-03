@@ -3,14 +3,11 @@ package ch.bailu.gtk;
 import org.junit.jupiter.api.Test;
 
 import ch.bailu.gtk.gdk.RGBA;
-import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.glib.Glib;
 import ch.bailu.gtk.glib.MainContext;
 import ch.bailu.gtk.glib.MainLoop;
-import ch.bailu.gtk.gtk.Application;
-import ch.bailu.gtk.gtk.ApplicationWindow;
-import ch.bailu.gtk.wrapper.Str;
-import ch.bailu.gtk.wrapper.Strs;
+import ch.bailu.gtk.type.Str;
+import ch.bailu.gtk.type.Strs;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

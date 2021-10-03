@@ -11,8 +11,8 @@ import ch.bailu.gtk.gtk.Frame;
 import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.Widget;
 import ch.bailu.gtk.gtk.Window;
-import ch.bailu.gtk.wrapper.Str;
-import ch.bailu.gtk.wrapper.Strs;
+import ch.bailu.gtk.type.Str;
+import ch.bailu.gtk.type.Strs;
 
 public class ButtonBoxes {
 

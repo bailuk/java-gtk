@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "ch_bailu_gtk_wrapper_ImpDbls.h"
+#include "ch_bailu_gtk_type_ImpDbls.h"
 
 
 
 
-JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_wrapper_ImpDbls_createDoubleArray
+JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_type_ImpDbls_createDoubleArray
   (JNIEnv * _env, jclass _class, jdoubleArray _doubles)
 {
     jdouble* src  = (*_env)->GetDoubleArrayElements(_env, _doubles, NULL);
@@ -25,7 +25,7 @@ JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_wrapper_ImpDbls_createDoubleArray
 }
 
 
-JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_wrapper_ImpDbls_createDoubleArrayFromFloats
+JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_type_ImpDbls_createDoubleArrayFromFloats
   (JNIEnv * _env, jclass _class, jfloatArray _floats)
 {
     jfloat* src  = (*_env)->GetFloatArrayElements(_env, _floats, NULL);
@@ -47,7 +47,7 @@ JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_wrapper_ImpDbls_createDoubleArrayFromF
 
 }
 
-JNIEXPORT void JNICALL Java_ch_bailu_gtk_wrapper_ImpDbls_setAt
+JNIEXPORT void JNICALL Java_ch_bailu_gtk_type_ImpDbls_setAt
   (JNIEnv* _env, jclass _class, jlong _pointer, jint _index, jdouble _value)
 {
     jdouble* src  = (jdouble*) _pointer;
@@ -56,7 +56,7 @@ JNIEXPORT void JNICALL Java_ch_bailu_gtk_wrapper_ImpDbls_setAt
 
 
 
-JNIEXPORT jdouble JNICALL Java_ch_bailu_gtk_wrapper_ImpDbls_getAt
+JNIEXPORT jdouble JNICALL Java_ch_bailu_gtk_type_ImpDbls_getAt
   (JNIEnv* _env, jclass _class, jlong _pointer, jint _index)
 {
     const jdouble* src  = (jdouble*) _pointer;
@@ -64,7 +64,7 @@ JNIEXPORT jdouble JNICALL Java_ch_bailu_gtk_wrapper_ImpDbls_getAt
 }
 
 
-JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_wrapper_ImpDbls_createDbl
+JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_type_ImpDbls_createDbl
 (JNIEnv * _jenv, jclass _class, jdouble _value)
 {
     const jdouble* src  = &_value;

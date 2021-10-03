@@ -144,7 +144,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
                 }
                 
                 public void destroy() {
-                    ch.bailu.gtk.wrapper.ImpUtil.destroy(getCPointer());
+                    ch.bailu.gtk.type.ImpUtil.destroy(getCPointer());
                 }
             """.replaceIndent(" ".repeat(4)))
 

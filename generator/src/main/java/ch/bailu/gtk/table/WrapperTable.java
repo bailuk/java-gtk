@@ -9,7 +9,7 @@ import java.util.Map;
  * These data structures are represented in Java-space by type-wrapper classes.
  */
 public class WrapperTable {
-    private static final String NAMESPACE = "wrapper";
+    private static final String NAMESPACE = "type";
 
     private final Map<String, String> table = new HashMap<>(50);
 

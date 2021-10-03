@@ -9,12 +9,12 @@ public class Bytes extends ch.bailu.gtk.glib.Bytes {
         super(ImpBytes.createFromArray(bytes));
     }
 
-    public Bytes(ch.bailu.gtk.wrapper.Bytes bytes) {
+    public Bytes(ch.bailu.gtk.type.Bytes bytes) {
         super(createFromWrapper(bytes));
     }
 
 
-    private static long createFromWrapper(ch.bailu.gtk.wrapper.Bytes bytes) {
+    private static long createFromWrapper(ch.bailu.gtk.type.Bytes bytes) {
         bytes.throwIfNull();
         if (bytes.getSize() < 1) {
             bytes.throwNullPointerException("size == " + bytes.getSize());

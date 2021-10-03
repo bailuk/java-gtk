@@ -2,13 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "ch_bailu_gtk_wrapper_ImpInt.h"
+#include "ch_bailu_gtk_type_ImpInt.h"
 
 
 /**
     Copy a Java String to a heap memory region in c-space
 */
-JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_wrapper_ImpInt_createInt
+JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_type_ImpInt_createInt
 (JNIEnv * _jenv, jclass _class, jint _value)
 {
     const int* src  = &_value;
@@ -24,7 +24,7 @@ JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_wrapper_ImpInt_createInt
 }
 
 
-JNIEXPORT jint JNICALL Java_ch_bailu_gtk_wrapper_ImpInt_get
+JNIEXPORT jint JNICALL Java_ch_bailu_gtk_type_ImpInt_get
 (JNIEnv * _jenv, jclass _class, jlong _pointer)
 {
     const jint* src  = (jint*) _pointer;
@@ -32,7 +32,7 @@ JNIEXPORT jint JNICALL Java_ch_bailu_gtk_wrapper_ImpInt_get
 }
 
 
-JNIEXPORT void JNICALL Java_ch_bailu_gtk_wrapper_ImpInt_set
+JNIEXPORT void JNICALL Java_ch_bailu_gtk_type_ImpInt_set
 (JNIEnv * _jenv, jclass _class, jlong _pointer, int _value)
 {
     jint* src  = (jint*) _pointer;

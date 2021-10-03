@@ -22,9 +22,9 @@ import ch.bailu.gtk.gtk.Label;
 import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.ShadowType;
 import ch.bailu.gtk.gtk.Widget;
-import ch.bailu.gtk.wrapper.Int;
-import ch.bailu.gtk.wrapper.Str;
-import ch.bailu.gtk.wrapper.Strs;
+import ch.bailu.gtk.type.Int;
+import ch.bailu.gtk.type.Str;
+import ch.bailu.gtk.type.Strs;
 
 public class CairoDrawingArea {
 

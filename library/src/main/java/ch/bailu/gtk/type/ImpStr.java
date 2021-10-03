@@ -1,4 +1,4 @@
-package ch.bailu.gtk.wrapper;
+package ch.bailu.gtk.type;
 
 public class ImpStr {
     public static native long createStr(String str);

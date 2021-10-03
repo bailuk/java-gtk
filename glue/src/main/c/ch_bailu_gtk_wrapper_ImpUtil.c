@@ -2,14 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "ch_bailu_gtk_wrapper_ImpUtil.h"
+#include "ch_bailu_gtk_type_ImpUtil.h"
 
 
 /**
     Allocate and initialize a c-space pointer array
     and return its address back to Java-space
 */
-JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_wrapper_ImpUtil_createPointerArray
+JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_type_ImpUtil_createPointerArray
   (JNIEnv * _jenv, jclass _class, jlongArray _array)
 {
      const jlong* src = (*_jenv)->GetLongArrayElements(_jenv, _array, NULL);
@@ -30,7 +30,7 @@ JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_wrapper_ImpUtil_createPointerArray
     Free c-space heap array
     Usually this frees a c-space copy of Java-space data
 */
-JNIEXPORT void JNICALL Java_ch_bailu_gtk_wrapper_ImpUtil_destroy
+JNIEXPORT void JNICALL Java_ch_bailu_gtk_type_ImpUtil_destroy
   (JNIEnv * _jenv, jclass _class, jlong _pointer)
 {
     free((void*) _pointer);

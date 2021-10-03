@@ -6,8 +6,8 @@ import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.Button;
 import ch.bailu.gtk.gtk.ButtonBox;
 import ch.bailu.gtk.gtk.Orientation;
-import ch.bailu.gtk.wrapper.Str;
-import ch.bailu.gtk.wrapper.Strs;
+import ch.bailu.gtk.type.Str;
+import ch.bailu.gtk.type.Strs;
 
 public class HelloWorldBoxed {
 

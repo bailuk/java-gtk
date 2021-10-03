@@ -1,4 +1,4 @@
-package ch.bailu.gtk;
+package ch.bailu.gtk.type;
 
 
 public class Pointer {

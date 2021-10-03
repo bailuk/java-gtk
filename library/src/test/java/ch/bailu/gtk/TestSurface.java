@@ -6,7 +6,7 @@ import ch.bailu.gtk.cairo.Cairo;
 import ch.bailu.gtk.cairo.Context;
 import ch.bailu.gtk.cairo.Format;
 import ch.bailu.gtk.cairo.Surface;
-import ch.bailu.gtk.wrapper.Bytes;
+import ch.bailu.gtk.type.Bytes;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,6 +1,4 @@
-package ch.bailu.gtk.wrapper;
-
-import ch.bailu.gtk.Pointer;
+package ch.bailu.gtk.type;
 
 public class Str extends Pointer {
     public static final Str NULL = new Str(0);
@@ -17,7 +15,7 @@ public class Str extends Pointer {
     }
 
     public Str(String str) {
-        super(ImpStr.createStr(str));
+        super(ch.bailu.gtk.type.ImpStr.createStr(str));
 
         if (getCPointer() != 0) {
             size = str.length()+1;
@@ -32,7 +30,7 @@ public class Str extends Pointer {
 
     public void destroy() {
         if (size > 0) {
-            ImpUtil.destroy(getCPointer());
+            ch.bailu.gtk.type.ImpUtil.destroy(getCPointer());
             size = 0;
         }
     }
@@ -42,7 +40,7 @@ public class Str extends Pointer {
         String result = "";
 
         if (getCPointer() != 0) {
-            result = ImpStr.toString(getCPointer());
+            result = ch.bailu.gtk.type.ImpStr.toString(getCPointer());
         }
         return result;
     }

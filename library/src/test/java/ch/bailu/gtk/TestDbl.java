@@ -2,8 +2,8 @@ package ch.bailu.gtk;
 
 import org.junit.jupiter.api.Test;
 
-import ch.bailu.gtk.wrapper.Dbl;
-import ch.bailu.gtk.wrapper.Dbls;
+import ch.bailu.gtk.type.Dbl;
+import ch.bailu.gtk.type.Dbls;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
