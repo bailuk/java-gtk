@@ -33,6 +33,7 @@ public class WrapperTable {
         add("gint*",          "Int");
         add("int*",           "Int");
         add("gdouble*",       "Dbls");
+        add("gconstpointer",  "Pointer");
     }
 
 

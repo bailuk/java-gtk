@@ -312,7 +312,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
                 del = ", "
 
             } else if (!p.isCallback) {
-                result.append("${del}${p.getName()}.getCPointer()")
+                result.append("${del}toCPointer(${p.getName()})")
                 del = ", "
             }
 
@@ -331,7 +331,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
             if (p.isJavaNative()) {
                 result.append(p.getName())
             } else {
-                result.append("${p.getName()}.getCPointer()")
+                result.append("toCPointer(${p.getName()})")
             }
             del = ", ";
         }

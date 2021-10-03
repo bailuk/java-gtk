@@ -1,3 +1,3 @@
 package ch.bailu.gtk.type;
 
-public class Package {}
+public class Package extends Type {}

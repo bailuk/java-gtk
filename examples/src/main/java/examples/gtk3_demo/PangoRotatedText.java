@@ -21,6 +21,7 @@ import ch.bailu.gtk.pango.Layout;
 import ch.bailu.gtk.pango.Pango;
 import ch.bailu.gtk.pango.Rectangle;
 import ch.bailu.gtk.pangocairo.Pangocairo;
+import ch.bailu.gtk.type.Bytes;
 import ch.bailu.gtk.type.Dbl;
 import ch.bailu.gtk.type.Int;
 import ch.bailu.gtk.type.Str;
@@ -31,8 +32,8 @@ public class PangoRotatedText {
     private final static int N_WORDS = 5;
     private final static String FONT = "Serif 18";
 
-    private final static Str HEART = new Str("♥");
-    private final static Str TEXT = new Str("I ♥ GTK+");
+    private final static String HEART = "♥";
+    private final static String TEXT = "I ♥ GTK+";
 
     private final Int width = new Int();
     private final Int height = new Int();
@@ -91,19 +92,13 @@ public class PangoRotatedText {
 
 
         /* Set fancy shape attributes for all hearts */
+
+
         for (; true; /*p = text; (p = strstr (p, HEART)); p += strlen (HEART)*/) {
-            Attribute attr =  new Attribute(0);
-           // var attr = new AttrShape()
-            // FIXME implement constructor
+            Attribute attr =  AttrShape.newWithData(ink_rect, logical_rect, new Bytes(p), null, null);
 
-/*            attr = pango_attr_shape_new_with_data (&ink_rect,
-                                             &logical_rect,
-                    GUINT_TO_POINTER (g_utf8_get_char (p)),
-                    NULL, NULL);
-
-            attr->start_index = p - text;
-            attr->end_index = attr->start_index + strlen (HEART);
-                    */
+            attr.setFieldStartIndex(p-text);
+            attr.setFieldEndIndex((p-text) + HEART.getSize()-1);
             attrs.insert(attr);
             break;
         }

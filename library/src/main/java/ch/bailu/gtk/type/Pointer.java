@@ -1,7 +1,7 @@
 package ch.bailu.gtk.type;
 
 
-public class Pointer {
+public class Pointer extends Type {
 
     private final long pointer;
 
