@@ -69,5 +69,5 @@ Compile Java and C library, generate JAR archive and copy JAR archive as artifac
  
  ## License
  - Files in [generator/src/resources/gir/](generator/src/resources/gir/) are comming from the [GTK project](https://gitlab.gnome.org/GNOME/gtk) and are therefore licensed under the GNU Library General Public License.
- - Examples in [examples/src/main/java/examples](examples/src/main/java/examples) are ported from the [GTK project](https://gitlab.gnome.org/GNOME/gtk/-/tree/gtk-3-24/demos/gtk-demo) and are therefore licensed under the GNU Library General Public License.   
+ - Examples in [examples/src/main/java/examples/gtk3_demo](examples/src/main/java/examples/gtk3_demo) are ported from the [GTK project](https://gitlab.gnome.org/GNOME/gtk/-/tree/gtk-3-24/demos/gtk-demo) and are therefore licensed under the GNU Library General Public License.   
  - Everything else licensed under the [MIT License](https://en.wikipedia.org/wiki/MIT_License)

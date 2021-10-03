@@ -1,4 +1,4 @@
-package examples;
+package examples.gtk3_demo;
 
 import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gio.Icon;

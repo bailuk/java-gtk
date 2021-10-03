@@ -1,4 +1,4 @@
-package examples;
+package examples.gtk3_demo;
 
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.cairo.Content;
