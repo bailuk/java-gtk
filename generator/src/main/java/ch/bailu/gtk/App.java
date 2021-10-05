@@ -37,20 +37,22 @@ public class App {
     }
 
     private static File getExistingFile(String girFile) throws IOException {
-        File result = new File("src/main/resources",girFile);
+        File result = new File(Configuration.GIR_DIR_CUSTOM,girFile);
+        String type = "custom";
 
-
-        if (result.exists()) {
-            System.out.println("local:" + result);
-
-        } else {
+        if (!result.exists()) {
             result = new File(Configuration.instance().getGirBaseDir(),girFile);
-            if (result.exists()) {
-                System.out.println("system: " + result);
-            } else {
-                throw new IOException("File does not exist " + result);
+            type = "system";
+            if (!result.exists()) {
+                result = new File(Configuration.GIR_DIR_LOCAL, girFile);
+                type = "local";
+                if (!result.exists()) {
+                    throw new IOException("File does not exist " + result);
+                }
             }
         }
+
+        System.out.println(type + ": " + result);
         return result;
     }
 

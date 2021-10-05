@@ -9,6 +9,10 @@ public class Configuration {
     public static final String HEADER_FILE_BASE      = "ch_bailu_gtk_";
     public static final String JNI_METHOD_NAME_BASE  = "Java_ch_bailu_gtk_";
 
+    public static final String GIR_DIR_CUSTOM = "src/main/resources";
+    public static final String GIR_DIR_LOCAL = "src/main/resources/gir";
+
+
     public  final static String[] GIR_FILES= {
             "GObject-2.0.gir",
             "Gtk-3.0.gir",
