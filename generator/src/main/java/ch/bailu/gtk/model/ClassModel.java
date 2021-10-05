@@ -1,5 +1,7 @@
 package ch.bailu.gtk.model;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -39,12 +41,15 @@ public class ClassModel extends Model {
     private String structureType;  // record, enum, class, interface, bitfield, callback
     private String cType;  // C type
 
+    private String doc = "";
+
     public ClassModel(StructureTag structure, NamespaceModel nameSpace) {
         cType = structure.getType();
         this.nameSpace = nameSpace;
         structureType = structure.getStructureType();
         name = convert(nameSpace.getNamespace(), structure.getName());
         parent = new ClassModel(nameSpace.getNamespace(), structure.getParentName(), structureType);
+        doc = structure.getDoc();
 
         for (MethodTag m: structure.getConstructors()) {
             privateFactories.addIfSupported(filterConstructor(new MethodModel(nameSpace.getNamespace(), m)));
@@ -354,5 +359,9 @@ public class ClassModel extends Model {
 
     public NamespaceModel getNameSpaceModel() {
         return nameSpace;
+    }
+
+    public String getDoc() {
+        return doc;
     }
 }

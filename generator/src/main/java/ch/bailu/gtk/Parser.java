@@ -70,6 +70,7 @@ public class Parser {
                 tag.setText(parser.getText());
             }
 
+
             parser.next();
         }
     }

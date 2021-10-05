@@ -17,6 +17,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
     override fun writeClass(classModel : ClassModel) {
         start()
+        a(getJavaDoc(classModel.doc,0))
         a("public class ${classModel.getApiName()} extends ${classModel.getApiParentName()} {\n")
     }
 
@@ -39,12 +40,22 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
 
     private fun writeFunctionCall(classModel : ClassModel, methodModel : MethodModel, selfCall: Boolean) {
+        a(getJavaDoc(methodModel.doc,4))
         a("""
             public ${getStatic(selfCall)} ${methodModel.getReturnType().apiType} ${methodModel.apiName}(${getSignature(methodModel.parameters)}) ${getThrowsExtension(methodModel)} {
                 ${getCallbackConnections(methodModel)}
                 ${getFunctionCall(classModel, methodModel, selfCall)};
             }
             """.replaceIndent(" ".repeat(4)))
+    }
+
+    private fun getJavaDoc(doc: String, intent: Int): String {
+        if (doc.length > 0) {
+            val space = " ".repeat(intent);
+            val docOut = doc.replace('\\', '-').replaceIndent("${space} * ")
+            return "${space}/**\n${docOut}\n${space}**/\n"
+        }
+        return ""
     }
 
     private fun getStatic(selfCall : Boolean) : String {

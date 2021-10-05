@@ -21,13 +21,15 @@ public class MethodModel extends Model {
     private final boolean throwsError;
     private final List<MethodModel> callbackModel = new ArrayList<>();
 
+    private String doc = "";
+
     // simple method with return type and parameters can be a factory
     public MethodModel(String namespace, MethodTag method) {
         throwsError = method.throwsError();
         gtkName = method.getIdentifier();
         name = method.getName();
 
-
+        doc = method.getDoc();
         returnType = new ParameterModel(namespace, method.getReturnValue(), false, false);
 
         setSupported("Deprecated", !method.isDeprecated());
@@ -137,5 +139,9 @@ public class MethodModel extends Model {
     @Override
     public int hashCode() {
         return Objects.hash(name, gtkName);
+    }
+
+    public String getDoc() {
+        return doc;
     }
 }

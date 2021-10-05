@@ -5,6 +5,7 @@ import java.util.List;
 public class MethodTag extends NamedTag {
     private final ParameterTag returnValue =  new ParameterTag(this);
 
+    private final DocTag doc = new DocTag(this);
     private final TagList<ParameterTag> parameters = new TagList<>();
     private final TagList<ParameterTag> instanceParameters = new TagList<>();
 
@@ -31,6 +32,9 @@ public class MethodTag extends NamedTag {
             if ("instance-parameter".equals(name)) {
                 return instanceParameters.addTag(new ParameterTag(this));
             }
+            if ("doc".equals(name)) {
+                return doc;
+            }
             return ignore();
         }
     }
@@ -44,6 +48,10 @@ public class MethodTag extends NamedTag {
 
         if ("parameters".equals(name)) {
             return new Parameters();
+        }
+
+        if ("doc".equals(name)) {
+            return doc;
         }
 
         return new IgnoreTag(this);
@@ -81,4 +89,7 @@ public class MethodTag extends NamedTag {
         return throwsError;
     }
 
+    public String getDoc() {
+        return doc.getText();
+    }
 }

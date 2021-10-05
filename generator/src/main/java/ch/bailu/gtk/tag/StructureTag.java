@@ -16,6 +16,7 @@ public class StructureTag extends NamedTag {
 
     private String type = "";
 
+    private final DocTag doc = new DocTag(this);
 
     private final TagList<NamedTag> implementsList = new TagList<>();
     private final TagList<MethodTag> constructors = new TagList<>();
@@ -62,6 +63,10 @@ public class StructureTag extends NamedTag {
             MethodTag f = new MethodTag(this);
             functions.add(f);
             return f;
+        }
+
+        if ("doc".equals(name)) {
+            return doc;
         }
 
         return ignore();
@@ -129,5 +134,9 @@ public class StructureTag extends NamedTag {
 
     public String getType() {
         return type;
+    }
+
+    public String getDoc() {
+        return doc.getText();
     }
 }
