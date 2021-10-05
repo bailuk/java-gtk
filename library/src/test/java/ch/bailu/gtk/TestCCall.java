@@ -52,7 +52,7 @@ public class TestCCall {
                 return GTK.FALSE;
             }
             return GTK.TRUE;
-        }, 0);
+        }, null);
         assertEquals(0, i);
         loop.run();
         assertEquals(10, i);

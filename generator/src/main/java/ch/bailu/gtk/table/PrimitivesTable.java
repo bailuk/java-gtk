@@ -18,6 +18,7 @@ public class PrimitivesTable {
 
     private PrimitivesTable() {
         add("none",          "void");
+        add("void",          "void");
         add("gboolean",      "int");
         add("gint",          "int");
         add("glong",         "long");
@@ -27,7 +28,7 @@ public class PrimitivesTable {
         add("gfloat",        "float");
         add("guint32",       "int");
         add("gssize",        "long");
-        add("gpointer",      "long");
+//        add("gpointer",      "long");
         add("gulong",        "long");
         add("gsize",         "long");
         add("gchar",         "char");
@@ -42,7 +43,6 @@ public class PrimitivesTable {
         add("guint8",        "int");
         add("time_t",        "long");
         add("time_t",        "long");
-        add("void",          "void");
         add("long",          "long");
         add("int",           "int");
         add("double",        "double");

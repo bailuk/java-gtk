@@ -223,18 +223,29 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         val getter = JavaNames.getGetterName(parameterModel.getName())
         val setter = JavaNames.getSetterName(parameterModel.getName())
 
+
+        var directAccess = ""
+        if (parameterModel.isDirectType) {
+            directAccess = "&"
+        }
+
         a ("""
         JNIEXPORT ${parameterModel.getJniType()} JNICALL ${getJniMethodName(classModel, getter)}(JNIEnv * _jenv, jclass _jself, jlong _self)
         {
             const ${classModel.getCType()}* __self = (${classModel.getCType()}*) _self;
-            return (${parameterModel.getJniType()}) __self->${parameterModel.getName()};
+            return (${parameterModel.getJniType()}) ${directAccess}__self->${parameterModel.getName()};
         }
+        
+        """.trimIndent())
 
+        if (parameterModel.isWriteable && !parameterModel.isDirectType)
+        a ("""
         JNIEXPORT void JNICALL ${getJniMethodName(classModel, setter)}(JNIEnv * _jenv, jclass _jself, jlong _self, ${parameterModel.getJniType()} _${parameterModel.getName()})
         {
             ${classModel.getCType()}* __self = (${classModel.getCType()}*) _self;
             __self->${parameterModel.getName()} = (${parameterModel.getGtkType()}) _${parameterModel.getName()};
         }
+        
         """.trimIndent())
         next()
     }

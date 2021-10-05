@@ -4,11 +4,14 @@ import java.util.regex.Pattern;
 
 public class CType {
 
-    private final static Pattern P_CONST = Pattern.compile("^const [A-Za-z]*");
-    private final static Pattern P_POINTER = Pattern.compile(".*[A-Za-z]\\*$");
+    private final static Pattern P_CONST = Pattern.compile("^const [A-Za-z]+");
+    private final static Pattern P_POINTER = Pattern.compile(".*[A-Za-z]+\\*$");
+    private final static Pattern P_NOPOINTER = Pattern.compile(".*[A-Za-z]+$");
 
-    final boolean isPointer;
-    final boolean isConst;
+
+    private final boolean isPointer;
+    private final boolean isConst;
+    private final boolean isDirectType;
 
     private final String type;
 
@@ -21,6 +24,7 @@ public class CType {
 
         isPointer = P_POINTER.matcher(this.type).find();
         isConst = P_CONST.matcher(this.type).find();
+        isDirectType = P_NOPOINTER.matcher(this.type).find();
     }
 
     public boolean contains(String type) {
@@ -29,6 +33,10 @@ public class CType {
 
     public boolean isSinglePointer() {
         return isPointer;
+    }
+
+    public boolean isDirectType() {
+        return isDirectType;
     }
     public boolean isConst() {
         return isConst;

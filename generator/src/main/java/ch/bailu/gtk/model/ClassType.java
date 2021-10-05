@@ -16,6 +16,8 @@ public class ClassType implements ClassTypeInterface {
 
     private final RelativeNamespaceType type;
 
+    // Non-pointer access needed to access records inside records as fields
+    private boolean directType;
 
     private boolean valid = false;
     private boolean wrapper = false;
@@ -28,18 +30,18 @@ public class ClassType implements ClassTypeInterface {
     }
 
     
-    public ClassType(String namespace, ParameterTag parameter) {
+    public ClassType(String namespace, ParameterTag parameter, boolean supportsDirectType) {
         this(   namespace,
                 parameter.getTypeName(),
                 new CType(parameter.getType()),
-                parameter.isOutDirection() && Util.isEnum(namespace, parameter));
+                parameter.isOutDirection() && Util.isEnum(namespace, parameter), supportsDirectType);
     }
 
-    public ClassType(String namespace, String typeName, String ctype) {
-        this(namespace, typeName, new CType(ctype), false);
+    public ClassType(String namespace, String typeName, String ctype, boolean supportsDirectType) {
+        this(namespace, typeName, new CType(ctype), false, supportsDirectType);
     }
     
-    private ClassType(String namespace, String typeName, CType ctype, boolean isOutEnum) {
+    private ClassType(String namespace, String typeName, CType ctype, boolean isOutEnum, boolean supportsDirectType) {
         if (WrapperTable.instance().contains(ctype.getName())) {
             typeName = WrapperTable.instance().convert(ctype.getName());
             wrapper = true;
@@ -50,10 +52,21 @@ public class ClassType implements ClassTypeInterface {
 
         type = convert(namespace, typeName);
         callbackTag = getCallbackTagFromTable(type);
-        valid = wrapper || (callbackTag != null) || (isInStructureTable(type) && ctype.isSinglePointer());
+        valid = wrapperOrCallback() || supportedClass(type, ctype, supportsDirectType);
+        directType = supportsDirectType && !wrapperOrCallback() && supportedClass(type, ctype, supportsDirectType) && ctype.isDirectType();
     }
 
+    private boolean wrapperOrCallback() {
+        return wrapper || callbackTag != null;
+    }
 
+    private boolean supportedClass(RelativeNamespaceType type, CType ctype, boolean supportsDirectType) {
+        return isInStructureTable(type) && isPointerSupported(ctype, supportsDirectType);
+    }
+
+    private boolean isPointerSupported(CType ctype, boolean supportsDirectType) {
+        return ctype.isSinglePointer() || (supportsDirectType && ctype.isDirectType());
+    }
 
     private RelativeNamespaceType convert(String namespace, String typeName) {
         NamespaceType converted = AliasTable.instance().convert(new NamespaceType(namespace, typeName));
@@ -106,4 +119,7 @@ public class ClassType implements ClassTypeInterface {
     }
 
 
+    public boolean isDirectType() {
+        return isClass() && directType;
+    }
 }

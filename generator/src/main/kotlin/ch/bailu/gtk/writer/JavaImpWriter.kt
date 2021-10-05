@@ -108,8 +108,10 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
         start();
         a("static native ${parameterModel.getImpType()} ${JavaNames.getGetterName(parameterModel.getName())}(${getSelfSignature(parameters)});\n")
 
-        parameters.add(parameterModel)
-        a("static native void ${JavaNames.getSetterName(parameterModel.getName())}(${getSelfSignature(parameters)});\n")
+        if (parameterModel.isWriteable && !parameterModel.isDirectType) {
+            parameters.add(parameterModel)
+            a("static native void ${JavaNames.getSetterName(parameterModel.getName())}(${getSelfSignature(parameters)});\n")
+        }
 
         end(1);
     }

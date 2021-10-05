@@ -23,7 +23,7 @@ public class ParameterModel extends Model {
 
     private MethodModel callbackModel = null;
 
-    public ParameterModel(String namespace, ParameterTag parameter, boolean toUpper) {
+    public ParameterModel(String namespace, ParameterTag parameter, boolean toUpper, boolean supportsDirectAccess) {
 
         if (toUpper) {
             name = JavaNames.fixToken(parameter.getName().toUpperCase());
@@ -33,7 +33,7 @@ public class ParameterModel extends Model {
 
         value = parameter.getValue();
 
-        classType = new ClassType(namespace, parameter);
+        classType = new ClassType(namespace, parameter, supportsDirectAccess);
         if (classType.isClass()) {
             cType = new CType("void*");
             jType = new JavaType("long");
@@ -154,5 +154,9 @@ public class ParameterModel extends Model {
 
     public JniTypeConverter getJniConverter() {
         return jniConverter;
+    }
+
+    public boolean isDirectType() {
+        return classType.isDirectType();
     }
 }

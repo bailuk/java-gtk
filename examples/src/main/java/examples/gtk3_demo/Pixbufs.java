@@ -177,7 +177,7 @@ public class Pixbufs {
             da.onDraw(cr -> onDraw(da, cr));
             window.add(da);
             window.setSizeRequest(backWidth, backHeight);
-            window.addTickCallback((widget, frame_clock, user_data) -> onTick(frame_clock), 0, data -> {});
+            window.addTickCallback((widget, frame_clock, user_data) -> onTick(frame_clock), null, data -> {});
 
         } catch (AllocationError e) {
             System.out.println(e.getMessage());

@@ -67,7 +67,7 @@ public class ClassModel extends Model {
         }
 
         for (ParameterTag field: structure.getFields()) {
-            var fieldModel = new ParameterModel(nameSpace.getNamespace(), field, false);
+            var fieldModel = new ParameterModel(nameSpace.getNamespace(), field, false, Filter.fieldDirectAccessAllowed(this, field));
             fields.addIfSupported(filterField(fieldModel));
         }
 
@@ -148,7 +148,7 @@ public class ClassModel extends Model {
         this.name = name;
 
         for (ParameterTag parameterTag : members) {
-            constants.addIfSupported(new ParameterModel(namespace.getNamespace(), parameterTag, toUpper));
+            constants.addIfSupported(new ParameterModel(namespace.getNamespace(), parameterTag, toUpper, false));
         }
     }
 

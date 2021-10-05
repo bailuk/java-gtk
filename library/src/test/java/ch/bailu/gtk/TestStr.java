@@ -17,9 +17,20 @@ public class TestStr {
         Str s = new Str(TEXT);
 
         assertEquals(TEXT, s.toString());
-        assertEquals(TEXT.getBytes().length, s.getSize());
+
+        // getBytes is not null terminated
+        assertEquals(TEXT.getBytes().length+1, s.getSize());
         s.destroy();
         assertEquals(0, s.getSize());
+
+        s = new Str("");
+        assertEquals("", s.toString());
+        assertEquals("".getBytes().length+1, s.getSize());
+        assertEquals(0, s.getByte(0));
+        assertEquals(1, s.getSize());
+        s.destroy();
+        assertEquals(0, s.getSize());
+
     }
 
 }

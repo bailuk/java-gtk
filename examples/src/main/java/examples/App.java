@@ -3,6 +3,11 @@ package examples;
 import java.io.IOException;
 
 import ch.bailu.gtk.GTK;
+import examples.gtk3_demo.CairoDrawingArea;
+import examples.gtk3_demo.ColorChooser;
+import examples.gtk3_demo.PangoRotatedText;
+import examples.gtk3_demo.PangoTextMask;
+import examples.gtk3_demo.Pixbufs;
 
 public class App {
 

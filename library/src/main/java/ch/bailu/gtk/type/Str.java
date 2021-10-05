@@ -6,15 +6,25 @@ public class Str extends Bytes {
     }
 
     public Str(String str) {
-        super(str.getBytes());
+        super(strToBytes(str));
+    }
+
+    /**
+     *  String.getBytes() does not return a 0 terminated result.
+     *  Therefore the string needs to be copied twice
+     */
+    private static byte[] strToBytes(String str) {
+        byte[] src=str.getBytes();
+        byte[] dst=new byte[src.length+1];
+        System.arraycopy(src, 0, dst, 0, src.length);
+        return dst;
     }
 
     @Override
     public String toString() {
-        if (getCPointer() == 0 || getSize() < 1) {
+        if (getCPointer() == 0) {
             return "";
         }
-
-        return new String(toBytes());
+        return ImpStr.toString(getCPointer());
     }
 }

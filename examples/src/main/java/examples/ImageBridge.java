@@ -34,8 +34,8 @@ public class ImageBridge {
         var list = Pixbuf.getFormats();
 
         int count = 1;
-        while(list.getCPointer() != 0 && list.getFieldData() != 0) {
-            var format = new PixbufFormat(list.getFieldData());
+        while(list.isNotNull() && list.getFieldData().isNotNull()) {
+            var format = new PixbufFormat(list.getFieldData().getCPointer());
 
             System.out.println("");
             System.out.println("Format " + count + ":");

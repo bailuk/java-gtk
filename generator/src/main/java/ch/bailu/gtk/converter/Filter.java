@@ -3,6 +3,7 @@ package ch.bailu.gtk.converter;
 import ch.bailu.gtk.model.ClassModel;
 import ch.bailu.gtk.model.MethodModel;
 import ch.bailu.gtk.model.ParameterModel;
+import ch.bailu.gtk.tag.ParameterTag;
 
 public class Filter {
     public static boolean values(String name, String value) {
@@ -49,6 +50,14 @@ public class Filter {
 
 
     public static boolean field(ClassModel classModel, ParameterModel parameterModel) {
+        if ("PixbufAnimationIterClass".equals(classModel.getApiName())) {
+            return false;
+        }
+
+        if ("SettingsBackendClass".equals(classModel.getApiName())) {
+            return false;
+        }
+
         if ("PixbufFormat".equals(classModel.getApiName())) {
             return false;
         }
@@ -83,4 +92,7 @@ public class Filter {
         return false;
     }
 
+    public static boolean fieldDirectAccessAllowed(ClassModel classModel, ParameterTag field) {
+        return "AttrShape".equals(classModel.getApiName());
+    }
 }

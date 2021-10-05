@@ -28,7 +28,7 @@ public class MethodModel extends Model {
         name = method.getName();
 
 
-        returnType = new ParameterModel(namespace, method.getReturnValue(), false);
+        returnType = new ParameterModel(namespace, method.getReturnValue(), false, false);
 
         setSupported("Deprecated", !method.isDeprecated());
         setSupported("Return value", returnType.isSupported());
@@ -36,7 +36,7 @@ public class MethodModel extends Model {
 
         for (ParameterTag t : method.getParameters()) {
             if (!t.isVarargs()) {
-                var parameterModel = new ParameterModel(namespace, t, false);
+                var parameterModel = new ParameterModel(namespace, t, false, false);
                 parameters.add(parameterModel);
                 setSupported(parameterModel.getSupportedState(), parameterModel.isSupported());
 

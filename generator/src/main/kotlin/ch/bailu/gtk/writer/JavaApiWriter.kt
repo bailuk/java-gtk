@@ -267,7 +267,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
         }
 
-        if (parameterModel.isWriteable()) {
+        if (parameterModel.isWriteable() && !parameterModel.isDirectType()) {
             parameters.add(parameterModel)
             a("""
                 

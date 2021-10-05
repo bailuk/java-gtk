@@ -3,6 +3,7 @@ package ch.bailu.gtk.type;
 public class Bytes extends Array {
 
 
+
     public Bytes(long pointer) {
         super(pointer, 1, 0);
     }

@@ -28,15 +28,17 @@ public class TestTypeModel {
 
 		assertEquals(false, ctype.isConst());
 		assertEquals(false, ctype.isSinglePointer());
+		assertEquals(true, ctype.isDirectType());
 		assertEquals("GApplicationFlags", ctype.getName());
 		assertEquals(true, ctype.contains("ApplicationFlags"));
 
 
-		ctype = new CType("GtkApplication*");
+		ctype = new CType("PangoAttrShape*");
 
 		assertEquals(false, ctype.isConst());
 		assertEquals(true, ctype.isSinglePointer());
-		assertEquals("GtkApplication*", ctype.getName());
+		assertEquals(false, ctype.isDirectType());
+		assertEquals("PangoAttrShape*", ctype.getName());
 
 
 		ctype = new CType("const gchar*");
@@ -125,24 +127,37 @@ public class TestTypeModel {
 		assertEquals(false, classType.isClass());
 
 
-		classType = new ClassType("namespace", "Application", "GtkApplication");
+		classType = new ClassType("namespace", "Application", "GtkApplication", false);
+		assertEquals(false, classType.isClass());
+		assertEquals(false, classType.isDirectType());
+
+		classType = new ClassType("namespace", "Application", "GtkApplication", true);
 		assertEquals(false, classType.isClass());
 
-		StructureTable.instance().add("namespace", "Application");
-		classType = new ClassType("namespace", "Application", "GtkApplication");
-		assertEquals(false, classType.isClass());
 
 		StructureTable.instance().add("namespace", "Application");
-		classType = new ClassType("namespace", "Application", "GtkApplication*");
+		classType = new ClassType("namespace", "Application", "GtkApplication", false);
+		assertEquals(false, classType.isClass());
+		assertEquals(false, classType.isDirectType());
+
+		classType = new ClassType("namespace", "Application", "GtkApplication", true);
+		assertEquals(true, classType.isClass());
+		assertEquals(true, classType.isDirectType());
+
+		StructureTable.instance().add("namespace", "Application");
+		classType = new ClassType("namespace", "Application", "GtkApplication*", true);
 		assertEquals(true, classType.isClass());
 		assertEquals("Application", classType.getFullName());
+		assertEquals(false, classType.isDirectType());
 
-		classType = new ClassType("mynamespace", "Application", "GtkApplication*");
+		classType = new ClassType("mynamespace", "Application", "GtkApplication*", false);
 		assertEquals(false, classType.isClass());
+		assertEquals(false, classType.isDirectType());
 
-		classType = new ClassType("mynamespace", "namespace.Application", "GtkApplication*");
+		classType = new ClassType("mynamespace", "namespace.Application", "GtkApplication*", false);
 		assertEquals("ch.bailu.gtk.namespace.Application", classType.getFullName());
 		assertEquals(true, classType.isClass());
+		assertEquals(false, classType.isDirectType());
 
 	}
 }
