@@ -55,7 +55,7 @@ public class Parser {
     private void parse(XmlPullParser parser, Tag tag) throws XmlPullParserException, IOException {
         while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
             if (parser.getEventType() == XmlPullParser.START_TAG) {
-                tag = tag.getChild(parser.getName(), parser.getPrefix());
+                tag = tag.getChild(parser.getName(), parser.getPrefix() == null ? "" : parser.getPrefix());
 
                 for (int i = 0; i < parser.getAttributeCount(); i++) {
                     tag.setAttribute(parser.getAttributeName(i), parser.getAttributeValue(i));

@@ -1,11 +1,9 @@
 package ch.bailu.gtk.model;
 
 import ch.bailu.gtk.converter.Util;
-import ch.bailu.gtk.table.EnumTable;
 import ch.bailu.gtk.converter.Filter;
 import ch.bailu.gtk.converter.JavaNames;
 import ch.bailu.gtk.converter.JniTypeConverter;
-import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.tag.ParameterTag;
 
 public class ParameterModel extends Model {
