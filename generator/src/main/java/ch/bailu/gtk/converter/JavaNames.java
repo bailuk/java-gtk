@@ -1,6 +1,6 @@
 package ch.bailu.gtk.converter;
 
-import ch.bailu.gtk.model.ReservedTokenTable;
+import ch.bailu.gtk.table.ReservedTokenTable;
 
 public class JavaNames {
 
@@ -60,7 +60,7 @@ public class JavaNames {
 
 
     public static String fixToken(String token) {
-        return ReservedTokenTable.instance().convert(token);
+        return ReservedTokenTable.INSTANCE.convert(token);
     }
 
     public static String getSetterName(String name) {

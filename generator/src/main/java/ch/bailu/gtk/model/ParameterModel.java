@@ -1,12 +1,13 @@
 package ch.bailu.gtk.model;
 
+import static ch.bailu.gtk.converter.UtilKt.isEnum;
 import static ch.bailu.gtk.log.UtilKt.colonList;
 
-import ch.bailu.gtk.converter.Util;
-import ch.bailu.gtk.converter.Filter;
 import ch.bailu.gtk.converter.JavaNames;
 import ch.bailu.gtk.converter.JniTypeConverter;
-import ch.bailu.gtk.log.Logable;
+import ch.bailu.gtk.model.type.CType;
+import ch.bailu.gtk.model.type.ClassType;
+import ch.bailu.gtk.model.type.JavaType;
 import ch.bailu.gtk.tag.ParameterTag;
 
 public class ParameterModel extends Model {
@@ -41,7 +42,7 @@ public class ParameterModel extends Model {
             cType = new CType("void*");
             jType = new JavaType("long");
 
-        } else if (Util.isEnum(namespace, parameterTag)) {
+        } else if (isEnum(namespace, parameterTag)) {
             cType = new CType("int");
             jType = new JavaType("int");
 
@@ -111,7 +112,7 @@ public class ParameterModel extends Model {
 
 
     public String getGtkType() {
-        return cType.getName();
+        return cType.getType();
     }
 
 

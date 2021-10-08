@@ -1,5 +1,6 @@
 package ch.bailu.gtk.writer
 
+import ch.bailu.gtk.model.NamespaceModel
 import ch.bailu.gtk.converter.JavaNames
 import ch.bailu.gtk.model.*
 import java.io.Writer

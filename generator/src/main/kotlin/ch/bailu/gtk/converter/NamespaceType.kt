@@ -8,8 +8,8 @@ class NamespaceType(fallbackNamespace: String, typeName: String) {
     private val NONAMESPACE = Pattern.compile("^[A-Za-z]\\w+$")
 
 
-    private var namespace: String = ""
-    private var name: String = ""
+    private val namespace: String
+    private val name: String
 
     init {
         var m = NAMESPACE.matcher(typeName)
@@ -29,7 +29,7 @@ class NamespaceType(fallbackNamespace: String, typeName: String) {
     }
 
 
-    fun getNamespace(): String? {
+    fun getNamespace(): String {
         return namespace
     }
 
@@ -37,13 +37,6 @@ class NamespaceType(fallbackNamespace: String, typeName: String) {
         return name
     }
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o == null || javaClass != o.javaClass) return false
-        val that = o as NamespaceType
-        return namespace == that.namespace &&
-                name == that.name
-    }
 
     override fun hashCode(): Int {
         return Objects.hash(namespace, name)
@@ -55,5 +48,17 @@ class NamespaceType(fallbackNamespace: String, typeName: String) {
 
     override fun toString(): String {
         return "${namespace}.${name}"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as NamespaceType
+
+        if (namespace != other.namespace) return false
+        if (name != other.name) return false
+
+        return true
     }
 }

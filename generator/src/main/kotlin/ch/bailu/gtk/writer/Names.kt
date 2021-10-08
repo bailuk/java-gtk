@@ -21,7 +21,7 @@ fun getImpName(name : String): String? {
  * gobject_Closure_onClosureNotify
  */
 fun getCSignalCallbackName(classModel : ClassModel, methodModel : MethodModel) : String {
-    return getCCallbackName(classModel.nameSpaceModel.namespace, classModel.apiName, methodModel.signalMethodName)
+    return getCCallbackName(classModel.nameSpaceModel.getNamespace(), classModel.apiName, methodModel.signalMethodName)
 }
 
 fun getCCallbackName(classModel : ClassModel, parameterModel: ParameterModel) : String {

@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.converter.RelativeNamespaceType;
-import ch.bailu.gtk.model.CType;
-import ch.bailu.gtk.model.ClassType;
-import ch.bailu.gtk.model.JavaType;
+import ch.bailu.gtk.model.type.CType;
+import ch.bailu.gtk.model.type.ClassType;
+import ch.bailu.gtk.model.type.JavaType;
 import ch.bailu.gtk.table.StructureTable;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,7 +20,7 @@ public class TestTypeModel {
 
 		assertEquals(false, ctype.isConst());
 		assertEquals(false, ctype.isSinglePointer());
-		assertEquals("void", ctype.getName());
+		assertEquals("void", ctype.getType());
 		assertEquals(false, ctype.contains("ApplicationFlags"));
 
 
@@ -29,7 +29,7 @@ public class TestTypeModel {
 		assertEquals(false, ctype.isConst());
 		assertEquals(false, ctype.isSinglePointer());
 		assertEquals(true, ctype.isDirectType());
-		assertEquals("GApplicationFlags", ctype.getName());
+		assertEquals("GApplicationFlags", ctype.getType());
 		assertEquals(true, ctype.contains("ApplicationFlags"));
 
 
@@ -38,7 +38,7 @@ public class TestTypeModel {
 		assertEquals(false, ctype.isConst());
 		assertEquals(true, ctype.isSinglePointer());
 		assertEquals(false, ctype.isDirectType());
-		assertEquals("PangoAttrShape*", ctype.getName());
+		assertEquals("PangoAttrShape*", ctype.getType());
 
 
 		ctype = new CType("const gchar*");

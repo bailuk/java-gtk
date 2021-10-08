@@ -16,7 +16,6 @@ import ch.bailu.gtk.table.AliasTable;
 import ch.bailu.gtk.log.Logable;
 import ch.bailu.gtk.table.CallbackTable;
 import ch.bailu.gtk.table.StructureTable;
-import ch.bailu.gtk.writer.IO;
 
 public class App {
 

@@ -9,12 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TestPrimitivesTable {
     @Test
     void test() {
-        assertEquals(true, PrimitivesTable.instance().contains("gdouble"));
-        assertEquals("double", PrimitivesTable.instance().convert("gdouble"));
+        assertEquals(true, PrimitivesTable.INSTANCE.contains("gdouble"));
+        assertEquals("double", PrimitivesTable.INSTANCE.convert("gdouble"));
 
 
-        assertEquals(true, PrimitivesTable.instance().contains("double"));
-        assertEquals("double", PrimitivesTable.instance().convert("double"));
+        assertEquals(true, PrimitivesTable.INSTANCE.contains("double"));
+        assertEquals("double", PrimitivesTable.INSTANCE.convert("double"));
 
     }
 }

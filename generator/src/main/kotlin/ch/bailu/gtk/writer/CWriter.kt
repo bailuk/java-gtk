@@ -1,7 +1,11 @@
 package ch.bailu.gtk.writer
 
+import ch.bailu.gtk.model.NamespaceModel
 import ch.bailu.gtk.converter.JavaNames
-import ch.bailu.gtk.model.*
+import ch.bailu.gtk.model.ClassModel
+import ch.bailu.gtk.model.MethodModel
+import ch.bailu.gtk.model.Model
+import ch.bailu.gtk.model.ParameterModel
 import java.io.Writer
 
 
@@ -12,7 +16,7 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
 
         a("\n#include <jni.h>\n")
 
-        for (include in namespaceModel.includes) {
+        for (include in namespaceModel.getIncludes()) {
             a("#include <${include}>\n")
         }
 

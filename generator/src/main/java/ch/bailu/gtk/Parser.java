@@ -13,7 +13,6 @@ import java.io.Reader;
 import ch.bailu.gtk.builder.BuilderInterface;
 import ch.bailu.gtk.tag.DocumentTag;
 import ch.bailu.gtk.tag.Tag;
-import ch.bailu.gtk.writer.IO;
 
 public class Parser {
 
