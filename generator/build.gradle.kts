@@ -36,7 +36,7 @@ tasks.register("generate", JavaExec::class) {
     dependsOn("build")
     setDescription("Generate source code from introspective files")
     classpath = sourceSets["main"].runtimeClasspath
-    mainClass.set("ch.bailu.gtk.App")
+    mainClass.set("ch.bailu.gtk.AppKt")
 
     args(setOf(
             "-i", "/usr/share/gir-1.0",

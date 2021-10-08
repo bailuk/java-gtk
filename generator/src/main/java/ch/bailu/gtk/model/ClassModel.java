@@ -14,6 +14,10 @@ import ch.bailu.gtk.tag.ParameterTag;
 import ch.bailu.gtk.tag.StructureTag;
 import ch.bailu.gtk.writer.CodeWriter;
 
+import static ch.bailu.gtk.model.filter.FilterKt.createMalloc;
+import static ch.bailu.gtk.model.filter.FilterKt.field;
+import static ch.bailu.gtk.model.filter.FilterKt.fieldDirectAccessAllowed;
+import static ch.bailu.gtk.model.filter.FilterKt.method;
 import static ch.bailu.gtk.writer.NamesKt.getImpPrefix;
 
 public class ClassModel extends Model {
@@ -69,7 +73,7 @@ public class ClassModel extends Model {
         }
 
         for (ParameterTag field: structure.getFields()) {
-            var fieldModel = new ParameterModel(nameSpace.getNamespace(), field, false, Filter.fieldDirectAccessAllowed(this, field));
+            var fieldModel = new ParameterModel(nameSpace.getNamespace(), field, false, fieldDirectAccessAllowed(this));
             fields.addIfSupported(filterField(fieldModel));
         }
 
@@ -88,7 +92,7 @@ public class ClassModel extends Model {
 
     private ParameterModel filterField(ParameterModel parameterModel) {
         parameterModel.setSupported("Callback", !parameterModel.isCallback());
-        parameterModel.setSupported("Filter", Filter.field(this, parameterModel));
+        parameterModel.setSupported("Filter", field(this));
         return parameterModel;
     }
 
@@ -97,7 +101,7 @@ public class ClassModel extends Model {
         return filter(methodModel);
     }
     private MethodModel filter(MethodModel methodModel) {
-        methodModel.setSupported("Filter", Filter.method(this, methodModel));
+        methodModel.setSupported("Filter", method(this, methodModel));
         return methodModel;
     }
 
@@ -202,7 +206,7 @@ public class ClassModel extends Model {
 
     public boolean hasNativeCalls() {
         if (isNameSpaceSupported()) {
-            if (isRecord() && Filter.createMalloc(this)) {
+            if (isRecord() && createMalloc(this)) {
                 return true;
             } else if (isPackage() || isClassType()) {
                 return (   methods.size() >0
@@ -248,7 +252,7 @@ public class ClassModel extends Model {
             writer.next();
             writer.writeInternalConstructor(this);
 
-            if (isRecord() && Filter.createMalloc(this)) {
+            if (isRecord() && createMalloc(this)) {
                 writer.writeMallocConstructor(this);
             }
 

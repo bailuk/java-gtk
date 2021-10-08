@@ -36,17 +36,18 @@ class ClassType {
     constructor(namespace: String, typeName: String, ctype: String, supportsDirectType: Boolean) : this(namespace, typeName, CType(ctype), false, supportsDirectType)
 
     constructor(namespace: String, typeName: String, ctype: CType, isOutEnum: Boolean, supportsDirectType: Boolean) {
-        var typeName = typeName
+        var t = typeName
+
         if (WrapperTable.contains(ctype.type)) {
-            typeName = WrapperTable.convert(ctype.type)
+            t = WrapperTable.convert(ctype.type)
             wrapper = true
 
         } else if (isOutEnum) {
-            typeName = WrapperTable.convert("gint*")
+            t = WrapperTable.convert("gint*")
             wrapper = true
         }
 
-        type = convert(namespace, typeName)
+        type = convert(namespace, t)
         callbackTag = getCallbackTagFromTable(type)
         valid = wrapperOrCallback() || supportedClass(type, ctype, supportsDirectType)
         directType = supportsDirectType && !wrapperOrCallback() && supportedClass(type, ctype, supportsDirectType) && ctype.isDirectType

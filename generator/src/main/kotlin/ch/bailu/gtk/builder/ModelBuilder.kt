@@ -3,9 +3,7 @@ package ch.bailu.gtk.builder
 import ch.bailu.gtk.model.ClassModel
 import ch.bailu.gtk.model.NamespaceModel
 import ch.bailu.gtk.tag.*
-import ch.bailu.gtk.writer.CWriter
-import ch.bailu.gtk.writer.JavaApiWriter
-import ch.bailu.gtk.writer.JavaImpWriter
+import ch.bailu.gtk.writer.*
 import java.io.IOException
 import java.io.Writer
 
@@ -26,10 +24,10 @@ class ModelBuilder : BuilderInterface {
     private fun writeJavaImpFile(model: ClassModel) {
         var out: Writer? = null
         try {
-            out = IO.getJavaImpWriter(model, namespace)
+            out = getJavaImpWriter(model, namespace)
             model.write(JavaImpWriter(out))
         } finally {
-            IO.close(out)
+            out?.close()
         }
     }
 
@@ -37,10 +35,10 @@ class ModelBuilder : BuilderInterface {
     private fun writeCFile(model: ClassModel) {
         var out: Writer? = null
         try {
-            out = IO.getCWriter(model, namespace)
+            out = getCWriter(model, namespace)
             model.write(CWriter(out))
         } finally {
-            IO.close(out)
+            out?.close()
         }
     }
 
@@ -66,7 +64,7 @@ class ModelBuilder : BuilderInterface {
     }
 
 
-    override fun buildAlias(alias: AliasTag) {}
+    override fun buildAlias(aliasTag: AliasTag) {}
 
 
     @Throws(IOException::class)
@@ -81,10 +79,10 @@ class ModelBuilder : BuilderInterface {
     private fun writeJavaFile(model: ClassModel) {
         var out: Writer? = null
         try {
-            out = IO.getJavaWriter(model.apiName, namespace)
+            out = getJavaWriter(model.apiName, namespace)
             model.write(JavaApiWriter(out))
         } finally {
-            IO.close(out)
+            out?.close()
         }
     }
 }

@@ -2,10 +2,8 @@ package ch.bailu.gtk.model.filter
 
 import ch.bailu.gtk.model.ClassModel
 import ch.bailu.gtk.model.MethodModel
-import ch.bailu.gtk.model.ParameterModel
-import ch.bailu.gtk.tag.ParameterTag
 
-fun values(name: String, value: String): Boolean {
+fun values(value: String): Boolean {
     return ("2147483648" != value
             && "9223372036854775807" != value
             && "4294967295" != value
@@ -32,7 +30,7 @@ fun method(classModel: ClassModel, methodModel: MethodModel): Boolean {
 }
 
 
-fun field(classModel: ClassModel, parameterModel: ParameterModel): Boolean {
+fun field(classModel: ClassModel): Boolean {
     if ("PixbufAnimationIterClass" == classModel.apiName) {
         return false
     }
@@ -67,6 +65,6 @@ fun createMalloc(classModel: ClassModel): Boolean {
     return false
 }
 
-fun fieldDirectAccessAllowed(classModel: ClassModel, field: ParameterTag): Boolean {
+fun fieldDirectAccessAllowed(classModel: ClassModel): Boolean {
     return "AttrShape" == classModel.apiName
 }

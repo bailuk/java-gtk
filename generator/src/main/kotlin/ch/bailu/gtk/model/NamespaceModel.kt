@@ -30,9 +30,9 @@ class NamespaceModel : Model, NamespaceInterface {
     }
 
     val javaSourceDirectory: File
-        get() = File(Configuration.instance().javaBaseDir, namespace)
+        get() = File(Configuration.getInstance().javaBaseDir, namespace)
     val cSourceDirectory: File
-        get() = File(Configuration.instance().cBaseDir)
+        get() = Configuration.getInstance().cBaseDir
 
     fun getIncludes(): List<String> {
         return includes

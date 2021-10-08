@@ -10,7 +10,7 @@ interface BuilderInterface {
 
     @Throws(IOException::class)
     fun buildNamespaceEnd(namespace: NamespaceTag)
-    fun buildAlias(alias: AliasTag)
+    fun buildAlias(aliasTag: AliasTag)
 
     @Throws(IOException::class)
     fun buildEnumeration(enumeration: EnumerationTag)

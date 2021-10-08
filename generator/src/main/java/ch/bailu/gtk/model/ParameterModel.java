@@ -2,6 +2,7 @@ package ch.bailu.gtk.model;
 
 import static ch.bailu.gtk.converter.UtilKt.isEnum;
 import static ch.bailu.gtk.log.UtilKt.colonList;
+import static ch.bailu.gtk.model.filter.FilterKt.values;
 
 import ch.bailu.gtk.converter.JavaNames;
 import ch.bailu.gtk.converter.JniTypeConverter;
@@ -59,7 +60,7 @@ public class ParameterModel extends Model {
         jniConverter = JniTypeConverter.factory(this);
 
         //setSupported("private", parameter.isPrivate());
-        setSupported("value", Filter.values(name, getValue()));
+        setSupported("value", values(getValue()));
         setSupported("jType", jType.isValid());
         setSupported("callback", isCallbackSupported());
 
