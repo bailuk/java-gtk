@@ -1,5 +1,7 @@
 package ch.bailu.gtk.builder;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 

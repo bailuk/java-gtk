@@ -1,14 +1,22 @@
 package ch.bailu.gtk;
 
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 
 import org.xmlpull.v1.XmlPullParserException;
 
 import ch.bailu.gtk.builder.AliasBuilder;
 import ch.bailu.gtk.builder.BuilderInterface;
 import ch.bailu.gtk.builder.ModelBuilder;
+import ch.bailu.gtk.model.ClassModel;
+import ch.bailu.gtk.model.NamespaceModel;
+import ch.bailu.gtk.table.StructureTable;
+import ch.bailu.gtk.writer.CWriter;
+import ch.bailu.gtk.writer.IO;
 
 public class App {
 
@@ -19,11 +27,22 @@ public class App {
             System.out.println("generate sources");
 
             parse(new AliasBuilder());
+            logTables();
             parse(new ModelBuilder());
 
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void logTables() throws IOException {
+        Writer out = null;
+        try {
+            out = new BufferedWriter(new FileWriter(Configuration.LOG_CLASSES));
+            StructureTable.INSTANCE.log(out);
+        } finally {
+            IO.close(out);
         }
     }
 

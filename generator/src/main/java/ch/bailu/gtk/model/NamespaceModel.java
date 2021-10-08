@@ -7,7 +7,7 @@ import java.util.List;
 import ch.bailu.gtk.Configuration;
 import ch.bailu.gtk.table.NamespaceTable;
 import ch.bailu.gtk.converter.RelativeNamespaceType;
-import ch.bailu.gtk.tag.NamedTag;
+import ch.bailu.gtk.tag.NamedWithDocTag;
 import ch.bailu.gtk.tag.NamespaceTag;
 
 
@@ -21,7 +21,7 @@ public class NamespaceModel extends Model implements NamespaceInterface {
     public NamespaceModel(NamespaceTag namespace) {
         this.namespace = namespace.getName().toLowerCase();
 
-        for (NamedTag i : namespace.getIncludes()) {
+        for (NamedWithDocTag i : namespace.getIncludes()) {
             includes.add(i.getName());
         }
 
