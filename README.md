@@ -51,7 +51,7 @@ Compiles and runs the code generator. This will generate Java and C code from [G
 - Input: `generator/src/resources/gir/*`
 - Output Java: `library/build/generated/src/main/java/[...]/*.java`
 - Output C: `glue/build/generated/src/main/c/*.c`
-- Configuration: [generator/src/main/java/ch/bailu/gtk/Configuration.java](generator/src/main/java/ch/bailu/gtk/Configuration.java)
+- Configuration: [generator/src/main/kotlin/ch/bailu/gtk/Configuration.kt](generator/src/main/kotlin/ch/bailu/gtk/Configuration.kt)
 
 `./gradlew run`  
 Compile everything and run the default demo application.
