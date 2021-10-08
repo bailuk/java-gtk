@@ -3,7 +3,7 @@ package ch.bailu.gtk.table
 import java.io.Writer
 import java.util.HashMap
 
-object StructureTable {
+object StructureTable : Logable {
     private val table: MutableMap<String, MutableMap<String, Int>> = HashMap()
 
     fun add(namespace: String, name: String) {
@@ -28,7 +28,7 @@ object StructureTable {
         return getTable(namespace)[name] != null
     }
 
-    fun log(writer: Writer) {
+    override fun log(writer: Writer) {
         table.onEach {
             writer.write("{${it.key}\n")
             it.value.forEach {

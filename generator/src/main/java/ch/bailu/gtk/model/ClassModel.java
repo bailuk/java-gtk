@@ -3,11 +3,11 @@ package ch.bailu.gtk.model;
 import java.io.IOException;
 import java.util.List;
 
-import ch.bailu.gtk.table.AliasTable;
 import ch.bailu.gtk.converter.Filter;
 import ch.bailu.gtk.converter.JavaNames;
 import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.converter.RelativeNamespaceType;
+import ch.bailu.gtk.table.AliasTable;
 import ch.bailu.gtk.tag.EnumerationTag;
 import ch.bailu.gtk.tag.MethodTag;
 import ch.bailu.gtk.tag.NamespaceTag;
@@ -82,7 +82,7 @@ public class ClassModel extends Model {
 
     private String convert(String namespace, String name) {
         NamespaceType from = new NamespaceType(namespace, name);
-        var result = AliasTable.instance().convert(from).getName();
+        var result = AliasTable.INSTANCE.convert(from).getName();
         return result;
     }
 

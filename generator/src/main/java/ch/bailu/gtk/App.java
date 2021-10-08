@@ -12,10 +12,9 @@ import org.xmlpull.v1.XmlPullParserException;
 import ch.bailu.gtk.builder.AliasBuilder;
 import ch.bailu.gtk.builder.BuilderInterface;
 import ch.bailu.gtk.builder.ModelBuilder;
-import ch.bailu.gtk.model.ClassModel;
-import ch.bailu.gtk.model.NamespaceModel;
+import ch.bailu.gtk.table.AliasTable;
+import ch.bailu.gtk.table.Logable;
 import ch.bailu.gtk.table.StructureTable;
-import ch.bailu.gtk.writer.CWriter;
 import ch.bailu.gtk.writer.IO;
 
 public class App {
@@ -23,11 +22,13 @@ public class App {
     public static void main(String[] args) {
         try {
             Configuration.init(args);
-
-            System.out.println("generate sources");
-
+            System.out.println("1. fill tables");
             parse(new AliasBuilder());
+
+            System.out.println("2. log tables");
             logTables();
+
+            System.out.println("3. build model and write code files");
             parse(new ModelBuilder());
 
 
@@ -37,15 +38,20 @@ public class App {
     }
 
     private static void logTables() throws IOException {
+        logTable(StructureTable.INSTANCE, Configuration.LOG_STRUCTURE_TABLE_FILE);
+        logTable(AliasTable.INSTANCE, Configuration.LOG_ALIAS_TABLE_FILE);
+    }
+
+    private static void logTable(Logable logable, String file) throws IOException {
+        System.out.println(file);
         Writer out = null;
         try {
-            out = new BufferedWriter(new FileWriter(Configuration.LOG_CLASSES));
-            StructureTable.INSTANCE.log(out);
+            out = new BufferedWriter(new FileWriter(file));
+            logable.log(out);
         } finally {
             IO.close(out);
         }
     }
-
 
 
     public static void parse(BuilderInterface builder) throws IOException, XmlPullParserException {

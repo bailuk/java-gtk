@@ -1,10 +1,10 @@
 package ch.bailu.gtk.model;
 
 import ch.bailu.gtk.Configuration;
+import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.converter.Util;
 import ch.bailu.gtk.table.AliasTable;
 import ch.bailu.gtk.table.CallbackTable;
-import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.converter.RelativeNamespaceType;
 import ch.bailu.gtk.table.StructureTable;
 import ch.bailu.gtk.table.WrapperTable;
@@ -69,7 +69,7 @@ public class ClassType implements ClassTypeInterface {
     }
 
     private RelativeNamespaceType convert(String namespace, String typeName) {
-        NamespaceType converted = AliasTable.instance().convert(new NamespaceType(namespace, typeName));
+        NamespaceType converted = AliasTable.INSTANCE.convert(new NamespaceType(namespace, typeName));
         return new RelativeNamespaceType(namespace, converted);
     }
 

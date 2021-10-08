@@ -1,10 +1,10 @@
 package ch.bailu.gtk.builder;
 
+import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.table.AliasTable;
 import ch.bailu.gtk.table.CallbackTable;
 import ch.bailu.gtk.table.EnumTable;
 import ch.bailu.gtk.table.NamespaceTable;
-import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.table.StructureTable;
 import ch.bailu.gtk.tag.AliasTag;
 import ch.bailu.gtk.tag.CallbackTag;
@@ -24,7 +24,7 @@ public class AliasBuilder implements BuilderInterface{
     }
 
     private String convert(String namespace, String name) {
-        return AliasTable.instance().convert(new NamespaceType(namespace, name)).getName();
+        return AliasTable.INSTANCE.convert(new NamespaceType(namespace, name)).getName();
     }
 
     @Override
@@ -38,7 +38,7 @@ public class AliasBuilder implements BuilderInterface{
 
     @Override
     public void buildAlias(AliasTag aliasTag) {
-        AliasTable.instance().add(namespace, aliasTag.getName(), aliasTag.getTypeName());
+        AliasTable.INSTANCE.add(namespace, aliasTag.getName(), aliasTag.getTypeName());
     }
 
     @Override
