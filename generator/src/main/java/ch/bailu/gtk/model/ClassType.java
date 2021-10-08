@@ -82,7 +82,7 @@ public class ClassType implements ClassTypeInterface {
     }
 
     private boolean isInStructureTable(RelativeNamespaceType n) {
-        return StructureTable.instance().contains(n.getNamespace(), n.getName());
+        return StructureTable.INSTANCE.contains(n.getNamespace(), n.getName());
     }
 
 

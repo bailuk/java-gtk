@@ -13,7 +13,7 @@ public class ParameterModel extends Model {
     private final ClassType classType;
     private final JavaType jType;
 
-    private final String value;
+    //private final String value;
 
     private final JniTypeConverter jniConverter;
 
@@ -21,28 +21,30 @@ public class ParameterModel extends Model {
 
     private MethodModel callbackModel = null;
 
-    public ParameterModel(String namespace, ParameterTag parameter, boolean toUpper, boolean supportsDirectAccess) {
+    private final ParameterTag parameterTag;
+
+    public ParameterModel(String namespace, ParameterTag parameterTag, boolean toUpper, boolean supportsDirectAccess) {
+
+        this.parameterTag = parameterTag;
 
         if (toUpper) {
-            name = JavaNames.fixToken(parameter.getName().toUpperCase());
+            name = JavaNames.fixToken(parameterTag.getName().toUpperCase());
          } else {
-            name = JavaNames.fixToken(parameter.getName());
+            name = JavaNames.fixToken(parameterTag.getName());
         }
 
-        value = parameter.getValue();
-
-        classType = new ClassType(namespace, parameter, supportsDirectAccess);
+        classType = new ClassType(namespace, parameterTag, supportsDirectAccess);
         if (classType.isClass()) {
             cType = new CType("void*");
             jType = new JavaType("long");
 
-        } else if (Util.isEnum(namespace, parameter)) {
+        } else if (Util.isEnum(namespace, parameterTag)) {
             cType = new CType("int");
             jType = new JavaType("int");
 
         } else {
-            cType = new CType(parameter.getType());
-            jType = new JavaType(parameter.getType());
+            cType = new CType(parameterTag.getType());
+            jType = new JavaType(parameterTag.getType());
         }
 
         if (classType.isCallback()) {
@@ -53,11 +55,11 @@ public class ParameterModel extends Model {
         jniConverter = JniTypeConverter.factory(this);
 
         //setSupported("private", parameter.isPrivate());
-        setSupported("value", Filter.values(name, value));
+        setSupported("value", Filter.values(name, getValue()));
         setSupported("jType", jType.isValid());
         setSupported("callback", isCallbackSupported());
 
-        this.isWriteable = parameter.isWriteable();
+        this.isWriteable = parameterTag.isWriteable();
     }
 
 
@@ -69,7 +71,7 @@ public class ParameterModel extends Model {
     }
 
     public String getValue() {
-        return saveString(value);
+        return saveString(parameterTag.getValue());
     }
     public String getName() {
         return saveString(name);
@@ -117,7 +119,26 @@ public class ParameterModel extends Model {
             supported = "(s)";
         }
 
-        return "[" + supported + getGtkType() + ":" + getApiType() + ":" + getValue() + "]";
+        return collonList(new String[] {
+                supported,
+                parameterTag.getType(),
+                parameterTag.getTypeName(), // <-
+                parameterTag.getName(),     // <-
+                parameterTag.getValue(),
+                getGtkType(),
+                getApiType()});
+    }
+
+    public String collonList(String[] strings) {
+        String del = "";
+        StringBuilder builder = new StringBuilder();
+        builder.append("[");
+        for (String s: strings) {
+            builder.append(del);
+            builder.append(s);
+            del = ":";
+        }
+        return builder.append("]").toString();
     }
 
     private static String saveString(String in) {

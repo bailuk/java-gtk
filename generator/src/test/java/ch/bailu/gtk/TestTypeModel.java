@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.converter.RelativeNamespaceType;
-import ch.bailu.gtk.table.StructureTable;
 import ch.bailu.gtk.model.CType;
 import ch.bailu.gtk.model.ClassType;
 import ch.bailu.gtk.model.JavaType;
+import ch.bailu.gtk.table.StructureTable;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -135,7 +135,7 @@ public class TestTypeModel {
 		assertEquals(false, classType.isClass());
 
 
-		StructureTable.instance().add("namespace", "Application");
+		StructureTable.INSTANCE.add("namespace", "Application");
 		classType = new ClassType("namespace", "Application", "GtkApplication", false);
 		assertEquals(false, classType.isClass());
 		assertEquals(false, classType.isDirectType());
@@ -144,7 +144,7 @@ public class TestTypeModel {
 		assertEquals(true, classType.isClass());
 		assertEquals(true, classType.isDirectType());
 
-		StructureTable.instance().add("namespace", "Application");
+		StructureTable.INSTANCE.add("namespace", "Application");
 		classType = new ClassType("namespace", "Application", "GtkApplication*", true);
 		assertEquals(true, classType.isClass());
 		assertEquals("Application", classType.getFullName());

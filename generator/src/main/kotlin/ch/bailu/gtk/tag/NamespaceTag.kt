@@ -9,7 +9,7 @@ class NamespaceTag(parent: TagWithParent): NamedWithDocTag(parent) {
     private val functions: MutableList<MethodTag> = ArrayList()
     private val constants: MutableList<ParameterTag> = ArrayList()
 
-    private var _package = NamedWithDocTag(this)
+    private var packageTag = NamedWithDocTag(this)
 
     @Throws(IOException::class)
     override fun started() {
@@ -70,7 +70,7 @@ class NamespaceTag(parent: TagWithParent): NamedWithDocTag(parent) {
     }
 
     fun getPackage(): String {
-        return _package.getName()
+        return packageTag.getName()
     }
 
     fun addInclude(include: NamedWithDocTag): TagWithParent {
@@ -79,7 +79,7 @@ class NamespaceTag(parent: TagWithParent): NamedWithDocTag(parent) {
     }
 
     fun addPackage(pkg: NamedWithDocTag): TagWithParent {
-        _package = pkg
+        packageTag = pkg
         return pkg
     }
 }

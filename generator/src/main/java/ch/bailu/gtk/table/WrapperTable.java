@@ -40,7 +40,7 @@ public class WrapperTable {
 
     private void add(String ctype, String wrapper) {
         table.put(ctype, wrapper);
-        StructureTable.instance().add(NAMESPACE, wrapper);
+        StructureTable.INSTANCE.add(NAMESPACE, wrapper);
     }
 
     public boolean contains(String cType) {

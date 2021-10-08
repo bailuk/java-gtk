@@ -16,7 +16,7 @@ public class CType {
     private final String type;
 
     public CType(String type) {
-        if (type == null) {
+        if (type == null || "".equals(type)) {
             type = "void*";
         }
 

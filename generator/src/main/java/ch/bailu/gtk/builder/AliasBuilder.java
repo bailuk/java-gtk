@@ -20,7 +20,7 @@ public class AliasBuilder implements BuilderInterface{
 
     @Override
     public void buildStructure(StructureTag structure) {
-        StructureTable.instance().add(namespace, convert(namespace, structure.getName()));
+        StructureTable.INSTANCE.add(namespace, convert(namespace, structure.getName()));
     }
 
     private String convert(String namespace, String name) {

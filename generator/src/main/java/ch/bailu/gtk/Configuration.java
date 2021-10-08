@@ -12,6 +12,7 @@ public class Configuration {
     public static final String GIR_DIR_CUSTOM = "src/main/resources";
     public static final String GIR_DIR_LOCAL = "src/main/resources/gir";
 
+    public static final String LOG_CLASSES = "build/structure_table.out";
 
     public  final static String[] GIR_FILES= {
             "GObject-2.0.gir",
