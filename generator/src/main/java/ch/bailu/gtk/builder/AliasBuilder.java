@@ -49,6 +49,6 @@ public class AliasBuilder implements BuilderInterface{
 
     @Override
     public void buildCallback(CallbackTag callbackTag) {
-        CallbackTable.instance().add(namespace, callbackTag);
+        CallbackTable.INSTANCE.add(namespace, callbackTag);
     }
 }

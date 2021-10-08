@@ -1,5 +1,7 @@
 package ch.bailu.gtk.tag
 
+import ch.bailu.gtk.log.colonList
+
 
 /**
 
@@ -130,5 +132,9 @@ open class ParameterTag(parent: TagWithParent): NamedWithDocTag(parent) {
 
     fun isOutDirection(): Boolean {
         return !inType
+    }
+
+    override fun toString(): String {
+        return colonList(arrayOf(getTypeName(), getType(), getValue()))
     }
 }

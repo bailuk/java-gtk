@@ -1,9 +1,12 @@
 package ch.bailu.gtk.model;
 
+import static ch.bailu.gtk.log.UtilKt.colonList;
+
 import ch.bailu.gtk.converter.Util;
 import ch.bailu.gtk.converter.Filter;
 import ch.bailu.gtk.converter.JavaNames;
 import ch.bailu.gtk.converter.JniTypeConverter;
+import ch.bailu.gtk.log.Logable;
 import ch.bailu.gtk.tag.ParameterTag;
 
 public class ParameterModel extends Model {
@@ -119,7 +122,7 @@ public class ParameterModel extends Model {
             supported = "(s)";
         }
 
-        return collonList(new String[] {
+        return colonList(new String[] {
                 supported,
                 parameterTag.getType(),
                 parameterTag.getTypeName(), // <-
@@ -129,17 +132,6 @@ public class ParameterModel extends Model {
                 getApiType()});
     }
 
-    public String collonList(String[] strings) {
-        String del = "";
-        StringBuilder builder = new StringBuilder();
-        builder.append("[");
-        for (String s: strings) {
-            builder.append(del);
-            builder.append(s);
-            del = ":";
-        }
-        return builder.append("]").toString();
-    }
 
     private static String saveString(String in) {
         if (in == null) return "";

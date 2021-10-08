@@ -1,4 +1,4 @@
-package ch.bailu.gtk.table
+package ch.bailu.gtk.log
 
 import java.io.Writer
 

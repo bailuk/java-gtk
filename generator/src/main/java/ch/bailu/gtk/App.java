@@ -13,7 +13,8 @@ import ch.bailu.gtk.builder.AliasBuilder;
 import ch.bailu.gtk.builder.BuilderInterface;
 import ch.bailu.gtk.builder.ModelBuilder;
 import ch.bailu.gtk.table.AliasTable;
-import ch.bailu.gtk.table.Logable;
+import ch.bailu.gtk.log.Logable;
+import ch.bailu.gtk.table.CallbackTable;
 import ch.bailu.gtk.table.StructureTable;
 import ch.bailu.gtk.writer.IO;
 
@@ -40,6 +41,7 @@ public class App {
     private static void logTables() throws IOException {
         logTable(StructureTable.INSTANCE, Configuration.LOG_STRUCTURE_TABLE_FILE);
         logTable(AliasTable.INSTANCE, Configuration.LOG_ALIAS_TABLE_FILE);
+        logTable(CallbackTable.INSTANCE, Configuration.LOG_CALLBACK_TABLE_FILE);
     }
 
     private static void logTable(Logable logable, String file) throws IOException {

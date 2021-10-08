@@ -14,6 +14,7 @@ public class Configuration {
 
     public static final String LOG_STRUCTURE_TABLE_FILE = "build/structure_table.out";
     public static final String LOG_ALIAS_TABLE_FILE     = "build/alias_table.out";
+    public static final String LOG_CALLBACK_TABLE_FILE  = "build/callback_table.out";
 
     public  final static String[] GIR_FILES= {
             "GObject-2.0.gir",
@@ -27,6 +28,7 @@ public class Configuration {
             "Pango-1.0.gir",
             "GdkPixbuf-2.0.gir",
     };
+
 
     private File javaBaseDir, cBaseDir, girBaseDir;
     

@@ -1,5 +1,7 @@
 package ch.bailu.gtk.tag
 
+import ch.bailu.gtk.log.colonList
+
 open class MethodTag(parent: TagWithParent): NamedWithDocTag(parent) {
     private val returnValue = ParameterTag(this)
 
@@ -66,4 +68,16 @@ open class MethodTag(parent: TagWithParent): NamedWithDocTag(parent) {
     fun throwsError(): Boolean {
         return throwsError
     }
+
+    override fun toString(): String {
+        var strings = ArrayList<String>()
+        strings.add(returnValue.toString())
+        strings.add(getName());
+        getParameters().forEach{
+            strings.add(it.toString())
+        }
+        return colonList(strings)
+
+    }
+
 }

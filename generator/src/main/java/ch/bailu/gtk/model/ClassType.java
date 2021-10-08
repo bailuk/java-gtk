@@ -4,8 +4,8 @@ import ch.bailu.gtk.Configuration;
 import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.converter.Util;
 import ch.bailu.gtk.table.AliasTable;
-import ch.bailu.gtk.table.CallbackTable;
 import ch.bailu.gtk.converter.RelativeNamespaceType;
+import ch.bailu.gtk.table.CallbackTable;
 import ch.bailu.gtk.table.StructureTable;
 import ch.bailu.gtk.table.WrapperTable;
 import ch.bailu.gtk.tag.CallbackTag;
@@ -78,7 +78,7 @@ public class ClassType implements ClassTypeInterface {
     }
 
     private CallbackTag getCallbackTagFromTable(RelativeNamespaceType n) {
-        return CallbackTable.instance().get(n.getNamespace(), n.getName());
+        return CallbackTable.INSTANCE.get(n.getNamespace(), n.getName());
     }
 
     private boolean isInStructureTable(RelativeNamespaceType n) {
