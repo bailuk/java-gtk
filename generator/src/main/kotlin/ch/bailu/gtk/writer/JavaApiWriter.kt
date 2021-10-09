@@ -1,10 +1,13 @@
 package ch.bailu.gtk.writer
 
 import ch.bailu.gtk.model.*
+import ch.bailu.gtk.writer.lang.JavaDoc
 import java.io.Writer
 
 
 class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
+
+    private val javaDoc = JavaDoc(writer)
 
     override fun writeStart(structureModel : StructureModel, namespaceModel : NamespaceModel) {
         super.writeStart(structureModel, namespaceModel)
@@ -16,7 +19,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
     override fun writeClass(structureModel : StructureModel) {
         start()
-        a(getJavaDoc(structureModel.doc,0))
+        javaDoc.writeClass(structureModel)
         a("public class ${structureModel.apiName} extends ${structureModel.apiParentName} {\n")
     }
 
@@ -39,22 +42,13 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
 
     private fun writeFunctionCall(structureModel : StructureModel, methodModel : MethodModel, selfCall: Boolean) {
-        a(getJavaDoc(methodModel.doc,4))
+        javaDoc.writeNativeMethod(structureModel, methodModel)
         a("""
             public ${getStatic(selfCall)} ${methodModel.returnType.apiType} ${methodModel.apiName}(${getSignature(methodModel.getParameters())}) ${getThrowsExtension(methodModel)} {
                 ${getCallbackConnections(methodModel)}
                 ${getFunctionCall(structureModel, methodModel, selfCall)};
             }
             """.replaceIndent(" ".repeat(4)))
-    }
-
-    private fun getJavaDoc(doc: String, intent: Int): String {
-        if (doc.length > 0) {
-            val space = " ".repeat(intent);
-            val docOut = doc.replace('\\', '-').replaceIndent("${space} * ")
-            return "${space}/**\n${docOut}\n${space}**/\n"
-        }
-        return ""
     }
 
     private fun getStatic(selfCall : Boolean) : String {
@@ -160,11 +154,13 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
         }
     }
+/*
 
     override fun writeInterfaceMethod(structureModel: StructureModel, m: MethodModel) {
         start(1)
         a("        public ${m.returnType.apiType} ${m.apiName}(${getSignature(m.getParameters())});\n")
     }
+*/
 
 
 

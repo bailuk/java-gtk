@@ -27,7 +27,10 @@ abstract class CodeWriter(writer : Writer) : Append {
     abstract fun writeSignal(structureModel : StructureModel, methodModel : MethodModel)
     abstract fun writeField(structureModel : StructureModel, parameterModel : ParameterModel)
     abstract fun writeFunction(structureModel : StructureModel, methodModel : MethodModel)
-    abstract fun writeUnsupported(model : Model) 
+    abstract fun writeUnsupported(model : Model)
+
+    abstract fun writeMallocConstructor(structureModel : StructureModel)
+    abstract fun writeCallback(structureModel: StructureModel, methodModel: MethodModel)
 
     abstract fun writeEnd() 
 
@@ -57,9 +60,5 @@ abstract class CodeWriter(writer : Writer) : Append {
         return this
     }
 
-    abstract fun writeMallocConstructor(structureModel : StructureModel)
-    abstract fun writeInterfaceMethod(structureModel: StructureModel, m: MethodModel)
-    abstract fun writeCallback(structureModel: StructureModel, methodModel: MethodModel)
 }
-
 

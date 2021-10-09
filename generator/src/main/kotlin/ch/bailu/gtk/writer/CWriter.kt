@@ -153,7 +153,6 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         next()
     }
 
-    override fun writeInterfaceMethod(structureModel: StructureModel, m: MethodModel) {}
     override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel) {
         start(1)
 

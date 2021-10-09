@@ -24,7 +24,6 @@ class ParameterModel : Model {
     val callbackModel: MethodModel?
 
 
-
     constructor(namespace: String, parameterTag: ParameterTag, toUpper: Boolean, supportsDirectAccess: Boolean) {
         this.parameterTag = parameterTag
         name = if (toUpper) {
@@ -154,4 +153,6 @@ class ParameterModel : Model {
             return parameterTag.getValue()
         }
 
+    val doc: String
+        get() = parameterTag.getDoc()
 }

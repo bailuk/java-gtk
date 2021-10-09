@@ -41,8 +41,6 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
         end(1)
     }
 
-    override fun writeInterfaceMethod(structureModel: StructureModel, m: MethodModel) {}
-
     override fun writeConstructor(structureModel : StructureModel, methodModel : MethodModel) {}
 
     override fun writeFactory(structureModel : StructureModel, methodModel : MethodModel) {}
