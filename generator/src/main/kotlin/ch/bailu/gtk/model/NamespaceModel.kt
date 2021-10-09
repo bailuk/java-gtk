@@ -7,7 +7,7 @@ import ch.bailu.gtk.tag.NamespaceTag
 import java.io.File
 import java.util.*
 
-class NamespaceModel : Model, NamespaceInterface {
+class NamespaceModel : Model {
     private val includes: MutableList<String> = ArrayList()
     private val namespace: String
 
@@ -25,7 +25,7 @@ class NamespaceModel : Model, NamespaceInterface {
     }
 
     constructor(type: RelativeNamespaceType) {
-        namespace = type.namespace
+        namespace = type.getNamespace()
         setSupported("Namespace", NamespaceTable.contains(namespace))
     }
 
@@ -38,11 +38,11 @@ class NamespaceModel : Model, NamespaceInterface {
         return includes
     }
 
-    override fun getNamespace(): String {
+    fun getNamespace(): String {
         return namespace
     }
 
-    override fun getFullNamespace(): String {
+    fun getFullNamespace(): String {
         return if ("" == namespace) {
             Configuration.BASE_NAME_SPACE_NODOT
         } else {

@@ -3,7 +3,7 @@ package ch.bailu.gtk.model.filter
 import ch.bailu.gtk.model.ClassModel
 import ch.bailu.gtk.model.MethodModel
 
-fun values(value: String): Boolean {
+fun filterValues(value: String): Boolean {
     return ("2147483648" != value
             && "9223372036854775807" != value
             && "4294967295" != value
@@ -13,7 +13,7 @@ fun values(value: String): Boolean {
             && "3600000000" != value)
 }
 
-fun method(classModel: ClassModel, methodModel: MethodModel): Boolean {
+fun filterMethod(classModel: ClassModel, methodModel: MethodModel): Boolean {
     if ("MenuItem" == classModel.apiName && "activate" == methodModel.apiName) {
         return false
     }
@@ -30,7 +30,7 @@ fun method(classModel: ClassModel, methodModel: MethodModel): Boolean {
 }
 
 
-fun field(classModel: ClassModel): Boolean {
+fun filterField(classModel: ClassModel): Boolean {
     if ("PixbufAnimationIterClass" == classModel.apiName) {
         return false
     }
@@ -56,7 +56,7 @@ private val MALLOC = arrayOf(
 )
 
 
-fun createMalloc(classModel: ClassModel): Boolean {
+fun filterCreateMallocConstructor(classModel: ClassModel): Boolean {
     for (s in MALLOC) {
         if (s == classModel.apiName) {
             return true
@@ -65,6 +65,6 @@ fun createMalloc(classModel: ClassModel): Boolean {
     return false
 }
 
-fun fieldDirectAccessAllowed(classModel: ClassModel): Boolean {
+fun filterFieldDirectAccess(classModel: ClassModel): Boolean {
     return "AttrShape" == classModel.apiName
 }

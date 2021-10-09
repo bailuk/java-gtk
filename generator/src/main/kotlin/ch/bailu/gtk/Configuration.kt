@@ -97,6 +97,6 @@ class Configuration {
     }
 
     fun getCBaseDir(): String {
-        return cBaseDir.getAbsolutePath()
+        return cBaseDir.absolutePath
     }
 }

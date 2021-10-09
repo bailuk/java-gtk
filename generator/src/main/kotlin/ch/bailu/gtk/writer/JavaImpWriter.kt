@@ -9,7 +9,7 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
 
     override fun writeStart(classModel : ClassModel, namespaceModel : NamespaceModel) {
         super.writeStart(classModel, namespaceModel)
-        a("\npackage " + namespaceModel.fullNamespace + ";\n");
+        a("\npackage " + namespaceModel.getFullNamespace() + ";\n");
         end(3);
     }
 
@@ -30,7 +30,7 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
 
     override fun writeNativeMethod(classModel : ClassModel, methodModel : MethodModel) {
         start();
-        a("    static native ${methodModel.returnType.impType} ${methodModel.apiName}(${getSelfSignature(methodModel.parameters)});\n")
+        a("    static native ${methodModel.returnType.impType} ${methodModel.apiName}(${getSelfSignature(methodModel.getParameters())});\n")
         end(1);
     }
 
@@ -50,7 +50,7 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
 
     override fun writePrivateFactory(classModel : ClassModel, methodModel : MethodModel) {
         start();
-        a("    static native long " + methodModel.getApiName());
+        a("    static native long " + methodModel.apiName);
         writeFactorySignature(methodModel);
         a(";\n");
         end(1);
@@ -68,8 +68,8 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
 
         a("""
             
-    static native void ${methodModel.signalMethodName}(long _self);
-    static ${methodModel.getReturnType().getImpType()} ${methodModel.signalCallbackName}(${getSelfSignature(methodModel.parameters)}) {
+    static native void ${getJavaSignalMethodName(methodModel.name)}(long _self);
+    static ${methodModel.returnType.impType} ${getImpJavaSignalCallbackName(methodModel.name)}(${getSelfSignature(methodModel.getParameters())}) {
         String signal = "${methodModel.apiName}";
         for (java.lang.Object observer : ch.bailu.gtk.Callback.get(_self, signal)) {
             ${getSignalInterfaceCall(classModel, methodModel)};
@@ -83,7 +83,7 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
     override fun writeCallback(classModel: ClassModel, methodModel: MethodModel) {
         a("""
             
-    static ${methodModel.getReturnType().getImpType()} ${methodModel.signalCallbackName}(${getSignature(methodModel.parameters, "")}) {
+    static ${methodModel.returnType.impType} ${getImpJavaSignalCallbackName(methodModel.name)}(${getSignature(methodModel.getParameters(), "")}) {
         String signal = "${methodModel.apiName}";
         for (java.lang.Object observer : ch.bailu.gtk.Callback.get(0, signal)) {
             ${getSignalInterfaceCall(classModel, methodModel)};
@@ -96,8 +96,8 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
     }
 
     private fun getDefaultReturn(methodModel : MethodModel) : String {
-        if (!methodModel.getReturnType().isVoid()) {
-            return "return ${methodModel.getReturnType().getImpDefaultConstant()};"
+        if (!methodModel.returnType.isVoid) {
+            return "return ${methodModel.returnType.impDefaultConstant};"
         }
         return ""
     }
@@ -106,11 +106,11 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
         val parameters : MutableList<ParameterModel> = ArrayList()
 
         start();
-        a("static native ${parameterModel.getImpType()} ${getJavaFieldGetterName(parameterModel.getName())}(${getSelfSignature(parameters)});\n")
+        a("static native ${parameterModel.impType} ${getJavaFieldGetterName(parameterModel.name)}(${getSelfSignature(parameters)});\n")
 
         if (parameterModel.isWriteable && !parameterModel.isDirectType) {
             parameters.add(parameterModel)
-            a("static native void ${getJavaFieldSetterName(parameterModel.getName())}(${getSelfSignature(parameters)});\n")
+            a("static native void ${getJavaFieldSetterName(parameterModel.name)}(${getSelfSignature(parameters)});\n")
         }
 
         end(1);
@@ -119,7 +119,7 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
     override
     fun writeFunction(classModel : ClassModel, methodModel : MethodModel) {
         start();
-        a("    static native ${methodModel.getReturnType().getImpType()} ${methodModel.getApiName()}(${getSignature(methodModel.getParameters(), "")});\n")
+        a("    static native ${methodModel.returnType.impType} ${methodModel.apiName}(${getSignature(methodModel.getParameters(), "")});\n")
         end(1);
 
     }
@@ -127,10 +127,10 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
     private fun getSignalInterfaceCall(classModel : ClassModel, methodModel : MethodModel) : String {
         val result = StringBuilder()
 
-        if (!methodModel.getReturnType().isVoid()) {
+        if (!methodModel.returnType.isVoid) {
             result.append("return ")
         }
-        result.append("((${classModel.getApiName()}.${methodModel.getSignalInterfaceName()})observer).${methodModel.getSignalMethodName()}(${getSignalInterfaceCallSignature(methodModel)})")
+        result.append("((${classModel.apiName}.${getJavaSignalInterfaceName(methodModel.name)})observer).${getJavaSignalMethodName(methodModel.name)}(${getSignalInterfaceCallSignature(methodModel)})")
 
         if (!methodModel.returnType.isVoid && !methodModel.returnType.isJavaNative) {
             result.append(".getCPointer()")
@@ -144,10 +144,10 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
 
         for (p in methodModel.getParameters()) {
             result.append(del)
-            if (p.isJavaNative()) {
-                result.append(p.getName())
+            if (p.isJavaNative) {
+                result.append(p.name)
             } else {
-                result.append("new ${p.apiType}(${p.getName()})")
+                result.append("new ${p.apiType}(${p.name})")
             }
             del = ", ";
         }

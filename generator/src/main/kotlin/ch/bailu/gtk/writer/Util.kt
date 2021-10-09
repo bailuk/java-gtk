@@ -42,7 +42,7 @@ fun getCWriter(model: ClassModel, namespace: NamespaceModel): Writer {
 @Throws(IOException::class)
 private fun getCFile(name: String, namespace: NamespaceModel): File {
     val fn = StringBuilder()
-    fn.append(Configuration.HEADER_FILE_BASE).append(namespace.namespace).append("_").append(name).append(".c")
+    fn.append(Configuration.HEADER_FILE_BASE).append(namespace.getNamespace()).append("_").append(name).append(".c")
     return File(createDirectory(namespace.cSourceDirectory), fn.toString())
 }
 

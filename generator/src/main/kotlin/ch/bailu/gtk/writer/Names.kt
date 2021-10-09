@@ -9,7 +9,7 @@ import ch.bailu.gtk.table.ReservedTokenTable.convert
 
 
 fun getJavaImpClassName(name : String): String {
-    return "Imp{$name}"
+    return "Imp${name}"
 }
 
 
@@ -18,12 +18,14 @@ fun getJavaImpClassName(name : String): String {
  * gobject_Closure_onClosureNotify
  */
 fun getJniSignalCallbackName(classModel : ClassModel, methodModel : MethodModel) : String {
-    return getJniCallbackName(classModel.nameSpaceModel.namespace, classModel.apiName, methodModel.signalMethodName)
+    return getJniCallbackName(classModel.nameSpaceModel.getNamespace(), classModel.apiName, getJavaSignalMethodName(methodModel.name))
 }
 
 
 fun getJniCallbackName(classModel : ClassModel, parameterModel: ParameterModel) : String {
-    return getJniCallbackName(classModel.nameSpaceModel.namespace, classModel.apiName, parameterModel.callbackModel.signalMethodName)
+    val cbModel = parameterModel.callbackModel
+    val cbName = cbModel?.name ?: ""
+    return getJniCallbackName(classModel.nameSpaceModel.getNamespace(), classModel.apiName, getJavaSignalMethodName(cbName))
 }
 
 
@@ -38,22 +40,22 @@ fun getJniMethodName(classModel: ClassModel, methodModel: MethodModel): String {
 
 
 fun getJniMethodName(classModel: ClassModel, methodName : String): String {
-    return Configuration.JNI_METHOD_NAME_BASE + classModel.nameSpaceModel.namespace + "_" + classModel.impName + "_" + methodName
+    return Configuration.JNI_METHOD_NAME_BASE + classModel.nameSpaceModel.getNamespace() + "_" + classModel.impName + "_" + methodName
 }
 
 
 fun getJniSignalConnectMethodName(classModel: ClassModel, methodModel: MethodModel): String {
     return Configuration.JNI_METHOD_NAME_BASE +
-            classModel.nameSpaceModel.namespace +
+            classModel.nameSpaceModel.getNamespace() +
             "_" +
             classModel.impName +
             "_" +
-            methodModel.signalMethodName
+            getJavaSignalMethodName(methodModel.name)
 }
 
 
 fun getJniGlobalsName(classModel: ClassModel, name: String): String {
-    return classModel.nameSpaceModel.namespace + "_" + classModel.impName + "_" + name
+    return classModel.nameSpaceModel.getNamespace() + "_" + classModel.impName + "_" + name
 }
 
 
@@ -63,7 +65,7 @@ fun getJniHeaderFileName(classModel: ClassModel) : String {
 
 
 fun getJniHeaderFileBase(namespaceModel : NamespaceModel): String {
-    return Configuration.HEADER_FILE_BASE + namespaceModel.namespace + "_"
+    return Configuration.HEADER_FILE_BASE + namespaceModel.getNamespace() + "_"
 }
 
 
@@ -103,7 +105,19 @@ private fun firstUpper(result: StringBuilder, s: String) {
 }
 
 
-fun getJavaSignalName(prefix: String, name: String): String {
+fun getJavaSignalMethodName(name: String): String {
+    return getJavaSignalName("on", name)
+}
+
+fun getJavaSignalInterfaceName(name: String): String {
+    return getJavaSignalName("On", name)
+}
+
+fun getImpJavaSignalCallbackName(name: String): String {
+    return getJavaSignalName("callbackOn", name)
+}
+
+private fun getJavaSignalName(prefix: String, name: String): String {
     val result = StringBuilder()
     result.append(prefix)
     val names = name.split("-".toRegex()).toTypedArray()

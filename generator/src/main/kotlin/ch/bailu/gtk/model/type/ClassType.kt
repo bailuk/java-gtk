@@ -75,11 +75,11 @@ class ClassType {
     }
 
     private fun getCallbackTagFromTable(n: RelativeNamespaceType): CallbackTag? {
-        return CallbackTable[n.namespace, n.name]
+        return CallbackTable[n.getNamespace(), n.getName()]
     }
 
     private fun isInStructureTable(n: RelativeNamespaceType): Boolean {
-        return contains(n.namespace, n.name)
+        return contains(n.getNamespace(), n.getName())
     }
 
 
@@ -92,22 +92,22 @@ class ClassType {
     }
 
 
-    fun getFullName(): String? {
+    fun getFullName(): String {
         return if (isClass() && !type.hasCurrentNamespace()) {
-            getFullNamespace() + "." + type.name
+            getFullNamespace() + "." + type.getName()
         } else getName()
     }
 
     fun getNamespace(): String {
-        return type.namespace
+        return type.getNamespace()
     }
 
     fun getFullNamespace(): String {
-        return Configuration.BASE_NAME_SPACE_DOT + type.namespace
+        return Configuration.BASE_NAME_SPACE_DOT + type.getNamespace()
     }
 
     fun getName(): String {
-        return type.name
+        return type.getName()
     }
 
 
