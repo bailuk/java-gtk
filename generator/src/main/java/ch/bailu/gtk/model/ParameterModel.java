@@ -3,8 +3,8 @@ package ch.bailu.gtk.model;
 import static ch.bailu.gtk.converter.UtilKt.isEnum;
 import static ch.bailu.gtk.log.UtilKt.colonList;
 import static ch.bailu.gtk.model.filter.FilterKt.values;
+import static ch.bailu.gtk.writer.NamesKt.fixToken;
 
-import ch.bailu.gtk.converter.JavaNames;
 import ch.bailu.gtk.converter.JniTypeConverter;
 import ch.bailu.gtk.model.type.CType;
 import ch.bailu.gtk.model.type.ClassType;
@@ -17,8 +17,6 @@ public class ParameterModel extends Model {
     private final CType cType;
     private final ClassType classType;
     private final JavaType jType;
-
-    //private final String value;
 
     private final JniTypeConverter jniConverter;
 
@@ -33,9 +31,9 @@ public class ParameterModel extends Model {
         this.parameterTag = parameterTag;
 
         if (toUpper) {
-            name = JavaNames.fixToken(parameterTag.getName().toUpperCase());
+            name = fixToken(parameterTag.getName().toUpperCase());
          } else {
-            name = JavaNames.fixToken(parameterTag.getName());
+            name = fixToken(parameterTag.getName());
         }
 
         classType = new ClassType(namespace, parameterTag, supportsDirectAccess);

@@ -3,7 +3,6 @@ package ch.bailu.gtk.model;
 import java.io.IOException;
 import java.util.List;
 
-import ch.bailu.gtk.converter.JavaNames;
 import ch.bailu.gtk.converter.NamespaceType;
 import ch.bailu.gtk.converter.RelativeNamespaceType;
 import ch.bailu.gtk.table.AliasTable;
@@ -18,7 +17,10 @@ import static ch.bailu.gtk.model.filter.FilterKt.createMalloc;
 import static ch.bailu.gtk.model.filter.FilterKt.field;
 import static ch.bailu.gtk.model.filter.FilterKt.fieldDirectAccessAllowed;
 import static ch.bailu.gtk.model.filter.FilterKt.method;
-import static ch.bailu.gtk.writer.NamesKt.getImpPrefix;
+import static ch.bailu.gtk.writer.NamesKt.getJavaImpClassName;
+import static ch.bailu.gtk.writer.NamesKt.getJavaImpPrefix;
+import static ch.bailu.gtk.writer.NamesKt.getJavaClassName;
+import static ch.bailu.gtk.writer.NamesKt.getJavaPackageConstantsInterfaceName;
 
 public class ClassModel extends Model {
 
@@ -113,7 +115,7 @@ public class ClassModel extends Model {
     public ClassModel(NamespaceTag namespace) {
         this.nameSpace = new NamespaceModel(namespace);
         structureType = "package";
-        name = JavaNames.toClassName(nameSpace.getNamespace());
+        name = getJavaClassName(nameSpace.getNamespace());
         parent = new ClassModel(nameSpace.getNamespace(), null, structureType);
 
         for (MethodTag m : namespace.getFunctions()) {
@@ -128,7 +130,7 @@ public class ClassModel extends Model {
      * @param members
      */
     public ClassModel(NamespaceModel namespace, List<ParameterTag> members) {
-        this(namespace, JavaNames.toInterfaceName(namespace.getNamespace()), members, false);
+        this(namespace, getJavaPackageConstantsInterfaceName(namespace.getNamespace()), members, false);
     }
 
     /**
@@ -330,7 +332,7 @@ public class ClassModel extends Model {
     }
 
     public String getImpName() {
-        return getImpPrefix() + name;
+        return getJavaImpClassName(name);
     }
 
     public String getApiName() {

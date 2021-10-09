@@ -1,6 +1,5 @@
 package ch.bailu.gtk.writer
 
-import ch.bailu.gtk.converter.JavaNames
 import ch.bailu.gtk.model.*
 import java.io.Writer
 
@@ -255,8 +254,8 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
     override fun writeField(classModel : ClassModel, parameterModel : ParameterModel) {
         val parameters : MutableList<ParameterModel> = ArrayList()
 
-        val getter = JavaNames.getGetterName(parameterModel.getName())
-        val setter = JavaNames.getSetterName(parameterModel.getName())
+        val getter = getJavaFieldGetterName(parameterModel.getName())
+        val setter = getJavaFieldSetterName(parameterModel.getName())
 
         start(1)
 

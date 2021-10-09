@@ -1,7 +1,6 @@
 package ch.bailu.gtk.writer
 
 import ch.bailu.gtk.model.NamespaceModel
-import ch.bailu.gtk.converter.JavaNames
 import ch.bailu.gtk.model.ClassModel
 import ch.bailu.gtk.model.MethodModel
 import ch.bailu.gtk.model.Model
@@ -20,7 +19,7 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
             a("#include <${include}>\n")
         }
 
-        a("#include \"${getHeaderFileName(classModel)}\"\n\n\n")
+        a("#include \"${getJniHeaderFileName(classModel)}\"\n\n\n")
 
         a("jclass ${getGlobalClassName(classModel)};\n")
         a("JavaVM* ${getGlobalVMName(classModel)};\n")
@@ -159,7 +158,7 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         start(1)
 
         a("""
-        static ${methodModel.getReturnType().gtkType} ${getCSignalCallbackName(classModel, methodModel)}${getCallbackSignature(methodModel)}
+        static ${methodModel.getReturnType().gtkType} ${getJniSignalCallbackName(classModel, methodModel)}${getCallbackSignature(methodModel)}
         {
             JavaVM* globalVM    = ${getGlobalVMName(classModel)};
             jclass  globalClass = ${getGlobalClassName(classModel)};
@@ -184,7 +183,7 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         start(1)
 
         a("""
-        static ${methodModel.getReturnType().gtkType} ${getCSignalCallbackName(classModel, methodModel)}${getSignalCallbackSignature(methodModel)}
+        static ${methodModel.getReturnType().gtkType} ${getJniSignalCallbackName(classModel, methodModel)}${getSignalCallbackSignature(methodModel)}
         {
             JavaVM* globalVM    = ${getGlobalVMName(classModel)};
             jclass  globalClass = ${getGlobalClassName(classModel)};
@@ -206,7 +205,7 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         {
             printf("JNI connect: ${methodModel.getApiName()}\n");
             ${getEnvironmentInit(classModel, methodModel, true)}    
-            g_signal_connect ((void *)_self, "${methodModel.getApiName()}", G_CALLBACK (${getCSignalCallbackName(classModel, methodModel)}), NULL);
+            g_signal_connect ((void *)_self, "${methodModel.getApiName()}", G_CALLBACK (${getJniSignalCallbackName(classModel, methodModel)}), NULL);
         }
         """.trimIndent())
     }
@@ -224,8 +223,8 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
 
     override fun writeField(classModel : ClassModel, parameterModel : ParameterModel) {
         start(2)
-        val getter = JavaNames.getGetterName(parameterModel.getName())
-        val setter = JavaNames.getSetterName(parameterModel.getName())
+        val getter = getJavaFieldGetterName(parameterModel.getName())
+        val setter = getJavaFieldSetterName(parameterModel.getName())
 
 
         var directAccess = ""
@@ -356,11 +355,11 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
     }
 
     private fun getGlobalClassName(classModel : ClassModel) : String {
-        return getGlobalName(classModel,"class")
+        return getJniGlobalsName(classModel,"class")
     }
 
     private fun getGlobalVMName(classModel : ClassModel) : String {
-        return getGlobalName(classModel,"VM")
+        return getJniGlobalsName(classModel,"VM")
     }
 
 

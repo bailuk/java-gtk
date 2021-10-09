@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import ch.bailu.gtk.converter.JavaNames;
 import ch.bailu.gtk.tag.MethodTag;
 import ch.bailu.gtk.tag.ParameterTag;
+
+import static ch.bailu.gtk.writer.NamesKt.getJavaMethodName;
+import static ch.bailu.gtk.writer.NamesKt.getJavaSignalName;
 
 public class MethodModel extends Model {
 
@@ -103,7 +105,7 @@ public class MethodModel extends Model {
     }
 
     public String getApiName() {
-        return JavaNames.toJavaMethodName(name);
+        return getJavaMethodName(name);
     }
 
     public String getGtkName() {
@@ -115,15 +117,15 @@ public class MethodModel extends Model {
     }
 
     public String getSignalMethodName() {
-        return JavaNames.toJavaSignalName("on", name);
+        return getJavaSignalName("on", name);
     }
 
     public String getSignalInterfaceName() {
-        return JavaNames.toJavaSignalName("On", name);
+        return getJavaSignalName("On", name);
     }
 
     public String getSignalCallbackName() {
-        return JavaNames.toJavaSignalName("callbackOn", name);
+        return getJavaSignalName("callbackOn", name);
     }
 
 

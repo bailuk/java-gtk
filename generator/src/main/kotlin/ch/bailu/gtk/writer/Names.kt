@@ -5,14 +5,11 @@ import ch.bailu.gtk.model.ClassModel
 import ch.bailu.gtk.model.MethodModel
 import ch.bailu.gtk.model.NamespaceModel
 import ch.bailu.gtk.model.ParameterModel
-
-fun getImpPrefix() : String {
-    return "Imp"
-}
+import ch.bailu.gtk.table.ReservedTokenTable.convert
 
 
-fun getImpName(name : String): String? {
-    return "${getImpPrefix()}{$name}"
+fun getJavaImpClassName(name : String): String {
+    return "Imp{$name}"
 }
 
 
@@ -20,19 +17,19 @@ fun getImpName(name : String): String? {
  * function name of a c callback function
  * gobject_Closure_onClosureNotify
  */
-fun getCSignalCallbackName(classModel : ClassModel, methodModel : MethodModel) : String {
-    return getCCallbackName(classModel.nameSpaceModel.getNamespace(), classModel.apiName, methodModel.signalMethodName)
+fun getJniSignalCallbackName(classModel : ClassModel, methodModel : MethodModel) : String {
+    return getJniCallbackName(classModel.nameSpaceModel.namespace, classModel.apiName, methodModel.signalMethodName)
 }
 
-fun getCCallbackName(classModel : ClassModel, parameterModel: ParameterModel) : String {
-    return getCCallbackName(classModel.nameSpaceModel.namespace, classModel.apiName, parameterModel.callbackModel.signalMethodName)
+
+fun getJniCallbackName(classModel : ClassModel, parameterModel: ParameterModel) : String {
+    return getJniCallbackName(classModel.nameSpaceModel.namespace, classModel.apiName, parameterModel.callbackModel.signalMethodName)
 }
 
-private fun getCCallbackName(namespace: String, className: String, methodName: String) : String {
+
+private fun getJniCallbackName(namespace: String, className: String, methodName: String) : String {
     return "${namespace}_${className}_${methodName}"
 }
-
-
 
 
 fun getJniMethodName(classModel: ClassModel, methodModel: MethodModel): String {
@@ -44,6 +41,7 @@ fun getJniMethodName(classModel: ClassModel, methodName : String): String {
     return Configuration.JNI_METHOD_NAME_BASE + classModel.nameSpaceModel.namespace + "_" + classModel.impName + "_" + methodName
 }
 
+
 fun getJniSignalConnectMethodName(classModel: ClassModel, methodModel: MethodModel): String {
     return Configuration.JNI_METHOD_NAME_BASE +
             classModel.nameSpaceModel.namespace +
@@ -54,17 +52,83 @@ fun getJniSignalConnectMethodName(classModel: ClassModel, methodModel: MethodMod
 }
 
 
-fun getGlobalName(classModel: ClassModel, name: String): String {
+fun getJniGlobalsName(classModel: ClassModel, name: String): String {
     return classModel.nameSpaceModel.namespace + "_" + classModel.impName + "_" + name
 }
 
 
-
-
-fun getHeaderFileName(classModel: ClassModel) : String {
-    return getHeaderFileBase(classModel.nameSpaceModel) + classModel.impName + ".h"
+fun getJniHeaderFileName(classModel: ClassModel) : String {
+    return getJniHeaderFileBase(classModel.nameSpaceModel) + classModel.impName + ".h"
 }
 
-fun getHeaderFileBase(namespaceModel : NamespaceModel): String {
+
+fun getJniHeaderFileBase(namespaceModel : NamespaceModel): String {
     return Configuration.HEADER_FILE_BASE + namespaceModel.namespace + "_"
+}
+
+
+fun getJavaMethodName(name: String): String {
+    if (name.length < 3) {
+        return name
+    }
+    val result = StringBuilder()
+    val names = name.split("_".toRegex()).toTypedArray()
+    result.append(names[0])
+    for (i in 1 until names.size) {
+        firstUpper(result, names[i])
+    }
+    return fixToken(result.toString())
+}
+
+
+fun getJavaClassName(name: String): String {
+    val result = StringBuilder()
+    val names = name.split("_".toRegex()).toTypedArray()
+    for (i in names.indices) {
+        firstUpper(result, names[i])
+    }
+    return fixToken(result.toString())
+}
+
+
+private fun firstUpper(result: StringBuilder, s: String) {
+    if (s.isNotEmpty()) {
+        result.append(Character.toUpperCase(s[0]))
+        if (s.length > 1) {
+            result.append(s.substring(1))
+        }
+    } else {
+        result.append(s)
+    }
+}
+
+
+fun getJavaSignalName(prefix: String, name: String): String {
+    val result = StringBuilder()
+    result.append(prefix)
+    val names = name.split("-".toRegex()).toTypedArray()
+    for (i in names.indices) {
+        firstUpper(result, names[i])
+    }
+    return fixToken(result.toString())
+}
+
+
+fun fixToken(token: String): String {
+    return convert(token)
+}
+
+
+fun getJavaFieldSetterName(name: String): String {
+    return getJavaMethodName("set_field_$name")
+}
+
+
+fun getJavaFieldGetterName(name: String): String {
+    return getJavaMethodName("get_field_$name")
+}
+
+
+fun getJavaPackageConstantsInterfaceName(namespace: String): String {
+    return getJavaClassName(namespace) + "Constants"
 }

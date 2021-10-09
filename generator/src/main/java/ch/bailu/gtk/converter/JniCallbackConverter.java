@@ -3,7 +3,7 @@ package ch.bailu.gtk.converter;
 import ch.bailu.gtk.model.ClassModel;
 import ch.bailu.gtk.model.ParameterModel;
 
-import static ch.bailu.gtk.writer.NamesKt.getCCallbackName;
+import static ch.bailu.gtk.writer.NamesKt.getJniCallbackName;
 
 public class JniCallbackConverter extends JniTypeConverter {
     private final ParameterModel parameterModel;
@@ -14,7 +14,7 @@ public class JniCallbackConverter extends JniTypeConverter {
 
     @Override
     public String getAllocateResourceString(ClassModel classModel) {
-        return "const "+ parameterModel.getGtkType() + " __" + parameterModel.getName() + " = (" + parameterModel.getGtkType() + ")" + " " + getCCallbackName(classModel, parameterModel) + ";";
+        return "const "+ parameterModel.getGtkType() + " __" + parameterModel.getName() + " = (" + parameterModel.getGtkType() + ")" + " " + getJniCallbackName(classModel, parameterModel) + ";";
     }
 
     @Override

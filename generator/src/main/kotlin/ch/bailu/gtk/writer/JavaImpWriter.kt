@@ -1,7 +1,6 @@
 package ch.bailu.gtk.writer
 
 import ch.bailu.gtk.model.NamespaceModel
-import ch.bailu.gtk.converter.JavaNames
 import ch.bailu.gtk.model.*
 import java.io.Writer
 
@@ -107,11 +106,11 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
         val parameters : MutableList<ParameterModel> = ArrayList()
 
         start();
-        a("static native ${parameterModel.getImpType()} ${JavaNames.getGetterName(parameterModel.getName())}(${getSelfSignature(parameters)});\n")
+        a("static native ${parameterModel.getImpType()} ${getJavaFieldGetterName(parameterModel.getName())}(${getSelfSignature(parameters)});\n")
 
         if (parameterModel.isWriteable && !parameterModel.isDirectType) {
             parameters.add(parameterModel)
-            a("static native void ${JavaNames.getSetterName(parameterModel.getName())}(${getSelfSignature(parameters)});\n")
+            a("static native void ${getJavaFieldSetterName(parameterModel.getName())}(${getSelfSignature(parameters)});\n")
         }
 
         end(1);
