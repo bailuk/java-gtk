@@ -1,8 +1,8 @@
 package ch.bailu.gtk.parser
 
 import ch.bailu.gtk.builder.BuilderInterface
-import ch.bailu.gtk.tag.DocumentTag
-import ch.bailu.gtk.tag.Tag
+import ch.bailu.gtk.parser.tag.DocumentTag
+import ch.bailu.gtk.parser.tag.Tag
 import ch.bailu.gtk.writer.getReader
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException

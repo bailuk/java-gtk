@@ -1,4 +1,4 @@
-package ch.bailu.gtk.tag
+package ch.bailu.gtk.parser.tag
 
 class RepositoryTag(parent: Tag) : TagWithParent(parent) {
     private val namespace = NamespaceTag(this)

@@ -1,4 +1,4 @@
-package ch.bailu.gtk.tag
+package ch.bailu.gtk.parser.tag
 
 open class TypeTag(parent: TagWithParent) : NamedWithDocTag(parent) {
     var aType: String = ""

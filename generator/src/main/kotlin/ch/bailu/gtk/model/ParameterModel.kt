@@ -8,7 +8,7 @@ import ch.bailu.gtk.model.filter.filterValues
 import ch.bailu.gtk.model.type.CType
 import ch.bailu.gtk.model.type.ClassType
 import ch.bailu.gtk.model.type.JavaType
-import ch.bailu.gtk.tag.ParameterTag
+import ch.bailu.gtk.parser.tag.ParameterTag
 import ch.bailu.gtk.writer.fixToken
 import ch.bailu.gtk.writer.getJavaSignalInterfaceName
 

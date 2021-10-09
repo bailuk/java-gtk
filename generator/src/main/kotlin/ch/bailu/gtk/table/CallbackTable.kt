@@ -1,7 +1,7 @@
 package ch.bailu.gtk.table
 
 import ch.bailu.gtk.log.Logable
-import ch.bailu.gtk.tag.CallbackTag
+import ch.bailu.gtk.parser.tag.CallbackTag
 import java.io.Writer
 
 object CallbackTable : Logable {

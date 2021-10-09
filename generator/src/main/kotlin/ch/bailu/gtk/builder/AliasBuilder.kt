@@ -7,7 +7,7 @@ import ch.bailu.gtk.table.CallbackTable.add
 import ch.bailu.gtk.table.EnumTable.add
 import ch.bailu.gtk.table.NamespaceTable.add
 import ch.bailu.gtk.table.StructureTable.add
-import ch.bailu.gtk.tag.*
+import ch.bailu.gtk.parser.tag.*
 
 class AliasBuilder : BuilderInterface{
     private var namespace = ""

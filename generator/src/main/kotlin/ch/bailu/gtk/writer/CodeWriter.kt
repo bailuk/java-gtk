@@ -9,24 +9,24 @@ abstract class CodeWriter(writer : Writer) : Append {
     private var out = writer
     private var group = GroupSpace(out) 
 
-    open fun writeStart(classModel : ClassModel, namespaceModel : NamespaceModel) {
+    open fun writeStart(structureModel : StructureModel, namespaceModel : NamespaceModel) {
         a ("/* this file is machine generated */\n")
     }
 
-    abstract fun writeClass(classModel : ClassModel) 
-    abstract fun writeInterface(classModel : ClassModel) 
+    abstract fun writeClass(structureModel : StructureModel)
+    abstract fun writeInterface(structureModel : StructureModel)
 
-    abstract fun writeInternalConstructor(classModel : ClassModel) 
-    abstract fun writeConstructor(classModel : ClassModel, methodModel : MethodModel) 
+    abstract fun writeInternalConstructor(structureModel : StructureModel)
+    abstract fun writeConstructor(structureModel : StructureModel, methodModel : MethodModel)
 
-    abstract fun writeFactory(classModel : ClassModel, methodModel : MethodModel) 
-    abstract fun writePrivateFactory(classModel : ClassModel, methodModel : MethodModel) 
+    abstract fun writeFactory(structureModel : StructureModel, methodModel : MethodModel)
+    abstract fun writePrivateFactory(structureModel : StructureModel, methodModel : MethodModel)
 
     abstract fun writeConstant(parameterModel : ParameterModel) 
-    abstract fun writeNativeMethod(classModel : ClassModel, methodModel : MethodModel) 
-    abstract fun writeSignal(classModel : ClassModel,  methodModel : MethodModel) 
-    abstract fun writeField(classModel : ClassModel, parameterModel : ParameterModel)
-    abstract fun writeFunction(classModel : ClassModel, methodModel : MethodModel)
+    abstract fun writeNativeMethod(structureModel : StructureModel, methodModel : MethodModel)
+    abstract fun writeSignal(structureModel : StructureModel, methodModel : MethodModel)
+    abstract fun writeField(structureModel : StructureModel, parameterModel : ParameterModel)
+    abstract fun writeFunction(structureModel : StructureModel, methodModel : MethodModel)
     abstract fun writeUnsupported(model : Model) 
 
     abstract fun writeEnd() 
@@ -57,9 +57,9 @@ abstract class CodeWriter(writer : Writer) : Append {
         return this
     }
 
-    abstract fun writeMallocConstructor(classModel : ClassModel)
-    abstract fun writeInterfaceMethod(classModel: ClassModel, m: MethodModel)
-    abstract fun writeCallback(classModel: ClassModel, methodModel: MethodModel)
+    abstract fun writeMallocConstructor(structureModel : StructureModel)
+    abstract fun writeInterfaceMethod(structureModel: StructureModel, m: MethodModel)
+    abstract fun writeCallback(structureModel: StructureModel, methodModel: MethodModel)
 }
 
 

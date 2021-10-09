@@ -1,7 +1,7 @@
 package ch.bailu.gtk.converter
 
 import ch.bailu.gtk.table.EnumTable
-import ch.bailu.gtk.tag.ParameterTag
+import ch.bailu.gtk.parser.tag.ParameterTag
 
 
 fun isEnum(namespace: String, parameter: ParameterTag): Boolean {

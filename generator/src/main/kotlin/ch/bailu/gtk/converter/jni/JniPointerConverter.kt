@@ -1,6 +1,6 @@
 package ch.bailu.gtk.converter.jni
 
-import ch.bailu.gtk.model.ClassModel
+import ch.bailu.gtk.model.StructureModel
 import ch.bailu.gtk.model.ParameterModel
 
 class JniPointerConverter(parameter: ParameterModel) : JniTypeConverter() {
@@ -8,7 +8,7 @@ class JniPointerConverter(parameter: ParameterModel) : JniTypeConverter() {
     private val model = parameter
 
 
-    override fun getAllocateResourceString(classModel: ClassModel): String {
+    override fun getAllocateResourceString(structureModel: StructureModel): String {
         return ""
     }
 
@@ -16,7 +16,7 @@ class JniPointerConverter(parameter: ParameterModel) : JniTypeConverter() {
         return ""
     }
 
-    override fun getCallSignatureString(classModel: ClassModel): String {
+    override fun getCallSignatureString(structureModel: StructureModel): String {
         return "(void*) ${model.name}"
     }
 

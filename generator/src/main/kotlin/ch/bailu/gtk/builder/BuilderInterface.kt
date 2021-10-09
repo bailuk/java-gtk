@@ -1,6 +1,6 @@
 package ch.bailu.gtk.builder
 
-import ch.bailu.gtk.tag.*
+import ch.bailu.gtk.parser.tag.*
 import java.io.IOException
 
 interface BuilderInterface {

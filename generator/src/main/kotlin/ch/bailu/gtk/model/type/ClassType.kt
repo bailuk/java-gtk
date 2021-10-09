@@ -8,8 +8,8 @@ import ch.bailu.gtk.table.AliasTable.convert
 import ch.bailu.gtk.table.CallbackTable
 import ch.bailu.gtk.table.StructureTable.contains
 import ch.bailu.gtk.table.WrapperTable
-import ch.bailu.gtk.tag.CallbackTag
-import ch.bailu.gtk.tag.ParameterTag
+import ch.bailu.gtk.parser.tag.CallbackTag
+import ch.bailu.gtk.parser.tag.ParameterTag
 
 class ClassType {
     private var type: RelativeNamespaceType

@@ -7,20 +7,20 @@ import java.io.Writer
 class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
 
 
-    override fun writeStart(classModel : ClassModel, namespaceModel : NamespaceModel) {
-        super.writeStart(classModel, namespaceModel)
+    override fun writeStart(structureModel : StructureModel, namespaceModel : NamespaceModel) {
+        super.writeStart(structureModel, namespaceModel)
         a("\npackage " + namespaceModel.getFullNamespace() + ";\n");
         end(3);
     }
 
-    override fun writeClass(classModel : ClassModel) {
+    override fun writeClass(structureModel : StructureModel) {
         start();
-        a("class " + classModel.impName + " {\n");
+        a("class " + structureModel.impName + " {\n");
     }
 
-    override fun writeInterface(classModel : ClassModel) {}
+    override fun writeInterface(structureModel : StructureModel) {}
 
-    override fun writeInternalConstructor(classModel : ClassModel) {}
+    override fun writeInternalConstructor(structureModel : StructureModel) {}
 
     override fun writeUnsupported(model : Model) {
         start()
@@ -28,27 +28,27 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
         end(1)
     }
 
-    override fun writeNativeMethod(classModel : ClassModel, methodModel : MethodModel) {
+    override fun writeNativeMethod(structureModel : StructureModel, methodModel : MethodModel) {
         start();
         a("    static native ${methodModel.returnType.impType} ${methodModel.apiName}(${getSelfSignature(methodModel.getParameters())});\n")
         end(1);
     }
 
 
-    override fun writeMallocConstructor(classModel : ClassModel) {
+    override fun writeMallocConstructor(structureModel : StructureModel) {
         start()
         a("    static native long newFromMalloc();\n")
         end(1)
     }
 
-    override fun writeInterfaceMethod(classModel: ClassModel, m: MethodModel) {}
+    override fun writeInterfaceMethod(structureModel: StructureModel, m: MethodModel) {}
 
-    override fun writeConstructor(classModel : ClassModel, methodModel : MethodModel) {}
+    override fun writeConstructor(structureModel : StructureModel, methodModel : MethodModel) {}
 
-    override fun writeFactory(classModel : ClassModel, methodModel : MethodModel) {}
+    override fun writeFactory(structureModel : StructureModel, methodModel : MethodModel) {}
 
 
-    override fun writePrivateFactory(classModel : ClassModel, methodModel : MethodModel) {
+    override fun writePrivateFactory(structureModel : StructureModel, methodModel : MethodModel) {
         start();
         a("    static native long " + methodModel.apiName);
         writeFactorySignature(methodModel);
@@ -64,7 +64,7 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
     }
 
 
-    override fun writeSignal(classModel : ClassModel, methodModel : MethodModel) {
+    override fun writeSignal(structureModel : StructureModel, methodModel : MethodModel) {
 
         a("""
             
@@ -72,7 +72,7 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
     static ${methodModel.returnType.impType} ${getImpJavaSignalCallbackName(methodModel.name)}(${getSelfSignature(methodModel.getParameters())}) {
         String signal = "${methodModel.apiName}";
         for (java.lang.Object observer : ch.bailu.gtk.Callback.get(_self, signal)) {
-            ${getSignalInterfaceCall(classModel, methodModel)};
+            ${getSignalInterfaceCall(structureModel, methodModel)};
         }
         ${getDefaultReturn(methodModel)}
     }
@@ -80,13 +80,13 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
         """.trimMargin())
     }
 
-    override fun writeCallback(classModel: ClassModel, methodModel: MethodModel) {
+    override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel) {
         a("""
             
     static ${methodModel.returnType.impType} ${getImpJavaSignalCallbackName(methodModel.name)}(${getSignature(methodModel.getParameters(), "")}) {
         String signal = "${methodModel.apiName}";
         for (java.lang.Object observer : ch.bailu.gtk.Callback.get(0, signal)) {
-            ${getSignalInterfaceCall(classModel, methodModel)};
+            ${getSignalInterfaceCall(structureModel, methodModel)};
         }
         ${getDefaultReturn(methodModel)}
     }
@@ -102,7 +102,7 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
         return ""
     }
 
-    override fun writeField(classModel : ClassModel, parameterModel : ParameterModel) {
+    override fun writeField(structureModel : StructureModel, parameterModel : ParameterModel) {
         val parameters : MutableList<ParameterModel> = ArrayList()
 
         start();
@@ -117,20 +117,20 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
     }
 
     override
-    fun writeFunction(classModel : ClassModel, methodModel : MethodModel) {
+    fun writeFunction(structureModel : StructureModel, methodModel : MethodModel) {
         start();
         a("    static native ${methodModel.returnType.impType} ${methodModel.apiName}(${getSignature(methodModel.getParameters(), "")});\n")
         end(1);
 
     }
 
-    private fun getSignalInterfaceCall(classModel : ClassModel, methodModel : MethodModel) : String {
+    private fun getSignalInterfaceCall(structureModel : StructureModel, methodModel : MethodModel) : String {
         val result = StringBuilder()
 
         if (!methodModel.returnType.isVoid) {
             result.append("return ")
         }
-        result.append("((${classModel.apiName}.${getJavaSignalInterfaceName(methodModel.name)})observer).${getJavaSignalMethodName(methodModel.name)}(${getSignalInterfaceCallSignature(methodModel)})")
+        result.append("((${structureModel.apiName}.${getJavaSignalInterfaceName(methodModel.name)})observer).${getJavaSignalMethodName(methodModel.name)}(${getSignalInterfaceCallSignature(methodModel)})")
 
         if (!methodModel.returnType.isVoid && !methodModel.returnType.isJavaNative) {
             result.append(".getCPointer()")

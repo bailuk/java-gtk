@@ -1,8 +1,8 @@
 package ch.bailu.gtk.builder
 
-import ch.bailu.gtk.model.ClassModel
+import ch.bailu.gtk.model.StructureModel
 import ch.bailu.gtk.model.NamespaceModel
-import ch.bailu.gtk.tag.*
+import ch.bailu.gtk.parser.tag.*
 import ch.bailu.gtk.writer.*
 import java.io.IOException
 import java.io.Writer
@@ -12,7 +12,7 @@ class ModelBuilder : BuilderInterface {
     private var namespace: NamespaceModel = NamespaceModel()
 
     override fun buildStructure(structure: StructureTag) {
-        val model = ClassModel(structure, namespace)
+        val model = StructureModel(structure, namespace)
         writeJavaFile(model)
         if (model.hasNativeCalls()) {
             writeCFile(model)
@@ -21,7 +21,7 @@ class ModelBuilder : BuilderInterface {
     }
 
     @Throws(IOException::class)
-    private fun writeJavaImpFile(model: ClassModel) {
+    private fun writeJavaImpFile(model: StructureModel) {
         var out: Writer? = null
         try {
             out = getJavaImpWriter(model, namespace)
@@ -32,7 +32,7 @@ class ModelBuilder : BuilderInterface {
     }
 
     @Throws(IOException::class)
-    private fun writeCFile(model: ClassModel) {
+    private fun writeCFile(model: StructureModel) {
         var out: Writer? = null
         try {
             out = getCWriter(model, namespace)
@@ -50,7 +50,7 @@ class ModelBuilder : BuilderInterface {
     @Throws(IOException::class)
     override fun buildNamespaceEnd(namespace: NamespaceTag) {
         // functions
-        var model = ClassModel(namespace)
+        var model = StructureModel(namespace)
         writeJavaFile(model)
         if (model.hasNativeCalls()) {
             writeCFile(model)
@@ -59,7 +59,7 @@ class ModelBuilder : BuilderInterface {
 
 
         // constants
-        model = ClassModel(NamespaceModel(namespace), namespace.getConstants())
+        model = StructureModel(NamespaceModel(namespace), namespace.getConstants())
         writeJavaFile(model)
     }
 
@@ -69,14 +69,14 @@ class ModelBuilder : BuilderInterface {
 
     @Throws(IOException::class)
     override fun buildEnumeration(enumeration: EnumerationTag) {
-        val model = ClassModel(namespace, enumeration)
+        val model = StructureModel(namespace, enumeration)
         writeJavaFile(model)
     }
 
     override fun buildCallback(callbackTag: CallbackTag) {}
 
     @Throws(IOException::class)
-    private fun writeJavaFile(model: ClassModel) {
+    private fun writeJavaFile(model: StructureModel) {
         var out: Writer? = null
         try {
             out = getJavaWriter(model.apiName, namespace)

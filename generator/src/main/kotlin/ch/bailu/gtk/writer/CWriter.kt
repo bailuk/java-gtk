@@ -1,7 +1,7 @@
 package ch.bailu.gtk.writer
 
 import ch.bailu.gtk.model.NamespaceModel
-import ch.bailu.gtk.model.ClassModel
+import ch.bailu.gtk.model.StructureModel
 import ch.bailu.gtk.model.MethodModel
 import ch.bailu.gtk.model.Model
 import ch.bailu.gtk.model.ParameterModel
@@ -10,8 +10,8 @@ import java.io.Writer
 
 class CWriter (writer : Writer) : CodeWriter(writer) {
 
-    override fun writeStart(classModel : ClassModel, namespaceModel : NamespaceModel) {
-        super.writeStart(classModel, namespaceModel)
+    override fun writeStart(structureModel : StructureModel, namespaceModel : NamespaceModel) {
+        super.writeStart(structureModel, namespaceModel)
 
         a("\n#include <jni.h>\n")
 
@@ -19,25 +19,25 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
             a("#include <${include}>\n")
         }
 
-        a("#include \"${getJniHeaderFileName(classModel)}\"\n\n\n")
+        a("#include \"${getJniHeaderFileName(structureModel)}\"\n\n\n")
 
-        a("jclass ${getGlobalClassName(classModel)};\n")
-        a("JavaVM* ${getGlobalVMName(classModel)};\n")
+        a("jclass ${getGlobalClassName(structureModel)};\n")
+        a("JavaVM* ${getGlobalVMName(structureModel)};\n")
 
         end(3)
     }
 
 
-    override fun writeNativeMethod(classModel : ClassModel, methodModel : MethodModel) {
+    override fun writeNativeMethod(structureModel : StructureModel, methodModel : MethodModel) {
         start(2)
-        _writeNativeMethod(classModel, methodModel, true)
+        _writeNativeMethod(structureModel, methodModel, true)
         next()
     }
 
 
-    override fun writePrivateFactory(classModel : ClassModel, methodModel : MethodModel) {
+    override fun writePrivateFactory(structureModel : StructureModel, methodModel : MethodModel) {
         start(2)
-        _writeNativeMethod(classModel, methodModel, false);
+        _writeNativeMethod(structureModel, methodModel, false);
         next()
     }
 
@@ -45,13 +45,13 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         
     }
 
-    private fun _writeNativeMethod(classModel : ClassModel, methodModel : MethodModel, self : Boolean) {
+    private fun _writeNativeMethod(structureModel : StructureModel, methodModel : MethodModel, self : Boolean) {
         a ("""
-        JNIEXPORT ${methodModel.returnType.jniType} JNICALL ${getJniMethodName(classModel, methodModel)}(${getJniSignature(methodModel, self)})
+        JNIEXPORT ${methodModel.returnType.jniType} JNICALL ${getJniMethodName(structureModel, methodModel)}(${getJniSignature(methodModel, self)})
         {
-            ${getAllocateParameters(classModel, methodModel)}
-            ${getEnvironmentInit(classModel, methodModel, false)}
-            ${getReturnStatement(methodModel)} ${methodModel.gtkName}(${getGtkCallSignature(classModel, methodModel, self)});
+            ${getAllocateParameters(structureModel, methodModel)}
+            ${getEnvironmentInit(structureModel, methodModel, false)}
+            ${getReturnStatement(methodModel)} ${methodModel.gtkName}(${getGtkCallSignature(structureModel, methodModel, self)});
             ${getFreeParameters(methodModel)}
         }
         """.trimIndent())
@@ -75,12 +75,12 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
     }
 
 
-    private fun getAllocateParameters(classModel: ClassModel, methodModel : MethodModel) : String {
+    private fun getAllocateParameters(structureModel: StructureModel, methodModel : MethodModel) : String {
         val result = StringBuilder()
         var del = ""
 
         for (p in methodModel.getParameters()) {
-            del = appendIntendLine(result, p.jniConverter.getAllocateResourceString(classModel), del)
+            del = appendIntendLine(result, p.jniConverter.getAllocateResourceString(structureModel), del)
         }
         return result.toString()
     }
@@ -107,7 +107,7 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         return del
     }
 
-    private fun getGtkCallSignature(classModel: ClassModel, methodModel : MethodModel, self : Boolean): String {
+    private fun getGtkCallSignature(structureModel: StructureModel, methodModel : MethodModel, self : Boolean): String {
         val result = StringBuilder()
 
         var del = ""
@@ -118,7 +118,7 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         }
 
         for (parameterModel in methodModel.getParameters()) {
-            result.append("${del}${parameterModel.jniConverter.getCallSignatureString(classModel)}")
+            result.append("${del}${parameterModel.jniConverter.getCallSignatureString(structureModel)}")
             del = ", "
         }
 
@@ -142,26 +142,26 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
     }
 
 
-    override fun writeMallocConstructor(classModel : ClassModel) {
+    override fun writeMallocConstructor(structureModel : StructureModel) {
         start(1)
         a("""
-        JNIEXPORT jlong JNICALL ${getJniMethodName(classModel, "newFromMalloc")}(JNIEnv * _jenv, jclass _jself)
+        JNIEXPORT jlong JNICALL ${getJniMethodName(structureModel, "newFromMalloc")}(JNIEnv * _jenv, jclass _jself)
         {
-            return (jlong) calloc(1, sizeof(${classModel.cType}));
+            return (jlong) calloc(1, sizeof(${structureModel.cType}));
         }
         """.trimIndent())
         next()
     }
 
-    override fun writeInterfaceMethod(classModel: ClassModel, m: MethodModel) {}
-    override fun writeCallback(classModel: ClassModel, methodModel: MethodModel) {
+    override fun writeInterfaceMethod(structureModel: StructureModel, m: MethodModel) {}
+    override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel) {
         start(1)
 
         a("""
-        static ${methodModel.returnType.gtkType} ${getJniSignalCallbackName(classModel, methodModel)}${getCallbackSignature(methodModel)}
+        static ${methodModel.returnType.gtkType} ${getJniSignalCallbackName(structureModel, methodModel)}${getCallbackSignature(methodModel)}
         {
-            JavaVM* globalVM    = ${getGlobalVMName(classModel)};
-            jclass  globalClass = ${getGlobalClassName(classModel)};
+            JavaVM* globalVM    = ${getGlobalVMName(structureModel)};
+            jclass  globalClass = ${getGlobalClassName(structureModel)};
             JNIEnv* g_env;
             int     envStat     = (*globalVM)->GetEnv(globalVM, (void **)&g_env, JNI_VERSION_1_6);
 
@@ -179,14 +179,14 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         next()
     }
 
-    override fun writeSignal(classModel : ClassModel, methodModel : MethodModel) {
+    override fun writeSignal(structureModel : StructureModel, methodModel : MethodModel) {
         start(1)
 
         a("""
-        static ${methodModel.returnType.gtkType} ${getJniSignalCallbackName(classModel, methodModel)}${getSignalCallbackSignature(methodModel)}
+        static ${methodModel.returnType.gtkType} ${getJniSignalCallbackName(structureModel, methodModel)}${getSignalCallbackSignature(methodModel)}
         {
-            JavaVM* globalVM    = ${getGlobalVMName(classModel)};
-            jclass  globalClass = ${getGlobalClassName(classModel)};
+            JavaVM* globalVM    = ${getGlobalVMName(structureModel)};
+            jclass  globalClass = ${getGlobalClassName(structureModel)};
             JNIEnv* g_env;
             int     envStat     = (*globalVM)->GetEnv(globalVM, (void **)&g_env, JNI_VERSION_1_6);
 
@@ -201,27 +201,27 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
             }
         }
     
-        JNIEXPORT void JNICALL ${getJniSignalConnectMethodName(classModel, methodModel)}(JNIEnv * _jenv, jclass _jself, jlong _self) 
+        JNIEXPORT void JNICALL ${getJniSignalConnectMethodName(structureModel, methodModel)}(JNIEnv * _jenv, jclass _jself, jlong _self) 
         {
             printf("JNI connect: ${methodModel.apiName}\n");
-            ${getEnvironmentInit(classModel, methodModel, true)}    
-            g_signal_connect ((void *)_self, "${methodModel.apiName}", G_CALLBACK (${getJniSignalCallbackName(classModel, methodModel)}), NULL);
+            ${getEnvironmentInit(structureModel, methodModel, true)}    
+            g_signal_connect ((void *)_self, "${methodModel.apiName}", G_CALLBACK (${getJniSignalCallbackName(structureModel, methodModel)}), NULL);
         }
         """.trimIndent())
     }
 
 
-    private fun getEnvironmentInit(classModel: ClassModel, methodModel: MethodModel, isSignal : Boolean) : String {
+    private fun getEnvironmentInit(structureModel: StructureModel, methodModel: MethodModel, isSignal : Boolean) : String {
         // TODO move isSignal to methodModel (for example to hasCallback())
         return if (isSignal || methodModel.hasCallback()) {
-            "(*_jenv)->GetJavaVM(_jenv, &${getGlobalVMName(classModel)});\n            ${getGlobalClassName(classModel)} = (jclass) (*_jenv)->NewGlobalRef(_jenv, _jself);"
+            "(*_jenv)->GetJavaVM(_jenv, &${getGlobalVMName(structureModel)});\n            ${getGlobalClassName(structureModel)} = (jclass) (*_jenv)->NewGlobalRef(_jenv, _jself);"
         } else {
             "";
         }
     }
 
 
-    override fun writeField(classModel : ClassModel, parameterModel : ParameterModel) {
+    override fun writeField(structureModel : StructureModel, parameterModel : ParameterModel) {
         start(2)
         val getter = getJavaFieldGetterName(parameterModel.name)
         val setter = getJavaFieldSetterName(parameterModel.name)
@@ -233,9 +233,9 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         }
 
         a ("""
-        JNIEXPORT ${parameterModel.jniType} JNICALL ${getJniMethodName(classModel, getter)}(JNIEnv * _jenv, jclass _jself, jlong _self)
+        JNIEXPORT ${parameterModel.jniType} JNICALL ${getJniMethodName(structureModel, getter)}(JNIEnv * _jenv, jclass _jself, jlong _self)
         {
-            const ${classModel.cType}* __self = (${classModel.cType}*) _self;
+            const ${structureModel.cType}* __self = (${structureModel.cType}*) _self;
             return (${parameterModel.jniType}) ${directAccess}__self->${parameterModel.name};
         }
         
@@ -243,9 +243,9 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
 
         if (parameterModel.isWriteable && !parameterModel.isDirectType)
         a ("""
-        JNIEXPORT void JNICALL ${getJniMethodName(classModel, setter)}(JNIEnv * _jenv, jclass _jself, jlong _self, ${parameterModel.jniType} _${parameterModel.name})
+        JNIEXPORT void JNICALL ${getJniMethodName(structureModel, setter)}(JNIEnv * _jenv, jclass _jself, jlong _self, ${parameterModel.jniType} _${parameterModel.name})
         {
-            ${classModel.cType}* __self = (${classModel.cType}*) _self;
+            ${structureModel.cType}* __self = (${structureModel.cType}*) _self;
             __self->${parameterModel.name} = (${parameterModel.gtkType}) _${parameterModel.name};
         }
         
@@ -253,9 +253,9 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         next()
     }
 
-    override fun writeFunction(classModel : ClassModel, methodModel : MethodModel) {
+    override fun writeFunction(structureModel : StructureModel, methodModel : MethodModel) {
         start(2)
-        _writeNativeMethod(classModel, methodModel, false)
+        _writeNativeMethod(structureModel, methodModel, false)
         next()
     }
 
@@ -354,19 +354,19 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         return result.toString()
     }
 
-    private fun getGlobalClassName(classModel : ClassModel) : String {
-        return getJniGlobalsName(classModel,"class")
+    private fun getGlobalClassName(structureModel : StructureModel) : String {
+        return getJniGlobalsName(structureModel,"class")
     }
 
-    private fun getGlobalVMName(classModel : ClassModel) : String {
-        return getJniGlobalsName(classModel,"VM")
+    private fun getGlobalVMName(structureModel : StructureModel) : String {
+        return getJniGlobalsName(structureModel,"VM")
     }
 
 
 
-    override fun writeClass(classModel: ClassModel) {}
-    override fun writeInterface(classModel: ClassModel) {}
-    override fun writeInternalConstructor(classModel: ClassModel) {}
-    override fun writeConstructor(classModel: ClassModel, methodModel: MethodModel) {}
-    override fun writeFactory(classModel: ClassModel, methodModel: MethodModel) {}
+    override fun writeClass(structureModel: StructureModel) {}
+    override fun writeInterface(structureModel: StructureModel) {}
+    override fun writeInternalConstructor(structureModel: StructureModel) {}
+    override fun writeConstructor(structureModel: StructureModel, methodModel: MethodModel) {}
+    override fun writeFactory(structureModel: StructureModel, methodModel: MethodModel) {}
 }

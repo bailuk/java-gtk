@@ -1,6 +1,6 @@
 package ch.bailu.gtk.converter.jni
 
-import ch.bailu.gtk.model.ClassModel
+import ch.bailu.gtk.model.StructureModel
 import ch.bailu.gtk.model.ParameterModel
 import ch.bailu.gtk.writer.getJniCallbackName
 
@@ -9,15 +9,15 @@ class JniCallbackConverter(parameterModel: ParameterModel) : JniTypeConverter() 
     private val parameterModel = parameterModel
 
    
-    override fun getAllocateResourceString(classModel: ClassModel): String {
-        return "const ${parameterModel.gtkType} __${parameterModel.name} = (${parameterModel.gtkType}) ${getJniCallbackName(classModel, parameterModel)};"
+    override fun getAllocateResourceString(structureModel: StructureModel): String {
+        return "const ${parameterModel.gtkType} __${parameterModel.name} = (${parameterModel.gtkType}) ${getJniCallbackName(structureModel, parameterModel)};"
     }
 
     override fun getFreeResourcesString(): String {
         return ""
     }
 
-    override fun getCallSignatureString(classModel: ClassModel): String {
+    override fun getCallSignatureString(structureModel: StructureModel): String {
         return " __${parameterModel.name}"
     }
 

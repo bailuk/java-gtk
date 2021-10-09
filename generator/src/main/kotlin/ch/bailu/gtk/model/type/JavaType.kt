@@ -1,7 +1,7 @@
 package ch.bailu.gtk.model.type
 
 import ch.bailu.gtk.table.PrimitivesTable
-import ch.bailu.gtk.tag.ParameterTag
+import ch.bailu.gtk.parser.tag.ParameterTag
 
 class JavaType {
     private var type: String

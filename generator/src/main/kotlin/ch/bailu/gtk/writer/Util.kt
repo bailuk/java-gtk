@@ -1,7 +1,7 @@
 package ch.bailu.gtk.writer
 
 import ch.bailu.gtk.Configuration
-import ch.bailu.gtk.model.ClassModel
+import ch.bailu.gtk.model.StructureModel
 import ch.bailu.gtk.model.NamespaceModel
 import java.io.*
 
@@ -35,7 +35,7 @@ fun getReader(file: File): Reader {
 }
 
 @Throws(IOException::class)
-fun getCWriter(model: ClassModel, namespace: NamespaceModel): Writer {
+fun getCWriter(model: StructureModel, namespace: NamespaceModel): Writer {
     return BufferedWriter(FileWriter(getCFile(model.impName, namespace)))
 }
 
@@ -47,6 +47,6 @@ private fun getCFile(name: String, namespace: NamespaceModel): File {
 }
 
 @Throws(IOException::class)
-fun getJavaImpWriter(classModel: ClassModel, namespace: NamespaceModel): Writer {
-    return BufferedWriter(FileWriter(getJavaFile(classModel.impName, namespace)))
+fun getJavaImpWriter(structureModel: StructureModel, namespace: NamespaceModel): Writer {
+    return BufferedWriter(FileWriter(getJavaFile(structureModel.impName, namespace)))
 }

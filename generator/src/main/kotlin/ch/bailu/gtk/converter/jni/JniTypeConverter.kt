@@ -1,6 +1,6 @@
 package ch.bailu.gtk.converter.jni
 
-import ch.bailu.gtk.model.ClassModel
+import ch.bailu.gtk.model.StructureModel
 import ch.bailu.gtk.model.ParameterModel
 
 abstract class JniTypeConverter {
@@ -16,9 +16,9 @@ abstract class JniTypeConverter {
         }
     }
 
-    abstract fun getAllocateResourceString(classModel: ClassModel): String
+    abstract fun getAllocateResourceString(structureModel: StructureModel): String
     abstract fun getFreeResourcesString(): String
-    abstract fun getCallSignatureString(classModel: ClassModel): String
+    abstract fun getCallSignatureString(structureModel: StructureModel): String
 
     abstract fun getJniType(): String
 

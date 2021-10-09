@@ -1,7 +1,7 @@
 package ch.bailu.gtk.model
 
 import ch.bailu.gtk.log.colonList
-import ch.bailu.gtk.tag.MethodTag
+import ch.bailu.gtk.parser.tag.MethodTag
 import ch.bailu.gtk.writer.getJavaMethodName
 import java.util.*
 

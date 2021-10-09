@@ -1,12 +1,12 @@
 package ch.bailu.gtk.converter.jni
 
-import ch.bailu.gtk.model.ClassModel
+import ch.bailu.gtk.model.StructureModel
 import ch.bailu.gtk.model.ParameterModel
 
 class JniDefaultTypeConverter(parameterModel: ParameterModel) : JniTypeConverter() {
     private val model = parameterModel
 
-    override fun getAllocateResourceString(classModel: ClassModel): String {
+    override fun getAllocateResourceString(structureModel: StructureModel): String {
         return "const ${model.gtkType} __${model.name} = (${model.gtkType}) ${model.name};"
     }
 
@@ -14,7 +14,7 @@ class JniDefaultTypeConverter(parameterModel: ParameterModel) : JniTypeConverter
         return ""
     }
 
-    override fun getCallSignatureString(classModel: ClassModel): String {
+    override fun getCallSignatureString(structureModel: StructureModel): String {
         return "__" + model.name
     }
 

@@ -14,4 +14,12 @@ class ModelList<T : Model>(unsupported: ArrayList<Model>) : java.util.ArrayList<
             unsupported.add(model)
         }
     }
+
+    override fun add(element: T): Boolean {
+        return if (contains(element)) {
+            false;
+        } else {
+            super.add(element)
+        }
+    }
 }

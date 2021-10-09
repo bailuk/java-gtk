@@ -1,4 +1,4 @@
-package ch.bailu.gtk.tag
+package ch.bailu.gtk.parser.tag
 
 class AliasTag(parent: TagWithParent): ParameterTag(parent) {
 

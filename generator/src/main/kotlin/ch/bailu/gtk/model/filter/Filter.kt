@@ -1,6 +1,6 @@
 package ch.bailu.gtk.model.filter
 
-import ch.bailu.gtk.model.ClassModel
+import ch.bailu.gtk.model.StructureModel
 import ch.bailu.gtk.model.MethodModel
 
 fun filterValues(value: String): Boolean {
@@ -13,37 +13,37 @@ fun filterValues(value: String): Boolean {
             && "3600000000" != value)
 }
 
-fun filterMethod(classModel: ClassModel, methodModel: MethodModel): Boolean {
-    if ("MenuItem" == classModel.apiName && "activate" == methodModel.apiName) {
+fun filterMethod(structureModel: StructureModel, methodModel: MethodModel): Boolean {
+    if ("MenuItem" == structureModel.apiName && "activate" == methodModel.apiName) {
         return false
     }
-    if ("ToolPalette" == classModel.apiName && "getStyle" == methodModel.apiName) {
+    if ("ToolPalette" == structureModel.apiName && "getStyle" == methodModel.apiName) {
         return false
     }
-    if ("Toolbar" == classModel.apiName && "getStyle" == methodModel.apiName) {
+    if ("Toolbar" == structureModel.apiName && "getStyle" == methodModel.apiName) {
         return false
     }
-    if ("Coverage" == classModel.apiName && "ref" == methodModel.apiName) {
+    if ("Coverage" == structureModel.apiName && "ref" == methodModel.apiName) {
         return false
     }
-    return !("PrintSettings" == classModel.apiName && "get" == methodModel.apiName)
+    return !("PrintSettings" == structureModel.apiName && "get" == methodModel.apiName)
 }
 
 
-fun filterField(classModel: ClassModel): Boolean {
-    if ("PixbufAnimationIterClass" == classModel.apiName) {
+fun filterField(structureModel: StructureModel): Boolean {
+    if ("PixbufAnimationIterClass" == structureModel.apiName) {
         return false
     }
-    if ("SettingsBackendClass" == classModel.apiName) {
+    if ("SettingsBackendClass" == structureModel.apiName) {
         return false
     }
-    if ("PixbufFormat" == classModel.apiName) {
+    if ("PixbufFormat" == structureModel.apiName) {
         return false
     }
-    if ("PixbufModule" == classModel.apiName) {
+    if ("PixbufModule" == structureModel.apiName) {
         return false
     }
-    return "PixbufModulePattern" != classModel.apiName
+    return "PixbufModulePattern" != structureModel.apiName
 }
 
 /**
@@ -56,15 +56,15 @@ private val MALLOC = arrayOf(
 )
 
 
-fun filterCreateMallocConstructor(classModel: ClassModel): Boolean {
+fun filterCreateMallocConstructor(structureModel: StructureModel): Boolean {
     for (s in MALLOC) {
-        if (s == classModel.apiName) {
+        if (s == structureModel.apiName) {
             return true
         }
     }
     return false
 }
 
-fun filterFieldDirectAccess(classModel: ClassModel): Boolean {
-    return "AttrShape" == classModel.apiName
+fun filterFieldDirectAccess(structureModel: StructureModel): Boolean {
+    return "AttrShape" == structureModel.apiName
 }
