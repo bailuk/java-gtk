@@ -3,21 +3,21 @@ package ch.bailu.gtk.parser
 import ch.bailu.gtk.builder.BuilderInterface
 import ch.bailu.gtk.parser.tag.DocumentTag
 import ch.bailu.gtk.parser.tag.Tag
+import ch.bailu.gtk.config.NamespaceConfig
 import ch.bailu.gtk.writer.getReader
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
 import org.xmlpull.v1.XmlPullParserFactory
-import java.io.File
 import java.io.IOException
 import java.io.Reader
 
 class Parser {
 
-    constructor(file: File, builder: BuilderInterface) {
+    constructor(namespaceConfig: NamespaceConfig, builder: BuilderInterface) {
         var reader: Reader? = null
         try {
-            reader = getReader(file)
-            parse(getParser(reader), DocumentTag(builder))
+            reader = getReader(namespaceConfig.getFile())
+            parse(getParser(reader), DocumentTag(builder, namespaceConfig))
         } finally {
             reader?.close()
         }
@@ -56,4 +56,6 @@ class Parser {
             parser.next()
         }
     }
+
+
 }

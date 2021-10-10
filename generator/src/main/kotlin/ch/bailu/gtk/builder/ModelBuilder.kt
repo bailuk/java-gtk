@@ -3,6 +3,7 @@ package ch.bailu.gtk.builder
 import ch.bailu.gtk.model.StructureModel
 import ch.bailu.gtk.model.NamespaceModel
 import ch.bailu.gtk.parser.tag.*
+import ch.bailu.gtk.config.NamespaceConfig
 import ch.bailu.gtk.writer.*
 import java.io.IOException
 import java.io.Writer
@@ -43,7 +44,7 @@ class ModelBuilder : BuilderInterface {
     }
 
 
-    override fun buildNamespaceStart(namespace: NamespaceTag) {
+    override fun buildNamespaceStart(namespace: NamespaceTag, namespaceConfig: NamespaceConfig) {
         this.namespace = NamespaceModel(namespace)
     }
 

@@ -8,6 +8,7 @@ import ch.bailu.gtk.table.EnumTable.add
 import ch.bailu.gtk.table.NamespaceTable.add
 import ch.bailu.gtk.table.StructureTable.add
 import ch.bailu.gtk.parser.tag.*
+import ch.bailu.gtk.config.NamespaceConfig
 
 class AliasBuilder : BuilderInterface{
     private var namespace = ""
@@ -20,9 +21,9 @@ class AliasBuilder : BuilderInterface{
         return convert(NamespaceType(namespace, name)).getName()
     }
 
-    override fun buildNamespaceStart(namespace: NamespaceTag) {
+    override fun buildNamespaceStart(namespace: NamespaceTag, namespaceConfig: NamespaceConfig) {
         this.namespace = namespace.getName().lowercase()
-        add(this.namespace)
+        add(this.namespace, namespaceConfig)
     }
 
     override fun buildNamespaceEnd(namespace: NamespaceTag) {}

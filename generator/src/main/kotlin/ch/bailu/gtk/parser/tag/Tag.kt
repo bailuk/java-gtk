@@ -1,6 +1,7 @@
 package ch.bailu.gtk.parser.tag
 
 import ch.bailu.gtk.builder.BuilderInterface
+import ch.bailu.gtk.config.NamespaceConfig
 
 abstract class Tag {
     abstract fun getChild(name: String, prefix: String): TagWithParent
@@ -14,6 +15,7 @@ abstract class Tag {
     abstract fun getParent(): Tag
 
     abstract fun getBuilder(): BuilderInterface
+    abstract fun getNamespaceConfig(): NamespaceConfig
 
 
     protected fun ignore(): IgnoreTag {

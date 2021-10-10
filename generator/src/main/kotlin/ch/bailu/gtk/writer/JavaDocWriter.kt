@@ -1,21 +1,21 @@
-package ch.bailu.gtk.writer.lang
+package ch.bailu.gtk.writer
 
 import ch.bailu.gtk.model.MethodModel
 import ch.bailu.gtk.model.Model
 import ch.bailu.gtk.model.ParameterModel
 import ch.bailu.gtk.model.StructureModel
-import ch.bailu.gtk.writer.CodeWriter
+import ch.bailu.gtk.table.NamespaceTable
 import java.io.Writer
 
 
-class JavaDoc(writer: Writer) : CodeWriter(writer) {
+class JavaDocWriter(writer: Writer) : CodeWriter(writer) {
 
     private var space = ""
     private var begin = ""
     private var intent = 0
 
     private fun writeDocBlock(doc: String) {
-        var nl = "<br>"
+        var nl = ""
         doc.lines().forEach {
             if (it.contains("|[")) nl = ""
             writeDocLine(escapeDoc(it), nl)
@@ -27,10 +27,14 @@ class JavaDoc(writer: Writer) : CodeWriter(writer) {
         methodModel.getParameters().forEach {
             writeDocParamLine(it.doc, "@param ${it.name}")
         }
+    }
+
+    private fun writeDocReturnBlock(methodModel: MethodModel) {
         if (!methodModel.returnType.isVoid) {
             writeDocParamLine(methodModel.returnType.doc, "@return")
         }
     }
+
 
     private fun escapeDoc(doc: String): String {
         return doc
@@ -38,6 +42,8 @@ class JavaDoc(writer: Writer) : CodeWriter(writer) {
                 .replace("\"", "&quot;")
                 .replace("<", "&lt;")
                 .replace(">", "&gt;")
+                .replace("#", "&#35;")
+                .replace("@", "&#64;")
                 .replace("\\", "&#92;")
                 .replace("|[", "<pre> ")
                 .replace("]|", " </pre>")
@@ -69,15 +75,18 @@ class JavaDoc(writer: Writer) : CodeWriter(writer) {
     }
 
     override fun writeClass(structureModel: StructureModel) {
-        if (structureModel.doc.length > 5) {
-            writeDocStart(0)
-            if (structureModel.isClassType) {
-                // TODO fix link
-                writeDocLine("<a href=\"https://docs.gtk.org/gtk3/class.${structureModel.apiName}.html\">Gtk.${structureModel.apiName}</a>", "<br>")
-            }
-            writeDocBlock(structureModel.doc)
-            writeDocEnd()
+        writeDocStart(0)
+        writeDocClassUrl(structureModel)
+        writeDocBlock(structureModel.doc)
+        writeDocEnd()
+    }
+
+
+    fun writeDocClassUrl(structureModel: StructureModel) {
+        NamespaceTable.with(structureModel.nameSpaceModel.getNamespace()) {
+            writeDocLine("<p><b><a href=\"${it.docUrl.getUrl(structureModel)}\">External documentation</a></b></p>", "")
         }
+
     }
 
     override fun writeInterface(structureModel: StructureModel) {
@@ -87,7 +96,12 @@ class JavaDoc(writer: Writer) : CodeWriter(writer) {
     override fun writeInternalConstructor(structureModel: StructureModel) {}
 
     override fun writeConstructor(structureModel: StructureModel, methodModel: MethodModel) {
-        writeNativeMethod(structureModel, methodModel)
+        if (methodModel.getParameters().isNotEmpty() || methodModel.doc.length > 3) {
+            writeDocStart(4)
+            writeDocBlock(methodModel.doc)
+            writeDocParamBlock(methodModel)
+            writeDocEnd()
+        }
     }
 
     override fun writeFactory(structureModel: StructureModel, methodModel: MethodModel) {
@@ -100,7 +114,7 @@ class JavaDoc(writer: Writer) : CodeWriter(writer) {
 
     override fun writeConstant(parameterModel: ParameterModel) {
         writeDocStart(4)
-        writeDocParamLine(parameterModel.doc, "@param ${parameterModel.name}")
+        writeDocBlock(parameterModel.doc)
         writeDocEnd()
     }
 
@@ -109,12 +123,19 @@ class JavaDoc(writer: Writer) : CodeWriter(writer) {
             writeDocStart(4)
             writeDocBlock(methodModel.doc)
             writeDocParamBlock(methodModel)
+            writeDocReturnBlock(methodModel)
             writeDocEnd()
         }
     }
 
     override fun writeSignal(structureModel: StructureModel, methodModel: MethodModel) {
-        writeNativeMethod(structureModel, methodModel)
+        if (methodModel.getParameters().isNotEmpty() || methodModel.doc.length > 3 || !methodModel.returnType.isVoid) {
+            writeDocStart(8)
+            writeDocBlock(methodModel.doc)
+            writeDocParamBlock(methodModel)
+            writeDocReturnBlock(methodModel)
+            writeDocEnd()
+        }
     }
 
     override fun writeField(structureModel: StructureModel, parameterModel: ParameterModel) {
@@ -126,18 +147,15 @@ class JavaDoc(writer: Writer) : CodeWriter(writer) {
     }
 
     override fun writeUnsupported(model: Model) {
-        TODO("Not yet implemented")
     }
 
     override fun writeEnd() {
-        TODO("Not yet implemented")
     }
 
     override fun writeMallocConstructor(structureModel: StructureModel) {
-        TODO("Not yet implemented")
     }
 
     override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel) {
-        writeNativeMethod(structureModel, methodModel)
+        writeSignal(structureModel, methodModel)
     }
 }

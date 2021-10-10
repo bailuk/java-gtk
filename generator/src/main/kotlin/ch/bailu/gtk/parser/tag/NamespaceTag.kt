@@ -13,7 +13,7 @@ class NamespaceTag(parent: TagWithParent): NamedWithDocTag(parent) {
 
     @Throws(IOException::class)
     override fun started() {
-        getBuilder().buildNamespaceStart(this)
+        getBuilder().buildNamespaceStart(this, getNamespaceConfig())
     }
 
 

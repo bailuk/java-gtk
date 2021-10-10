@@ -1,13 +1,12 @@
 package ch.bailu.gtk.writer
 
 import ch.bailu.gtk.model.*
-import ch.bailu.gtk.writer.lang.JavaDoc
 import java.io.Writer
 
 
 class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
-    private val javaDoc = JavaDoc(writer)
+    private val javaDoc = JavaDocWriter(writer)
 
     override fun writeStart(structureModel : StructureModel, namespaceModel : NamespaceModel) {
         super.writeStart(structureModel, namespaceModel)
@@ -25,6 +24,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
     override fun writeInterface(structureModel : StructureModel) {
         start()
+        javaDoc.writeInterface(structureModel)
         a("public interface ${structureModel.apiName} {\n")
     }
 
@@ -36,13 +36,13 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
     override fun writeNativeMethod(structureModel : StructureModel, methodModel : MethodModel) {
         start(2)
+        javaDoc.writeNativeMethod(structureModel, methodModel)
         writeFunctionCall(structureModel, methodModel, true)
         next()
     }
 
 
     private fun writeFunctionCall(structureModel : StructureModel, methodModel : MethodModel, selfCall: Boolean) {
-        javaDoc.writeNativeMethod(structureModel, methodModel)
         a("""
             public ${getStatic(selfCall)} ${methodModel.returnType.apiType} ${methodModel.apiName}(${getSignature(methodModel.getParameters())}) ${getThrowsExtension(methodModel)} {
                 ${getCallbackConnections(methodModel)}
@@ -60,6 +60,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
     }
     override fun writeFunction(structureModel : StructureModel, methodModel : MethodModel) {
         start(2)
+        javaDoc.writeFunction(structureModel, methodModel)
         writeFunctionCall(structureModel, methodModel, false)
         next()
     }
@@ -127,7 +128,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
     override fun writeInternalConstructor(structureModel : StructureModel) {
         start(1)
-
+        javaDoc.writeInternalConstructor(structureModel)
         a("""
             public ${structureModel.apiName}(long pointer) {
                 super(pointer);
@@ -140,7 +141,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
     override fun writeMallocConstructor(structureModel : StructureModel) {
         if (structureModel.hasDefaultConstructor() == false) {
             start(1)
-
+            javaDoc.writeMallocConstructor(structureModel)
             a ("""
                 
                 public ${structureModel.apiName}() {
@@ -154,18 +155,10 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
         }
     }
-/*
-
-    override fun writeInterfaceMethod(structureModel: StructureModel, m: MethodModel) {
-        start(1)
-        a("        public ${m.returnType.apiType} ${m.apiName}(${getSignature(m.getParameters())});\n")
-    }
-*/
-
-
 
     override fun writeConstructor(structureModel : StructureModel, methodModel : MethodModel) {
         start(1);
+        javaDoc.writeConstructor(structureModel, methodModel)
         a("""
     public ${structureModel.apiName}(${getSignature(methodModel.getParameters())}) {
         super(${structureModel.impName}.${methodModel.apiName}(${getFactoryCallSignature(methodModel.getParameters())}));
@@ -176,7 +169,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
     override fun writeFactory(structureModel : StructureModel, methodModel : MethodModel) {
         start(1);
-
+        javaDoc.writeFactory(structureModel, methodModel)
         a("""
     public static ${structureModel.apiName} ${methodModel.apiName}${structureModel.apiName}(${getSignature(methodModel.getParameters())}) ${getThrowsExtension(methodModel)} {
         long pointerToObject = ${structureModel.impName}.${methodModel.apiName}(${getFactoryCallSignature(methodModel.getParameters())});
@@ -199,6 +192,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
     override fun writeConstant(parameterModel : ParameterModel) {
         start(1)
+        javaDoc.writeConstant(parameterModel)
 
         var value = parameterModel.value
         var type  = parameterModel.apiType
@@ -228,7 +222,10 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
         a("        ch.bailu.gtk.Callback.put(getCPointer(), \"").a(methodModel.apiName).a("\", observer);\n");
         a("        ").a(structureModel.impName).a(".").a(getJavaSignalMethodName(methodModel.name)).a("(getCPointer());\n");
         a("    }\n");
-        a("    public interface ").a(getJavaSignalInterfaceName(methodModel.name)).a(" {\n");
+        a("    public interface ").a(getJavaSignalInterfaceName(methodModel.name)).a(" {\n")
+
+        javaDoc.writeSignal(structureModel, methodModel)
+
         a("        ").a(methodModel.returnType.apiType).a(" ").a(getJavaSignalMethodName(methodModel.name)); writeSignature(methodModel); a(";\n");
         a("    }\n");
     }
@@ -236,15 +233,12 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
 
     override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel) {
         start(1)
+        a("    public interface ${getJavaSignalInterfaceName(methodModel.name)} {\n")
 
-        a("""
-   public interface ${getJavaSignalInterfaceName(methodModel.name)} {
-      ${methodModel.returnType.apiType} ${getJavaSignalMethodName(methodModel.name)}(${getSignature(methodModel.getParameters())});
-   }
+        javaDoc.writeCallback(structureModel, methodModel)
 
-""")
-
-
+        a("        ${methodModel.returnType.apiType} ${getJavaSignalMethodName(methodModel.name)}(${getSignature(methodModel.getParameters())});\n")
+        a("    }\n")
     }
 
     override fun writeField(structureModel : StructureModel, parameterModel : ParameterModel) {
@@ -254,6 +248,7 @@ class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
         val setter = getJavaFieldSetterName(parameterModel.name)
 
         start(1)
+        javaDoc.writeField(structureModel, parameterModel)
 
         if (parameterModel.isJavaNative) {
             a("""

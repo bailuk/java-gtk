@@ -15,15 +15,24 @@ import java.io.*
 fun main(args: Array<String>) {
     try {
         Configuration.init(args)
-        println("1. fill tables")
+
+        println("==> fill tables")
         parse(AliasBuilder())
-        println("2. log tables")
+
+        println("==> log tables")
         logTables()
-        println("3. build model and write code files")
+
+        println("==> build model and write code files")
         parse(ModelBuilder())
+
     } catch (e: Exception) {
         e.printStackTrace()
     }
+}
+
+@Throws(IOException::class, XmlPullParserException::class)
+fun parse(builder: BuilderInterface) {
+    Configuration.NAMESPACES.forEach {Parser(it, builder)}
 }
 
 @Throws(IOException::class)
@@ -35,7 +44,7 @@ private fun logTables() {
 
 @Throws(IOException::class)
 private fun logTable(logable: Logable, file: String) {
-    println(file)
+    println("  --> ${file}")
     var out: Writer? = null
     try {
         out = BufferedWriter(FileWriter(file))
@@ -43,32 +52,4 @@ private fun logTable(logable: Logable, file: String) {
     } finally {
         out?.close()
     }
-}
-
-
-@Throws(IOException::class, XmlPullParserException::class)
-fun parse(builder: BuilderInterface) {
-    for (girFile in Configuration.GIR_FILES) {
-        val file = getExistingFile(girFile)
-        Parser(file, builder)
-    }
-}
-
-@Throws(IOException::class)
-private fun getExistingFile(girFile: String): File {
-    var result = File(Configuration.GIR_DIR_CUSTOM, girFile)
-    var type = "custom"
-    if (!result.exists()) {
-        result = File(Configuration.getInstance().girBaseDir, girFile)
-        type = "system"
-        if (!result.exists()) {
-            result = File(Configuration.GIR_DIR_LOCAL, girFile)
-            type = "local"
-            if (!result.exists()) {
-                throw IOException("File does not exist $result")
-            }
-        }
-    }
-    println("$type: $result")
-    return result
 }

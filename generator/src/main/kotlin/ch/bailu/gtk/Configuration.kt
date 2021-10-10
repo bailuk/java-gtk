@@ -1,5 +1,8 @@
 package ch.bailu.gtk
 
+import ch.bailu.gtk.config.GtkDocUrl
+import ch.bailu.gtk.config.NamespaceConfig
+import ch.bailu.gtk.config.StaticUrl
 import java.io.File
 
 class Configuration {
@@ -17,17 +20,17 @@ class Configuration {
         const val LOG_ALIAS_TABLE_FILE = "build/alias_table.out"
         const val LOG_CALLBACK_TABLE_FILE = "build/callback_table.out"
 
-        val GIR_FILES = arrayOf(
-                    "GObject-2.0.gir",
-                    "Gtk-3.0.gir",
-                    "Gio-2.0.gir",
-                    "Gdk-3.0.gir",
-                    "PangoCairo-1.0.gir",
-                    "cairo-custom.gir",
-                    "GLib-2.0.gir",
-                    "Atk-1.0.gir",
-                    "Pango-1.0.gir",
-                    "GdkPixbuf-2.0.gir")
+        val NAMESPACES = arrayOf(
+                    NamespaceConfig("GObject-2.0.gir",    GtkDocUrl("gobject")),
+                    NamespaceConfig("Gtk-3.0.gir",        GtkDocUrl("gtk3")),
+                    NamespaceConfig("Gio-2.0.gir",        GtkDocUrl("gio")),
+                    NamespaceConfig("Gdk-3.0.gir",        GtkDocUrl("gdk3")),
+                    NamespaceConfig("PangoCairo-1.0.gir", GtkDocUrl("PangoCairo")),
+                    NamespaceConfig("cairo-custom.gir",   StaticUrl("https://www.cairographics.org/manual/")),
+                    NamespaceConfig("GLib-2.0.gir",       GtkDocUrl("glib")),
+                    NamespaceConfig("Atk-1.0.gir",        GtkDocUrl("atk")),
+                    NamespaceConfig("Pango-1.0.gir",      GtkDocUrl("Pango")),
+                    NamespaceConfig("GdkPixbuf-2.0.gir",  GtkDocUrl("gdk-pixbuf")))
 
 
 

@@ -1,12 +1,18 @@
 package ch.bailu.gtk.parser.tag
 
 import ch.bailu.gtk.builder.BuilderInterface
+import ch.bailu.gtk.config.NamespaceConfig
 
-class DocumentTag(builder: BuilderInterface): Tag() {
-    val rootBuilder = builder
+class DocumentTag(builder: BuilderInterface, namespaceConfig: NamespaceConfig): Tag() {
+    private val builder = builder
+    private val namespaceConfig = namespaceConfig
 
     override fun getBuilder(): BuilderInterface {
-        return rootBuilder
+        return builder
+    }
+
+    override fun getNamespaceConfig(): NamespaceConfig {
+        return namespaceConfig
     }
 
     override fun getChild(name: String, prefix: String): TagWithParent {
@@ -19,4 +25,5 @@ class DocumentTag(builder: BuilderInterface): Tag() {
     override fun getParent(): Tag {
         return this
     }
+
 }
