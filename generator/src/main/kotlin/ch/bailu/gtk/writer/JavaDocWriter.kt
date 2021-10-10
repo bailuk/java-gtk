@@ -15,11 +15,28 @@ class JavaDocWriter(writer: Writer) : CodeWriter(writer) {
     private var intent = 0
 
     private fun writeDocBlock(doc: String) {
+        val evenPre = isEvenPre(doc)
         var nl = ""
-        doc.lines().forEach {
-            if (it.contains("|[")) nl = ""
-            writeDocLine(escapeDoc(it), nl)
-            if (it.contains("]|")) nl = "<br>"
+
+        if (evenPre)
+            doc.lines().forEach {
+                if (it.contains("|[")) nl = ""
+                writeDocLine(replacePre(escapeDoc(it)), nl)
+                if (it.contains("]|")) nl = "<br>"
+        } else {
+            doc.lines().forEach {
+                writeDocLine(escapeDoc(it), nl)
+                nl = "<br>"
+            }
+        }
+    }
+
+    private fun isEvenPre(doc: String): Boolean {
+        if (count(doc, "|[") != count(doc, "]|")) {
+            println("WARNING code tags are not even: \"${doc.replace('\n', ' ')}\"")
+            return false
+        } else {
+            return true
         }
     }
 
@@ -38,15 +55,28 @@ class JavaDocWriter(writer: Writer) : CodeWriter(writer) {
 
     private fun escapeDoc(doc: String): String {
         return doc
-                .replace("&", "&amp;")
+                .replace("&",  "&amp;")
                 .replace("\"", "&quot;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("#", "&#35;")
-                .replace("@", "&#64;")
+                .replace("<",  "&lt;")
+                .replace(">",  "&gt;")
+                .replace("#",  "&#35;")
+                .replace("@",  "&#64;")
                 .replace("\\", "&#92;")
-                .replace("|[", "<pre> ")
-                .replace("]|", " </pre>")
+    }
+
+    private fun replacePre(doc: String): String {
+        return doc.replace("|[", "<pre>").replace("]|", "</pre>")
+    }
+
+    private fun count(doc: String, word: String): Int {
+        var index = doc.indexOf(word)
+        var count = 0
+
+        while (index > -1) {
+            count++
+            index = doc.indexOf(word, index+1)
+        }
+        return count
     }
 
     private fun writeDocParamLine(doc: String, prefix: String) {
