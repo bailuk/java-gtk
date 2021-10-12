@@ -1,5 +1,6 @@
 package ch.bailu.gtk.builder
 
+import ch.bailu.gtk.Configuration
 import ch.bailu.gtk.model.StructureModel
 import ch.bailu.gtk.model.NamespaceModel
 import ch.bailu.gtk.parser.tag.*
@@ -81,7 +82,7 @@ class ModelBuilder : BuilderInterface {
         var out: Writer? = null
         try {
             out = getJavaWriter(model.apiName, namespace)
-            model.write(JavaApiWriter(out))
+            model.write(JavaApiWriter(out, Configuration.createJavaDocConfig(out)))
         } finally {
             out?.close()
         }

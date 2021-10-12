@@ -1,12 +1,14 @@
 package ch.bailu.gtk.writer
 
 import ch.bailu.gtk.model.*
+import ch.bailu.gtk.writer.java_doc.JavaDoc
 import java.io.Writer
+import javax.security.auth.login.Configuration
 
 
-class JavaApiWriter(writer : Writer) : CodeWriter(writer) {
+class JavaApiWriter(writer: Writer, doc: JavaDoc) : CodeWriter(writer) {
 
-    private val javaDoc = JavaDocWriter(writer)
+    private val javaDoc = JavaDocWriter(writer, doc)
 
     override fun writeStart(structureModel : StructureModel, namespaceModel : NamespaceModel) {
         super.writeStart(structureModel, namespaceModel)

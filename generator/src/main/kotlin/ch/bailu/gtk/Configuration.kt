@@ -3,7 +3,10 @@ package ch.bailu.gtk
 import ch.bailu.gtk.config.GtkDocUrl
 import ch.bailu.gtk.config.NamespaceConfig
 import ch.bailu.gtk.config.StaticUrl
+import ch.bailu.gtk.writer.java_doc.JavaDoc
+import ch.bailu.gtk.writer.java_doc.JavaDocHtml
 import java.io.File
+import java.io.Writer
 
 class Configuration {
 
@@ -47,6 +50,10 @@ class Configuration {
 
         fun init(args: Array<String>) {
             INSTANCE = Configuration(args)
+        }
+
+        fun createJavaDocConfig(writer: Writer): JavaDoc {
+            return JavaDocHtml(writer)
         }
 
     }
