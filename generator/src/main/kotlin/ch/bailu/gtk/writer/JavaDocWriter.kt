@@ -13,8 +13,8 @@ class JavaDocWriter(writer: Writer, val doc: JavaDoc) : CodeWriter(writer) {
 
     override fun writeClass(structureModel: StructureModel) {
         doc.writeStart(0)
-        doc.writeClassUrl(structureModel)
         doc.writeBlock(structureModel.doc)
+        doc.writeClassUrl(structureModel)
         doc.writeDocEnd()
     }
 

@@ -76,6 +76,10 @@ tasks.compileJava {
     dependsOn(":generator:generate")
 }
 
+tasks.javadoc {
+    options.windowTitle("java-gtk")
+    options.overview("java-gtk")
+}
 
 tasks {
     val sourcesJar by creating(Jar::class) {

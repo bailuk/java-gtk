@@ -10,23 +10,27 @@ class JavaDocHtml(writer: Writer) : JavaDoc(writer) {
     override fun writeBlock(doc: String) {
         val evenPre = isEvenPre(doc)
         var nl = ""
+        var insideCodeBlock = false
 
-        if (evenPre)
-            doc.lines().forEach {
-                if (it.contains("|[")) nl = ""
-                writeLine(replacePre(escapeDoc(it)), nl)
-                if (it.contains("]|")) nl = "<br>"
+        doc.lines().forEach {
+            if (evenPre && it.contains("|[")) insideCodeBlock = true
+
+            if (insideCodeBlock) {
+                writeLine(replacePre(escapeDoc(it)), "")
             } else {
-            doc.lines().forEach {
-                writeLine(escapeDoc(it), nl)
-                nl = "<br>"
+                writeLine(replacePre(escapeDoc(it)), nl)
             }
+
+            if (it.contains("]|")) insideCodeBlock = false
+            nl = "<br>"
         }
     }
 
+
+
     override fun writeClassUrl(structureModel: StructureModel) {
         NamespaceTable.with(structureModel.nameSpaceModel.getNamespace()) {
-            writeLine("<p><b><a href=\"${it.docUrl.getUrl(structureModel)}\">External documentation</a></b></p>", "")
+            writeLine("<p><a href=\"${it.docUrl.getUrl(structureModel)}\">${it.docUrl.getUrl(structureModel)}</a></p>", "")
         }
 
     }

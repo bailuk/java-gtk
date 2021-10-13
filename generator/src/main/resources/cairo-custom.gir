@@ -733,6 +733,36 @@
                     </parameter>
                 </parameters>
             </method>
+
+            <method name="init" c:identifier="cairo_matrix_init">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="matrix" transfer-ownership="none">
+                        <type name="Matrix" c:type="cairo_matrix_t*"/>
+                    </instance-parameter>
+
+                    <parameter name="xx">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                    <parameter name="yx">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                    <parameter name="xy">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                    <parameter name="yy">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                    <parameter name="x0">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                    <parameter name="y0">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                </parameters>
+            </method>
         </record>
 
 
