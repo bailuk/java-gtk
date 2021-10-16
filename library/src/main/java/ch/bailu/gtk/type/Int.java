@@ -1,8 +1,6 @@
 package ch.bailu.gtk.type;
 
-import ch.bailu.gtk.type.Pointer;
-
-public class Int extends Pointer {
+public class Int extends Wrapper {
 
     private boolean created;
 

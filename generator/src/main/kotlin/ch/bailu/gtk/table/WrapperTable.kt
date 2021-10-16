@@ -21,6 +21,7 @@ object WrapperTable {
         add("filename", "Str")
         add("char**", "Strs")
         add("gint*", "Int")
+        add("gsize*", "Int64")
         add("int*", "Int")
         add("gdouble*", "Dbls")
         add("gconstpointer", "Pointer")

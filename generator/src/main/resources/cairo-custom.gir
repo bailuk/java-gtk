@@ -574,7 +574,6 @@
             glib:type-name="CairoSurface"
             glib:get-type="cairo_gobject_surface_get_type">
 
-
             <method name="create_context" c:identifier="cairo_create">
                 <return-value transfer-ownership="none">
                     <type name="Context" c:type="cairo_t*"/>
@@ -793,6 +792,17 @@
                         <type name="double" c:type="double"/>
                     </parameter>
                 </parameters>
+            </constructor>
+
+            <constructor name="create_for_surface" c:identifier="cairo_pattern_create_for_surface">
+                <return-value transfer-ownership="none">
+                    <type name="Pattern" c:type="cairo_pattern_t*"/>
+                </return-value>
+                <parameters>
+                    <parameter name="surface">
+                       <type name="Surface" c:type="cairo_surface_t*"/>
+                   </parameter>
+               </parameters>
             </constructor>
 
             <method name="add_color_stop_rgb" c:identifier="cairo_pattern_add_color_stop_rgb">

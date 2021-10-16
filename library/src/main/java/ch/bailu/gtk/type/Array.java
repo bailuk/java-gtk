@@ -1,6 +1,6 @@
 package ch.bailu.gtk.type;
 
-public abstract class Array extends Pointer {
+public abstract class Array extends Wrapper {
     private int length;
     private final int bytes;
 

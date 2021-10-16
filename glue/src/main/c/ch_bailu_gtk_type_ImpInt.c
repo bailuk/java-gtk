@@ -6,7 +6,7 @@
 
 
 /**
-    Copy a Java String to a heap memory region in c-space
+    Copy a Java Primitive to a heap memory region in c-space
 */
 JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_type_ImpInt_createInt
 (JNIEnv * _jenv, jclass _class, jint _value)
@@ -36,5 +36,37 @@ JNIEXPORT void JNICALL Java_ch_bailu_gtk_type_ImpInt_set
 (JNIEnv * _jenv, jclass _class, jlong _pointer, int _value)
 {
     jint* src  = (jint*) _pointer;
+    *src = _value;
+}
+
+
+JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_type_ImpInt_createLong
+(JNIEnv * _jenv, jclass _class, jlong _value)
+{
+    const jlong* src  = &_value;
+    const jsize  size = sizeof(jlong);
+
+    void* dest = malloc(size);
+
+    if (dest != NULL) {
+        dest = memcpy(dest, src, size);
+    }
+
+    return (jlong) dest;
+}
+
+
+JNIEXPORT jlong JNICALL Java_ch_bailu_gtk_type_ImpInt_getLong
+(JNIEnv * _jenv, jclass _class, jlong _pointer)
+{
+    const jlong* src  = (jint*) _pointer;
+    return *src;
+}
+
+
+JNIEXPORT void JNICALL Java_ch_bailu_gtk_type_ImpInt_setLong
+(JNIEnv * _jenv, jclass _class, jlong _pointer, jlong _value)
+{
+    jlong* src  = (jlong*) _pointer;
     *src = _value;
 }
