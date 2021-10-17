@@ -14,9 +14,6 @@ public class GTK {
     private final static String LIB_NAME = "glue.so";
     private final static String TMP_DIR = "java-gtk-library";
 
-
-
-    
     public static void init() throws IOException {
         try {
             System.out.println(System.getProperty("java.library.path"));

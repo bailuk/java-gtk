@@ -25,19 +25,24 @@ public class Bytes extends ch.bailu.gtk.glib.Bytes {
         return ImpBytes.createFromWrapper(bytes.getCPointer(), bytes.getSize());
     }
 
-    public byte[] getBytes() {
-        byte[] result = {};
 
-        if (getSize() > 0) {
-            Int64 size = new Int64();
-            Pointer pointer = getData(size);
-
-            if (size.get() > 0 && pointer.isNotNull()) {
-                result = ch.bailu.gtk.type.ImpBytes.toBytes(pointer.getCPointer(), 0, (int) (size.get() - 1));
-            }
-            size.destroy();
-        }
-
+    private ch.bailu.gtk.type.Bytes toBytesWrapper() {
+        var size = new Int64();
+        var data = getData(size);
+        var result = new ch.bailu.gtk.type.Bytes(data.getCPointer(), (int) size.get());
+        size.destroy();
         return result;
+    }
+
+    public byte[] toBytes(int start, int end) {
+        return toBytesWrapper().toBytes(start, end);
+    }
+
+    public byte[] toBytes() {
+        return toBytesWrapper().toBytes();
+    }
+
+    public byte getByte(int i) {
+        return toBytesWrapper().getByte(i);
     }
 }

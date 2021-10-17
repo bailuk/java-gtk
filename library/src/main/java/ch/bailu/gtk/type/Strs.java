@@ -1,9 +1,8 @@
 package ch.bailu.gtk.type;
 
-import ch.bailu.gtk.type.Pointer;
-
 public class Strs extends Pointer {
     private Str[] strs;
+    private boolean destroyAll = false;
 
     public Strs(long pointer) {
         super(pointer);
@@ -11,15 +10,15 @@ public class Strs extends Pointer {
     }
 
     public Strs(String[] strings) {
-        this(strings, toStrs(strings));
+        this(toStrs(strings));
+        destroyAll = true;
     }
 
-
-    private Strs(String[] strings, Str[] strs) {
-        this(strings, strs, ImpUtil.createPointerArray(Util.toPointerArray(strs)));
+    public Strs(Str[] strs) {
+        this(strs, ImpUtil.createPointerArray(Util.toPointerArray(strs)));
     }
 
-    public Strs(String[] strings, Str[] strs, long pointers) {
+    public Strs(Str[] strs, long pointers) {
         super(pointers);
         this.strs=strs;
     }
@@ -42,14 +41,39 @@ public class Strs extends Pointer {
         return strs.length * Long.BYTES;
     }
 
+
+    /**
+     * If object was initialized with java String constructor destroy
+     * all strings and pointer array.
+     * Else only destroy pointer array.
+     */
     public void destroy() {
+        if (destroyAll) {
+            destroyAll();
+        } else {
+            destroyArray();
+        }
+    }
+
+    /**
+     * Destroy pointer array and strings
+     */
+    public void destroyAll() {
         if (strs != null) {
             for (Pointer pointer : strs) {
                 ImpUtil.destroy(pointer.getCPointer());
             }
+            destroyArray();
+        }
+        strs = null;
+    }
+
+    private void destroyArray() {
+        if (strs != null) {
             ImpUtil.destroy(getCPointer());
         }
         strs = null;
     }
+
 
 }

@@ -5,9 +5,12 @@ plugins {
 }
 
 project.version = scmVersion.version
+project.group = "ch.bailu.java-gtk"
 
-group = "ch.bailu.java-gtk"
-
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
 
 publishing {
     repositories {
@@ -19,6 +22,7 @@ publishing {
                 password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
 
             }
+
         }
     }
     publications {
@@ -46,7 +50,6 @@ tasks.test {
     dependsOn( ":glue:linkDebug")
     useJUnitPlatform()
 }
-
 
 sourceSets {
     main {
@@ -77,10 +80,19 @@ tasks.compileJava {
 }
 
 tasks.javadoc {
+    /*
+        https://docs.gradle.org/current/javadoc/org/gradle/external/javadoc/StandardJavadocDocletOptions.html
+    */
     options.windowTitle("java-gtk")
     options.overview("java-gtk")
+    (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
+    (options as StandardJavadocDocletOptions).footer = "Test"
 }
 
+tasks.named("sourcesJar") {
+    dependsOn(":glue:linkRelease")
+}
+/*
 tasks {
     val sourcesJar by creating(Jar::class) {
         archiveClassifier.set("sources")
@@ -99,3 +111,5 @@ tasks {
         archives(jar)
     }
 }
+
+*/

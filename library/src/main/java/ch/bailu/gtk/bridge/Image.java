@@ -7,64 +7,87 @@ import java.io.OutputStream;
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.exception.AllocationError;
 import ch.bailu.gtk.gdkpixbuf.Pixbuf;
-import ch.bailu.gtk.gio.Cancellable;
 import ch.bailu.gtk.gio.MemoryInputStream;
 import ch.bailu.gtk.gio.MemoryOutputStream;
 import ch.bailu.gtk.type.Str;
 
 public class Image {
 
-
-    public static Pixbuf load(InputStream inputStream) throws IOException, AllocationError {
-        final Bytes bytes = new Bytes(inputStream.readAllBytes());
-        final MemoryInputStream stream = MemoryInputStream.newFromBytesMemoryInputStream(bytes);
-        final Pixbuf result = Pixbuf.newFromStreamPixbuf(stream, new Cancellable(0));
-
-        stream.close(new Cancellable(0));
-        stream.unref();
-        bytes.unref();
-        result.throwIfNull();
-        return result;
+    /**
+     * Loads an image from the stream into Pixbuf
+     * @param inputStream stream with image data
+     * @return Pixbuf
+     * @throws IOException
+     */
+    public static Pixbuf load(InputStream inputStream) throws IOException  {
+        return load(inputStream, -1, -1, true);
     }
 
-    public static Pixbuf load(InputStream inputStream, int width, int height) throws IOException, AllocationError {
+    /**
+     * Loads an image from the stream into Pixbuf
+     * @param inputStream stream with image data
+     * @param width the width of the returned Pixbuf
+     * @param height the height of the returned Pixbuf
+     * @return Pixbuf
+     * @throws IOException
+     */
+    public static Pixbuf load(InputStream inputStream, int width, int height) throws IOException {
         return load(inputStream, width, height, false);
     }
 
-    public static Pixbuf load(InputStream inputStream, int width, int height, boolean preserveAspectRatio) throws IOException, AllocationError {
+
+    /**
+     * Loads an image from the stream into Pixbuf
+     * @param inputStream
+     * @param width the width of the returned Pixbuf
+     * @param height the height of the returned Pixbuf
+     * @param preserveAspectRatio `TRUE` to preserve the image's aspect ratio
+     * @return Pixbuf
+     * @throws IOException
+     */
+    public static Pixbuf load(InputStream inputStream, int width, int height, boolean preserveAspectRatio) throws IOException {
         final int keepAspect = GTK.is(preserveAspectRatio);
         final Bytes bytes = new Bytes(inputStream.readAllBytes());
         final MemoryInputStream stream = MemoryInputStream.newFromBytesMemoryInputStream(bytes);
 
-
-        final Pixbuf result = Pixbuf.newFromStreamAtScalePixbuf(stream, width, height, keepAspect, new Cancellable(0));
-
-        stream.close(new Cancellable(0));
-        stream.unref();
-        bytes.unref();
-        result.throwIfNull();
-        return result;
-    }
-
-    public static void save(OutputStream outputStream, Pixbuf pixbuf) throws IOException {
-        pixbuf.throwIfNull();
-
         try {
-            final MemoryOutputStream stream = MemoryOutputStream.newResizableMemoryOutputStream();
-            final Str format = new Str("png");
-
-            if (GTK.is(pixbuf.saveToStreamv(stream, format, null, null, null))) {
-                Bytes bytes = new Bytes(stream.getData().getCPointer());
-                outputStream.write(bytes.getBytes());
-                bytes.unref();
-            }
+            final Pixbuf result = Pixbuf.newFromStreamAtScalePixbuf(stream, width, height, keepAspect, null);
             stream.close(null);
-            stream.unref();
-            format.destroy();
+            result.throwIfNull();
+            return result;
 
-        } catch (AllocationError allocationError) {
-            throw new IOException("Image::save");
+        } catch (AllocationError e) {
+            throw new IOException("Image::load::" + width + "::" + height);
+
+        } finally {
+            stream.unref();
+            bytes.unref();
         }
     }
 
+
+    /**
+     * Convert pixbuf to an image format and write bytes to outputStream
+     * @param outputStream the image will be written to this stream
+     * @param pixbuf pixbuf to convert
+     * @param imageFormat one of the following formats: "jpeg", "tiff", "png", "ico" or "bmp"
+     * @throws IOException
+     */
+    public static void save(OutputStream outputStream, Pixbuf pixbuf, String imageFormat) throws IOException {
+        pixbuf.throwIfNull();
+        try {
+            final MemoryOutputStream stream = MemoryOutputStream.newResizableMemoryOutputStream();
+            final Str format = new Str(imageFormat);
+
+            if (GTK.is(pixbuf.saveToStreamv(stream, format, null, null, null))) {
+                ch.bailu.gtk.type.Bytes bytes = new ch.bailu.gtk.type.Bytes(stream.getData().getCPointer(), (int) stream.getDataSize());
+                outputStream.write(bytes.toBytes());
+            }
+            format.destroy();
+            stream.close(null);
+            stream.unref();
+        } catch (AllocationError allocationError) {
+            throw new IOException("Image::save::" + imageFormat);
+        }
+    }
 }

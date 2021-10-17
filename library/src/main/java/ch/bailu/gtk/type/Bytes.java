@@ -4,6 +4,10 @@ public class Bytes extends Array {
 
 
 
+    public Bytes(long pointer, int size) {
+        super(pointer, 1, size);
+    }
+
     public Bytes(long pointer) {
         super(pointer, 1, 0);
     }
