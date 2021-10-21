@@ -33,7 +33,7 @@ public class TestGBytes {
 
 
         Bytes bytesC = new Bytes(new byte[]{4,5,0});
-        byte[] res = bytesC.getBytes();
+        byte[] res = bytesC.toBytes();
         assertEquals(3, res.length);
         assertEquals(4, res[0]);
         assertEquals(5, res[1]);
