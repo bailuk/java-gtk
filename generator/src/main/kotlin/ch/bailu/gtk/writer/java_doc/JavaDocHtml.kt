@@ -15,10 +15,16 @@ class JavaDocHtml(writer: Writer) : JavaDoc(writer) {
         doc.lines().forEach {
             if (evenPre && it.contains("|[")) insideCodeBlock = true
 
-            if (insideCodeBlock) {
-                writeLine(replacePre(escapeDoc(it)), "")
+            val line = if (evenPre) {
+                replacePre(escapeDoc(it))
             } else {
-                writeLine(replacePre(escapeDoc(it)), nl)
+                escapeDoc(it)
+            }
+
+            if (insideCodeBlock) {
+                writeLine(line, "")
+            } else {
+                writeLine(line, nl)
             }
 
             if (it.contains("]|")) insideCodeBlock = false
