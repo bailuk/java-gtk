@@ -83,7 +83,9 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
             
     static ${methodModel.returnType.impType} ${getImpJavaSignalCallbackName(methodModel.name)}(${getSignature(methodModel.getParameters(), "")}) {
         String signal = "${methodModel.apiName}";
-        for (java.lang.Object observer : ch.bailu.gtk.Callback.get(0, signal)) {
+        long emitter = ${getEmitter(methodModel)};
+        
+        for (java.lang.Object observer : ch.bailu.gtk.Callback.get(emitter, signal)) {
             ${getSignalInterfaceCall(structureModel, methodModel)};
         }
         ${getDefaultReturn(methodModel)}
@@ -91,6 +93,18 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
     
         """.trimMargin())
 
+    }
+
+    private fun getEmitter(methodModel: MethodModel) : String {
+        return try {
+            val last = methodModel.getParameters().last {
+                it.apiType == "ch.bailu.gtk.type.Pointer"
+            }
+
+            last.name
+        } catch (e : NoSuchElementException) {
+            "0"
+        }
     }
 
     private fun getDefaultReturn(methodModel : MethodModel) : String {

@@ -47,12 +47,24 @@ class JavaApiWriter(writer: Writer, doc: JavaDoc) : CodeWriter(writer) {
     private fun writeFunctionCall(structureModel : StructureModel, methodModel : MethodModel, selfCall: Boolean) {
         a("""
             public ${getStatic(selfCall)} ${methodModel.returnType.apiType} ${methodModel.apiName}(${getSignature(methodModel.getParameters())}) ${getThrowsExtension(methodModel)} {
+                final long emitter = ${getEmitter(methodModel)};
                 ${getCallbackConnections(methodModel)}
                 ${getFunctionCall(structureModel, methodModel, selfCall)};
             }
             """.replaceIndent(" ".repeat(4)))
     }
 
+    private fun getEmitter(methodModel: MethodModel) : String {
+        return try {
+            val last = methodModel.getParameters().last {
+                it.apiType == "ch.bailu.gtk.type.Pointer"
+            }
+
+            "toCPointer(${last.name})"
+        } catch (e : NoSuchElementException) {
+            "0"
+        }
+    }
     private fun getStatic(selfCall : Boolean) : String {
         return if (selfCall) {
             ""
@@ -99,7 +111,7 @@ class JavaApiWriter(writer: Writer, doc: JavaDoc) : CodeWriter(writer) {
 
             for (p in methodModel.getParameters()) {
                 if (p.isCallback) {
-                    result.append("${del}ch.bailu.gtk.Callback.put(0, \"${p.callbackModel?.apiName}\", ${p.name});\n")
+                    result.append("${del}ch.bailu.gtk.Callback.put(emitter, \"${p.callbackModel?.apiName}\", ${p.name});\n")
                     del = " ".repeat(16)
                 }
             }
