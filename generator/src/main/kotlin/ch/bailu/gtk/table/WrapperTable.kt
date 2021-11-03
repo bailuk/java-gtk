@@ -26,6 +26,7 @@ object WrapperTable {
         add("gdouble*", "Dbls")
         add("gconstpointer", "Pointer")
         add("gpointer", "Pointer")
+        add("const GdkEvent*", "Pointer")
     }
 
 
