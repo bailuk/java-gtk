@@ -7,10 +7,15 @@ import ch.bailu.gtk.type.Dbls;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestDbl {
+import java.io.IOException;
 
+public class TestDbl {
     static {
-        System.loadLibrary("glue");
+        try {
+            GTK.init();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

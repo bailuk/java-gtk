@@ -39,7 +39,6 @@ repositories {
 
 
 dependencies {
-    //implementation("org.jetbrains:annotations:15.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
 }
 
@@ -47,7 +46,6 @@ dependencies {
 tasks.test {
     val libraryPath = file("${project(":glue").buildDir}/lib/main/debug").absolutePath
     systemProperty( "java.library.path", libraryPath)
-    dependsOn( ":glue:linkDebug")
     useJUnitPlatform()
 }
 
@@ -59,24 +57,17 @@ sourceSets {
         }
 
         resources {
-            compiledBy(":glue:linkRelease")
-            val res = File(project(":glue").buildDir, "lib/main/release")
+            val res = File( "../glue/build/lib/")
             srcDir(res)
         }
     }
 }
-
-tasks.processResources {
-    dependsOn(":glue:linkRelease")
-}
-
 
 tasks.compileJava {
     if (this is JavaCompile) {
         options.compilerArgs.add("-Xlint:deprecation")
         options.compilerArgs.add("-Xlint:unchecked")
     }
-    dependsOn(":generator:generate")
 }
 
 tasks.javadoc {
@@ -89,27 +80,3 @@ tasks.javadoc {
     (options as StandardJavadocDocletOptions).footer = "Test"
 }
 
-tasks.named("sourcesJar") {
-    dependsOn(":glue:linkRelease")
-}
-/*
-tasks {
-    val sourcesJar by creating(Jar::class) {
-        archiveClassifier.set("sources")
-        from(sourceSets.main.get().allJava)
-    }
-
-    val javadocJar by creating(Jar::class) {
-        dependsOn.add(javadoc)
-        archiveClassifier.set("javadoc")
-        from(javadoc)
-    }
-
-    artifacts {
-        archives(sourcesJar)
-        archives(javadocJar)
-        archives(jar)
-    }
-}
-
-*/

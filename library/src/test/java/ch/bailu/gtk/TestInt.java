@@ -6,11 +6,16 @@ import ch.bailu.gtk.type.Int;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestInt {
+import java.io.IOException;
 
-        static {
-            System.loadLibrary("glue");
+public class TestInt {
+    static {
+        try {
+            GTK.init();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
 
         @Test
         public void testInt() {

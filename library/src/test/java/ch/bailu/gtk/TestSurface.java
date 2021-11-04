@@ -10,9 +10,15 @@ import ch.bailu.gtk.type.Bytes;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
+
 public class TestSurface {
     static {
-        System.loadLibrary("glue");
+        try {
+            GTK.init();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

@@ -5,10 +5,17 @@ import org.junit.jupiter.api.Test;
 import ch.bailu.gtk.type.Str;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.io.IOException;
 
 public class TestStr {
     static {
-        System.loadLibrary("glue");
+        try {
+            GTK.init();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
