@@ -56,7 +56,7 @@ Compiles and runs the code generator. This will generate Java and C code from [G
 `./gradelw library:classes`  
 Compiles java classes and creates JNI headers
 
-`make -C glue`  
+`make -C glue -j`  
 Compile C code and generate C library
 - Input: JNI headers and generated C code
 - Output: `glue/build/lib/[...]/libglue.so`
