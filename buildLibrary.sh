@@ -4,4 +4,11 @@
 # compile glue
 # build library
 
-./gradlew library:assemble && cd glue && make -j && cd .. && ./gradlew library:build
+echo "Compile C code. See 'build/build.log' for details"
+cd glue || exit 1
+make -j > build/build.log 2>&1 || exit 1
+cd ..
+
+echo "Build java archives"
+./gradlew library:build
+find library/ -name *.jar

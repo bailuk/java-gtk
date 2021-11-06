@@ -3,6 +3,12 @@
 # clean library module and glue module
 # compile and run source generator
 
-./gradlew library:clean
+echo "Clean all"
+./gradlew library:clean || exit 1
 rm -r glue/build
-./gradlew generator:generate
+
+echo "Generate sources"
+./gradlew generator:generate || exit 1
+
+echo "Generate JNI headers"
+./gradlew library:classes || exit 1

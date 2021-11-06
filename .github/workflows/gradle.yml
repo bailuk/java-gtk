@@ -28,8 +28,8 @@ jobs:
       run: chmod +x gradlew
     - name: Generate sources
       run: ./gradlew generator:generate
-    - name: Compile Java code
-      run: ./gradlew library:assemble
+    - name: Generate JNI headers
+      run: ./gradlew library:classes
     - name: Compile C code
       run: cd glue && make -j && cd ..
     - name: Build library
