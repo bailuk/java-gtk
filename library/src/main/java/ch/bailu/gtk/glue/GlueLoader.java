@@ -13,13 +13,13 @@ public class GlueLoader {
     private final static String TMP_DIR = "java-gtk-glue";
 
     public GlueLoader() throws IOException {
-        System.out.println("Glue Loader");
         PlatformDetection platformDetection = new PlatformDetection();
 
         try {
             loadLibrary(platformDetection.getGluePath(), TMP_DIR, LIB_NAME);
         } catch (Exception e) {
             System.out.println(e);
+            throw e;
         }
     }
 

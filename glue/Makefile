@@ -31,7 +31,7 @@ vpath %.c $(sort $(dir $(SRCS)))
 all : $(PRODUCT)
 
 $(PRODUCT) : $(addprefix $(OBJDIR)/, $(OBJS)) | $(LIBDIR)
-	cc -shared -Wl,-soname,libglue.so -o $@ $^ $(LIBS) -m64
+	cc -shared -Wl,-soname,libglue.so -o $@ $^ $(LIBS)
 
 
 $(OBJDIR)/%.o : %.c | $(OBJDIR)
