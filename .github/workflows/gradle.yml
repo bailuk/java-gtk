@@ -26,13 +26,13 @@ jobs:
       run: sudo -E apt -y install libgtk-3-dev libgirepository1.0-dev
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Build with Gradle
+    - name: Generate sources
       run: ./gradlew generator:generate
-    - name: Compile Java
+    - name: Compile Java code
       run: ./gradlew library:assemble
-    - name: Build libglue
+    - name: Compile C code
       run: cd glue && make -j && cd ..
-    - name: Build Library
+    - name: Build library
       run: ./gradlew library:build
     - name: Upload artifact
       uses: actions/upload-artifact@v2
