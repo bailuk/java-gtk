@@ -1,14 +1,16 @@
 #!/bin/sh
 
-# assemble library
-# compile glue
-# build library
+# compile glue and build library
 
-echo "Compile C code. See 'build/build.log' for details"
-cd glue || exit 1
-make -j > build/build.log 2>&1 || exit 1
-cd ..
+buildLog="glue/build/build.log"
 
-echo "Build java archives"
-./gradlew library:build
+echo "\nCompile C code. See '${buildLog}' for details"
+if ! make -C glue -j $1 > ${buildLog} 2>&1; then
+  tail ${buildLog}
+  exit 1
+fi
+find glue/ -name *.so
+
+echo "\nBuild java archives"
+./gradlew -q library:build || exit 1
 find library/ -name *.jar

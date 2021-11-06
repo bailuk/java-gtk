@@ -31,7 +31,7 @@ jobs:
     - name: Generate JNI headers
       run: ./gradlew library:classes
     - name: Compile C code
-      run: cd glue && make -j && cd ..
+      run: make -C glue
     - name: Build library
       run: ./gradlew library:build
     - name: Upload artifact

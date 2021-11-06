@@ -46,15 +46,27 @@ public class HelloWorld {
 ```
 
 ## Build
-`./gradlew generate`  
+`./gradlew generator:generate`  
 Compiles and runs the code generator. This will generate Java and C code from [GIR](https://gi.readthedocs.io/en/latest/) files.
 - Input: `generator/src/resources/gir/*`
 - Output Java: `library/build/generated/src/main/java/[...]/*.java`
 - Output C: `glue/build/generated/src/main/c/*.c`
 - Configuration: [generator/src/main/kotlin/ch/bailu/gtk/Configuration.kt](generator/src/main/kotlin/ch/bailu/gtk/Configuration.kt)
 
-`./gradlew run`  
-Compile everything and run the default demo application.
+`./gradelw library:classes`  
+Compiles java classes and creates JNI headers
+
+`make -C glue`  
+Compile C code and generate C library
+- Input: JNI headers and generated C code
+- Output: `glue/build/lib/[...]/libglue.so`
+
+`./gradlew library:build`  
+Create library, create javadoc and run tests
+- Output: jar, javadoc.jar and sources.jar in `libray/build/libs/` 
+
+`./gradlew examples:run`  
+Run the default demo application.
 The default demo application can be selected in [examples/src/main/java/examples/App.java](examples/src/main/java/examples/App.java)
 
 `./gradlew publishToMavenLocal`  
