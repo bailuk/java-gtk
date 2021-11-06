@@ -27,7 +27,13 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew generator:generate
+    - name: Compile Java
+      run: ./gradlew library:assemble
+    - name: Build libglue
+      run: .cd glue && make -j && cd ..
+    - name: Build Library
+      run: ./gradlew library:build
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
