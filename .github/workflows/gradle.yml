@@ -31,7 +31,7 @@ jobs:
     - name: Compile Java
       run: ./gradlew library:assemble
     - name: Build libglue
-      run: .cd glue && make -j && cd ..
+      run: cd glue && make -j && cd ..
     - name: Build Library
       run: ./gradlew library:build
     - name: Upload artifact
