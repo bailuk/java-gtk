@@ -1,16 +1,16 @@
-package ch.bailu.gtk.writer
+package ch.bailu.gtk.writer.java
 
 import ch.bailu.gtk.model.NamespaceModel
 import ch.bailu.gtk.model.*
+import ch.bailu.gtk.writer.*
 import java.io.Writer
 
 class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
 
-
     override fun writeStart(structureModel : StructureModel, namespaceModel : NamespaceModel) {
-        super.writeStart(structureModel, namespaceModel)
-        a("\npackage " + namespaceModel.getFullNamespace() + ";\n");
-        end(3);
+        start(3)
+        a("package ${namespaceModel.getFullNamespace()};")
+        end(3)
     }
 
     override fun writeClass(structureModel : StructureModel) {
@@ -22,11 +22,7 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
 
     override fun writeInternalConstructor(structureModel : StructureModel) {}
 
-    override fun writeUnsupported(model : Model) {
-        start()
-        a("    /* Unsupported:${model} */\n")
-        end(1)
-    }
+    override fun writeUnsupported(model : Model) {}
 
     override fun writeNativeMethod(structureModel : StructureModel, methodModel : MethodModel) {
         start();
@@ -58,7 +54,7 @@ class JavaImpWriter(writer : Writer) : CodeWriter(writer) {
 
 
     override fun writeEnd() {
-        a("}\n");
+        a("}\n")
     }
 
 

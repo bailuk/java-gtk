@@ -6,6 +6,8 @@ import ch.bailu.gtk.model.NamespaceModel
 import ch.bailu.gtk.parser.tag.*
 import ch.bailu.gtk.config.NamespaceConfig
 import ch.bailu.gtk.writer.*
+import ch.bailu.gtk.writer.java.JavaApiWriter
+import ch.bailu.gtk.writer.java.JavaImpWriter
 import java.io.IOException
 import java.io.Writer
 

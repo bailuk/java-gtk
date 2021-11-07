@@ -1,9 +1,10 @@
-package ch.bailu.gtk.writer
+package ch.bailu.gtk.writer.java
 
 import ch.bailu.gtk.model.*
+import ch.bailu.gtk.writer.*
 import ch.bailu.gtk.writer.java_doc.JavaDoc
+import ch.bailu.gtk.writer.java_doc.JavaDocWriter
 import java.io.Writer
-import javax.security.auth.login.Configuration
 
 
 class JavaApiWriter(writer: Writer, doc: JavaDoc) : CodeWriter(writer) {
@@ -11,9 +12,10 @@ class JavaApiWriter(writer: Writer, doc: JavaDoc) : CodeWriter(writer) {
     private val javaDoc = JavaDocWriter(writer, doc)
 
     override fun writeStart(structureModel : StructureModel, namespaceModel : NamespaceModel) {
-        super.writeStart(structureModel, namespaceModel)
         start(3)
-        a("package ${namespaceModel.getFullNamespace()};")
+        a("package ${namespaceModel.getFullNamespace()};\n\n")
+        a("import javax.annotation.Nullable;\n")
+        a("import javax.annotation.Nonnull;")
         end(3)
     }
 
@@ -45,9 +47,14 @@ class JavaApiWriter(writer: Writer, doc: JavaDoc) : CodeWriter(writer) {
 
 
     private fun writeFunctionCall(structureModel : StructureModel, methodModel : MethodModel, selfCall: Boolean) {
+        val staticToken = if (selfCall) {
+            ""
+        } else {
+            "static "
+        }
+
         a("""
-            public ${getStatic(selfCall)} ${methodModel.returnType.apiType} ${methodModel.apiName}(${getSignature(methodModel.getParameters())}) ${getThrowsExtension(methodModel)} {
-                final long emitter = ${getEmitter(methodModel)};
+            public ${staticToken}${methodModel.returnType.apiType} ${methodModel.apiName}(${getSignature(methodModel.getParameters())}) ${getThrowsExtension(methodModel)} {
                 ${getCallbackConnections(methodModel)}
                 ${getFunctionCall(structureModel, methodModel, selfCall)};
             }
@@ -65,13 +72,7 @@ class JavaApiWriter(writer: Writer, doc: JavaDoc) : CodeWriter(writer) {
             "0"
         }
     }
-    private fun getStatic(selfCall : Boolean) : String {
-        return if (selfCall) {
-            ""
-        } else {
-            "static"
-        }
-    }
+
     override fun writeFunction(structureModel : StructureModel, methodModel : MethodModel) {
         start(2)
         javaDoc.writeFunction(structureModel, methodModel)
@@ -106,13 +107,13 @@ class JavaApiWriter(writer: Writer, doc: JavaDoc) : CodeWriter(writer) {
 
     private fun getCallbackConnections (methodModel: MethodModel) : String {
         var result = StringBuilder()
-        var del = "";
+        val del = " ".repeat(16)
         if (methodModel.hasCallback()) {
+            result.append("final long emitter = ${getEmitter(methodModel)};\n")
 
             for (p in methodModel.getParameters()) {
                 if (p.isCallback) {
                     result.append("${del}ch.bailu.gtk.Callback.put(emitter, \"${p.callbackModel?.apiName}\", ${p.name});\n")
-                    del = " ".repeat(16)
                 }
             }
         }
@@ -148,7 +149,7 @@ class JavaApiWriter(writer: Writer, doc: JavaDoc) : CodeWriter(writer) {
                 super(pointer);
             }
         """.replaceIndent(" ".repeat(4)))
-
+        end(1)
     }
 
 
@@ -165,7 +166,7 @@ class JavaApiWriter(writer: Writer, doc: JavaDoc) : CodeWriter(writer) {
                 public void destroy() {
                     ch.bailu.gtk.type.ImpUtil.destroy(getCPointer());
                 }
-            """.replaceIndent(" ".repeat(4)))
+            """, 4)
 
         }
     }
@@ -174,30 +175,29 @@ class JavaApiWriter(writer: Writer, doc: JavaDoc) : CodeWriter(writer) {
         start(1);
         javaDoc.writeConstructor(structureModel, methodModel)
         a("""
-    public ${structureModel.apiName}(${getSignature(methodModel.getParameters())}) {
-        super(${structureModel.impName}.${methodModel.apiName}(${getFactoryCallSignature(methodModel.getParameters())}));
-    }
-            
-""")
+            public ${structureModel.apiName}(${getSignature(methodModel.getParameters())}) {
+                super(${structureModel.impName}.${methodModel.apiName}(${getFactoryCallSignature(methodModel.getParameters())}));
+            }
+        """, 4)
+        end(1)
     }
 
     override fun writeFactory(structureModel : StructureModel, methodModel : MethodModel) {
         start(1);
         javaDoc.writeFactory(structureModel, methodModel)
         a("""
-    public static ${structureModel.apiName} ${methodModel.apiName}${structureModel.apiName}(${getSignature(methodModel.getParameters())}) ${getThrowsExtension(methodModel)} {
-        long pointerToObject = ${structureModel.impName}.${methodModel.apiName}(${getFactoryCallSignature(methodModel.getParameters())});
+            public static ${structureModel.apiName} ${methodModel.apiName}${structureModel.apiName}(${getSignature(methodModel.getParameters())}) ${getThrowsExtension(methodModel)} {
+                long pointerToObject = ${structureModel.impName}.${methodModel.apiName}(${getFactoryCallSignature(methodModel.getParameters())});
                
-        if (pointerToObject == 0) {
-            ${getThrowsOnNullSatement(structureModel, methodModel)};
-        }
+                if (pointerToObject == 0) {
+                    ${getThrowsOnNullSatement(structureModel, methodModel)};
+                }
         
-        return new ${structureModel.apiName}(pointerToObject);
-         
-    }        
+                return new ${structureModel.apiName}(pointerToObject);
+            }        
 
-""")
-
+        """, 4)
+        end(1)
     }
 
     override
@@ -226,13 +226,15 @@ class JavaApiWriter(writer: Writer, doc: JavaDoc) : CodeWriter(writer) {
     }
 
     override fun writeEnd() {
-        start();
-        a("}\n");
+        start(1)
+        a("}\n")
     }
 
     override  fun writeSignal(structureModel : StructureModel, methodModel : MethodModel) {
         start(1);
-        a("    public void ").a(getJavaSignalMethodName(methodModel.name)).a("(").a(getJavaSignalInterfaceName(methodModel.name)).a(" observer) {\n");
+        a("    public void ").a(getJavaSignalMethodName(methodModel.name)).a("(").a(
+            getJavaSignalInterfaceName(methodModel.name)
+        ).a(" observer) {\n");
         a("        ch.bailu.gtk.Callback.put(getCPointer(), \"").a(methodModel.apiName).a("\", observer);\n");
         a("        ").a(structureModel.impName).a(".").a(getJavaSignalMethodName(methodModel.name)).a("(getCPointer());\n");
         a("    }\n");
@@ -306,7 +308,17 @@ class JavaApiWriter(writer: Writer, doc: JavaDoc) : CodeWriter(writer) {
 
         var del = ""
         for (p in parameters) {
-            result.append("${del}${p.apiType} ${p.name}")
+            val nonnull = if (!p.isJavaNative) {
+                if (p.nullable) {
+                    "@Nullable "
+                } else {
+                    "@Nonnull "
+                }
+            } else {
+                ""
+            }
+
+            result.append("${del}${nonnull}${p.apiType} ${p.name}")
             del = ", "
         }
         return result.toString()
@@ -315,6 +327,10 @@ class JavaApiWriter(writer: Writer, doc: JavaDoc) : CodeWriter(writer) {
 
     private fun getSelfCallSignature(parameters : List<ParameterModel>) : String {
         return "getCPointer()${getCallSignature(parameters, ", ")}"
+    }
+
+    private fun getFactoryCallSignature(parameters : List<ParameterModel>) : String {
+        return getCallSignature(parameters, " ")
     }
 
     private fun getCallSignature(parameters : List<ParameterModel>, firstDel : String) : String{
@@ -327,28 +343,14 @@ class JavaApiWriter(writer: Writer, doc: JavaDoc) : CodeWriter(writer) {
                 del = ", "
 
             } else if (!p.isCallback) {
-                result.append("${del}toCPointer(${p.name})")
+                if (p.nullable) {
+                    result.append("${del}toCPointer(${p.name})")
+                } else {
+                    result.append("${del}toCPointerNotNull(${p.name})")
+                }
                 del = ", "
             }
 
-        }
-        return result.toString()
-    }
-
-
-    private fun getFactoryCallSignature(parameters : List<ParameterModel>) : String {
-        val result = StringBuilder()
-        var del = " ";
-
-        for (p in parameters) {
-            result.append(del)
-
-            if (p.isJavaNative) {
-                result.append(p.name)
-            } else {
-                result.append("toCPointer(${p.name})")
-            }
-            del = ", ";
         }
         return result.toString()
     }

@@ -12,26 +12,24 @@ import ch.bailu.gtk.parser.tag.ParameterTag
 import ch.bailu.gtk.writer.fixToken
 import ch.bailu.gtk.writer.getJavaSignalInterfaceName
 
-class ParameterModel : Model {
-    private val cType: CType
-    private val classType: ClassType
-    private val jType: JavaType
-    private val parameterTag: ParameterTag
+class ParameterModel(namespace: String, private val parameterTag: ParameterTag, toUpper: Boolean, supportsDirectAccess: Boolean) :
+    Model() {
 
-    var name: String
+    private val cType: CType
+    private val classType: ClassType = ClassType(namespace, parameterTag, supportsDirectAccess)
+    private val jType: JavaType
+
+    var name: String = if (toUpper) {
+        fixToken(parameterTag.getName().uppercase())
+    } else {
+        fixToken(parameterTag.getName())
+    }
     val jniConverter: JniTypeConverter
     val isWriteable: Boolean
     val callbackModel: MethodModel?
 
 
-    constructor(namespace: String, parameterTag: ParameterTag, toUpper: Boolean, supportsDirectAccess: Boolean) {
-        this.parameterTag = parameterTag
-        name = if (toUpper) {
-            fixToken(parameterTag.getName().uppercase())
-        } else {
-            fixToken(parameterTag.getName())
-        }
-        classType = ClassType(namespace, parameterTag, supportsDirectAccess)
+    init {
         if (classType.isClass()) {
             cType = CType("void*")
             jType = JavaType("long")
@@ -155,4 +153,9 @@ class ParameterModel : Model {
 
     val doc: String
         get() = parameterTag.getDoc()
+
+    val nullable: Boolean
+        get() {
+            return parameterTag.nullable
+        }
 }

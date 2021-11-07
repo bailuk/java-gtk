@@ -15,6 +15,13 @@ abstract class JavaDoc(val writer: Writer): Append {
         return this
     }
 
+
+    override fun a(o : String, intent: Int) : Append {
+        writer.append(o.replaceIndent(" ".repeat(intent)))
+        return this
+    }
+
+
     abstract fun writeClassUrl(structureModel: StructureModel)
     abstract fun writeBlock(doc: String)
     abstract fun writeParameter(methodModel: MethodModel)

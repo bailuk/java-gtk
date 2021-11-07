@@ -40,6 +40,12 @@ abstract class CodeWriter(writer : Writer) : Append {
         return this
     }
 
+    override fun a(o : String, intent: Int) : Append {
+        out.append(o.replaceIndent(" ".repeat(intent)))
+        return this
+    }
+
+
     protected fun start() : CodeWriter {
         group.start()
         return this

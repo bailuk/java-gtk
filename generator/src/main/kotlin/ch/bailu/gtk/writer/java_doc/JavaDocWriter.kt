@@ -1,11 +1,10 @@
-package ch.bailu.gtk.writer
+package ch.bailu.gtk.writer.java_doc
 
 import ch.bailu.gtk.model.MethodModel
 import ch.bailu.gtk.model.Model
 import ch.bailu.gtk.model.ParameterModel
 import ch.bailu.gtk.model.StructureModel
-import ch.bailu.gtk.writer.java_doc.JavaDoc
-import ch.bailu.gtk.writer.java_doc.JavaDocHtml
+import ch.bailu.gtk.writer.CodeWriter
 import java.io.Writer
 
 
