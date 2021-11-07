@@ -29,7 +29,7 @@ class ModelBuilder : BuilderInterface {
         var out: Writer? = null
         try {
             out = getJavaImpWriter(model, namespace)
-            model.write(JavaImpWriter(out))
+            model.write(JavaImpWriter(TextWriter(out)))
         } finally {
             out?.close()
         }
@@ -40,7 +40,7 @@ class ModelBuilder : BuilderInterface {
         var out: Writer? = null
         try {
             out = getCWriter(model, namespace)
-            model.write(CWriter(out))
+            model.write(CWriter(TextWriter(out)))
         } finally {
             out?.close()
         }
@@ -84,7 +84,7 @@ class ModelBuilder : BuilderInterface {
         var out: Writer? = null
         try {
             out = getJavaWriter(model.apiName, namespace)
-            model.write(JavaApiWriter(out, Configuration.createJavaDocConfig(out)))
+            model.write(JavaApiWriter(TextWriter(out), Configuration.createJavaDocConfig(out)))
         } finally {
             out?.close()
         }

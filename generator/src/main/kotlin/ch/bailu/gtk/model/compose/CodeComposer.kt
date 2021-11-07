@@ -28,11 +28,9 @@ abstract class CodeComposer {
 
     fun writeStart(writer: CodeWriter, structureModel: StructureModel) {
         writer.writeStart(structureModel, structureModel.nameSpaceModel)
-        writer.next()
     }
 
     fun writeEnd(writer: CodeWriter, models: ModelLists) {
-        writer.next()
         for (m in models.unsupported) {
             writer.writeUnsupported(m)
         }

@@ -8,7 +8,6 @@ class InterfaceComposer : CodeComposer() {
 
     override fun compose(writer: CodeWriter, structureModel: StructureModel, models: ModelLists) {
         writer.writeInterface(structureModel)
-        writer.next()
         for (p in models.constants) {
             writer.writeConstant(p)
         }

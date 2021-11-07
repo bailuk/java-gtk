@@ -8,37 +8,36 @@ import ch.bailu.gtk.model.ParameterModel
 import java.io.Writer
 
 
-class CWriter (writer : Writer) : CodeWriter(writer) {
+class CWriter (writer : TextWriter) : CodeWriter(writer) {
 
     override fun writeStart(structureModel : StructureModel, namespaceModel : NamespaceModel) {
         super.writeStart(structureModel, namespaceModel)
-
-        a("\n#include <jni.h>\n")
+        out.a("\n#include <jni.h>\n")
 
         for (include in namespaceModel.getIncludes()) {
-            a("#include <${include}>\n")
+            out.a("#include <${include}>\n")
         }
 
-        a("#include \"${getJniHeaderFileName(structureModel)}\"\n\n\n")
+        out.a("#include \"${getJniHeaderFileName(structureModel)}\"\n\n\n")
 
-        a("jclass ${getGlobalClassName(structureModel)};\n")
-        a("JavaVM* ${getGlobalVMName(structureModel)};\n")
+        out.a("jclass ${getGlobalClassName(structureModel)};\n")
+        out.a("JavaVM* ${getGlobalVMName(structureModel)};\n")
 
-        end(3)
+        out.end(3)
     }
 
 
     override fun writeNativeMethod(structureModel : StructureModel, methodModel : MethodModel) {
-        start(2)
+        out.start(2)
         _writeNativeMethod(structureModel, methodModel, true)
-        next()
+        out.end(2)
     }
 
 
     override fun writePrivateFactory(structureModel : StructureModel, methodModel : MethodModel) {
-        start(2)
+        out.start(2)
         _writeNativeMethod(structureModel, methodModel, false);
-        next()
+        out.end(2)
     }
 
     override fun writeConstant(parameterModel: ParameterModel) {
@@ -46,15 +45,15 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
     }
 
     private fun _writeNativeMethod(structureModel : StructureModel, methodModel : MethodModel, self : Boolean) {
-        a ("""
-        JNIEXPORT ${methodModel.returnType.jniType} JNICALL ${getJniMethodName(structureModel, methodModel)}(${getJniSignature(methodModel, self)})
-        {
-            ${getAllocateParameters(structureModel, methodModel)}
-            ${getEnvironmentInit(structureModel, methodModel, false)}
-            ${getReturnStatement(methodModel)} ${methodModel.gtkName}(${getGtkCallSignature(structureModel, methodModel, self)});
-            ${getFreeParameters(methodModel)}
-        }
-        """.trimIndent())
+        out.a("""
+            JNIEXPORT ${methodModel.returnType.jniType} JNICALL ${getJniMethodName(structureModel, methodModel)}(${getJniSignature(methodModel, self)})
+            {
+                ${getAllocateParameters(structureModel, methodModel)}
+                ${getEnvironmentInit(structureModel, methodModel, false)}
+                ${getReturnStatement(methodModel)} ${methodModel.gtkName}(${getGtkCallSignature(structureModel, methodModel, self)});
+                ${getFreeParameters(methodModel)}
+            }
+            """, 0)
     }
 
 
@@ -143,20 +142,20 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
 
 
     override fun writeMallocConstructor(structureModel : StructureModel) {
-        start(1)
-        a("""
-        JNIEXPORT jlong JNICALL ${getJniMethodName(structureModel, "newFromMalloc")}(JNIEnv * _jenv, jclass _jself)
-        {
-            return (jlong) calloc(1, sizeof(${structureModel.cType}));
-        }
-        """.trimIndent())
-        next()
+        out.start(2)
+        out.a("""
+            JNIEXPORT jlong JNICALL ${getJniMethodName(structureModel, "newFromMalloc")}(JNIEnv * _jenv, jclass _jself)
+            {
+                return (jlong) calloc(1, sizeof(${structureModel.cType}));
+            }
+        """,0)
+        out.end(2)
     }
 
     override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel) {
-        start(1)
+        out.start(2)
 
-        a("""
+        out.a("""
         static ${methodModel.returnType.gtkType} ${getJniSignalCallbackName(structureModel, methodModel)}${getCallbackSignature(methodModel)}
         {
             JavaVM* globalVM    = ${getGlobalVMName(structureModel)};
@@ -175,13 +174,13 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
             }
         }
         """.trimIndent())
-        next()
+        out.end(2)
     }
 
     override fun writeSignal(structureModel : StructureModel, methodModel : MethodModel) {
-        start(1)
+        out.start(2)
 
-        a("""
+        out.a("""
         static ${methodModel.returnType.gtkType} ${getJniSignalCallbackName(structureModel, methodModel)}${getSignalCallbackSignature(methodModel)}
         {
             JavaVM* globalVM    = ${getGlobalVMName(structureModel)};
@@ -221,7 +220,7 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
 
 
     override fun writeField(structureModel : StructureModel, parameterModel : ParameterModel) {
-        start(2)
+        out.start(2)
         val getter = getJavaFieldGetterName(parameterModel.name)
         val setter = getJavaFieldSetterName(parameterModel.name)
 
@@ -231,7 +230,7 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
             directAccess = "&"
         }
 
-        a ("""
+        out.a("""
         JNIEXPORT ${parameterModel.jniType} JNICALL ${getJniMethodName(structureModel, getter)}(JNIEnv * _jenv, jclass _jself, jlong _self)
         {
             const ${structureModel.cType}* __self = (${structureModel.cType}*) _self;
@@ -241,7 +240,7 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         """.trimIndent())
 
         if (parameterModel.isWriteable && !parameterModel.isDirectType)
-        a ("""
+        out.a("""
         JNIEXPORT void JNICALL ${getJniMethodName(structureModel, setter)}(JNIEnv * _jenv, jclass _jself, jlong _self, ${parameterModel.jniType} _${parameterModel.name})
         {
             ${structureModel.cType}* __self = (${structureModel.cType}*) _self;
@@ -249,13 +248,13 @@ class CWriter (writer : Writer) : CodeWriter(writer) {
         }
         
         """.trimIndent())
-        next()
+        out.end(2)
     }
 
     override fun writeFunction(structureModel : StructureModel, methodModel : MethodModel) {
-        start(2)
+        out.start(2)
         _writeNativeMethod(structureModel, methodModel, false)
-        next()
+        out.end(2)
     }
 
     override fun writeUnsupported(model: Model) {}

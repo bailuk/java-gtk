@@ -5,10 +5,10 @@ import ch.bailu.gtk.model.Model
 import ch.bailu.gtk.model.ParameterModel
 import ch.bailu.gtk.model.StructureModel
 import ch.bailu.gtk.writer.CodeWriter
-import java.io.Writer
+import ch.bailu.gtk.writer.TextWriter
 
 
-class JavaDocWriter(writer: Writer, val doc: JavaDoc) : CodeWriter(writer) {
+class JavaDocWriter(writer: TextWriter, val doc: JavaDoc) : CodeWriter(writer) {
 
     override fun writeClass(structureModel: StructureModel) {
         doc.writeStart(0)

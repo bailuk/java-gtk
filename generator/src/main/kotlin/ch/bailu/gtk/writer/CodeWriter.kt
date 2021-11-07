@@ -5,12 +5,9 @@ import ch.bailu.gtk.model.*
 import java.io.Writer
 
 
-abstract class CodeWriter(writer : Writer) : Append {
-    private var out = writer
-    private var group = GroupSpace(out) 
-
+abstract class CodeWriter(val out: TextWriter)  {
     open fun writeStart(structureModel : StructureModel, namespaceModel : NamespaceModel) {
-        a ("/* this file is machine generated */\n")
+        out.a("/* this file is machine generated */\n")
     }
 
     abstract fun writeClass(structureModel : StructureModel)
@@ -33,38 +30,5 @@ abstract class CodeWriter(writer : Writer) : Append {
     abstract fun writeCallback(structureModel: StructureModel, methodModel: MethodModel)
 
     abstract fun writeEnd() 
-
-
-    override fun a(o : String) : Append {
-        out.append(o)
-        return this
-    }
-
-    override fun a(o : String, intent: Int) : Append {
-        out.append(o.replaceIndent(" ".repeat(intent)))
-        return this
-    }
-
-
-    protected fun start() : CodeWriter {
-        group.start()
-        return this
-    }
-
-    protected fun start(i : Int) : CodeWriter  {
-        group.start(i)
-        return this
-    }
-
-    fun next() : CodeWriter {
-        group.next()
-        return this
-    }
-
-    protected fun end(i : Int) : CodeWriter {
-        group.end(i)
-        return this
-    }
-
 }
 

@@ -39,11 +39,9 @@ repositories {
 
 
 dependencies {
-    // https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api
-    // api("javax.annotation:javax.annotation-api:1.3.2")
     // implementation of javax.annotation:javax.annotation-api
     // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
-    implementation("com.google.code.findbugs:jsr305:3.0.2")
+    api("com.google.code.findbugs:jsr305:3.0.2")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
 }

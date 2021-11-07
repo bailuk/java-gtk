@@ -1,6 +1,9 @@
 plugins {
     application
 }
+repositories {
+    mavenCentral()
+}
 
 dependencies {
     implementation(project(":library"))
