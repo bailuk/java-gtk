@@ -34,7 +34,7 @@ class AliasBuilder : BuilderInterface{
 
     override fun buildEnumeration(enumeration: EnumerationTag) {
         add(NamespaceType(namespace, enumeration.getName()))
-        add(NamespaceType(namespace, enumeration.getType()))
+        add(NamespaceType(namespace, enumeration.type))
     }
 
     override fun buildCallback(callbackTag: CallbackTag) {

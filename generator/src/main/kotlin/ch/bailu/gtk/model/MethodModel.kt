@@ -32,7 +32,7 @@ class MethodModel : Model {
         setSupported("Return value", returnType.isSupported)
         setSupported("Return cb", !returnType.isCallback)
         for (t in method.getParameters()) {
-            if (!t.isVarargs()) {
+            if (!t.isVarargs) {
                 val parameterModel = ParameterModel(namespace, t, false, false)
                 parameters.add(parameterModel)
                 setSupported(parameterModel.supportedState, parameterModel.isSupported)

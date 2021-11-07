@@ -31,7 +31,7 @@ class ClassType {
     constructor(namespace: String, parameter: ParameterTag, supportsDirectType: Boolean) : this(namespace,
                 parameter.getTypeName(),
                 CType(parameter.getType()),
-                parameter.isOutDirection() && isEnum(namespace, parameter), supportsDirectType)
+                !parameter.inDirection && isEnum(namespace, parameter), supportsDirectType)
 
     constructor(namespace: String, typeName: String, ctype: String, supportsDirectType: Boolean) : this(namespace, typeName, CType(ctype), false, supportsDirectType)
 

@@ -55,20 +55,29 @@ TransferOwnership?,
 
  */
 open class ParameterTag(parent: TagWithParent): NamedWithDocTag(parent) {
-    private var value = ""
-    private var inType = true
-
-
-    fun getValue(): String {
-        return value
-    }
 
     private val type = TypeTag(this)
-    private var isArray = false
-    private var isVarargs = false
 
-    private var isWriteable = false
-    private var isPrivate = false
+    var value = ""
+        private set
+
+    var inDirection = true
+        private set
+
+    var nullable = false
+        private set
+
+    var isArray = false
+        private set
+
+    var isVarargs = false
+        private set
+
+    var isWriteable = false
+        private set
+
+    var isPrivate = false
+        private set
 
     override fun getChild(name: String, prefix: String): TagWithParent {
         if ("type" == name) {
@@ -93,7 +102,9 @@ open class ParameterTag(parent: TagWithParent): NamedWithDocTag(parent) {
         } else if ("value" == name) {
             this.value = value
         } else if ("direction" == name) {
-            inType = "in" == value
+            inDirection = "in" == value
+        } else if ("nullable" == name || "optional" == name||  "allow-none" == name) {
+            nullable = ("1" == value)
         } else {
             super.setAttribute(name, value)
         }
@@ -105,36 +116,11 @@ open class ParameterTag(parent: TagWithParent): NamedWithDocTag(parent) {
 
 
     open fun getType(): String {
-        return type.getType()
+        return type.type
     }
 
-    fun isArray(): Boolean {
-        return isArray
-    }
-
-
-    fun isWriteable(): Boolean {
-        return isWriteable
-    }
-
-
-    fun isPrivate(): Boolean {
-        return isPrivate
-    }
-
-    fun isVarargs(): Boolean {
-        return isVarargs
-    }
-
-    fun isInDirection(): Boolean {
-        return inType
-    }
-
-    fun isOutDirection(): Boolean {
-        return !inType
-    }
 
     override fun toString(): String {
-        return colonList(arrayOf(getTypeName(), getType(), getValue()))
+        return colonList(arrayOf(getTypeName(), getType(), value))
     }
 }

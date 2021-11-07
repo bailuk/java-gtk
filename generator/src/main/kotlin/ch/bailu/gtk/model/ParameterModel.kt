@@ -46,10 +46,10 @@ class ParameterModel : Model {
         jniConverter = factory(this)
 
         //setSupported("private", parameter.isPrivate());
-        setSupported("value", filterValues(parameterTag.getValue()))
+        setSupported("value", filterValues(parameterTag.value))
         setSupported("jType", jType.isValid())
         setSupported("callback", isCallbackSupported)
-        isWriteable = parameterTag.isWriteable()
+        isWriteable = parameterTag.isWriteable
     }
 
     private fun createCallbackModel(classType: ClassType, namespace: String): MethodModel? {
@@ -116,7 +116,7 @@ class ParameterModel : Model {
                 parameterTag.getType(),
                 parameterTag.getTypeName(),  // <-
                 parameterTag.getName(),  // <-
-                parameterTag.getValue(),
+                parameterTag.value,
                 gtkType,
                 apiType))
     }
@@ -150,7 +150,7 @@ class ParameterModel : Model {
 
     val value: String
         get() {
-            return parameterTag.getValue()
+            return parameterTag.value
         }
 
     val doc: String
