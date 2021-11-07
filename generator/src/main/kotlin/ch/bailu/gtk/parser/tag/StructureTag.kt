@@ -2,24 +2,27 @@ package ch.bailu.gtk.parser.tag
 
 import java.io.IOException
 
-class StructureTag(parent: TagWithParent, structureType: String): NamedWithDocTag(parent) {
+class StructureTag(parent: TagWithParent, val structureType: String): NamedWithDocTag(parent) {
 
-    private var parent = ""
-    private val structureType: String = structureType
-    private var disguised = false
+    var parent = ""
+        private set
 
-    private var type = ""
+    var disguised = false
+        private set
 
-    private val implementsList = TagList<NamedWithDocTag>()
-    private val constructors = TagList<MethodTag>()
-    private val functions = TagList<MethodTag>()
+    var type = ""
+        private set
+
+    val implementsList = TagList<NamedWithDocTag>()
+    val constructors = TagList<MethodTag>()
+    val functions = TagList<MethodTag>()
 
 
-    private val virtuals = TagList<MethodTag>()
-    private val methods = TagList<MethodTag>()
+    val virtuals = TagList<MethodTag>()
+    val methods = TagList<MethodTag>()
 
-    private val signals = TagList<MethodTag>()
-    private val fields = TagList<ParameterTag>()
+    val signals = TagList<MethodTag>()
+    val fields = TagList<ParameterTag>()
 
     override fun getChild(name: String, prefix: String): TagWithParent {
         if ("field" == name) {
@@ -50,7 +53,7 @@ class StructureTag(parent: TagWithParent, structureType: String): NamedWithDocTa
 
     @Throws(IOException::class)
     override fun end() {
-        if (isDisguised() == false) {
+        if (!disguised) {
             getBuilder().buildStructure(this)
         }
     }
@@ -68,48 +71,4 @@ class StructureTag(parent: TagWithParent, structureType: String): NamedWithDocTa
         }
     }
 
-
-    fun getParentName(): String {
-        return parent
-    }
-
-    fun getStructureType(): String {
-        return structureType
-    }
-
-    fun getImplementsList(): List<NamedWithDocTag> {
-        return implementsList
-    }
-
-    fun getConstructors(): List<MethodTag> {
-        return constructors
-    }
-
-    fun getVirtuals(): List<MethodTag> {
-        return virtuals
-    }
-
-    fun getMethods(): List<MethodTag> {
-        return methods
-    }
-
-    fun getSignals(): List<MethodTag> {
-        return signals
-    }
-
-    fun getFields(): List<ParameterTag> {
-        return fields
-    }
-
-    fun getFunctions(): List<MethodTag> {
-        return functions
-    }
-
-    fun isDisguised(): Boolean {
-        return disguised
-    }
-
-    fun getType(): String {
-        return type
-    }
 }

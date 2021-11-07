@@ -29,6 +29,9 @@ class NamespaceTag(parent: TagWithParent): NamedWithDocTag(parent) {
         if ("record" == name) {
             return StructureTag(this, name)
         }
+        if ("union" == name) {
+            return StructureTag(this, name)
+        }
         if ("interface" == name) {
             return StructureTag(this, name)
         }

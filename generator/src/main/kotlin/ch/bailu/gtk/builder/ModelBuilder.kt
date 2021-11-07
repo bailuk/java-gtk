@@ -17,10 +17,13 @@ class ModelBuilder : BuilderInterface {
 
     override fun buildStructure(structure: StructureTag) {
         val model = StructureModel(structure, namespace)
-        writeJavaFile(model)
-        if (model.hasNativeCalls()) {
-            writeCFile(model)
-            writeJavaImpFile(model)
+
+        if (model.isSupported) {
+            writeJavaFile(model)
+            if (model.hasNativeCalls()) {
+                writeCFile(model)
+                writeJavaImpFile(model)
+            }
         }
     }
 

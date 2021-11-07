@@ -31,13 +31,13 @@ class StructureModel : Model {
     val doc: String
 
     constructor(structure: StructureTag, nameSpace: NamespaceModel) {
-        cType = structure.getType()
+        cType = structure.type
         nameSpaceModel = nameSpace
-        structureType = StructureType(structure.getStructureType())
+        structureType = StructureType(structure.structureType)
         apiName = convert(nameSpace.getNamespace(), structure.getName())
-        parent = StructureModel(nameSpace.getNamespace(), structure.getParentName(), structureType)
+        parent = StructureModel(nameSpace.getNamespace(), structure.parent, structureType)
         doc = structure.getDoc()
-        for (m in structure.getConstructors()) {
+        for (m in structure.constructors) {
             models.privateFactories.addIfSupported(filterConstructor(MethodModel(nameSpace.getNamespace(), m)))
         }
 
@@ -49,19 +49,21 @@ class StructureModel : Model {
             }
         }
 
-        for (method in structure.getMethods()) {
+        for (method in structure.methods) {
             models.addIfSupportedWithCallbacks(models.methods, filter(MethodModel(nameSpace.getNamespace(), method)))
         }
-        for (signal in structure.getSignals()) {
+        for (signal in structure.signals) {
             models.signals.addIfSupported(MethodModel(nameSpace.getNamespace(), signal))
         }
-        for (field in structure.getFields()) {
+        for (field in structure.fields) {
             val fieldModel = ParameterModel(nameSpace.getNamespace(), field, false, filterFieldDirectAccess(this))
             models.fields.addIfSupported(filterField(fieldModel))
         }
-        for (m in structure.getFunctions()) {
+        for (m in structure.functions) {
             models.addIfSupportedWithCallbacks(models.functions, filter(MethodModel(nameSpace.getNamespace(), m)))
         }
+
+        setSupported("Name", apiName != "")
     }
 
     private fun convert(namespace: String, name: String): String {
@@ -146,14 +148,14 @@ class StructureModel : Model {
 
         if (className == "") {
             nameSpaceModel = NamespaceModel()
-            if (structType.isRecord) {
-                apiName = nameSpaceModel.getFullNamespace() + ".type.Record"
+            apiName =  if (structType.isRecord) {
+                nameSpaceModel.getFullNamespace() + ".type.Record"
             } else if (structType.isPackage) {
-                apiName = nameSpaceModel.getFullNamespace() + ".type.Package"
+                nameSpaceModel.getFullNamespace() + ".type.Package"
             } else if (structType.isCallback) {
-                apiName = nameSpaceModel.getFullNamespace() + ".type.Callback"
+                nameSpaceModel.getFullNamespace() + ".type.Callback"
             } else {
-                apiName = nameSpaceModel.getFullNamespace() + ".type.Pointer"
+                nameSpaceModel.getFullNamespace() + ".type.Pointer"
             }
         } else {
             val type = RelativeNamespaceType(defaultNamespace, className)
