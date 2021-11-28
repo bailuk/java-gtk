@@ -67,5 +67,4 @@ fun filterCreateMallocConstructor(structureModel: StructureModel): Boolean {
 
 fun filterFieldDirectAccess(structureModel: StructureModel): Boolean {
     return "AttrShape" == structureModel.apiName || "Event" == structureModel.apiName
-
 }
