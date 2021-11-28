@@ -466,7 +466,21 @@
                     <instance-parameter name="cr" transfer-ownership="none">
                         <type name="Context" c:type="cairo_t*"/>
                     </instance-parameter>
-                    <parameter name="matrix" transfer-ownership="non">
+                    <parameter name="matrix" transfer-ownership="none">
+                        <type name="Matrix" c:type="const cario_matrix_t*"/>
+                    </parameter>
+                </parameters>
+            </method>
+
+            <method name="transform" c:identifier="cairo_transform">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                    <parameter name="matrix" transfer-ownership="none">
                         <type name="Matrix" c:type="const cario_matrix_t*"/>
                     </parameter>
                 </parameters>
