@@ -20,11 +20,11 @@ public class App {
         //new Spinner(argv);
         //new LinksSample(argv);
         //new CairoDrawingArea(argv);
-        //new Pixbufs(argv);
-        new PangoTextMask(argv);
+        new Pixbufs(argv);
+        //new PangoTextMask(argv);
 
         // FIXME this sample is not yet implemented
-        //n ew PangoRotatedText(argv);
+        //new PangoRotatedText(argv);
 
 
         //new ImageBridge(argv);
