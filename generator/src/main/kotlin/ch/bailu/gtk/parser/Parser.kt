@@ -42,9 +42,9 @@ class Parser {
         var tag = rootTag
         while (parser.eventType != XmlPullParser.END_DOCUMENT) {
             if (parser.eventType == XmlPullParser.START_TAG) {
-                tag = tag.getChild(parser.name, if (parser.prefix == null) "" else parser.prefix)
+                tag = tag.getChild(toPrefixed(parser.name, parser.prefix));
                 for (i in 0 until parser.attributeCount) {
-                    tag.setAttribute(parser.getAttributeName(i), parser.getAttributeValue(i))
+                    tag.setAttribute(toPrefixed(parser.getAttributeName(i), parser.getAttributePrefix(i)), parser.getAttributeValue(i))
                 }
                 tag.started()
             } else if (parser.eventType == XmlPullParser.END_TAG) {
@@ -58,4 +58,10 @@ class Parser {
     }
 
 
+    private fun toPrefixed(name: String, prefix: String?) : String {
+        if (prefix == null) {
+            return name;
+        }
+        return "$prefix:$name"
+    }
 }

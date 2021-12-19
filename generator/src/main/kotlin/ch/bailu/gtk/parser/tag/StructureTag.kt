@@ -24,7 +24,7 @@ class StructureTag(parent: TagWithParent, val structureType: String): NamedWithD
     val signals = TagList<MethodTag>()
     val fields = TagList<ParameterTag>()
 
-    override fun getChild(name: String, prefix: String): TagWithParent {
+    override fun getChild(name: String): TagWithParent {
         if ("field" == name) {
             return fields.addTag(ParameterTag(this))
         }
@@ -40,7 +40,7 @@ class StructureTag(parent: TagWithParent, val structureType: String): NamedWithD
         if ("method" == name) {
             return methods.addTag(MethodTag(this))
         }
-        if ("signal" == name) {
+        if ("glib:signal" == name) {
             return signals.addTag(MethodTag(this))
         }
         if ("function" == name) {
@@ -48,7 +48,7 @@ class StructureTag(parent: TagWithParent, val structureType: String): NamedWithD
             functions.add(f)
             return f
         }
-        return super.getChild(name, prefix)
+        return super.getChild(name)
     }
 
     @Throws(IOException::class)
@@ -64,7 +64,7 @@ class StructureTag(parent: TagWithParent, val structureType: String): NamedWithD
             parent = value
         } else if ("disguised" == name) {
             disguised = "1" == value
-        } else if ("type" == name) {
+        } else if ("c:type" == name) {
             type = value
         } else {
             super.setAttribute(name, value)

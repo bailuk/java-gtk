@@ -4,10 +4,10 @@ public abstract class Array extends Wrapper {
     private int length;
     private final int bytes;
 
-    public Array(long pointer, int bytes, int length) {
+    public Array(CPointer pointer, int bytes, int length) {
         super(pointer);
         this.bytes = bytes;
-        if (pointer == 0) {
+        if (pointer.isNull()) {
             this.length = 0;
         } else {
             this.length = length;

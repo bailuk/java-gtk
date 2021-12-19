@@ -5,10 +5,10 @@ import java.io.IOException
 class EnumerationTag(parent: TagWithParent) : TypeTag(parent) {
     private val members = TagList<ParameterTag>()
 
-    override fun getChild(name: String, prefix: String): TagWithParent {
+    override fun getChild(name: String): TagWithParent {
         return if ("member" == name) {
             members.addTag(MemberTag(this))
-        } else super.getChild(name, prefix)
+        } else super.getChild(name)
     }
 
     @Throws(IOException::class)

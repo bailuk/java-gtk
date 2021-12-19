@@ -15,7 +15,10 @@ class JavaApiWriter(writer: TextWriter, doc: JavaDoc) : CodeWriter(writer) {
         super.writeStart(structureModel, namespaceModel)
         out.a("package ${namespaceModel.getFullNamespace()};\n\n")
         out.a("import javax.annotation.Nullable;\n")
-        out.a("import javax.annotation.Nonnull;")
+        out.a("import javax.annotation.Nonnull;\n\n")
+        out.a("import ch.bailu.gtk.type.CPointer;")
+
+
         out.end(3)
     }
 
@@ -102,7 +105,7 @@ class JavaApiWriter(writer: TextWriter, doc: JavaDoc) : CodeWriter(writer) {
             result.append("return ${c.impName}.${m.apiName}(${signature})")
 
         } else {
-            result.append("return new ${m.returnType.apiType}(${c.impName}.${m.apiName}(${signature}))")
+            result.append("return new ${m.returnType.apiType}(new CPointer(${c.impName}.${m.apiName}(${signature})))")
         }
         return result.toString()
     }
@@ -148,7 +151,7 @@ class JavaApiWriter(writer: TextWriter, doc: JavaDoc) : CodeWriter(writer) {
         out.start(1)
         javaDoc.writeInternalConstructor(structureModel)
         out.a("""
-            public ${structureModel.apiName}(long pointer) {
+            public ${structureModel.apiName}(CPointer pointer) {
                 super(pointer);
             }
         """,4)
@@ -162,7 +165,7 @@ class JavaApiWriter(writer: TextWriter, doc: JavaDoc) : CodeWriter(writer) {
             javaDoc.writeMallocConstructor(structureModel)
             out.a("""
                 public ${structureModel.apiName}() {
-                    super(${structureModel.impName}.newFromMalloc());
+                    super(new CPointer(${structureModel.impName}.newFromMalloc()));
                 }
                 
                 public void destroy() {
@@ -178,7 +181,7 @@ class JavaApiWriter(writer: TextWriter, doc: JavaDoc) : CodeWriter(writer) {
         javaDoc.writeConstructor(structureModel, methodModel)
         out.a("""
             public ${structureModel.apiName}(${getSignature(methodModel.getParameters())}) {
-                super(${structureModel.impName}.${methodModel.apiName}(${getFactoryCallSignature(methodModel.getParameters())}));
+                super(new CPointer(${structureModel.impName}.${methodModel.apiName}(${getFactoryCallSignature(methodModel.getParameters())})));
             }
         """, 4)
         out.end(1)
@@ -189,9 +192,9 @@ class JavaApiWriter(writer: TextWriter, doc: JavaDoc) : CodeWriter(writer) {
         javaDoc.writeFactory(structureModel, methodModel)
         out.a("""
             public static ${structureModel.apiName} ${methodModel.apiName}${structureModel.apiName}(${getSignature(methodModel.getParameters())}) ${getThrowsExtension(methodModel)} {
-                long pointerToObject = ${structureModel.impName}.${methodModel.apiName}(${getFactoryCallSignature(methodModel.getParameters())});
+                CPointer pointerToObject = new CPointer(${structureModel.impName}.${methodModel.apiName}(${getFactoryCallSignature(methodModel.getParameters())}));
                
-                if (pointerToObject == 0) {
+                if (pointerToObject.isNull()) {
                     ${getThrowsOnNullSatement(structureModel, methodModel)};
                 }
         
@@ -281,7 +284,7 @@ class JavaApiWriter(writer: TextWriter, doc: JavaDoc) : CodeWriter(writer) {
         } else {
             out.a("""
                 public ${parameterModel.apiType} ${getter}() {
-                    return new ${parameterModel.apiType}(${structureModel.impName}.${getter}(${getSelfCallSignature(parameters)}));
+                    return new ${parameterModel.apiType}(new CPointer(${structureModel.impName}.${getter}(${getSelfCallSignature(parameters)})));
                 }
                 """, 4)
             }

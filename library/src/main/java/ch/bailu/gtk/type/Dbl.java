@@ -10,12 +10,12 @@ public class Dbl extends Dbls {
         super(createDbl(0),1);
     }
 
-    public Dbl(long pointer) {
+    public Dbl(CPointer pointer) {
         super(pointer);
     }
 
-    private static long createDbl(double value) {
-        return ImpDbls.createDbl(value);
+    private static CPointer createDbl(double value) {
+        return new CPointer(ImpDbls.createDbl(value));
     }
 
     public static Dbl create(double value) {

@@ -14,6 +14,7 @@ import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.DrawingArea;
+import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
@@ -35,7 +36,7 @@ public class ImageBridge {
 
         int count = 1;
         while(list.isNotNull() && list.getFieldData().isNotNull()) {
-            var format = new PixbufFormat(list.getFieldData().getCPointer());
+            var format = new PixbufFormat(new CPointer(list.getFieldData().getCPointer()));
 
             System.out.println("");
             System.out.println("Format " + count + ":");

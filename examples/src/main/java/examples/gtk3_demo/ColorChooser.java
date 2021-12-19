@@ -15,6 +15,7 @@ import ch.bailu.gtk.gtk.Frame;
 import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.ResponseType;
 import ch.bailu.gtk.gtk.ShadowType;
+import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
@@ -37,7 +38,7 @@ public class ColorChooser {
         window.add(vbox);
 
         window.setTitle(new Str("Color Chooser"));
-        var frame = new Frame(null);
+        var frame = new Frame((Str)null);
         frame.setShadowType(ShadowType.IN);
         vbox.packStart(frame, 1,1,0);
 
@@ -71,7 +72,7 @@ public class ColorChooser {
 
             dialog.onResponse(response_id -> {
                 if (response_id == ResponseType.OK) {
-                    var color = new ch.bailu.gtk.gtk.ColorChooser(dialog.getCPointer());
+                    var color = new ch.bailu.gtk.gtk.ColorChooser(new CPointer(dialog.getCPointer()));
                     color.getRgba(rgba);
                 }
                 dialog.destroy();

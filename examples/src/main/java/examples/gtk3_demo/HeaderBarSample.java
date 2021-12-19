@@ -13,6 +13,7 @@ import ch.bailu.gtk.gtk.Image;
 import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.TextView;
 import ch.bailu.gtk.gtk.Window;
+import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
@@ -37,7 +38,7 @@ public class HeaderBarSample {
 
         var button = new Button();
         var icon = new ThemedIcon(new Str("mail-send-receive-symbolic"));
-        var image = Image.newFromGiconImage(new Icon(icon.getCPointer()), IconSize.BUTTON);
+        var image = Image.newFromGiconImage(new Icon(new CPointer(icon.getCPointer())), IconSize.BUTTON);
         icon.unref();
 
         button.add(image);

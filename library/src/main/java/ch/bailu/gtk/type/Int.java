@@ -8,14 +8,14 @@ public class Int extends Wrapper {
         this(createInt(0));
     }
 
-    public Int(long pointer) {
+    public Int(CPointer pointer) {
         super(pointer);
-        created = pointer != 0;
+        created = pointer.isNotNull();
     }
 
 
-    private static long createInt(int value) {
-        return ImpInt.createInt(value);
+    private static CPointer createInt(int value) {
+        return new CPointer(ImpInt.createInt(value));
     }
 
     public static Int create(int value) {

@@ -1,7 +1,7 @@
 package ch.bailu.gtk.type;
 
 public abstract class Wrapper extends Pointer {
-    public Wrapper(long pointer) {
+    public Wrapper(CPointer pointer) {
         super(pointer);
     }
 }

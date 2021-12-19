@@ -22,7 +22,7 @@ class NamespaceTag(parent: TagWithParent): NamedWithDocTag(parent) {
         getBuilder().buildNamespaceEnd(this)
     }
 
-    override fun getChild(name: String, prefix: String): TagWithParent {
+    override fun getChild(name: String): TagWithParent {
         if ("class" == name) {
             return StructureTag(this, name)
         }
@@ -57,7 +57,7 @@ class NamespaceTag(parent: TagWithParent): NamedWithDocTag(parent) {
         if ("callback" == name) {
             return CallbackTag(this)
         }
-        return super.getChild(name, prefix)
+        return super.getChild(name)
     }
 
     fun getIncludes(): List<NamedWithDocTag> {

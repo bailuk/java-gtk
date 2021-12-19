@@ -1,29 +1,38 @@
 package ch.bailu.gtk.type;
 
 
-public class Pointer extends Type {
+import java.util.Objects;
 
-    public final static Pointer NULL = new Pointer(0);
+public class Pointer extends Type implements CPointerInterface {
 
-    private final long pointer;
+    public final static Pointer NULL = new Pointer(CPointer.NULL);
 
-    public Pointer(long pointer) {
+    private final CPointer pointer;
+
+    public Pointer(CPointer pointer) {
         this.pointer = pointer;
     }
 
+    @Override
     public final long getCPointer() {
+        return pointer.getCPointer();
+    }
+
+    public final CPointer getCPointerWrapper() {
         return pointer;
     }
 
     @Override
     public int hashCode() {
-        return Long.valueOf(pointer).hashCode();
+        return pointer.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Pointer) {
-            return ((Pointer) obj).pointer == pointer;
+        if (this == obj) {
+            return true;
+        } else if (obj instanceof Pointer) {
+            return Objects.equals(((Pointer)obj).pointer, pointer);
         }
         return false;
     }
@@ -42,16 +51,18 @@ public class Pointer extends Type {
     }
 
     public final void throwIfNull() {
-        if (pointer == 0) {
+        if (pointer.isNull()) {
             throwNullPointerException("pointer == 0");
         }
     }
 
+    @Override
     public final boolean isNotNull() {
-        return (pointer != 0);
+        return pointer.isNotNull();
     }
 
+    @Override
     public final boolean isNull() {
-        return (pointer == 0);
+        return pointer.isNull();
     }
 }

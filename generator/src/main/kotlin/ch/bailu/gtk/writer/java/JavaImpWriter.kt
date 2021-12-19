@@ -9,7 +9,8 @@ class JavaImpWriter(writer : TextWriter) : CodeWriter(writer) {
 
     override fun writeStart(structureModel : StructureModel, namespaceModel : NamespaceModel) {
         super.writeStart(structureModel, namespaceModel)
-        out.a("package ${namespaceModel.getFullNamespace()};")
+        out.a("package ${namespaceModel.getFullNamespace()};\n\n")
+        out.a("import ch.bailu.gtk.type.CPointer;")
         out.end(3)
     }
 
@@ -156,7 +157,7 @@ class JavaImpWriter(writer : TextWriter) : CodeWriter(writer) {
             if (p.isJavaNative) {
                 result.append(p.name)
             } else {
-                result.append("new ${p.apiType}(${p.name})")
+                result.append("new ${p.apiType}(new CPointer(${p.name}))")
             }
             del = ", ";
         }

@@ -3,7 +3,7 @@ package ch.bailu.gtk.parser.tag
 class DocTag(parent: TagWithParent): TagWithParent(parent) {
     var aText = ""
 
-    override fun getChild(name: String, prefix: String): TagWithParent {
+    override fun getChild(name: String): TagWithParent {
         return ignore()
     }
 

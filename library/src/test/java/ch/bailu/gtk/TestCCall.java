@@ -6,6 +6,7 @@ import ch.bailu.gtk.gdk.RGBA;
 import ch.bailu.gtk.glib.Glib;
 import ch.bailu.gtk.glib.MainContext;
 import ch.bailu.gtk.glib.MainLoop;
+import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
@@ -48,7 +49,7 @@ public class TestCCall {
 
         final long timeExpectMin = 100*10;
         final long start = System.currentTimeMillis();
-        final var loop = new MainLoop(new MainContext(0), GTK.TRUE);
+        final var loop = new MainLoop(new MainContext(CPointer.NULL), GTK.TRUE);
         Glib.timeoutAdd(100, user_data -> {
             i++;
             if (i==10) {

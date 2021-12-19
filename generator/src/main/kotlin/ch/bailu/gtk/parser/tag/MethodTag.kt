@@ -15,7 +15,7 @@ open class MethodTag(parent: TagWithParent): NamedWithDocTag(parent) {
 
 
     private inner class Parameters : TagWithParent(this@MethodTag) {
-        override fun getChild(name: String, prefix: String): TagWithParent {
+        override fun getChild(name: String): TagWithParent {
             if ("parameter" == name) {
                 return parameters.addTag(ParameterTag(this))
             }
@@ -27,18 +27,18 @@ open class MethodTag(parent: TagWithParent): NamedWithDocTag(parent) {
     }
 
 
-    override fun getChild(name: String, prefix: String): TagWithParent {
+    override fun getChild(name: String): TagWithParent {
         if ("return-value" == name) {
             return returnValue
         }
         if ("parameters" == name) {
             return Parameters()
         }
-        return super.getChild(name, prefix)
+        return super.getChild(name)
     }
 
     override fun setAttribute(name: String, value: String) {
-        if ("identifier" == name) {
+        if ("c:identifier" == name) {
             identifier = value
         } else if ("throws" == name) {
             throwsError = "1" == value

@@ -1,7 +1,7 @@
 package ch.bailu.gtk.type;
 
 public class Str extends Bytes {
-    public Str(long pointer) {
+    public Str(CPointer pointer) {
         super(pointer);
     }
 

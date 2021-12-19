@@ -79,7 +79,7 @@ open class ParameterTag(parent: TagWithParent): NamedWithDocTag(parent) {
     var isPrivate = false
         private set
 
-    override fun getChild(name: String, prefix: String): TagWithParent {
+    override fun getChild(name: String): TagWithParent {
         if ("type" == name) {
             return type
         }
@@ -91,7 +91,7 @@ open class ParameterTag(parent: TagWithParent): NamedWithDocTag(parent) {
             isVarargs = true
             return ignore()
         }
-        return super.getChild(name, prefix)
+        return super.getChild(name)
     }
 
     override fun setAttribute(name: String, value: String) {

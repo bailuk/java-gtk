@@ -10,14 +10,14 @@ public class Int64 extends Wrapper {
         this(createLong(0));
     }
 
-    public Int64(long pointer) {
+    public Int64(CPointer pointer) {
         super(pointer);
-        created = pointer != 0;
+        created = pointer.isNotNull();
     }
 
 
-    private static long createLong(long value) {
-        return ImpInt.createLong(value);
+    private static CPointer createLong(long value) {
+        return new CPointer(ImpInt.createLong(value));
     }
 
     public static Int64 create(long value) {

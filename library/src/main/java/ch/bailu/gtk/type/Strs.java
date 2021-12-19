@@ -4,7 +4,7 @@ public class Strs extends Pointer {
     private Str[] strs;
     private boolean destroyAll = false;
 
-    public Strs(long pointer) {
+    public Strs(CPointer pointer) {
         super(pointer);
         strs = null;
     }
@@ -15,10 +15,10 @@ public class Strs extends Pointer {
     }
 
     public Strs(Str[] strs) {
-        this(strs, ImpUtil.createPointerArray(Util.toPointerArray(strs)));
+        this(strs, new CPointer(ImpUtil.createPointerArray(Util.toPointerArray(strs))));
     }
 
-    public Strs(Str[] strs, long pointers) {
+    public Strs(Str[] strs, CPointer pointers) {
         super(pointers);
         this.strs=strs;
     }

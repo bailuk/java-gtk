@@ -4,7 +4,7 @@ import ch.bailu.gtk.builder.BuilderInterface
 import ch.bailu.gtk.config.NamespaceConfig
 
 abstract class Tag {
-    abstract fun getChild(name: String, prefix: String): TagWithParent
+    abstract fun getChild(name: String): TagWithParent
 
     open fun started() {}
     open fun end() {}

@@ -15,7 +15,7 @@ class DocumentTag(builder: BuilderInterface, namespaceConfig: NamespaceConfig): 
         return namespaceConfig
     }
 
-    override fun getChild(name: String, prefix: String): TagWithParent {
+    override fun getChild(name: String): TagWithParent {
         if ("repository" == name) {
             return RepositoryTag(this)
         }

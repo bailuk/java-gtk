@@ -5,11 +5,11 @@ public class Dbls extends Array {
     private final static int BYTES = 4;
 
 
-    public Dbls(long pointer, int length) {
+    public Dbls(CPointer pointer, int length) {
         super(pointer, BYTES, length);
     }
 
-    public Dbls(long pointer) {
+    public Dbls(CPointer pointer) {
         super(pointer, BYTES, 0);
     }
 
@@ -18,11 +18,11 @@ public class Dbls extends Array {
         super(createDoubleArray(doubles), BYTES, doubles.length);
     }
 
-    private static long createDoubleArray(double[] doubles) {
+    private static CPointer createDoubleArray(double[] doubles) {
         if (doubles.length > 0) {
-            return ImpDbls.createDoubleArray(doubles);
+            return new CPointer(ImpDbls.createDoubleArray(doubles));
         }
-        return 0;
+        return CPointer.NULL;
     }
 
     public void setAt(int index, double value) {
@@ -42,10 +42,10 @@ public class Dbls extends Array {
         super(createDoubleArray(floats), BYTES, floats.length);
     }
 
-    private static long createDoubleArray(float[] floats) {
+    private static CPointer createDoubleArray(float[] floats) {
         if (floats.length > 0) {
-            return ImpDbls.createDoubleArrayFromFloats(floats);
+            return new CPointer(ImpDbls.createDoubleArrayFromFloats(floats));
         }
-        return 0;
+        return CPointer.NULL;
     }
 }

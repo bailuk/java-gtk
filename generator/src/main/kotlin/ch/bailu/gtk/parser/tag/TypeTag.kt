@@ -5,7 +5,7 @@ open class TypeTag(parent: TagWithParent) : NamedWithDocTag(parent) {
         private set
 
     override fun setAttribute(name: String, value: String) {
-        if ("type" == name) {
+        if ("c:type" == name) {
             type = value
         } else {
             super.setAttribute(name, value)

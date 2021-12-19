@@ -4,7 +4,7 @@ open class NamedWithDocTag(parent: TagWithParent) : TagWithParent(parent){
     private var name: String = ""
     private val doc =  DocTag(this)
 
-    override fun getChild(name: String, prefix: String): TagWithParent {
+    override fun getChild(name: String): TagWithParent {
         if ("doc" == name) {
             return doc
         }

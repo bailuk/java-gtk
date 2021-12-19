@@ -52,7 +52,8 @@ fun filterField(structureModel: StructureModel): Boolean {
 private val MALLOC = arrayOf(
         "RGBA",
         "Rectangle",
-        "Matrix"
+        "Matrix",
+        "TreeIter"
 )
 
 

@@ -5,7 +5,7 @@
 
 echo "\nClean all"
 ./gradlew -q library:clean || exit 1
-rm -r glue/build
+test -d glue/build && rm -r glue/build
 
 echo "\nGenerate sources"
 ./gradlew -q generator:generate || exit 1

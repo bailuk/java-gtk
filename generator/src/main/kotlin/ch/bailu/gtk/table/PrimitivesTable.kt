@@ -20,6 +20,7 @@ object PrimitivesTable {
         add("gssize", "long")
         add("gulong", "long")
         add("gsize", "long")
+        add("GType", "long")
         add("gchar", "char")
         add("gunichar", "char")
         add("gint64", "long")

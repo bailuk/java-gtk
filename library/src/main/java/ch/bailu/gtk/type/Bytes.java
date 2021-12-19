@@ -2,13 +2,11 @@ package ch.bailu.gtk.type;
 
 public class Bytes extends Array {
 
-
-
-    public Bytes(long pointer, int size) {
+    public Bytes(CPointer pointer, int size) {
         super(pointer, 1, size);
     }
 
-    public Bytes(long pointer) {
+    public Bytes(CPointer pointer) {
         super(pointer, 1, 0);
     }
 
@@ -17,11 +15,11 @@ public class Bytes extends Array {
 
     }
 
-    private static long createBytes(byte[] bytes) {
+    private static CPointer createBytes(byte[] bytes) {
         if (bytes.length == 0) {
-            return 0;
+            return CPointer.NULL;
         }
-        return ImpBytes.createBytes(bytes);
+        return new CPointer(ImpBytes.createBytes(bytes));
     }
 
     public byte getByte(int index) {
