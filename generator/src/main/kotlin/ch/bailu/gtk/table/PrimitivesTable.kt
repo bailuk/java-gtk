@@ -36,6 +36,7 @@ object PrimitivesTable {
         add("long", "long")
         add("int", "int")
         add("double", "double")
+        add("float", "float")
     }
 
     private fun add(cType: String, jType: String) {

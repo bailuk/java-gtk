@@ -26,6 +26,9 @@ fun filterMethod(structureModel: StructureModel, methodModel: MethodModel): Bool
     if ("Coverage" == structureModel.apiName && "ref" == methodModel.apiName) {
         return false
     }
+    if ("PrintUnixDialog" == structureModel.apiName && "getSettings" == methodModel.apiName) {
+        return false
+    }
     return !("PrintSettings" == structureModel.apiName && "get" == methodModel.apiName)
 }
 
@@ -53,7 +56,8 @@ private val MALLOC = arrayOf(
         "RGBA",
         "Rectangle",
         "Matrix",
-        "TreeIter"
+        "TreeIter",
+        "Value"
 )
 
 
