@@ -1,9 +1,14 @@
+
 package examples;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import ch.bailu.gtk.Callback;
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.bridge.Image;
 import ch.bailu.gtk.cairo.Context;
@@ -15,6 +20,7 @@ import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.DrawingArea;
 import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
@@ -62,20 +68,17 @@ public class ImageBridge {
     private Pixbuf pixbuf = null;
 
     private void doLogoLoadAndDisplay(ApplicationWindow window) {
-        Pixbuf icon = loadPixbuf(64, 64);
+        //Pixbuf icon = loadPixbuf(64, 64);
 
         window.setResizable(GTK.TRUE);
         window.setSizeRequest(400,200);
         window.setTitle(new Str("GTK Logo from Java stream"));
-        if (icon != null) {
-            window.setIcon(icon);
-        }
 
-        window.onSizeAllocate(allocation -> setPixbuf(allocation.getFieldWidth(), allocation.getFieldHeight()));
         DrawingArea da = new DrawingArea();
-        window.add(da);
-        da.onDraw(cr -> drawLogo(cr));
-        window.showAll();
+        window.setChild(da);
+        da.onResize((width, height) -> setPixbuf(width, height));
+        da.setDrawFunc((drawing_area, cr, width, height, user_data) -> drawLogo(cr), new Callback.EmitterID(), null);
+        window.show();
     }
 
 
@@ -126,3 +129,4 @@ public class ImageBridge {
         return GTK.FALSE;
     }
 }
+

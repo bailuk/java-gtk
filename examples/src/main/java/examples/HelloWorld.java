@@ -21,8 +21,8 @@ public class HelloWorld {
 
             // When the button is clicked, close the window
             button.onClicked(() -> window.close());
-            window.add(button);
-            window.showAll();
+            window.setChild(button);
+            window.show();
         });
 
         app.run(argv.length, new Strs(argv));

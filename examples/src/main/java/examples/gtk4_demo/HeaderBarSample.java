@@ -1,5 +1,5 @@
 
-package examples.gtk3_demo;
+package examples.gtk4_demo;
 
 import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gtk.Application;

@@ -1,7 +1,4 @@
-package examples.gtk3_demo;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+package examples.gtk4_demo;
 
 import ch.bailu.gtk.Callback;
 import ch.bailu.gtk.GTK;
@@ -23,7 +20,6 @@ import ch.bailu.gtk.gtk.DrawingArea;
 import ch.bailu.gtk.gtk.MessageDialog;
 import ch.bailu.gtk.gtk.MessageType;
 import ch.bailu.gtk.gtk.Widget;
-import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 

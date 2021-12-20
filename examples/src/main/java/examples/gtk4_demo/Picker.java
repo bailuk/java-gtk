@@ -1,4 +1,4 @@
-package examples.gtk3_demo;
+package examples.gtk4_demo;
 
 import java.util.Arrays;
 
