@@ -2,7 +2,6 @@ package examples.gtk3_demo;
 
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.cairo.Context;
-import ch.bailu.gtk.cairo.Matrix;
 import ch.bailu.gtk.cairo.Pattern;
 import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gtk.Application;
@@ -31,9 +30,9 @@ public class PangoTextMask {
         window.setTitle(new Str("Text Mask"));
 
         DrawingArea da = new DrawingArea();
-        window.add(da);
-        da.onDraw(cr -> drawText(window, cr));
-        window.showAll();
+        window.setChild(da);
+        da.setDrawFunc((drawing_area, cr, width, height, user_data) -> drawText(window, cr), null, null);
+        window.show();
     }
 
 

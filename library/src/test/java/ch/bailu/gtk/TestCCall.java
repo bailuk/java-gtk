@@ -26,19 +26,19 @@ public class TestCCall {
     @Test
     public void testRGBAMallocAndFileds() {
         RGBA rgba = new RGBA();
-        assertEquals(0d, rgba.getFieldAlpha(),0d);
-        assertEquals(0d, rgba.getFieldRed(),0d);
-        assertEquals(0d, rgba.getFieldGreen(),0d);
-        assertEquals(0d, rgba.getFieldBlue(),0d);
+        assertEquals(0f, rgba.getFieldAlpha(),0f);
+        assertEquals(0f, rgba.getFieldRed(),0f);
+        assertEquals(0f, rgba.getFieldGreen(),0f);
+        assertEquals(0f, rgba.getFieldBlue(),0f);
 
-        rgba.setFieldAlpha(0.1);
-        rgba.setFieldRed(0.2);
-        rgba.setFieldGreen(0.3);
-        rgba.setFieldBlue(0.4);
-        assertEquals(0.1d, rgba.getFieldAlpha(),0d);
-        assertEquals(0.2d, rgba.getFieldRed(),0d);
-        assertEquals(0.3d, rgba.getFieldGreen(),0d);
-        assertEquals(0.4d, rgba.getFieldBlue(),0d);
+        rgba.setFieldAlpha(0.1f);
+        rgba.setFieldRed(0.2f);
+        rgba.setFieldGreen(0.3f);
+        rgba.setFieldBlue(0.4f);
+        assertEquals(0.1f, rgba.getFieldAlpha(),0f);
+        assertEquals(0.2f, rgba.getFieldRed(),0f);
+        assertEquals(0.3f, rgba.getFieldGreen(),0f);
+        assertEquals(0.4f, rgba.getFieldBlue(),0f);
     }
 
     private int i = 0;

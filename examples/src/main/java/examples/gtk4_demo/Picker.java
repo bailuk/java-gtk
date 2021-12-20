@@ -25,7 +25,7 @@ import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
-public class ColorChooser {
+public class Picker {
 
     private final static String[] FONT_FAMILIES = {
         "Cursive",
@@ -36,7 +36,7 @@ public class ColorChooser {
         "System-ui",
     };
 
-    public ColorChooser(String[] argv) {
+    public Picker(String[] argv) {
 
         var app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
         app.onActivate(() -> colorSelection(new ApplicationWindow(app)));
@@ -56,13 +56,7 @@ public class ColorChooser {
         table.setColumnSpacing(10);
         window.setChild(table);
 
-        var label = new Label(new Str("Standard"));
-        table.attach(label, 1,-1,1,1);
-
-        label = new Label(new Str("Custom"));
-        table.attach(label, 2,-1,1,1);
-
-        label = new Label(new Str("Color"));
+        var label = new Label(new Str("Color:"));
         label.setHalign(Align.START);
         label.setValign(Align.CENTER);
         label.setHexpand(GTK.TRUE);
@@ -71,11 +65,6 @@ public class ColorChooser {
 
         var picker = new ColorButton();
         table.attach(picker, 1,0,1,1);
-
-        picker = new ColorButton();
-        // TODO palette
-        table.attach(picker, 2,0,1,1);
-
 
         label = new Label(new Str("Font:"));
         label.setHalign(Align.START);
@@ -97,7 +86,7 @@ public class ColorChooser {
 
         table.attach(fontPicker, 2,1,1,1);
 
-        label = new Label(new Str("Mail"));
+        label = new Label(new Str("Mail:"));
         label.setHalign(Align.START);
         label.setValign(Align.CENTER);
         label.setHexpand(GTK.TRUE);
@@ -107,7 +96,7 @@ public class ColorChooser {
         table.attach(label, 0,3,1,1);
         table.attach(appPicker, 1,3,1,1);
 
-        var button = Button.newWithLabelButton(new Str("color"));
+        var button = Button.newWithLabelButton(new Str("Select color"));
         table.attach(button, 0,4,1,1);
         var da = new DrawingArea();
         var rgba = new RGBA();

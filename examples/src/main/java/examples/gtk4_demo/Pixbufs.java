@@ -1,5 +1,9 @@
 package examples.gtk3_demo;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import ch.bailu.gtk.Callback;
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.cairo.Context;
 import ch.bailu.gtk.exception.AllocationError;
@@ -19,6 +23,7 @@ import ch.bailu.gtk.gtk.DrawingArea;
 import ch.bailu.gtk.gtk.MessageDialog;
 import ch.bailu.gtk.gtk.MessageType;
 import ch.bailu.gtk.gtk.Widget;
+import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
@@ -53,7 +58,7 @@ public class Pixbufs {
     private final Pixbuf images[] = new Pixbuf[IMAGE_NAMES.length];
 
     /* Widgets */
-    private Widget da;
+    private DrawingArea da;
 
     private static final long CYCLE_TIME = 3000000; /* 3 seconds */
     private long startTime;
@@ -78,7 +83,7 @@ public class Pixbufs {
         }
     }
 
-    int onDraw(Widget widget, Context cr) {
+    int onDraw(Context cr) {
         Gdk.cairoSetSourcePixbuf(cr, frame, 0, 0);
         cr.paint();
         return GTK.TRUE;
@@ -174,10 +179,11 @@ public class Pixbufs {
             frame = new Pixbuf(Colorspace.RGB, GTK.FALSE, 8, backWidth, backHeight);
             da = new DrawingArea();
 
-            da.onDraw(cr -> onDraw(da, cr));
-            window.add(da);
+
+            da.setDrawFunc((drawingArea, cr, width, height, userData) -> onDraw(cr), new Callback.EmitterID(), null);
+            window.setChild(da);
             window.setSizeRequest(backWidth, backHeight);
-            window.addTickCallback((widget, frame_clock, user_data) -> onTick(frame_clock), null, data -> {});
+            window.addTickCallback((widget, frame_clock, user_data) -> onTick(frame_clock), new Callback.EmitterID(), data -> {});
 
         } catch (AllocationError e) {
             System.out.println(e.getMessage());
@@ -191,7 +197,7 @@ public class Pixbufs {
             dialog.onResponse(response_id -> window.destroy());
             dialog.show();
         }
-        window.showAll();
+        window.show();
         return window;
     }
 }

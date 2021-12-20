@@ -19,7 +19,7 @@ public class LinksSample {
             // Create a new window
             var window = init(new ApplicationWindow(app));
 
-            window.showAll();
+            window.show();
             window.present();
 
         });
@@ -45,7 +45,7 @@ public class LinksSample {
                 .append("<span color=\"#00933B\">l</span><span color=\"#F90101\">e</span>")
                 .append("</a>.");
         window.setTitle(new Str("Links"));
-        window.setBorderWidth(12);
+        //window.setBorderWidth(12);
         Label label = new Label(new Str(labelString.toString()));
 
         label.setUseMarkup(1);
@@ -53,7 +53,7 @@ public class LinksSample {
             System.out.println("link clicked");
             return 0;
         });
-        window.add(label);
+        window.setChild(label);
         label.show();
         return window;
     }
