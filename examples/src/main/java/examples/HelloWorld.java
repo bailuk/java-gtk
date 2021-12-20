@@ -8,7 +8,7 @@ import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
 public class HelloWorld {
-    public HelloWorld(String[] argv) {
+    public HelloWorld(String[] args) {
         var app = new Application(new Str("com.example.GtkApplication"),
                 ApplicationFlags.FLAGS_NONE);
 
@@ -25,6 +25,6 @@ public class HelloWorld {
             window.show();
         });
 
-        app.run(argv.length, new Strs(argv));
+        app.run(args.length, new Strs(args));
     }
 }

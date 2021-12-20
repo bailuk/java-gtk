@@ -5,9 +5,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import ch.bailu.gtk.Callback;
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.bridge.Image;
@@ -20,20 +17,18 @@ import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.DrawingArea;
 import ch.bailu.gtk.type.CPointer;
-import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
 public class ImageBridge {
 
-    public ImageBridge(String[] argv) {
+    public ImageBridge(String[] args) {
 
         listSupportedFormats();
 
-
         var app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
         app.onActivate(() -> doLogoLoadAndDisplay(new ApplicationWindow(app)));
-        app.run(argv.length, new Strs(argv));
+        app.run(args.length, new Strs(args));
 
     }
 
@@ -44,7 +39,7 @@ public class ImageBridge {
         while(list.isNotNull() && list.getFieldData().isNotNull()) {
             var format = new PixbufFormat(new CPointer(list.getFieldData().getCPointer()));
 
-            System.out.println("");
+            System.out.println("__");
             System.out.println("Format " + count + ":");
             System.out.println(format.getName());
             System.out.println(format.getDescription());
@@ -68,8 +63,6 @@ public class ImageBridge {
     private Pixbuf pixbuf = null;
 
     private void doLogoLoadAndDisplay(ApplicationWindow window) {
-        //Pixbuf icon = loadPixbuf(64, 64);
-
         window.setResizable(GTK.TRUE);
         window.setSizeRequest(400,200);
         window.setTitle(new Str("GTK Logo from Java stream"));

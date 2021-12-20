@@ -10,7 +10,7 @@ import ch.bailu.gtk.type.Strs;
 
 public class LinksSample {
 
-    public LinksSample(String[] argv) {
+    public LinksSample(String[] args) {
         var app = new Application(new Str("com.example.GtkApplication"),
                 ApplicationFlags.FLAGS_NONE);
 
@@ -24,7 +24,7 @@ public class LinksSample {
 
         });
 
-        app.run(argv.length, new Strs(argv));
+        app.run(args.length, new Strs(args));
     }
 
 

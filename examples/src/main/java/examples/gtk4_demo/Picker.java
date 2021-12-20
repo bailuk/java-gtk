@@ -36,11 +36,11 @@ public class Picker {
         "System-ui",
     };
 
-    public Picker(String[] argv) {
+    public Picker(String[] args) {
 
         var app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
         app.onActivate(() -> colorSelection(new ApplicationWindow(app)));
-        app.run(argv.length, new Strs(argv));
+        app.run(args.length, new Strs(args));
 
     }
 

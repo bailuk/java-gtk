@@ -60,10 +60,10 @@ public class Pixbufs {
     private long startTime;
 
 
-    public Pixbufs(String[] argv) {
+    public Pixbufs(String[] args) {
         var app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
         app.onActivate(() -> doPixbufs(new ApplicationWindow(app)));
-        app.run(argv.length, new Strs(argv));
+        app.run(args.length, new Strs(args));
 
 
     }

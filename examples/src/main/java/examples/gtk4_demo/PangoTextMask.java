@@ -16,11 +16,11 @@ import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
 public class PangoTextMask {
-    public PangoTextMask(String[] argv) {
+    public PangoTextMask(String[] args) {
 
         var app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
         app.onActivate(() -> doTextmask(new ApplicationWindow(app)));
-        app.run(argv.length, new Strs(argv));
+        app.run(args.length, new Strs(args));
 
     }
 

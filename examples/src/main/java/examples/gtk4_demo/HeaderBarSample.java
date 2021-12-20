@@ -16,11 +16,11 @@ import ch.bailu.gtk.type.Strs;
 
 public class HeaderBarSample {
 
-    public HeaderBarSample(String argv[]) {
+    public HeaderBarSample(String args[]) {
         Application app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
 
         app.onActivate(() -> show(new ApplicationWindow(app)));
-        app.run(argv.length, new Strs(argv));
+        app.run(args.length, new Strs(args));
     }
 
     public void show(Window window) {
