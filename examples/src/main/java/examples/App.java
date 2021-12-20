@@ -15,12 +15,12 @@ public class App {
     public static void main (String[] args) throws IOException {
         GTK.init();
         //new HelloWorld(args);
-        //new HeaderBarSample(args);
+        new HeaderBarSample(args);
         //new Picker(args);
         //new LinksSample(args);
         //new Pixbufs(args);
         //new PangoTextMask(args);
         //new HelloWorldBoxed(args);
-        new ImageBridge(args);
+        //new ImageBridge(args);
     }
 }
