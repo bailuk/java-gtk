@@ -20,6 +20,7 @@ object WrapperTable {
         add("const gchar*", "Str")
         add("filename", "Str")
         add("char**", "Strs")
+        add("const char* const*", "Strs")
         add("gint*", "Int")
         add("gsize*", "Int64")
         add("GType*", "Int64")
