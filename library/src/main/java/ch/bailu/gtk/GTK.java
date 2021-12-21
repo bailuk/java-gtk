@@ -50,4 +50,9 @@ public class GTK {
         }
         return FALSE;
     }
+
+    public static int TOGGLE(int bool) {
+        if (IS(bool)) return GTK.FALSE;
+        return GTK.TRUE;
+    }
 }
