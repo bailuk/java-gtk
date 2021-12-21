@@ -76,7 +76,7 @@ public class Picker {
         table.attach(fontPicker,1,1,1,1);
 
         fontPicker = new FontButton();
-        var fontChooser = new FontChooser(fontPicker.getCPointerWrapper());
+        var fontChooser = new FontChooser(fontPicker.cast());
         fontChooser.setLevel(FontChooserLevel.FAMILY | FontChooserLevel.SIZE);
 
         fontChooser.setFilterFunc((family, face, data) -> {

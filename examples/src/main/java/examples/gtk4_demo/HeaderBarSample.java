@@ -8,6 +8,7 @@ import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gio.Menu;
 import ch.bailu.gtk.gio.MenuItem;
 import ch.bailu.gtk.gio.SimpleAction;
+import ch.bailu.gtk.glib.Variant;
 import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.Box;
@@ -18,6 +19,7 @@ import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.PopoverMenu;
 import ch.bailu.gtk.gtk.Switch;
 import ch.bailu.gtk.gtk.TextView;
+import ch.bailu.gtk.helper.ActionHelper;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
@@ -27,7 +29,7 @@ public class HeaderBarSample {
     public HeaderBarSample(String args[]) {
         Application app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
 
-        var menuModel = createMenuModel(new ActionMap(app.getCPointerWrapper()));
+        var menuModel = createMenuModel(new ActionMap(app.cast()));
 
         app.onActivate(() -> show(app, new ApplicationWindow(app), menuModel));
         app.run(args.length, new Strs(args));
@@ -75,20 +77,21 @@ public class HeaderBarSample {
         var networkMenu = new Menu();
         var serverMenu = new Menu();
 
+        var actions = new ActionHelper(actionMap, "app");
+
         result.appendSubmenu(new Str("Network"), networkMenu);
         result.appendSubmenu(new Str("Server"), serverMenu);
 
-        var actionConnect = new SimpleAction(new Str("connect"), null);
-        var actionDisconnect = new SimpleAction(new Str("disconnect"), null);
-
-        actionMap.addAction(new Action(actionConnect.getCPointerWrapper()));
-        actionMap.addAction(new Action(actionDisconnect.getCPointerWrapper()));
-
         serverMenu.appendItem(new MenuItem(new Str("Connect"), new Str("app.connect")));
         serverMenu.appendItem(new MenuItem(new Str("Disconnect"), new Str("app.disconnect")));
+        networkMenu.appendItem(new MenuItem(new Str("Toggle"), new Str("app.toggle")));
 
-        actionConnect.onActivate(parameter -> System.out.println("Connect selected"));
-        actionDisconnect.onActivate(parameter -> System.out.println("Disconnect selected"));
+        actions.add("connect", parameter -> System.out.println("Connect selected"));
+        actions.add("disconnect", parameter -> System.out.println("Disconnect selected"));
+        actions.addBoolean("toggle", GTK.TRUE, parameter -> {
+            actions.toggle("toggle");
+            System.out.println("Toggle");
+        });
 
         return result;
     }

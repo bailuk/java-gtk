@@ -9,7 +9,7 @@ import ch.bailu.gtk.gtk.Window;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
-public class GtkBuilder {
+public class BuilderExample {
     private static final Str UI_XML = new Str(
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<interface>\n" +
@@ -51,7 +51,7 @@ public class GtkBuilder {
             "</interface>\n");
 
 
-    public GtkBuilder(String[] args) {
+    public BuilderExample(String[] args) {
         final var app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
         app.onActivate(() -> {
             var builder = new Builder();
