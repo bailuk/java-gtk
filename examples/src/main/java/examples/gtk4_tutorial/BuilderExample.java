@@ -3,10 +3,8 @@ package examples.gtk4_tutorial;
 import ch.bailu.gtk.exception.AllocationError;
 import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gtk.Application;
-import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.Builder;
 import ch.bailu.gtk.gtk.Button;
-import ch.bailu.gtk.gtk.Grid;
 import ch.bailu.gtk.gtk.Window;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
@@ -60,16 +58,16 @@ public class GtkBuilder {
             try {
                 builder.addFromString(UI_XML, UI_XML.getLength());
 
-                var window = new Window(builder.getObject(new Str("window")).getCPointerWrapper());
+                var window = new Window(builder.getObject(new Str("window")).cast());
                 window.setApplication(app);
 
-                var button1 = new Button(builder.getObject(new Str("button1")).getCPointerWrapper());
+                var button1 = new Button(builder.getObject(new Str("button1")).cast());
                 button1.onClicked(()->System.out.println("Hello from button1"));
 
-                var button2 = new Button(builder.getObject(new Str("button2")).getCPointerWrapper());
+                var button2 = new Button(builder.getObject(new Str("button2")).cast());
                 button2.onClicked(()->System.out.println("Hello from button2"));
 
-                var quit = new Button(builder.getObject(new Str("quit")).getCPointerWrapper());
+                var quit = new Button(builder.getObject(new Str("quit")).cast());
                 quit.onClicked(()->window.close());
 
                 window.show();

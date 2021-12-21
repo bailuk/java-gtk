@@ -3,8 +3,15 @@ package examples;
 import java.io.IOException;
 
 import ch.bailu.gtk.GTK;
+import examples.gtk4_demo.HeaderBarSample;
+import examples.gtk4_demo.HelloWorldBoxed;
+import examples.gtk4_demo.LinksSample;
+import examples.gtk4_demo.PangoTextMask;
+import examples.gtk4_demo.Picker;
+import examples.gtk4_demo.Pixbufs;
 import examples.gtk4_tutorial.CustomDrawing;
-import examples.gtk4_tutorial.GtkBuilder;
+import examples.gtk4_tutorial.BuilderExample;
+import examples.gtk4_tutorial.ExampleApplication;
 
 public class App {
 
@@ -18,10 +25,9 @@ public class App {
         //new PangoTextMask(args);
         //new HelloWorldBoxed(args);
         //new ImageBridge(args);
-        //new Words(args);
-        //new Tutorial(args);
         //new CustomDrawing(args);
-        new GtkBuilder(args);
+        //new BuilderExample(args);
+        new ExampleApplication();
 
     }
 }
