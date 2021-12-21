@@ -17,6 +17,11 @@ import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
 public class HelloWorld {
+    public static void main(String[] args) {
+        GTK.init();
+        new HelloWorld(args);
+    }
+
     public HelloWorld(String[] args) {
         var app = new Application(new Str("com.example.GtkApplication"),
             ApplicationFlags.FLAGS_NONE);
