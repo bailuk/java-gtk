@@ -17,10 +17,11 @@ object WrapperTable {
         add("const double*", "Dbls")
         add("gchar*", "Str")
         add("const char*", "Str")
+        add("char*", "Str")
         add("const gchar*", "Str")
         add("filename", "Str")
         add("char**", "Strs")
-        add("const char* const*", "Strs")
+        add("const char* const*", "Strs")  // TODO probably wrong type
         add("gint*", "Int")
         add("gsize*", "Int64")
         add("GType*", "Int64")
