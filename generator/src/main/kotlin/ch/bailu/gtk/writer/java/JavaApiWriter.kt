@@ -241,7 +241,7 @@ class JavaApiWriter(writer: TextWriter, doc: JavaDoc) : CodeWriter(writer) {
         out.a("    public void ").a(getJavaSignalMethodName(methodModel.name)).a("(").a(
             getJavaSignalInterfaceName(methodModel.name)
         ).a(" observer) {\n");
-        out.a("        ch.bailu.gtk.Callback.put(getCPointer(), \"").a(methodModel.apiName).a("\", observer);\n");
+        out.a("        ch.bailu.gtk.Callback.put(getCPointer(), \"").a(methodModel.name).a("\", observer);\n");
         out.a("        ").a(structureModel.impName).a(".").a(getJavaSignalMethodName(methodModel.name)).a("(getCPointer());\n");
         out.a("    }\n");
         out.a("    public interface ").a(getJavaSignalInterfaceName(methodModel.name)).a(" {\n")

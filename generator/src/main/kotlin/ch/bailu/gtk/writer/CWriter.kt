@@ -203,7 +203,7 @@ class CWriter (writer : TextWriter) : CodeWriter(writer) {
         {
             printf("JNI connect: ${methodModel.apiName}\n");
             ${getEnvironmentInit(structureModel, methodModel, true)}    
-            g_signal_connect ((void *)_self, "${methodModel.apiName}", G_CALLBACK (${getJniSignalCallbackName(structureModel, methodModel)}), NULL);
+            g_signal_connect ((void *)_self, "${methodModel.name}", G_CALLBACK (${getJniSignalCallbackName(structureModel, methodModel)}), NULL);
         }
         """.trimIndent())
     }
