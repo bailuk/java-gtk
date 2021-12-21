@@ -3,6 +3,9 @@ package examples;
 import java.io.IOException;
 
 import ch.bailu.gtk.GTK;
+import ch.bailu.gtk.gtk.Application;
+import ch.bailu.gtk.type.Str;
+import examples.gtk4_demo.AppLauncher;
 import examples.gtk4_demo.HeaderBarSample;
 import examples.gtk4_demo.HelloWorldBoxed;
 import examples.gtk4_demo.LinksSample;
@@ -15,8 +18,12 @@ import examples.gtk4_tutorial.ExampleApplication;
 
 public class App {
 
+    public static Str ID = null;
+
     public static void main (String[] args) throws IOException {
         GTK.init();
+        ID = new Str("org.gtk.example");
+
         //new HelloWorld(args);
         //new HeaderBarSample(args);
         //new Picker(args);
@@ -27,7 +34,8 @@ public class App {
         //new ImageBridge(args);
         //new CustomDrawing(args);
         //new BuilderExample(args);
-        new ExampleApplication();
+        //new ExampleApplication();
+        new AppLauncher();
 
     }
 }

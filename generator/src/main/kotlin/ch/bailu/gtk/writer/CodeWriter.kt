@@ -29,6 +29,7 @@ abstract class CodeWriter(val out: TextWriter)  {
     abstract fun writeMallocConstructor(structureModel : StructureModel)
     abstract fun writeCallback(structureModel: StructureModel, methodModel: MethodModel)
 
-    abstract fun writeEnd() 
+    abstract fun writeEnd()
+    abstract fun writeGetTypeFunction(structureModel: StructureModel)
 }
 

@@ -236,6 +236,12 @@ class JavaApiWriter(writer: TextWriter, doc: JavaDoc) : CodeWriter(writer) {
         out.end(0)
     }
 
+    override fun writeGetTypeFunction(structureModel: StructureModel) {
+        out.start(1);
+        out.a("    public static long getTypeID() { return " + structureModel.impName + ".getTypeID(); }\n" )
+        out.end(0)
+    }
+
     override  fun writeSignal(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(1)
         out.a("    public void ").a(getJavaSignalMethodName(methodModel.name)).a("(").a(

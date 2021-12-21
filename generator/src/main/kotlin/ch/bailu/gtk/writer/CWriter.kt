@@ -5,7 +5,6 @@ import ch.bailu.gtk.model.StructureModel
 import ch.bailu.gtk.model.MethodModel
 import ch.bailu.gtk.model.Model
 import ch.bailu.gtk.model.ParameterModel
-import java.io.Writer
 
 
 class CWriter (writer : TextWriter) : CodeWriter(writer) {
@@ -259,6 +258,17 @@ class CWriter (writer : TextWriter) : CodeWriter(writer) {
 
     override fun writeUnsupported(model: Model) {}
     override fun writeEnd() {}
+
+    override fun writeGetTypeFunction(structureModel: StructureModel) {
+        out.start(2)
+        out.a("""
+            JNIEXPORT jlong JNICALL ${getJniMethodName(structureModel, "getTypeID")}(JNIEnv * _jenv, jclass _jself)
+            {
+                return (jlong) ${structureModel.typeFunction}();
+            }
+        """,0)
+        out.end(2)
+    }
 
     private fun getCallbackMethodID(methodModel : MethodModel) : String {
         return "(*g_env)->GetStaticMethodID(g_env, globalClass, \"${getImpJavaSignalCallbackName(methodModel.name)}\", \"${getJniIdSignature(methodModel)}\")"

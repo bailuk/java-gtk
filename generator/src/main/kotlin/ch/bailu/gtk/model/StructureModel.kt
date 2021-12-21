@@ -26,11 +26,18 @@ class StructureModel : Model {
     private var models = ModelLists()
 
     val structureType: StructureType
+    val typeFunction: String
     
     val cType: String
     val doc: String
 
+    val hasGetTypeFunction: Boolean
+        get() = "" != typeFunction
+
+
     constructor(structure: StructureTag, nameSpace: NamespaceModel) {
+        typeFunction = structure.getType
+
         cType = structure.type
         nameSpaceModel = nameSpace
         structureType = StructureType(structure.structureType)
@@ -93,6 +100,7 @@ class StructureModel : Model {
      * @param namespace
      */
     constructor(namespace: NamespaceTag) {
+        typeFunction = ""
         doc=""
         cType = ""
         nameSpaceModel = NamespaceModel(namespace)
@@ -127,6 +135,7 @@ class StructureModel : Model {
      * @param members
      */
     private constructor(namespace: NamespaceModel, name: String, members: List<ParameterTag>, toUpper: Boolean) {
+        typeFunction = ""
         nameSpaceModel = namespace
         structureType = StructureType(StructureType.Types.ENUMERATION)
         apiName = name
@@ -141,6 +150,7 @@ class StructureModel : Model {
 
     // parent initializer
     private constructor(defaultNamespace: String, className: String, structType: StructureType) {
+        typeFunction = ""
         doc = ""
         cType = ""
         structureType = structType
@@ -179,7 +189,7 @@ class StructureModel : Model {
             if (structureType.isRecord && filterCreateMallocConstructor(this)) {
                 return true
             } else if (structureType.isPackage || structureType.isClassType) {
-                return models.hasNativeCalls()
+                return models.hasNativeCalls() || hasGetTypeFunction
             }
         }
         return false

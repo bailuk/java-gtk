@@ -48,5 +48,9 @@ class ClassComposer : CodeComposer() {
         for (m in models.functions) {
             writer.writeFunction(structureModel, m)
         }
+
+        if (structureModel.hasGetTypeFunction) {
+            writer.writeGetTypeFunction(structureModel);
+        }
     }
 }
