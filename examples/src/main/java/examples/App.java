@@ -12,6 +12,7 @@ import examples.gtk4_demo.LinksSample;
 import examples.gtk4_demo.PangoTextMask;
 import examples.gtk4_demo.Picker;
 import examples.gtk4_demo.Pixbufs;
+import examples.gtk4_playground.Words;
 import examples.gtk4_tutorial.CustomDrawing;
 import examples.gtk4_tutorial.BuilderExample;
 import examples.gtk4_tutorial.ExampleApplication;
@@ -35,7 +36,8 @@ public class App {
         //new CustomDrawing(args);
         //new BuilderExample(args);
         //new ExampleApplication();
-        new AppLauncher();
+        new Words(args);
+        //new AppLauncher();
 
     }
 }
