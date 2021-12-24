@@ -8,7 +8,7 @@
 
 G_BEGIN_DECLS
 
-#define LIST_INDEX_TYPE list_index_get_type()
+#define LIST_TYPE_INDEX list_index_get_type()
 
 G_DECLARE_FINAL_TYPE(ListIndex, list_index, LIST, INDEX, GObject)
 
@@ -34,21 +34,21 @@ enum
 };
 
 
-static void g_list_index_iface_init (GListModelInterface *iface);
+static void list_index_iface_init (GListModelInterface *iface);
 
 
-G_DEFINE_TYPE_WITH_CODE (ListIndex, g_list_index, G_TYPE_OBJECT,
-                         G_IMPLEMENT_INTERFACE (G_TYPE_LIST_MODEL, g_list_index_iface_init));
+G_DEFINE_TYPE_WITH_CODE (ListIndex, list_index, G_TYPE_OBJECT,
+                         G_IMPLEMENT_INTERFACE (G_TYPE_LIST_MODEL, list_index_iface_init));
 
 
 static void
-g_list_index_set_size(ListIndex * listIndex, long size)
+list_index_set_size(ListIndex * listIndex, long size)
 {
     listIndex->size = size;
 }
 
 static void
-g_list_index_items_changed (ListIndex *listIndex,
+list_index_items_changed   (ListIndex *listIndex,
                             guint       position,
                             guint       removed,
                             guint       added)
@@ -58,13 +58,13 @@ g_list_index_items_changed (ListIndex *listIndex,
 
 
 static void
-g_list_index_dispose (GObject *object)
+list_index_dispose (GObject *object)
 {
-    G_OBJECT_CLASS (g_list_index_parent_class)->dispose (object);
+    G_OBJECT_CLASS (list_index_parent_class)->dispose (object);
 }
 
 static void
-g_list_index_get_property (GObject    *object,
+list_index_get_property (GObject    *object,
                            guint       property_id,
                            GValue     *value,
                            GParamSpec *pspec)
@@ -82,7 +82,7 @@ g_list_index_get_property (GObject    *object,
 
 
 static void
-g_list_index_set_property (GObject      *object,
+list_index_set_property   (GObject      *object,
                            guint         property_id,
                            const GValue *value,
                            GParamSpec   *pspec)
@@ -99,25 +99,25 @@ g_list_index_set_property (GObject      *object,
 
 
 static void
-g_list_index_class_init (ListIndexClass *klass)
+list_index_class_init (ListIndexClass *klass)
 {
     GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-    object_class->dispose = g_list_index_dispose;
-    object_class->get_property = g_list_index_get_property;
-    object_class->set_property = g_list_index_set_property;
+    object_class->dispose = list_index_dispose;
+    object_class->get_property = list_index_get_property;
+    object_class->set_property = list_index_set_property;
 }
 
 
 static GType
-g_list_index_get_item_type (GListModel *list)
+list_index_get_item_type (GListModel *list)
 {
     G_TYPE_LONG;
 }
 
 
 static guint
-g_list_index_get_n_items (GListModel *list)
+list_index_get_n_items (GListModel *list)
 {
     ListIndex *listIndex = LIST_INDEX (list);
     return listIndex->size;
@@ -125,7 +125,7 @@ g_list_index_get_n_items (GListModel *list)
 
 
 static gpointer
-g_list_index_get_item (GListModel *list,
+list_index_get_item (GListModel *list,
                        guint       position)
 {
     ListIndex *listIndex = LIST_INDEX (list);
@@ -135,23 +135,28 @@ g_list_index_get_item (GListModel *list,
 
 
 static void
-g_list_index_iface_init (GListModelInterface *iface)
+list_index_iface_init (GListModelInterface *iface)
 {
-    iface->get_item_type = g_list_index_get_item_type;
-    iface->get_n_items = g_list_index_get_n_items;
-    iface->get_item = g_list_index_get_item;
+    iface->get_item_type = list_index_get_item_type;
+    iface->get_n_items = list_index_get_n_items;
+    iface->get_item = list_index_get_item;
 }
 
 
 static void
-g_list_index_init (ListIndex *listIndex)
+list_index_init (ListIndex *listIndex)
 {
     listIndex->position = 0L;
     listIndex->size = 0L;
 }
 
+ListIndex *
+list_index_new(void)
+{
+    return g_object_new(LIST_TYPE_INDEX, NULL);
+}
 
-JNIEXPORT jobject JNICALL
+JNIEXPORT jlong JNICALL
 Java_ch_bailu_gtk_bridge_ImpListIndex_create(JNIEnv *env, jclass klass)
 {
     return (jlong) list_index_new();

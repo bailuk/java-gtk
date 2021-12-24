@@ -36,8 +36,10 @@ public class App {
         //new CustomDrawing(args);
         //new BuilderExample(args);
         //new ExampleApplication();
-        new Words(args);
+        //new Words(args);
+        //new HugeList();
         //new AppLauncher();
+        new GlibLoop();
 
     }
 }

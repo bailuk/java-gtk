@@ -1,15 +1,16 @@
 package ch.bailu.gtk.bridge;
 
+import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Pointer;
 
 public class ListIndex extends Pointer {
 
     public ListIndex() {
-        super(ImpListIndex.create());
+        super(new CPointer(ImpListIndex.create()));
     }
 
     public ListIndex(long size) {
-        super(ImpListIndex.create());
+        super(new CPointer(ImpListIndex.create()));
         ImpListIndex.setSize(getCPointer(), size);
     }
 
