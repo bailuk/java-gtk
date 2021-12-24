@@ -2,8 +2,8 @@ package ch.bailu.gtk.bridge;
 
 public class ImpListIndex {
     public static native long create();
-    public static native void setSize(long cPointer, long size);
-    public static native long getPosition(long cPointer);
-    public static native long getSize(long cPointer);
-    public static native void setPosition(long cPointer, long position);
+    public static native void setSize(long cPointer, int size);
+    public static native int getIndex(long cPointer);
+    public static native int getSize(long cPointer);
+    public static native void setIndex(long cPointer, int position);
 }
