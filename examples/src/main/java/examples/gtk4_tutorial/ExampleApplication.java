@@ -70,8 +70,7 @@ public class ExampleApplication {
 
                 actions.addBoolean("show-words", GTK.FALSE, (parameter) ->{
                     var revealer = new Revealer(appBuilder.getObject("sidebar"));
-                    actions.toggle("show-words");
-                    revealer.setRevealChild(actions.getValue("show-words"));
+                    revealer.setRevealChild(GTK.IS(actions.toggleChecked("show-words")));
                 });
 
                 var stack = new Stack(appBuilder.getObject("stack"));

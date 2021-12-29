@@ -47,21 +47,31 @@ public class ActionHelper {
         action.onActivate(run);
     }
 
-    public void toggle(String name) {
+    public void setChecked(String name, boolean checked) {
+        Action action = actions.get(name);
+
+        if (action != null) {
+            action.changeState(Variant.newBooleanVariant(GTK.IS(checked)));
+        }
+    }
+
+    public boolean toggleChecked(String name) {
         Action action = actions.get(name);
 
         if (action != null) {
             action.changeState(Variant.newBooleanVariant(GTK.TOGGLE(action.getState().getBoolean())));
+            return getChecked(name);
         }
+        return false;
     }
 
-    public int getValue(String name) {
+    public boolean getChecked(String name) {
         Action action = actions.get(name);
 
         if (action != null) {
-            return action.getState().getBoolean();
+            return GTK.IS(action.getState().getBoolean());
         }
-        return GTK.FALSE;
+        return false;
     }
 
     public void setAccels(String name, String[] accels) {

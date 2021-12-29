@@ -32,7 +32,6 @@ object PrimitivesTable {
         add("guint16", "int")
         add("guint8", "int")
         add("time_t", "long")
-        add("time_t", "long")
         add("long", "long")
         add("int", "int")
         add("double", "double")

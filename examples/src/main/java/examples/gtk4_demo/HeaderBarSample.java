@@ -2,13 +2,10 @@
 package examples.gtk4_demo;
 
 import ch.bailu.gtk.GTK;
-import ch.bailu.gtk.gio.Action;
 import ch.bailu.gtk.gio.ActionMap;
 import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gio.Menu;
 import ch.bailu.gtk.gio.MenuItem;
-import ch.bailu.gtk.gio.SimpleAction;
-import ch.bailu.gtk.glib.Variant;
 import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.Box;
@@ -89,7 +86,7 @@ public class HeaderBarSample {
         actions.add("connect", parameter -> System.out.println("Connect selected"));
         actions.add("disconnect", parameter -> System.out.println("Disconnect selected"));
         actions.addBoolean("toggle", GTK.TRUE, parameter -> {
-            actions.toggle("toggle");
+            actions.toggleChecked("toggle");
             System.out.println("Toggle");
         });
 
