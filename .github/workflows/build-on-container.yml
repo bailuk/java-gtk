@@ -1,6 +1,10 @@
 name: Build inside container
 
 on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 
