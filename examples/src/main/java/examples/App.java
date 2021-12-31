@@ -3,30 +3,33 @@ package examples;
 import java.io.IOException;
 
 import ch.bailu.gtk.GTK;
-import examples.gtk3_demo.CairoDrawingArea;
-import examples.gtk3_demo.ColorChooser;
-import examples.gtk3_demo.PangoRotatedText;
-import examples.gtk3_demo.PangoTextMask;
-import examples.gtk3_demo.Pixbufs;
+import ch.bailu.gtk.type.Str;
+import examples.gtk4_demo.Pixbufs;
 
 public class App {
 
-    public static void main (String[] argv) throws IOException {
+    public static Str ID = null;
+
+    public static void main (String[] args) throws IOException {
         GTK.init();
-        //new HelloWorld(argv);
-        //new HeaderBarSample(argv);
-        //new ColorChooser(argv);
-        //new ButtonBoxes(argv);
-        //new Spinner(argv);
-        //new LinksSample(argv);
-        //new CairoDrawingArea(argv);
-        new Pixbufs(argv);
-        //new PangoTextMask(argv);
+        ID = new Str("org.gtk.example");
 
-        // FIXME this sample is not yet implemented
-        //new PangoRotatedText(argv);
-
-
-        //new ImageBridge(argv);
+        //new HelloWorld(args);
+        //new HeaderBarSample(args);
+        //new Picker(args);
+        //new LinksSample(args);
+        new Pixbufs(args);
+        //new PangoTextMask(args);
+        //new HelloWorldBoxed(args);
+        //new ImageBridge(args);
+        //new CustomDrawing(args);
+        //new BuilderExample(args);
+        //new ExampleApplication();
+        //new Words(args);
+        //new HugeList();
+        //new AppLauncher();
+        //new GlibLoop();
+        //new GlibSettings();
+        //new GioStreams();
     }
 }

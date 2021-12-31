@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.bailu.gtk.type.Int;
+import ch.bailu.gtk.type.Pointer;
 
 public class Callback {
 
@@ -37,6 +38,26 @@ public class Callback {
             observers.put(emitter, signal, new ArrayList<>());
         }
         return observers.get(emitter, signal);
+    }
+
+    /**
+     * Remove emitter from callback observers. Call this after the receiving object has
+     * been destroyed to free resources and to prevent conflicts.
+     *
+     * @param emitter
+     */
+    public static void remove(Pointer emitter) {
+        remove(emitter.getCPointer());
+    }
+
+    /**
+     * Remove emitter from callback observers. Call this after the receiving object has
+     * been destroyed to free resources and to prevent conflicts.
+     *
+     * @param emitter
+     */
+    public static void remove(long emitter) {
+        observers.remove(emitter);
     }
 
 

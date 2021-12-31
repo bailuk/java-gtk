@@ -9,6 +9,13 @@ public class Pointer extends Type implements CPointerInterface {
 
     private final CPointer pointer;
 
+    /**
+     * Casting constructor to access another interface.
+     *
+     * @see ch.bailu.gtk.type.Pointer#cast()
+     *
+     * @param pointer Wraps a C pointer of a GTK class or record
+     */
     public Pointer(CPointer pointer) {
         this.pointer = pointer;
     }
@@ -18,7 +25,16 @@ public class Pointer extends Type implements CPointerInterface {
         return pointer.getCPointer();
     }
 
-    public final CPointer getCPointerWrapper() {
+    /**
+     * Pass the return value of this function to the casting
+     * constructor of any class derived from Pointer
+     *
+     * @see ch.bailu.gtk.type.Pointer#Pointer(CPointer)
+     * @see ch.bailu.gtk.type.Pointer
+     *
+     * @return CPointer (wraps a C pointer of a GTK class or record)
+     */
+    public final CPointer cast() {
         return pointer;
     }
 

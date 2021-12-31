@@ -1,6 +1,10 @@
 name: Build inside container
 
 on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 
@@ -9,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: ghcr.io/${{ github.repository }}/gtk4:latest
+      image: ghcr.io/bailuk/java-gtk/gtk4:latest
 
     steps:
       - name: Checkout repository

@@ -25,13 +25,13 @@ class Configuration {
 
         val NAMESPACES = arrayOf(
                     NamespaceConfig("GObject-2.0.gir",    GtkDocUrl("gobject")),
-                    NamespaceConfig("Gtk-3.0.gir",        GtkDocUrl("gtk3")),
+                    NamespaceConfig("Gtk-4.0.gir",        GtkDocUrl("gtk4")),
                     NamespaceConfig("Gio-2.0.gir",        GtkDocUrl("gio")),
-                    NamespaceConfig("Gdk-3.0.gir",        GtkDocUrl("gdk3")),
+                    NamespaceConfig("Gdk-4.0.gir",        GtkDocUrl("gdk4")),
                     NamespaceConfig("PangoCairo-1.0.gir", GtkDocUrl("PangoCairo")),
                     NamespaceConfig("cairo-custom.gir",   StaticUrl("https://www.cairographics.org/manual/")),
                     NamespaceConfig("GLib-2.0.gir",       GtkDocUrl("glib")),
-                    NamespaceConfig("Atk-1.0.gir",        GtkDocUrl("atk")),
+                    //NamespaceConfig("Atk-1.0.gir",        GtkDocUrl("atk")),
                     NamespaceConfig("Pango-1.0.gir",      GtkDocUrl("Pango")),
                     NamespaceConfig("GdkPixbuf-2.0.gir",  GtkDocUrl("gdk-pixbuf")))
 

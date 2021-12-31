@@ -1,7 +1,7 @@
 package ch.bailu.gtk.model.filter
 
-import ch.bailu.gtk.model.StructureModel
 import ch.bailu.gtk.model.MethodModel
+import ch.bailu.gtk.model.StructureModel
 
 fun filterValues(value: String): Boolean {
     return ("2147483648" != value
@@ -24,6 +24,9 @@ fun filterMethod(structureModel: StructureModel, methodModel: MethodModel): Bool
         return false
     }
     if ("Coverage" == structureModel.apiName && "ref" == methodModel.apiName) {
+        return false
+    }
+    if ("PrintUnixDialog" == structureModel.apiName && "getSettings" == methodModel.apiName) {
         return false
     }
     return !("PrintSettings" == structureModel.apiName && "get" == methodModel.apiName)
@@ -53,7 +56,9 @@ private val MALLOC = arrayOf(
         "RGBA",
         "Rectangle",
         "Matrix",
-        "TreeIter"
+        "TreeIter",
+        "TextIter",
+        "Value"
 )
 
 

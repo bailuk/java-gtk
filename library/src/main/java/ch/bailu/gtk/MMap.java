@@ -35,4 +35,7 @@ public class MMap <K1, K2, V> {
         return map.get(k1);
     }
 
+    public void remove(K1 emitter) {
+        map.remove(emitter);
+    }
 }

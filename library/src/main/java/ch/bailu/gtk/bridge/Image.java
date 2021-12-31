@@ -80,7 +80,7 @@ public class Image {
             final Str format = new Str(imageFormat);
 
             if (GTK.is(pixbuf.saveToStreamv(stream, format, null, null, null))) {
-                ch.bailu.gtk.type.Bytes bytes = new ch.bailu.gtk.type.Bytes(stream.getData().getCPointerWrapper(), (int) stream.getDataSize());
+                ch.bailu.gtk.type.Bytes bytes = new ch.bailu.gtk.type.Bytes(stream.getData().cast(), (int) stream.getDataSize());
                 outputStream.write(bytes.toBytes());
             }
             format.destroy();

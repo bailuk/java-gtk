@@ -8,7 +8,7 @@ import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
 public class HelloWorld {
-    public HelloWorld(String[] argv) {
+    public HelloWorld(String[] args) {
         var app = new Application(new Str("com.example.GtkApplication"),
                 ApplicationFlags.FLAGS_NONE);
 
@@ -21,10 +21,10 @@ public class HelloWorld {
 
             // When the button is clicked, close the window
             button.onClicked(() -> window.close());
-            window.add(button);
-            window.showAll();
+            window.setChild(button);
+            window.show();
         });
 
-        app.run(argv.length, new Strs(argv));
+        app.run(args.length, new Strs(args));
     }
 }

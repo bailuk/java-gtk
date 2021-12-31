@@ -1,7 +1,7 @@
-[![Java CI with Gradle](https://github.com/bailuk/java-gtk/actions/workflows/gradle.yml/badge.svg)](https://github.com/bailuk/java-gtk/actions/workflows/gradle.yml)
+[![Build inside container](https://github.com/bailuk/java-gtk/actions/workflows/build-on-container.yml/badge.svg)](https://github.com/bailuk/java-gtk/actions/workflows/build-on-container.yml)
 
 # Java-GTK
-Experimental GTK 3 bindings for Java
+Experimental GTK 4 bindings for Java
 
 [![POC screenshot](screenshot.png)](examples/src/main/java/examples/ImageBridge.java)
 
@@ -15,19 +15,19 @@ import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.Button;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
-import ch.bailu.gtk.GTK;
 
 public class HelloWorld {
     public static void main(String[] args) {
         GTK.init();
         new HelloWorld(args);
-    }   
+    }
 
     public HelloWorld(String[] args) {
         var app = new Application(new Str("com.example.GtkApplication"),
-                ApplicationFlags.FLAGS_NONE);
+            ApplicationFlags.FLAGS_NONE);
 
         app.onActivate(() -> {
+            
             // Create a new window
             var window = new ApplicationWindow(app);
 
@@ -36,8 +36,8 @@ public class HelloWorld {
 
             // When the button is clicked, close the window
             button.onClicked(() -> window.close());
-            window.add(button);
-            window.showAll();
+            window.setChild(button);
+            window.show();
         });
 
         app.run(args.length, new Strs(args));
@@ -77,9 +77,9 @@ Compile Java and C library, generate JAR archive and copy JAR archive as artifac
  - `generator/`: Kotlin application that generates C and Java code from GIR files (xml parser -> model builder -> writer). GIR files are taken from Debian dev packages.
  - `library/`  : java-gtk library depends on generated Java code.
  - `glue/`     : JNI C-Library. Depends on generated C code.
- - `examples/` : Some examples to test the bindings. Mostly ported from [https://gitlab.gnome.org/GNOME/gtk/-/tree/gtk-3-24/demos/gtk-demo](https://gitlab.gnome.org/GNOME/gtk/-/tree/gtk-3-24/demos/gtk-demo).
+ - `examples/` : Some examples to test the bindings. Mostly ported from [https://gitlab.gnome.org/GNOME/gtk/-/tree/main/demos/gtk-demo](https://gitlab.gnome.org/GNOME/gtk/-/tree/main/demos/gtk-demo).
  
  ## License
  - Files in [generator/src/resources/gir/](generator/src/resources/gir/) are comming from the [GTK project](https://gitlab.gnome.org/GNOME/gtk) and are therefore licensed under the GNU Library General Public License.
- - Examples in [examples/src/main/java/examples/gtk3_demo](examples/src/main/java/examples/gtk3_demo) are ported from the [GTK project](https://gitlab.gnome.org/GNOME/gtk/-/tree/gtk-3-24/demos/gtk-demo) and are therefore licensed under the GNU Library General Public License.   
+ - Examples in [examples/src/main/java/examples/gtk3_demo](examples/src/main/java/examples/gtk3_demo) are ported from the [GTK project](https://gitlab.gnome.org/GNOME/gtk/-/tree/main/demos/gtk-demo) and are therefore licensed under the GNU Library General Public License.   
  - Everything else licensed under the [MIT License](https://en.wikipedia.org/wiki/MIT_License)

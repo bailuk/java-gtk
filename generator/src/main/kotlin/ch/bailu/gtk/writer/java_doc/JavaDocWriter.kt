@@ -77,6 +77,8 @@ class JavaDocWriter(writer: TextWriter, val doc: JavaDoc) : CodeWriter(writer) {
     override fun writeUnsupported(model: Model) {}
 
     override fun writeEnd() {}
+    override fun writeGetTypeFunction(structureModel: StructureModel) {
+    }
 
     override fun writeMallocConstructor(structureModel: StructureModel) {}
 

@@ -61,13 +61,19 @@ class JavaImpWriter(writer : TextWriter) : CodeWriter(writer) {
         out.end(0)
     }
 
+    override fun writeGetTypeFunction(structureModel: StructureModel) {
+         out.start(1);
+         out.a("    static native long getTypeID();\n" )
+         out.end(0)
+    }
+
 
     override fun writeSignal(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(1)
         out.a("""
             static native void ${getJavaSignalMethodName(methodModel.name)}(long _self);
             static ${methodModel.returnType.impType} ${getImpJavaSignalCallbackName(methodModel.name)}(${getSelfSignature(methodModel.getParameters())}) {
-                String signal = "${methodModel.apiName}";
+                String signal = "${methodModel.name}";
                 for (java.lang.Object observer : ch.bailu.gtk.Callback.get(_self, signal)) {
                     ${getSignalInterfaceCall(structureModel, methodModel)};
                 }

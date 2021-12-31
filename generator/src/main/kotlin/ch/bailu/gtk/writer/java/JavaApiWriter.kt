@@ -236,12 +236,18 @@ class JavaApiWriter(writer: TextWriter, doc: JavaDoc) : CodeWriter(writer) {
         out.end(0)
     }
 
+    override fun writeGetTypeFunction(structureModel: StructureModel) {
+        out.start(1);
+        out.a("    public static long getTypeID() { return " + structureModel.impName + ".getTypeID(); }\n" )
+        out.end(0)
+    }
+
     override  fun writeSignal(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(1)
         out.a("    public void ").a(getJavaSignalMethodName(methodModel.name)).a("(").a(
             getJavaSignalInterfaceName(methodModel.name)
         ).a(" observer) {\n");
-        out.a("        ch.bailu.gtk.Callback.put(getCPointer(), \"").a(methodModel.apiName).a("\", observer);\n");
+        out.a("        ch.bailu.gtk.Callback.put(getCPointer(), \"").a(methodModel.name).a("\", observer);\n");
         out.a("        ").a(structureModel.impName).a(".").a(getJavaSignalMethodName(methodModel.name)).a("(getCPointer());\n");
         out.a("    }\n");
         out.a("    public interface ").a(getJavaSignalInterfaceName(methodModel.name)).a(" {\n")

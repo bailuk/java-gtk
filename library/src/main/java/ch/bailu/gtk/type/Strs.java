@@ -28,11 +28,23 @@ public class Strs extends Pointer {
         Str[] result = new Str[strs.length];
 
         for (int i=0; i< strs.length; i++) {
-            result[i] = new Str(strs[i]);
+            if (strs[i] == null) {
+                result[i] = Str.NULL;
+            } else {
+                result[i] = new Str(strs[i]);
+            }
         }
         return result;
     }
 
+
+    public int getLength() {
+        return strs.length;
+    }
+
+    public Str get(int index) {
+        return strs[index];
+    }
 
     public int getSize() {
         if (strs == null) {
