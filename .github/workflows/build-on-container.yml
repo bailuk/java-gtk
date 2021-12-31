@@ -1,0 +1,38 @@
+name: Build inside container
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image: ghcr.io/${{ github.repository }}/gtk4:latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Generate source code
+        run: ./gradlew generator:generate
+
+      - name: Generate JNI headers
+        run: ./gradlew library:classes
+
+      - name: Compile C code
+        run: make -C glue -j 3
+
+      - name: Build library
+        run: ./gradlew library:build
+
+      - name: Build exsamples
+        run: ./gradlew examples:build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: java-gtk
+          path: library/build/libs/*
+          if-no-files-found: error
