@@ -3,19 +3,8 @@ package examples;
 import java.io.IOException;
 
 import ch.bailu.gtk.GTK;
-import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.type.Str;
-import examples.gtk4_demo.AppLauncher;
-import examples.gtk4_demo.HeaderBarSample;
-import examples.gtk4_demo.HelloWorldBoxed;
-import examples.gtk4_demo.LinksSample;
-import examples.gtk4_demo.PangoTextMask;
-import examples.gtk4_demo.Picker;
 import examples.gtk4_demo.Pixbufs;
-import examples.gtk4_playground.Words;
-import examples.gtk4_tutorial.CustomDrawing;
-import examples.gtk4_tutorial.BuilderExample;
-import examples.gtk4_tutorial.ExampleApplication;
 
 public class App {
 
@@ -42,6 +31,5 @@ public class App {
         //new GlibLoop();
         //new GlibSettings();
         //new GioStreams();
-
     }
 }
