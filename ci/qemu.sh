@@ -1,5 +1,11 @@
 #!/bin/sh
-
+# __________________________________________________________________________
+# Collection of documentation on how to setup a qemu based build environment
+# ==========================================================================
+#
+# [ directory ci/qemu is in .gitignore ]
+#
+#
 # http://www.redfelineninja.org.uk/daniel/2018/02/running-an-iso-installer-image-for-arm64-aarch64-using-qemu-and-kvm/
 #    Load CD-ROM drivers from removable media?: Select No
 #    Manually select a CD-ROM module and device?: Select Yes
@@ -28,4 +34,4 @@ qemu-system-aarch64 \
     -net user,hostfwd=tcp::2222-:22
 
 # install packages:
-#    git openjdk-11-jdk libgtk-3-dev libgirepository1.0-dev
+#    see .github/workflows
