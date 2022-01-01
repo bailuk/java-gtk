@@ -16,7 +16,8 @@ OBJS := $(notdir $(OBJECTS))
 OBJDIR=build/obj
 
 ifeq ($(JAVA_HOME),)
-	JAVA_HOME = /usr/lib/jvm/java-11-openjdk-$(ARCH_JAVA)
+    # https://stackoverflow.com/questions/1117398/java-home-directory-in-linux
+    JAVA_HOME = $$(dirname $$(dirname $$(readlink -f $$(which javac))))
 endif
 
 GTK_LIBS    != pkg-config --libs gtk4
