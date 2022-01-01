@@ -1,4 +1,4 @@
-# Creates an image containing everything to build the gtk4 branch of this project
+# Creates an image containing everything to build this project
 # Based on https://hub.docker.com/_/debian/
 FROM docker.io/debian:bookworm
 LABEL version="0.2"
