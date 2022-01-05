@@ -68,9 +68,9 @@ public class ExampleApplication {
                     dialog.present();
                 });
 
-                actions.addBoolean("show-words", GTK.FALSE, (parameter) ->{
+                actions.add("show-words", false, (parameter) ->{
                     var revealer = new Revealer(appBuilder.getObject("sidebar"));
-                    revealer.setRevealChild(GTK.IS(actions.toggleChecked("show-words")));
+                    revealer.setRevealChild(GTK.IS(actions.getBooleanState("show-words")));
                 });
 
                 var stack = new Stack(appBuilder.getObject("stack"));
@@ -88,9 +88,7 @@ public class ExampleApplication {
                 var searchEntry = new SearchEntry(appBuilder.getObject("searchentry"));
                 var searchBar = new SearchBar(appBuilder.getObject("searchbar"));
 
-                searchToggle.onToggled(()->{
-                    searchBar.setSearchMode(searchToggle.getActive());
-                });
+                searchToggle.onToggled(()-> searchBar.setSearchMode(searchToggle.getActive()));
 
                 stack.onNotify(pspec -> {
                     System.out.println(pspec.getName().toString());

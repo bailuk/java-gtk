@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.type.Str;
+import examples.gtk4_demo.HeaderBarSample;
 import examples.gtk4_demo.Pixbufs;
 
 public class App {
@@ -15,10 +16,10 @@ public class App {
         ID = new Str("org.gtk.example");
 
         //new HelloWorld(args);
-        //new HeaderBarSample(args);
+        new HeaderBarSample(args);
         //new Picker(args);
         //new LinksSample(args);
-        new Pixbufs(args);
+        //new Pixbufs(args);
         //new PangoTextMask(args);
         //new HelloWorldBoxed(args);
         //new ImageBridge(args);

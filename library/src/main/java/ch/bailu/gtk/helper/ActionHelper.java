@@ -7,10 +7,14 @@ import ch.bailu.gtk.gio.Action;
 import ch.bailu.gtk.gio.ActionMap;
 import ch.bailu.gtk.gio.SimpleAction;
 import ch.bailu.gtk.glib.Variant;
+import ch.bailu.gtk.glib.VariantType;
 import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
+/**
+ * https://manpagez.com/html/glib/glib-2.40.0/gvariant-format-strings.php#gvariant-format-strings-numeric-types
+ */
 public class ActionHelper {
     private final Application app;
     private final ActionMap map;
@@ -24,30 +28,32 @@ public class ActionHelper {
         this.map = new ActionMap(app.cast());
     }
 
-    public ActionHelper(ActionMap map, String name) {
-        this.map = map;
-        this.name = name;
-        this.app = null;
-    }
-
     public void add(String name, SimpleAction.OnActivate run) {
         var action = new SimpleAction(new Str(name), null);
         addAction(name, new Action(action.cast()));
         action.onActivate(run);
     }
 
-    private void addAction(String name, Action action) {
-        map.addAction(action);
-        actions.put(name, action);
-    }
-
-    public void addBoolean(String name, int initial, SimpleAction.OnActivate run) {
-        var action = SimpleAction.newStatefulSimpleAction(new Str(name), null, Variant.newBooleanVariant(initial));
+    public void add(String name, boolean initial, SimpleAction.OnActivate run) {
+        var action = SimpleAction.newStatefulSimpleAction(new Str(name), null, Variant.newBooleanVariant(GTK.IS(initial)));
         addAction(name, new Action(action.cast()));
-        action.onActivate(run);
+        action.onActivate(parameter -> {
+            toggleState(name);
+            run.onActivate(parameter);
+        });
     }
 
-    public void setChecked(String name, boolean checked) {
+    public void add(String name, int initial, SimpleAction.OnActivate run) {
+        var action = SimpleAction.newStatefulSimpleAction(new Str(name), new VariantType(new Str("i")), Variant.newInt32Variant(initial));
+
+        addAction(name, new Action(action.cast()));
+        action.onActivate(parameter -> {
+            action.setState(parameter);
+            run.onActivate(parameter);
+        });
+    }
+
+    public void changeState(String name, boolean checked) {
         Action action = actions.get(name);
 
         if (action != null) {
@@ -55,17 +61,25 @@ public class ActionHelper {
         }
     }
 
-    public boolean toggleChecked(String name) {
+    public boolean toggleState(String name) {
         Action action = actions.get(name);
 
         if (action != null) {
             action.changeState(Variant.newBooleanVariant(GTK.TOGGLE(action.getState().getBoolean())));
-            return getChecked(name);
+            return getBooleanState(name);
         }
         return false;
     }
 
-    public boolean getChecked(String name) {
+    public int getState(String name) {
+        Action action = actions.get(name);
+        if (action != null) {
+            return action.getState().getInt32();
+        }
+        return 0;
+    }
+
+    public boolean getBooleanState(String name) {
         Action action = actions.get(name);
 
         if (action != null) {
@@ -75,8 +89,13 @@ public class ActionHelper {
     }
 
     public void setAccels(String name, String[] accels) {
-        if (app != null && accels != null && accels.length > 1 && accels[accels.length-1] == null) {
+        if (accels != null && accels.length > 1 && accels[accels.length-1] == null) {
             app.setAccelsForAction(new Str(this.name + "." + name), new Strs(accels));
         }
+    }
+
+    private void addAction(String name, Action action) {
+        map.addAction(action);
+        actions.put(name, action);
     }
 }

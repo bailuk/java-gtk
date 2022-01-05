@@ -2,7 +2,6 @@
 package examples.gtk4_demo;
 
 import ch.bailu.gtk.GTK;
-import ch.bailu.gtk.gio.ActionMap;
 import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gio.Menu;
 import ch.bailu.gtk.gio.MenuItem;
@@ -23,10 +22,10 @@ import ch.bailu.gtk.type.Strs;
 public class HeaderBarSample {
 
 
-    public HeaderBarSample(String args[]) {
+    public HeaderBarSample(String[] args) {
         Application app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
 
-        var menuModel = createMenuModel(new ActionMap(app.cast()));
+        var menuModel = createMenuModel(app);
 
         app.onActivate(() -> show(app, new ApplicationWindow(app), menuModel));
         app.run(args.length, new Strs(args));
@@ -69,26 +68,34 @@ public class HeaderBarSample {
     /**
      * https://stackoverflow.com/questions/69135934/creating-a-simple-menubar-menu-and-menu-item-in-c-using-gtk4
      */
-    private Menu createMenuModel(ActionMap actionMap) {
+    private Menu createMenuModel(Application app) {
         var result = new Menu();
         var networkMenu = new Menu();
         var serverMenu = new Menu();
+        var radioMenu = new Menu();
 
-        var actions = new ActionHelper(actionMap, "app");
+        var actions = new ActionHelper(app);
 
         result.appendSubmenu(new Str("Network"), networkMenu);
         result.appendSubmenu(new Str("Server"), serverMenu);
 
         serverMenu.appendItem(new MenuItem(new Str("Connect"), new Str("app.connect")));
         serverMenu.appendItem(new MenuItem(new Str("Disconnect"), new Str("app.disconnect")));
-        networkMenu.appendItem(new MenuItem(new Str("Toggle"), new Str("app.toggle")));
+
+        networkMenu.appendItem(new MenuItem(new Str("Enable"), new Str("app.toggle")));
+
+        for (int i = 0; i< 5; i++) {
+            radioMenu.appendItem(new MenuItem(new Str("eth" + i), new Str("app.select(" + i + ")")));
+        }
+
+        networkMenu.appendSection(new Str("Select device"), radioMenu);
+
 
         actions.add("connect", parameter -> System.out.println("Connect selected"));
         actions.add("disconnect", parameter -> System.out.println("Disconnect selected"));
-        actions.addBoolean("toggle", GTK.TRUE, parameter -> {
-            actions.toggleChecked("toggle");
-            System.out.println("Toggle");
-        });
+        actions.add("toggle", true, parameter -> System.out.println("Toggle"));
+
+        actions.add("select", 0, parameter -> System.out.println("selected " + parameter.getInt32()));
 
         return result;
     }
