@@ -1,0 +1,15 @@
+Source: java-gtk
+Maintainer: Lukas Bai <bailu@bailu.ch>
+Section: java
+Priority: optional
+Standards-Version: 3.9.2
+Build-Depends:
+ debhelper (>= 9),
+ libgtk-4-dev,
+ openjdk-11-jdk,
+ libgirepository1.0-dev
+
+Package: java-gtk
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Experimental GTK 4 bindings for Java

@@ -8,7 +8,10 @@ cd ../../
 git archive --prefix=java-gtk-${version}/ --format=tar.gz  HEAD -o ci/debian/build/java-gtk_${version}.orig.tar.gz
 cd ci/debian/build
 tar -xzvf java-gtk_${version}.orig.tar.gz
-ln -s ../debian .
+cd java-gtk-${version}
+ln -s ../../debian .
+cd debian
+
 
 # export DEBEMAIL="bailu@bailu.ch"
 # dch --create -v 0.1-1 --package inital
