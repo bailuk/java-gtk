@@ -1,10 +1,21 @@
 plugins {
     `java-library`
     `maven-publish`
-    id("pl.allegro.tech.build.axion-release") version "1.13.3"
 }
 
-project.version = scmVersion.version
+fun getProperty(property: String, default: String) : String {
+    var result = default
+
+    if (project.hasProperty(property)) {
+        val r = project.property(property)
+        if (r is String) {
+            result = r
+        }
+    }
+    return result
+}
+
+project.version = getProperty("VERSION", "SNAPSHOT")
 project.group = "ch.bailu.java-gtk"
 
 java {

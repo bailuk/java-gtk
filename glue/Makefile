@@ -1,3 +1,5 @@
+VERSION=SNAPSHOT
+
 ARCH != uname -m
 ARCH_JAVA != uname -m
 
@@ -25,14 +27,19 @@ GTK_CFLAGS  != pkg-config --cflags gtk4
 INCLUDE_DIRS = -I../library/build/generated/sources/headers/java/main/ -I$(JAVA_HOME)/include/ -I$(JAVA_HOME)/include/linux/
 
 LIBDIR=build/lib/glue/linux-$(ARCH)
-PRODUCT=$(LIBDIR)/libglue.so
+
+LIB_RESOURCE=$(LIBDIR)/libglue.so
+LIB_SHARE=build/lib/libjava-gtk.so.$(VERSION)
 
 vpath %.c $(sort $(dir $(SRCS)))
 
-all : $(PRODUCT)
+all : $(LIB_RESOURCE) $(LIB_SHARE)
 
-$(PRODUCT) : $(addprefix $(OBJDIR)/, $(OBJS)) | $(LIBDIR)
-	cc -shared -Wl,-soname,libglue.so -o $@ $^ $(GTK_LIBS)
+$(LIB_RESOURCE) : $(LIB_SHARE)
+	cp $(LIB_SHARE) $(LIB_RESOURCE)
+
+$(LIB_SHARE) : $(addprefix $(OBJDIR)/, $(OBJS)) | $(LIBDIR)
+	cc -shared -Wl,-soname,libjava-gtk.so -o $@ $^ $(GTK_LIBS)
 
 
 $(OBJDIR)/%.o : %.c | $(OBJDIR)
@@ -48,5 +55,4 @@ $(LIBDIR):
 
 
 clean:
-	rm $(OBJDIR)/*.o
-	rm $(PRODUCT)
+	rm -rf build
