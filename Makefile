@@ -14,9 +14,15 @@
 #       make run
 #
 
-DESTDIR =
-VERSION=SNAPSHOT
-JOBS=9
+ifndef VERSION
+	VERSION=SNAPSHOT
+endif
+
+ifndef JOBS
+	JOBS=9
+endif
+
+export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
 generator_jar = generator/build/libs/generator.jar
 gen_source_marker = build/gen-source.marker
