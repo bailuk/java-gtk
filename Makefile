@@ -1,5 +1,5 @@
 JOBS=9
-VERSION=0.1
+VERSION=SNAPSHOT
 
 generator_jar = generator/build/libs/generator.jar
 gen_source_marker = build/gen-source.marker
@@ -7,7 +7,7 @@ gen_header_marker = build/gen-header.marker
 
 clib_shared=glue/build/lib/libjava-gtk.so.$(VERSION)
 
-jlib_fat = library/build/libs/library-0.1.jar
+jlib_fat = java-gtk/build/libs/java-gtk-$(VERSION).jar
 
 m2_dir = $(HOME)/.m2/repository/ch/bailu/java-gtk/
 
@@ -47,13 +47,13 @@ run: $(jlib_fat)
 	./gradlew examples:run
 
 $(jlib_fat): $(clib_shared) FORCE
-	./gradlew -q library:build -P VERSION=$(VERSION)
+	./gradlew -q java-gtk:build -PVERSION=$(VERSION)
 
 $(clib_shared): $(gen_source_marker) $(gen_header_marker)
 	make -j $(JOBS) -C glue VERSION=$(VERSION)
 
 $(gen_header_marker): $(gen_source_marker)
-	./gradlew -q library:classes
+	./gradlew -q java-gtk:classes
 	touch $(gen_header_marker)
 
 $(gen_source_marker): $(generator_jar)

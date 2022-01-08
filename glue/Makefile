@@ -24,22 +24,37 @@ endif
 
 GTK_LIBS    != pkg-config --libs gtk4
 GTK_CFLAGS  != pkg-config --cflags gtk4
-INCLUDE_DIRS = -I../library/build/generated/sources/headers/java/main/ -I$(JAVA_HOME)/include/ -I$(JAVA_HOME)/include/linux/
+INCLUDE_DIRS = -I../java-gtk/build/generated/sources/headers/java/main/ -I$(JAVA_HOME)/include/ -I$(JAVA_HOME)/include/linux/
 
 LIBDIR=build/lib/glue/linux-$(ARCH)
 
-LIB_RESOURCE=$(LIBDIR)/libglue.so
-LIB_SHARE=build/lib/libjava-gtk.so.$(VERSION)
+
+lib_dir = build/lib
+lib_res_dir = $(lib_dir)/glue/linux-$(ARCH)
+lib_res = $(lib_res_dir)/libglue.so
+
+lib_share_dir = $(lib_dir)
+lib_share = $(lib_share_dir)/libjava-gtk.so.$(VERSION)
 
 vpath %.c $(sort $(dir $(SRCS)))
 
-all : $(LIB_RESOURCE) $(LIB_SHARE)
 
-$(LIB_RESOURCE) : $(LIB_SHARE)
-	cp $(LIB_SHARE) $(LIB_RESOURCE)
+all : fat
 
-$(LIB_SHARE) : $(addprefix $(OBJDIR)/, $(OBJS)) | $(LIBDIR)
+
+fat : $(lib_res)
+
+
+thin : $(lib_share)
+
+
+$(lib_res) : $(lib_share) | $(lib_res_dir)
+	cp $(lib_share) $(lib_res)
+
+
+$(lib_share) : $(addprefix $(OBJDIR)/, $(OBJS)) | $(lib_share_dir)
 	cc -shared -Wl,-soname,libjava-gtk.so -o $@ $^ $(GTK_LIBS)
+	echo $(VERSION) > $(lib_dir)/glue/VERSION
 
 
 $(OBJDIR)/%.o : %.c | $(OBJDIR)
@@ -50,7 +65,11 @@ $(OBJDIR):
 	mkdir -p $@
 
 
-$(LIBDIR):
+$(lib_res_dir):
+	mkdir -p $@
+
+
+$(lib_share_dir):
 	mkdir -p $@
 
 
