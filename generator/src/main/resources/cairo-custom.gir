@@ -710,7 +710,7 @@
                 </parameters>
             </method>
 
-            <method name="distance" c:identifier="cairo_matrix_distance">
+            <method name="distance" c:identifier="cairo_matrix_transform_distance">
                 <return-value transfer-ownership="none">
                     <type name="none" c:type="void"/>
                 </return-value>
@@ -720,10 +720,10 @@
                     </instance-parameter>
 
                     <parameter name="dx">
-                        <type name="double" c:type="double"/>
+                        <type name="double*" c:type="double*"/>
                     </parameter>
                     <parameter name="dy">
-                        <type name="double" c:type="double"/>
+                        <type name="double*" c:type="double*"/>
                     </parameter>
                 </parameters>
             </method>
