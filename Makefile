@@ -1,27 +1,66 @@
-JOBS=9
+# This project uses GNU Make as its main build system.
+# This is the top-level build file. It sticks to conventions expected by debuild.
+# It will call ./gradlew for java related builds and make -C glue to build C code.
+#
+# Usages:
+#
+#  - Build jar and install it to local maven repository:
+#		make install
+#
+#  - Build generator and generate all sources (including jni headers)
+#       make gen
+#
+#  - Build and test everything and then run the selected example
+#       make run
+#
+
+DESTDIR =
 VERSION=SNAPSHOT
+JOBS=9
 
 generator_jar = generator/build/libs/generator.jar
 gen_source_marker = build/gen-source.marker
 gen_header_marker = build/gen-header.marker
 
-clib_shared=glue/build/lib/libjava-gtk.so.$(VERSION)
+clib = glue/build/lib/libjava-gtk-$(VERSION).so
+jlib = java-gtk/build/libs/java-gtk-$(VERSION).jar
 
-jlib_fat = java-gtk/build/libs/java-gtk-$(VERSION).jar
+ifdef DESTDIR
+	# global
+	install_target = install_global
 
-m2_dir = $(HOME)/.m2/repository/ch/bailu/java-gtk/
+	# DESTDIR path must be absolute, else gradle will ignore this
+	m2_repo = $(DESTDIR)/usr/share/maven-repo
+
+else
+	# local
+	install_target = install_local
+	m2_repo = $(HOME)/.m2/repository
+endif
+
+m2_dir = $(m2_repo)/ch/bailu/java-gtk/
+clib_target = $(DESTDIR)/usr/lib/jni
+
+all: $(clib) $(jlib)
 
 
-all: $(clib_shared) $(jlib_fat)
+install: $(install_target)
 
 
-install: all uninstall
-	./gradlew -q publishToMavenLocal
+install_local: all uninstall
+	./gradlew -q publishToMavenLocal -Dmaven.repo.local=$(m2_repo)
+
+
+install_global: all uninstall
+	./gradlew -q publishToMavenLocal -Dmaven.repo.local=$(m2_repo)
+	mkdir -p $(clib_target)
+	cp $(clib) $(clib_target)/
+
 
 clean:
 	./gradlew -q clean
 	make -C glue clean
-	rm -rf build
+	- rm -rf build
 
 distclean: clean
 	echo "distclean"
@@ -30,7 +69,7 @@ maintainer-clean: distclean
 	echo "maintainer-clean"
 
 uninstall:
-	rm -r $(m2_dir)
+	- rm -r $(m2_dir)
 
 dist:
 	echo "dist"
@@ -41,15 +80,17 @@ dist-nogen:
 distcheck:
 	echo "distcheck"
 
-clib: $(clib_shared)
+clib: $(clib)
 
-run: $(jlib_fat)
+run: $(jlib)
 	./gradlew examples:run
 
-$(jlib_fat): $(clib_shared) FORCE
+gen: $(gen_source_marker) $(gen_header_marker)
+
+$(jlib): $(clib) FORCE
 	./gradlew -q java-gtk:build -PVERSION=$(VERSION)
 
-$(clib_shared): $(gen_source_marker) $(gen_header_marker)
+$(clib): $(gen_source_marker) $(gen_header_marker)
 	make -j $(JOBS) -C glue VERSION=$(VERSION)
 
 $(gen_header_marker): $(gen_source_marker)

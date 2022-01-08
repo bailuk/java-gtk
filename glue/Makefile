@@ -17,7 +17,7 @@ OBJECTS := $(SRCS:%.c=%.o)
 OBJS := $(notdir $(OBJECTS))
 OBJDIR=build/obj
 
-ifeq ($(JAVA_HOME),)
+ifndef JAVA_HOME
     # https://stackoverflow.com/questions/1117398/java-home-directory-in-linux
     JAVA_HOME = $$(dirname $$(dirname $$(readlink -f $$(which javac))))
 endif
@@ -34,18 +34,12 @@ lib_res_dir = $(lib_dir)/glue/linux-$(ARCH)
 lib_res = $(lib_res_dir)/libglue.so
 
 lib_share_dir = $(lib_dir)
-lib_share = $(lib_share_dir)/libjava-gtk.so.$(VERSION)
+lib_share = $(lib_share_dir)/libjava-gtk-$(VERSION).so
 
 vpath %.c $(sort $(dir $(SRCS)))
 
 
-all : fat
-
-
-fat : $(lib_res)
-
-
-thin : $(lib_share)
+all : $(lib_res)
 
 
 $(lib_res) : $(lib_share) | $(lib_res_dir)
@@ -54,7 +48,6 @@ $(lib_res) : $(lib_share) | $(lib_res_dir)
 
 $(lib_share) : $(addprefix $(OBJDIR)/, $(OBJS)) | $(lib_share_dir)
 	cc -shared -Wl,-soname,libjava-gtk.so -o $@ $^ $(GTK_LIBS)
-	echo $(VERSION) > $(lib_dir)/glue/VERSION
 
 
 $(OBJDIR)/%.o : %.c | $(OBJDIR)
