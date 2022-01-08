@@ -67,7 +67,7 @@ tasks.test {
 sourceSets {
     main {
         java {
-            val src = File(project(":library").buildDir,"generated/src/main/java")
+            val src = File(project(":java-gtk").buildDir,"generated/src/main/java")
             srcDir(src)
         }
 
@@ -77,6 +77,12 @@ sourceSets {
         }
     }
 }
+
+
+tasks.jar {
+    manifest.attributes.put("build-version", project.version)
+}
+
 
 tasks.compileJava {
     if (this is JavaCompile) {
