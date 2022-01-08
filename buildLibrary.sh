@@ -20,5 +20,5 @@ find glue/ -name *.so
 
 echo
 echo "Build java archives"
-./gradlew -q library:build || exit 1
-find library/ -name *.jar
+./gradlew -q java-gtk:build || exit 1
+find java-gtk/ -name *.jar

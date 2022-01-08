@@ -6,7 +6,7 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":library"))
+    implementation(project(":java-gtk"))
 }
 
 application {

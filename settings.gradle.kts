@@ -1,6 +1,6 @@
 rootProject.name = "java-gtk"
 
 include("generator")
-include("library")
+include("java-gtk")
 include("glue")
 include("examples")

@@ -49,11 +49,11 @@ public class HelloWorld {
 `./gradlew generator:generate`  
 Compiles and runs the code generator. This will generate Java and C code from [GIR](https://gi.readthedocs.io/en/latest/) files.
 - Input: `generator/src/resources/gir/*`
-- Output Java: `library/build/generated/src/main/java/[...]/*.java`
+- Output Java: `java-gtk/build/generated/src/main/java/[...]/*.java`
 - Output C: `glue/build/generated/src/main/c/*.c`
 - Configuration: [generator/src/main/kotlin/ch/bailu/gtk/Configuration.kt](generator/src/main/kotlin/ch/bailu/gtk/Configuration.kt)
 
-`./gradelw library:classes`  
+`./gradelw java-gtk:classes`  
 Compiles java classes and creates JNI headers
 
 `make -C glue -j`  
@@ -61,7 +61,7 @@ Compile C code and generate C library
 - Input: JNI headers and generated C code
 - Output: `glue/build/lib/[...]/libglue.so`
 
-`./gradlew library:build`  
+`./gradlew java-gtk:build`  
 Create library, create javadoc and run tests
 - Output: jar, javadoc.jar and sources.jar in `libray/build/libs/` 
 
@@ -75,7 +75,7 @@ Compile Java and C library, generate JAR archive and copy JAR archive as artifac
  
  ## Modules
  - `generator/`: Kotlin application that generates C and Java code from GIR files (xml parser -> model builder -> writer). GIR files are taken from Debian dev packages.
- - `library/`  : java-gtk library depends on generated Java code.
+ - `java-gtk/` : java-gtk library depends on generated Java code.
  - `glue/`     : JNI C-Library. Depends on generated C code.
  - `examples/` : Some examples to test the bindings. Mostly ported from [https://gitlab.gnome.org/GNOME/gtk/-/tree/main/demos/gtk-demo](https://gitlab.gnome.org/GNOME/gtk/-/tree/main/demos/gtk-demo).
  

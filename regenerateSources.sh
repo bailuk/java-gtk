@@ -5,7 +5,7 @@
 
 echo
 echo "Clean all"
-./gradlew -q library:clean || exit 1
+./gradlew -q java-gtk:clean || exit 1
 test -d glue/build && rm -r glue/build
 
 echo
@@ -14,4 +14,4 @@ echo "Generate sources"
 
 echo
 echo "Generate JNI headers"
-./gradlew -q library:classes || exit 1
+./gradlew -q java-gtk:classes || exit 1

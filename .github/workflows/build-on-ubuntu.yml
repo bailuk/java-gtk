@@ -26,16 +26,16 @@ jobs:
     - name: Generate sources
       run: ./gradlew generator:generate
     - name: Generate JNI headers
-      run: ./gradlew library:classes
+      run: ./gradlew java-gtk:classes
     - name: Compile C code
       run: make -C glue -j 3
     - name: Build library
-      run: ./gradlew library:build
+      run: ./gradlew java-gtk:build
     - name: Build exsamples
       run: ./gradlew examples:build
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
         name: java-gtk
-        path: library/build/libs/*
+        path: java-gtk/build/libs/*
         if-no-files-found: error
