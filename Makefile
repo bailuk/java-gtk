@@ -63,6 +63,7 @@ clean:
 	- rm -rf build
 
 distclean: clean
+	- rm -rf .gradle
 	echo "distclean"
 
 maintainer-clean: distclean
@@ -86,6 +87,12 @@ run: $(jlib)
 	./gradlew examples:run
 
 gen: $(gen_source_marker) $(gen_header_marker)
+
+deb: FORCE
+	make -C ci/debian VERSION=$(VERSION)
+
+deb-clean:
+	make -C ci/debian clean
 
 $(jlib): $(clib) FORCE
 	./gradlew -q java-gtk:build -PVERSION=$(VERSION)
