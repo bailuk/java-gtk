@@ -15,7 +15,7 @@ fun getProperty(property: String, default: String) : String {
     return result
 }
 
-project.version = getProperty("VERSION", "SNAPSHOT")
+project.version = getProperty("version", "SNAPSHOT")
 project.group = "ch.bailu.java-gtk"
 
 java {

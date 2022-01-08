@@ -1,4 +1,5 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: java-gtk
 Source: https://github.com/bailuk/java-gtk
+Copyright: (c) 2021, 2022 Lukas Bai
 License: MIT

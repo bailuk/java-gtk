@@ -28,7 +28,7 @@ generator_jar = generator/build/libs/generator.jar
 gen_source_marker = build/gen-source.marker
 gen_header_marker = build/gen-header.marker
 
-clib = glue/build/lib/libjava-gtk-$(VERSION).so
+clib = glue/build/libjava-gtk-$(VERSION).so
 jlib = java-gtk/build/libs/java-gtk-$(VERSION).jar
 
 ifdef DESTDIR
@@ -54,11 +54,11 @@ install: $(install_target)
 
 
 install_local: all uninstall
-	./gradlew -q publishToMavenLocal -Dmaven.repo.local=$(m2_repo)
+	./gradlew -q publishToMavenLocal -Dmaven.repo.local=$(m2_repo) -Pversion=$(VERSION)
 
 
 install_global: all uninstall
-	./gradlew -q publishToMavenLocal -Dmaven.repo.local=$(m2_repo)
+	./gradlew -q publishToMavenLocal -Dmaven.repo.local=$(m2_repo) -Pversion=$(VERSION)
 	mkdir -p $(clib_target)
 	cp $(clib) $(clib_target)/
 
@@ -70,7 +70,6 @@ clean:
 
 distclean: clean
 	- rm -rf .gradle
-	echo "distclean"
 
 maintainer-clean: distclean
 	echo "maintainer-clean"
@@ -101,7 +100,7 @@ deb-clean:
 	make -C ci/debian clean
 
 $(jlib): $(clib) FORCE
-	./gradlew -q java-gtk:build -PVERSION=$(VERSION)
+	./gradlew -q java-gtk:build -Pversion=$(VERSION)
 
 $(clib): $(gen_source_marker) $(gen_header_marker)
 	make -j $(JOBS) -C glue VERSION=$(VERSION)

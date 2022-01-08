@@ -29,11 +29,10 @@ INCLUDE_DIRS = -I../java-gtk/build/generated/sources/headers/java/main/ -I$(JAVA
 LIBDIR=build/lib/glue/linux-$(ARCH)
 
 
-lib_dir = build/lib
-lib_res_dir = $(lib_dir)/glue/linux-$(ARCH)
+lib_res_dir = build/lib/glue/linux-$(ARCH)
 lib_res = $(lib_res_dir)/libglue.so
 
-lib_share_dir = $(lib_dir)
+lib_share_dir = build
 lib_share = $(lib_share_dir)/libjava-gtk-$(VERSION).so
 
 vpath %.c $(sort $(dir $(SRCS)))
