@@ -1,6 +1,11 @@
 #!/bin/sh
 
+# use `make` instead
+#
 # compile glue and build library
+
+test -f gradlew || cd ..
+
 
 buildLog="glue/build/build.log"
 

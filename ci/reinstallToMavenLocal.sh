@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# use `make install` instead
+
+test -f gradlew || cd ..
+
 repoDir="${HOME}/.m2/repository/ch/bailu/java-gtk/"
 
 echo
