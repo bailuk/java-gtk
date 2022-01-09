@@ -7,7 +7,7 @@
 
 
 FROM docker.io/debian:bookworm
-LABEL version="0.3"
+LABEL version="0.4"
 
 ENV JAVA_TOOL_OPTIONS "-Dfile.encoding=UTF8"
 
@@ -19,6 +19,9 @@ RUN apt-get -y upgrade
 RUN apt-get -y install libgtk-4-dev
 RUN apt-get -y install openjdk-11-jdk
 RUN apt-get -y install libgirepository1.0-dev
+RUN apt-get -y install build-essential
+RUN apt-get -y install fakeroot
+RUN apt-get -y install devscripts
 RUN apt-get -y install git
 RUN apt-get -y clean
 
