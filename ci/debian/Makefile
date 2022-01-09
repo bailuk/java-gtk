@@ -1,4 +1,6 @@
+## Do not call this directly: execute `make deb` from project root
 
+# English for searchable error messages
 export LANG=C
 export GRADLE_USER_HOME=$(HOME)/.gradle
 export VERSION
