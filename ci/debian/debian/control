@@ -13,4 +13,4 @@ Package: java-gtk
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Experimental GTK 4 bindings for Java
-   This package contains everything to build and run GTK based Java applications
+ This package contains everything to build and run GTK based Java applications
