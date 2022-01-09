@@ -8,7 +8,7 @@ fun getProperty(property: String, default: String) : String {
 
     if (project.hasProperty(property)) {
         val r = project.property(property)
-        if (r is String) {
+        if (r is String && r != "unspecified") {
             result = r
         }
     }
@@ -64,6 +64,8 @@ tasks.test {
     useJUnitPlatform()
 }
 
+
+/** add generated code and C library to source set **/
 sourceSets {
     main {
         java {
@@ -72,15 +74,30 @@ sourceSets {
         }
 
         resources {
-            val res = File( "../glue/build/lib/")
+            val res = File("../glue/build/lib/")
             srcDir(res)
         }
+
+    }
+}
+
+
+/** exclude C library from source jar **/
+tasks.named("sourcesJar") {
+    if (this is org.gradle.jvm.tasks.Jar) {
+        exclude("/glue/")
     }
 }
 
 
 tasks.jar {
+    // add project version to all jars
     manifest.attributes.put("build-version", project.version)
+
+    // exclude C library from shared installation
+    if (getProperty("jarType", "resource") == "shared") {
+        exclude("/glue/")
+    }
 }
 
 
@@ -90,6 +107,7 @@ tasks.compileJava {
         options.compilerArgs.add("-Xlint:unchecked")
     }
 }
+
 
 tasks.javadoc {
     /*

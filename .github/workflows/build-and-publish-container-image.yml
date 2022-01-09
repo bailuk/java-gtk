@@ -30,7 +30,7 @@ jobs:
       - name: Build and push build image
         uses: docker/build-push-action@v2
         with:
-          context: ci
+          context: ci/debian
           push: true
           tags: ghcr.io/bailuk/java-gtk/gtk4:latest,${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

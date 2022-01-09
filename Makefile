@@ -15,7 +15,7 @@
 #
 
 ifndef VERSION
-	VERSION=SNAPSHOT
+	VERSION=0.1-SNAPSHOT
 endif
 
 ifndef JOBS
@@ -58,7 +58,7 @@ install_local: all uninstall
 
 
 install_global: all uninstall
-	./gradlew -q publishToMavenLocal -Dmaven.repo.local=$(m2_repo) -Pversion=$(VERSION)
+	./gradlew -q publishToMavenLocal -Dmaven.repo.local=$(m2_repo) -Pversion=$(VERSION) -PjarType=shared
 	mkdir -p $(clib_target)
 	cp $(clib) $(clib_target)/
 
@@ -68,8 +68,14 @@ clean:
 	make -C glue clean
 	- rm -rf build
 
-distclean: clean
+distclean: FORCE
 	- rm -rf .gradle
+	- rm -rf build
+	- rm -rf glue/build
+	- rm -rf java-gtk/build
+	- rm -rf generator/build
+	- rm -rf examples/build
+	- rm -rf ci/debian/build
 
 maintainer-clean: distclean
 	echo "maintainer-clean"
@@ -78,7 +84,8 @@ uninstall:
 	- rm -r $(m2_dir)
 
 dist:
-	echo "dist"
+	make install DESTDIR=$(CURDIR)/build/java-gtk-$(VERSION)
+	cd build && tar -czvf java-gtk-$(VERSION).tar.gz java-gtk-$(VERSION)
 
 dist-nogen:
 	echo "dist-nogen"
@@ -88,8 +95,11 @@ distcheck:
 
 clib: $(clib)
 
+examples: $(jlib)
+	./gradlew examples:build -Pversion=$(VERSION)
+
 run: $(jlib)
-	./gradlew examples:run
+	./gradlew examples:run -Pversion=$(VERSION)
 
 gen: $(gen_source_marker) $(gen_header_marker)
 
@@ -98,6 +108,17 @@ deb: FORCE
 
 deb-clean:
 	make -C ci/debian clean
+
+jdoc: $(gen_source_marker)
+	./gradlew -q java-gtk:javadocJar -Pversion=$(VERSION)
+
+jdoc-install: $(jdoc) javadoc
+	rm -rf javadoc/*
+	unzip -q java-gtk/build/libs/java-gtk-$(VERSION)-javadoc.jar -d javadoc
+
+javadoc:
+	mkdir javadoc
+
 
 $(jlib): $(clib) FORCE
 	./gradlew -q java-gtk:build -Pversion=$(VERSION)

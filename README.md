@@ -46,30 +46,27 @@ public class HelloWorld {
 ```
 
 ## Build
-`./gradlew generator:generate`  
+`make gen`  
 Compiles and runs the code generator. This will generate Java and C code from [GIR](https://gi.readthedocs.io/en/latest/) files.
+Then generates JNI headers.
 - Input: `generator/src/resources/gir/*`
 - Output Java: `java-gtk/build/generated/src/main/java/[...]/*.java`
 - Output C: `glue/build/generated/src/main/c/*.c`
 - Configuration: [generator/src/main/kotlin/ch/bailu/gtk/Configuration.kt](generator/src/main/kotlin/ch/bailu/gtk/Configuration.kt)
 
-`./gradelw java-gtk:classes`  
-Compiles java classes and creates JNI headers
-
-`make -C glue -j`  
+`make`  
 Compile C code and generate C library
 - Input: JNI headers and generated C code
 - Output: `glue/build/lib/[...]/libglue.so`
 
-`./gradlew java-gtk:build`  
-Create library, create javadoc and run tests
+And creates library, javadoc and run tests
 - Output: jar, javadoc.jar and sources.jar in `libray/build/libs/` 
 
-`./gradlew examples:run`  
+`make run`  
 Run the default demo application.
 The default demo application can be selected in [examples/src/main/java/examples/App.java](examples/src/main/java/examples/App.java)
 
-`./gradlew publishToMavenLocal`  
+`make install`  
 Compile Java and C library, generate JAR archive and copy JAR archive as artifact to local Maven repository (`~/.m2/repository`).
 
  
