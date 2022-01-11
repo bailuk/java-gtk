@@ -1,25 +1,22 @@
 package ch.bailu.gtk.glue;
 
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 class SharedLibLoader {
-    private final static String LIB_SHARED_NAME = "libjava-gtk-";
+    private final static String LIB_SHARED_NAME = "/usr/lib/jni/libjava-gtk-";
 
     public void load() throws IOException {
-        System.loadLibrary(getSharedName());
+        System.load(getSharedName());
     }
 
     private String getVersion() throws IOException {
         var result = "";
-        URLClassLoader cl = (URLClassLoader) LibResourceLoader.class.getClassLoader();
-        URL url = cl.findResource("META-INF/MANIFEST.MF");
-        Manifest manifest = new Manifest(url.openStream());
-        Attributes attr = manifest.getMainAttributes();
-        var version = manifest.getMainAttributes().getValue("build-version");
+        var cl = LibResourceLoader.class.getClassLoader();
+        var url = cl.getResource("META-INF/MANIFEST.MF");
+        var manifest = new Manifest(url.openStream());
+        var attr = manifest.getMainAttributes();
+        var version = attr.getValue("build-version");
 
         if (version != null) {
             result = version;
@@ -31,5 +28,4 @@ class SharedLibLoader {
         var version = getVersion();
         return LIB_SHARED_NAME + version + ".so";
     }
-
 }
