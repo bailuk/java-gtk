@@ -8,11 +8,11 @@ import java.nio.file.Files;
 
 import ch.bailu.gtk.GTK;
 
-public class GlueLoader {
+class LibResourceLoader {
     private final static String LIB_NAME = "libglue.so";
     private final static String TMP_DIR = "java-gtk-glue";
 
-    public GlueLoader() throws IOException {
+    public void load() throws IOException {
         PlatformDetection platformDetection = new PlatformDetection();
 
         try {

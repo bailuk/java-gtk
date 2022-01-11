@@ -2,14 +2,14 @@ package ch.bailu.gtk;
 
 import java.io.IOException;
 
-import ch.bailu.gtk.glue.GlueLoader;
+import ch.bailu.gtk.glue.LibLoader;
 
 public class GTK {
     public final static int TRUE = 1;
     public final static int FALSE = 0;
 
     public static void init() throws IOException {
-        new GlueLoader();
+        new LibLoader();
     }
 
     /**
