@@ -9,6 +9,7 @@ Experimental GTK 4 bindings for Java
 ```java
 package examples;
 
+import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.ApplicationWindow;
@@ -17,7 +18,7 @@ import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
 public class HelloWorld {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         GTK.init();
         new HelloWorld(args);
     }
