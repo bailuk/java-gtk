@@ -4,11 +4,11 @@ import java.io.IOException;
 
 public class LibLoader {
 
-    public LibLoader() throws IOException {
+    public LibLoader() throws IOException, UnsatisfiedLinkError {
         try {
-            new LibResourceLoader().load();
-        } catch(Exception e) {
-            new SharedLibLoader().load();
+            new SharedLibLoader();
+        } catch(Throwable e) {
+            new LibResourceLoader();
         }
     }
 }

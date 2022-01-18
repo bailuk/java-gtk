@@ -43,6 +43,7 @@ all : $(lib_res)
 
 $(lib_res) : $(lib_share) | $(lib_res_dir)
 	cp $(lib_share) $(lib_res)
+	echo $(VERSION) > build/lib/glue/version
 
 
 $(lib_share) : $(addprefix $(OBJDIR)/, $(OBJS)) | $(lib_share_dir)

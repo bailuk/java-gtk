@@ -91,12 +91,9 @@ tasks.named("sourcesJar") {
 
 
 tasks.jar {
-    // add project version to all jars
-    manifest.attributes.put("build-version", project.version)
-
     // exclude C library from shared installation
     if (getProperty("jarType", "resource") == "shared") {
-        exclude("/glue/")
+        exclude("/glue/*-*")
     }
 }
 

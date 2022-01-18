@@ -12,18 +12,12 @@ class LibResourceLoader {
     private final static String LIB_NAME = "libglue.so";
     private final static String TMP_DIR = "java-gtk-glue";
 
-    public void load() throws IOException {
+    public LibResourceLoader() throws IOException, UnsatisfiedLinkError {
         PlatformDetection platformDetection = new PlatformDetection();
-
-        try {
-            loadLibrary(platformDetection.getGluePath(), TMP_DIR, LIB_NAME);
-        } catch (Exception e) {
-            System.out.println(e);
-            throw e;
-        }
+        loadLibrary(platformDetection.getGluePath(), TMP_DIR, LIB_NAME);
     }
 
-    private void loadLibrary(String res, String tmp, String file) throws IOException {
+    private static void loadLibrary(String res, String tmp, String file) throws IOException {
         URL src = GTK.class.getResource(res + file);
         File lib = getLibFile(getTempDir(tmp), file);
 
