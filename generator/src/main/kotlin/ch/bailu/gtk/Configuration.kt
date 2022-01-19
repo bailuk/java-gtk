@@ -57,9 +57,9 @@ class Configuration {
         }
 
     }
-    var javaBaseDir: File
-    var cBaseDir: File
-    var girBaseDir: File
+    val javaBaseDir: File
+    val cBaseDir: File
+    val girBaseDir: File
 
 
     @Throws(RuntimeException::class)
@@ -75,7 +75,7 @@ class Configuration {
             } else if ("-j" == args[i]) {
                 jdir = getDirectory(args[++i], true)
             } else if ("-i" == args[i]) {
-                gdir = getDirectory(args[++i], true)
+                gdir = getDirectory(args[++i], false)
             }
             i++
         }
@@ -94,19 +94,10 @@ class Configuration {
         val result = File(dir)
         if (create) {
             result.mkdirs()
-        }
-        if (!result.exists()) {
-            throw RuntimeException("$dir does not exist.")
+            if (!result.exists()) {
+                throw RuntimeException("$dir does not exist.")
+            }
         }
         return result
-    }
-
-
-    fun getJavaBaseDir(): String {
-        return javaBaseDir.absolutePath
-    }
-
-    fun getCBaseDir(): String {
-        return cBaseDir.absolutePath
     }
 }

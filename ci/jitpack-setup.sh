@@ -8,8 +8,8 @@ VERSION="0.1"
 
 download_arch () {
   mkdir -p ${GLUE_DIR}/${ARCH}
-  wget -P ${GLUE_DIR}/${ARCH}/ https://bailu.ch/java-gtk/v${VERSION}/${ARCH}/libglue.so
-  wget -P ${GLUE_DIR}/${ARCH}/ https://bailu.ch/java-gtk/v${VERSION}/${ARCH}/libglue.so.gpg
+  wget --no-check-certificate -P ${GLUE_DIR}/${ARCH}/ https://bailu.ch/java-gtk/v${VERSION}/${ARCH}/libglue.so
+  wget --no-check-certificate -P ${GLUE_DIR}/${ARCH}/ https://bailu.ch/java-gtk/v${VERSION}/${ARCH}/libglue.so.gpg
 }
 
 ARCH="linux-aarch64"
