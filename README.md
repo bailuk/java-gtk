@@ -1,4 +1,5 @@
 [![Build inside container](https://github.com/bailuk/java-gtk/actions/workflows/build-on-container.yml/badge.svg)](https://github.com/bailuk/java-gtk/actions/workflows/build-on-container.yml)
+[![JitPack](https://jitpack.io/v/bailuk/java-gtk.svg)](https://jitpack.io/#bailuk/java-gtk)
 
 # Java-GTK
 Experimental GTK 4 bindings for Java
@@ -70,14 +71,16 @@ The default demo application can be selected in [examples/src/main/java/examples
 `make install`  
 Compile Java and C library, generate JAR archive and copy JAR archive as artifact to local Maven repository (`~/.m2/repository`).
 
+## Integration
+[SNAPSHOT builds](https://jitpack.io/#bailuk/java-gtk/main-SNAPSHOT) and [Javadoc](https://javadoc.jitpack.io/com/github/bailuk/java-gtk/main-SNAPSHOT/javadoc/) are available via [JitPack](https://jitpack.io).  
  
- ## Modules
- - `generator/`: Kotlin application that generates C and Java code from GIR files (xml parser -> model builder -> writer). GIR files are taken from Debian dev packages.
- - `java-gtk/` : java-gtk library depends on generated Java code.
- - `glue/`     : JNI C-Library. Depends on generated C code.
- - `examples/` : Some examples to test the bindings. Mostly ported from [https://gitlab.gnome.org/GNOME/gtk/-/tree/main/demos/gtk-demo](https://gitlab.gnome.org/GNOME/gtk/-/tree/main/demos/gtk-demo).
+## Modules
+- `generator/`: Kotlin application that generates C and Java code from GIR files (xml parser -> model builder -> writer). GIR files are taken from Debian dev packages.
+- `java-gtk/` : java-gtk library depends on generated Java code.
+- `glue/`     : JNI C-Library. Depends on generated C code.
+- `examples/` : Some examples to test the bindings. Mostly ported from [https://gitlab.gnome.org/GNOME/gtk/-/tree/main/demos/gtk-demo](https://gitlab.gnome.org/GNOME/gtk/-/tree/main/demos/gtk-demo).
  
- ## License
- - Files in [generator/src/resources/gir/](generator/src/resources/gir/) are comming from the [GTK project](https://gitlab.gnome.org/GNOME/gtk) and are therefore licensed under the GNU Library General Public License.
- - Examples in [examples/src/main/java/examples/gtk3_demo](examples/src/main/java/examples/gtk3_demo) are ported from the [GTK project](https://gitlab.gnome.org/GNOME/gtk/-/tree/main/demos/gtk-demo) and are therefore licensed under the GNU Library General Public License.   
- - Everything else licensed under the [MIT License](https://en.wikipedia.org/wiki/MIT_License)
+## License
+- Files in [generator/src/resources/gir/](generator/src/resources/gir/) are comming from the [GTK project](https://gitlab.gnome.org/GNOME/gtk) and are therefore licensed under the GNU Library General Public License.
+- Examples in [examples/src/main/java/examples/gtk3_demo](examples/src/main/java/examples/gtk3_demo) are ported from the [GTK project](https://gitlab.gnome.org/GNOME/gtk/-/tree/main/demos/gtk-demo) and are therefore licensed under the GNU Library General Public License.   
+- Everything else licensed under the [MIT License](https://en.wikipedia.org/wiki/MIT_License)
