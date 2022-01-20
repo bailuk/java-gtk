@@ -10,7 +10,7 @@ echo; echo
 test -f gradlew || cd ..
 
 VERSION="0.1"
-GLUE="java-gtk/build/resources/main/glue"
+GLUE="glue/build/lib/glue"
 KEY="build/pub-key.gpg"
 
 if ! test -f ${KEY}; then
@@ -19,6 +19,7 @@ if ! test -f ${KEY}; then
 fi
 
 download_arch () {
+  ARCH=$1
   LIB="${GLUE}/${ARCH}/libglue.so"
   URL="https://bailu.ch/java-gtk/v${VERSION}/${ARCH}/libglue.so.gpg"
   
@@ -28,11 +29,8 @@ download_arch () {
   fi
 }
 
-ARCH="linux-aarch64"
-download_arch
-
-ARCH="linux-x86_64"
-download_arch
+download_arch "linux-aarch64"
+download_arch "linux-x86_64"
 
 find -name "libglue*"
 
