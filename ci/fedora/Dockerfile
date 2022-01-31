@@ -19,4 +19,5 @@ RUN dnf -y install java-11-openjdk
 RUN dnf -y install java-11-openjdk-devel
 RUN dnf -y install gcc
 RUN dnf -y install git
+RUN dnf -y install libadwaita-devel
 RUN dnf -y clean all

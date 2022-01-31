@@ -13,10 +13,14 @@ import java.io.Reader
 
 class Parser {
 
-    constructor(namespaceConfig: NamespaceConfig, builder: BuilderInterface) {
+    constructor(namespaceConfig: NamespaceConfig, builder: BuilderInterface, noStubsNeeded: Boolean) {
         var reader: Reader? = null
         try {
+            if (!noStubsNeeded) {
+                println("Generating error stubs for ${namespaceConfig.pkgConfigName} as pkg-config couldn't find the library!")
+            }
             reader = getReader(namespaceConfig.getFile())
+            builder.buildErrorStubs(!noStubsNeeded);
             parse(getParser(reader), DocumentTag(builder, namespaceConfig))
         } finally {
             reader?.close()
