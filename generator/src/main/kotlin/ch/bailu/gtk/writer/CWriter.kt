@@ -1,10 +1,6 @@
 package ch.bailu.gtk.writer
 
-import ch.bailu.gtk.model.NamespaceModel
-import ch.bailu.gtk.model.StructureModel
-import ch.bailu.gtk.model.MethodModel
-import ch.bailu.gtk.model.Model
-import ch.bailu.gtk.model.ParameterModel
+import ch.bailu.gtk.model.*
 
 
 class CWriter (writer : TextWriter) : CodeWriter(writer) {
@@ -25,17 +21,15 @@ class CWriter (writer : TextWriter) : CodeWriter(writer) {
         out.end(3)
     }
 
-
     override fun writeNativeMethod(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(2)
-        _writeNativeMethod(structureModel, methodModel, true)
+        writeNativeMethodOrPrivateFactory(structureModel, methodModel, true)
         out.end(2)
     }
 
-
     override fun writePrivateFactory(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(2)
-        _writeNativeMethod(structureModel, methodModel, false)
+        writeNativeMethodOrPrivateFactory(structureModel, methodModel, false)
         out.end(2)
     }
 
@@ -43,7 +37,7 @@ class CWriter (writer : TextWriter) : CodeWriter(writer) {
         
     }
 
-    private fun _writeNativeMethod(structureModel : StructureModel, methodModel : MethodModel, self : Boolean) {
+    private fun writeNativeMethodOrPrivateFactory(structureModel : StructureModel, methodModel : MethodModel, self : Boolean) {
         out.a("""
             JNIEXPORT ${methodModel.returnType.jniType} JNICALL ${getJniMethodName(structureModel, methodModel)}(${getJniSignature(methodModel, self)})
             {
@@ -54,8 +48,7 @@ class CWriter (writer : TextWriter) : CodeWriter(writer) {
             """, 0)
     }
 
-
-    fun getJniSignature(methodModel : MethodModel, self : Boolean) : String {
+    private fun getJniSignature(methodModel : MethodModel, self : Boolean) : String {
         val result = StringBuilder()
         result.append("JNIEnv * _jenv, jclass _jself")
 
@@ -112,7 +105,6 @@ class CWriter (writer : TextWriter) : CodeWriter(writer) {
         }
         return result.toString()
     }
-
 
     private fun getReturnStatement(m : MethodModel) : String {
         if (!m.returnType.isVoid) {
@@ -204,7 +196,6 @@ class CWriter (writer : TextWriter) : CodeWriter(writer) {
         }
     }
 
-
     override fun writeField(structureModel : StructureModel, parameterModel : ParameterModel) {
         out.start(2)
         val getter = getJavaFieldGetterName(parameterModel.name)
@@ -239,7 +230,7 @@ class CWriter (writer : TextWriter) : CodeWriter(writer) {
 
     override fun writeFunction(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(2)
-        _writeNativeMethod(structureModel, methodModel, false)
+        writeNativeMethodOrPrivateFactory(structureModel, methodModel, false)
         out.end(2)
     }
 
@@ -323,7 +314,6 @@ class CWriter (writer : TextWriter) : CodeWriter(writer) {
         return result.toString()
     }
 
-
     private fun getCallbackSignature(methodModel : MethodModel) : String {
         val result = StringBuilder()
 
@@ -356,8 +346,6 @@ class CWriter (writer : TextWriter) : CodeWriter(writer) {
     private fun getGlobalVMName(structureModel : StructureModel) : String {
         return getJniGlobalsName(structureModel,"VM")
     }
-
-
 
     override fun writeClass(structureModel: StructureModel) {}
     override fun writeInterface(structureModel: StructureModel) {}
