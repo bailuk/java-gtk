@@ -45,7 +45,7 @@ class StructureModel : Model {
         parent = StructureModel(nameSpace.getNamespace(), structure.parent, structureType)
         doc = structure.getDoc()
         for (m in structure.constructors) {
-            models.privateFactories.addIfSupported(filterConstructor(MethodModel(nameSpace.getNamespace(), m)))
+            models.addIfSupportedWithCallbacks(models.privateFactories, filterConstructor(MethodModel(nameSpace.getNamespace(), m)))
         }
 
         models.privateFactories.forEach {
@@ -70,7 +70,7 @@ class StructureModel : Model {
             models.addIfSupportedWithCallbacks(models.functions, filter(MethodModel(nameSpace.getNamespace(), m)))
         }
 
-        setSupported("Name", apiName != "")
+        setSupported("name", apiName != "")
     }
 
     private fun convert(namespace: String, name: String): String {
@@ -79,18 +79,18 @@ class StructureModel : Model {
     }
 
     private fun filterField(parameterModel: ParameterModel): ParameterModel {
-        parameterModel.setSupported("Callback", !parameterModel.isCallback)
-        parameterModel.setSupported("Filter", filterField(this))
+        parameterModel.setSupported("cb-field", !parameterModel.isCallback)
+        parameterModel.setSupported("filter", filterField(this))
         return parameterModel
     }
 
     private fun filterConstructor(methodModel: MethodModel): MethodModel {
-        methodModel.setSupported("Callback", !methodModel.hasCallback())
+        //methodModel.setSupported("cb-constructor", !methodModel.hasCallback())
         return filter(methodModel)
     }
 
     private fun filter(methodModel: MethodModel): MethodModel {
-        methodModel.setSupported("Filter", filterMethod(this, methodModel))
+        methodModel.setSupported("filter", filterMethod(this, methodModel))
         return methodModel
     }
 
@@ -216,6 +216,6 @@ class StructureModel : Model {
 
 
     fun hasDefaultConstructor(): Boolean {
-        return models.constructors.find { return it.getParameters().isEmpty() } != null
+        return models.constructors.find { return it.parameters.isEmpty() } != null
     }
 }

@@ -63,7 +63,7 @@ class JavaDocHtml(writer: Writer) : JavaDoc(writer) {
 
 
     override fun writeParameter(methodModel: MethodModel) {
-        methodModel.getParameters().forEach {
+        methodModel.parameters.forEach {
             writeDocParamLine(it.doc, "@param ${it.name}")
         }
     }

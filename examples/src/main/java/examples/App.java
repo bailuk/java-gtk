@@ -16,7 +16,8 @@ public class App {
         GTK.init();
         ID = new Str("org.gtk.example");
 
-        //new HelloWorld(args);
+        new HelloWorld(args);
+        //new CustomLayoutTest(args);
         //new HeaderBarSample(args);
         //new Picker(args);
         //new LinksSample(args);
@@ -33,6 +34,6 @@ public class App {
         //new GlibLoop();
         //new GlibSettings();
         //new GioStreams();
-        new AdwaitaDemo(args);
+        //new AdwaitaDemo(args);
     }
 }

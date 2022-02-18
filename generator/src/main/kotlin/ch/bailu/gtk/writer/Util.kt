@@ -1,8 +1,10 @@
 package ch.bailu.gtk.writer
 
 import ch.bailu.gtk.Configuration
+import ch.bailu.gtk.model.MethodModel
 import ch.bailu.gtk.model.StructureModel
 import ch.bailu.gtk.model.NamespaceModel
+import ch.bailu.gtk.model.ParameterModel
 import java.io.*
 
 
@@ -49,4 +51,14 @@ private fun getCFile(name: String, namespace: NamespaceModel): File {
 @Throws(IOException::class)
 fun getJavaImpWriter(structureModel: StructureModel, namespace: NamespaceModel): Writer {
     return BufferedWriter(FileWriter(getJavaFile(structureModel.impName, namespace)))
+}
+
+
+fun emitterIdFromModel(methodModel: MethodModel, toString: (ParameterModel)->String): String{
+    return try {
+        val last = methodModel.parameters.last { it.apiType == "ch.bailu.gtk.type.Pointer" }
+        toString(last)
+    } catch (e : NoSuchElementException) {
+        "0"
+    }
 }

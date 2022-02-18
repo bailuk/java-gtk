@@ -1,9 +1,7 @@
 package ch.bailu.gtk.writer.java
 
-import ch.bailu.gtk.model.NamespaceModel
 import ch.bailu.gtk.model.*
 import ch.bailu.gtk.writer.*
-import java.io.Writer
 
 class JavaImpWriter(writer : TextWriter) : CodeWriter(writer) {
 
@@ -16,7 +14,7 @@ class JavaImpWriter(writer : TextWriter) : CodeWriter(writer) {
 
     override fun writeClass(structureModel : StructureModel) {
         out.start(3)
-        out.a("class " + structureModel.impName + " {\n");
+        out.a("class " + structureModel.impName + " {\n")
         out.end(1)
     }
 
@@ -28,7 +26,7 @@ class JavaImpWriter(writer : TextWriter) : CodeWriter(writer) {
 
     override fun writeNativeMethod(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(0)
-        out.a("    static native ${methodModel.returnType.impType} ${methodModel.apiName}(${getSelfSignature(methodModel.getParameters())});\n")
+        out.a("    static native ${methodModel.returnType.impType} ${methodModel.apiName}(${getSelfSignature(methodModel.parameters)});\n")
         out.end(0)
     }
 
@@ -46,10 +44,11 @@ class JavaImpWriter(writer : TextWriter) : CodeWriter(writer) {
 
     override fun writePrivateFactory(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(0)
-        out.a("    static native long " + methodModel.apiName)
-        writeFactorySignature(methodModel);
-        out.a(";\n")
-        out.end(0)
+
+        out.a("""
+            static native long ${methodModel.apiName}(${getSignature(methodModel.parameters)});
+        """,4)
+        out.end(1)
     }
 
     override fun writeConstant(parameterModel : ParameterModel) {}
@@ -62,7 +61,7 @@ class JavaImpWriter(writer : TextWriter) : CodeWriter(writer) {
     }
 
     override fun writeGetTypeFunction(structureModel: StructureModel) {
-         out.start(1);
+         out.start(1)
          out.a("    static native long getTypeID();\n" )
          out.end(0)
     }
@@ -70,25 +69,22 @@ class JavaImpWriter(writer : TextWriter) : CodeWriter(writer) {
 
     override fun writeSignal(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(1)
-        out.a("""
-            static native void ${getJavaSignalMethodName(methodModel.name)}(long _self);
-            static ${methodModel.returnType.impType} ${getImpJavaSignalCallbackName(methodModel.name)}(${getSelfSignature(methodModel.getParameters())}) {
-                String signal = "${methodModel.name}";
-                for (java.lang.Object observer : ch.bailu.gtk.Callback.get(_self, signal)) {
-                    ${getSignalInterfaceCall(structureModel, methodModel)};
-                }
-                ${getDefaultReturn(methodModel)}
-            }
-        """,4)
+        out.a("    static native void ${getJavaSignalMethodName(methodModel.name)}(long _self);\n")
+        writeSignalOrCallback(structureModel, methodModel, getSelfSignature(methodModel.parameters), "_self")
         out.end(1)
     }
 
     override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel) {
         out.start(1)
+        writeSignalOrCallback(structureModel, methodModel, getSignature(methodModel.parameters), emitterIdFromModel(methodModel) { it.name })
+        out.end(1)
+    }
+
+    private fun writeSignalOrCallback(structureModel: StructureModel, methodModel: MethodModel, signature: String, emitterId: String) {
         out.a("""
-            static ${methodModel.returnType.impType} ${getImpJavaSignalCallbackName(methodModel.name)}(${getSignature(methodModel.getParameters(), "")}) {
+            static ${methodModel.returnType.impType} ${getImpJavaSignalCallbackName(methodModel.name)}(${signature}) {
                 String signal = "${methodModel.apiName}";
-                long emitter = ${getEmitter(methodModel)};
+                long emitter = ${emitterId};
         
                 for (java.lang.Object observer : ch.bailu.gtk.Callback.get(emitter, signal)) {
                     ${getSignalInterfaceCall(structureModel, methodModel)};
@@ -96,20 +92,6 @@ class JavaImpWriter(writer : TextWriter) : CodeWriter(writer) {
                 ${getDefaultReturn(methodModel)}
             }
         """, 4)
-        out.end(1)
-
-    }
-
-    private fun getEmitter(methodModel: MethodModel) : String {
-        return try {
-            val last = methodModel.getParameters().last {
-                it.apiType == "ch.bailu.gtk.type.Pointer"
-            }
-
-            last.name
-        } catch (e : NoSuchElementException) {
-            "0"
-        }
     }
 
     private fun getDefaultReturn(methodModel : MethodModel) : String {
@@ -135,7 +117,7 @@ class JavaImpWriter(writer : TextWriter) : CodeWriter(writer) {
 
     override fun writeFunction(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(0)
-        out.a("    static native ${methodModel.returnType.impType} ${methodModel.apiName}(${getSignature(methodModel.getParameters(), "")});\n")
+        out.a("    static native ${methodModel.returnType.impType} ${methodModel.apiName}(${getSignature(methodModel.parameters)});\n")
         out.end(0)
 
     }
@@ -158,36 +140,25 @@ class JavaImpWriter(writer : TextWriter) : CodeWriter(writer) {
         val result = StringBuilder()
         var del = " "
 
-        for (p in methodModel.getParameters()) {
+        for (p in (methodModel).parameters) {
             result.append(del)
             if (p.isJavaNative) {
                 result.append(p.name)
             } else {
                 result.append("new ${p.apiType}(new CPointer(${p.name}))")
             }
-            del = ", ";
+            del = ", "
         }
         return result.toString()
 
     }
 
 
-    private fun writeFactorySignature(methodModel : MethodModel) {
-        out.a("(")
-
-        var del = " ";
-        for (p in methodModel.getParameters()) {
-            out.a(del + p.impType + " " + p.name);
-            del = ", ";
-        }
-        out.a(")");
-    }
-
     private fun getSelfSignature(parameters : List<ParameterModel>) : String {
         return "long _self${getSignature(parameters, ", ")}"
     }
 
-    private fun getSignature(parameters : List<ParameterModel>, firstDel : String) : String {
+    private fun getSignature(parameters : List<ParameterModel>, firstDel : String = "") : String {
         val result = StringBuilder()
         var del = firstDel
 

@@ -5,29 +5,21 @@ import ch.bailu.gtk.parser.tag.MethodTag
 import ch.bailu.gtk.writer.getJavaMethodName
 import java.util.*
 
-class MethodModel : Model {
-    private var parameters: MutableList<ParameterModel> = ArrayList()
+class MethodModel (namespace: String, method: MethodTag) : Model() {
+    val parameters: MutableList<ParameterModel> = ArrayList()
 
-    val name: String
-    val gtkName: String
+    val name: String = method.getName()
+    val gtkName: String = method.getIdentifier()
 
-    val returnType: ParameterModel
+    val returnType: ParameterModel = ParameterModel(namespace, method.getReturnValue(), false, false)
 
     val isConstructorType: Boolean
-    val throwsError: Boolean
-    private val callbackModel: MutableList<MethodModel> = ArrayList()
+    val throwsError: Boolean = method.throwsError()
+    val callbackModel: MutableList<MethodModel> = ArrayList()
 
-    val doc : String
+    val doc : String = method.getDoc()
 
-
-    // simple method with return type and parameters can be a factory
-    constructor(namespace: String, method: MethodTag) {
-        throwsError = method.throwsError()
-        gtkName = method.getIdentifier()
-        name = method.getName()
-        doc = method.getDoc()
-
-        returnType = ParameterModel(namespace, method.getReturnValue(), false, false)
+    init {
         setSupported("Deprecated", !method.isDeprecated())
         setSupported("Return value", returnType.isSupported)
         setSupported("Return cb", !returnType.isCallback)
@@ -48,18 +40,9 @@ class MethodModel : Model {
         return callbackModel.isNotEmpty()
     }
 
-    fun getCallbackModel(): List<MethodModel> {
-        return callbackModel
-    }
-
-
-    fun getParameters(): List<ParameterModel> {
-        return parameters
-    }
-
     override fun toString(): String {
         val result = StringBuilder().append(colonList(arrayOf(supportedState,returnType.toString(),apiName)))
-        for (p in getParameters()) {
+        for (p in parameters) {
             result.append(":").append(p.toString())
         }
         return result.toString()
