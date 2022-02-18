@@ -22,8 +22,8 @@ ifndef JAVA_HOME
     JAVA_HOME = $$(dirname $$(dirname $$(readlink -f $$(which javac))))
 endif
 
-GTK_LIBS    != pkg-config --libs gtk4
-GTK_CFLAGS  != pkg-config --cflags gtk4
+GTK_LIBS    != pkg-config --libs gtk4 $(shell bash -c 'pkg-config  --exists libadwaita-1 && echo "libadwaita-1" || echo ""')
+GTK_CFLAGS  != pkg-config --cflags gtk4 $(shell bash -c 'pkg-config  --exists libadwaita-1 && echo "libadwaita-1" || echo ""')
 INCLUDE_DIRS = -I../java-gtk/build/generated/sources/headers/java/main/ -I$(JAVA_HOME)/include/ -I$(JAVA_HOME)/include/linux/
 
 LIBDIR=build/lib/glue/linux-$(ARCH)

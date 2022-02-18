@@ -6,6 +6,7 @@ import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.type.Str;
 import examples.gtk4_demo.HeaderBarSample;
 import examples.gtk4_demo.Pixbufs;
+import examples.libadwaita_demo.AdwaitaDemo;
 
 public class App {
 
@@ -16,7 +17,7 @@ public class App {
         ID = new Str("org.gtk.example");
 
         //new HelloWorld(args);
-        new HeaderBarSample(args);
+        //new HeaderBarSample(args);
         //new Picker(args);
         //new LinksSample(args);
         //new Pixbufs(args);
@@ -32,5 +33,6 @@ public class App {
         //new GlibLoop();
         //new GlibSettings();
         //new GioStreams();
+        new AdwaitaDemo(args);
     }
 }

@@ -32,7 +32,7 @@ fun main(args: Array<String>) {
 
 @Throws(IOException::class, XmlPullParserException::class)
 fun parse(builder: BuilderInterface) {
-    Configuration.NAMESPACES.forEach {Parser(it, builder)}
+    Configuration.NAMESPACES.forEach {Parser(it, builder, !it.notAvailable())}
 }
 
 @Throws(IOException::class)

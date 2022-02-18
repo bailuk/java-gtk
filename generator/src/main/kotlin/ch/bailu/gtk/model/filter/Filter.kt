@@ -17,6 +17,9 @@ fun filterMethod(structureModel: StructureModel, methodModel: MethodModel): Bool
     if ("MenuItem" == structureModel.apiName && "activate" == methodModel.apiName) {
         return false
     }
+    if ("ActionRow" == structureModel.apiName && "activate" == methodModel.apiName) {
+        return false
+    }
     if ("ToolPalette" == structureModel.apiName && "getStyle" == methodModel.apiName) {
         return false
     }

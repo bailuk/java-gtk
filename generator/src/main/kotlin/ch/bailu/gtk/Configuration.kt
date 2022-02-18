@@ -24,16 +24,17 @@ class Configuration {
         const val LOG_CALLBACK_TABLE_FILE = "build/callback_table.out"
 
         val NAMESPACES = arrayOf(
-                    NamespaceConfig("GObject-2.0.gir",    GtkDocUrl("gobject")),
-                    NamespaceConfig("Gtk-4.0.gir",        GtkDocUrl("gtk4")),
-                    NamespaceConfig("Gio-2.0.gir",        GtkDocUrl("gio")),
-                    NamespaceConfig("Gdk-4.0.gir",        GtkDocUrl("gdk4")),
-                    NamespaceConfig("PangoCairo-1.0.gir", GtkDocUrl("PangoCairo")),
-                    NamespaceConfig("cairo-custom.gir",   StaticUrl("https://www.cairographics.org/manual/")),
-                    NamespaceConfig("GLib-2.0.gir",       GtkDocUrl("glib")),
-                    //NamespaceConfig("Atk-1.0.gir",        GtkDocUrl("atk")),
-                    NamespaceConfig("Pango-1.0.gir",      GtkDocUrl("Pango")),
-                    NamespaceConfig("GdkPixbuf-2.0.gir",  GtkDocUrl("gdk-pixbuf")))
+                    NamespaceConfig("GObject-2.0.gir",    GtkDocUrl("gobject"), "gobject-2.0"),
+                    NamespaceConfig("Gtk-4.0.gir",        GtkDocUrl("gtk4"), "gtk4"),
+                    NamespaceConfig("Gio-2.0.gir",        GtkDocUrl("gio"), "gio-2.0"),
+                    NamespaceConfig("Gdk-4.0.gir",        GtkDocUrl("gdk4"), "gtk4"),
+                    NamespaceConfig("PangoCairo-1.0.gir", GtkDocUrl("PangoCairo"), "pangocairo"),
+                    NamespaceConfig("cairo-custom.gir",   StaticUrl("https://www.cairographics.org/manual/"), "cairo"),
+                    NamespaceConfig("GLib-2.0.gir",       GtkDocUrl("glib"), "glib-2.0"),
+                    //NamespaceConfig("Atk-1.0.gir",        GtkDocUrl("atk"), "atk"),
+                    NamespaceConfig("Pango-1.0.gir",      GtkDocUrl("Pango"), "pango"),
+                    NamespaceConfig("GdkPixbuf-2.0.gir",  GtkDocUrl("gdk-pixbuf"), "gdk-pixbuf-2.0"),
+                    NamespaceConfig("Adw-1.gir",          StaticUrl("https://gnome.pages.gitlab.gnome.org/libadwaita/doc/"), "libadwaita-1"))
 
 
 

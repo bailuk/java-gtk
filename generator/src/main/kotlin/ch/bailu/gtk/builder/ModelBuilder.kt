@@ -14,6 +14,7 @@ import java.io.Writer
 class ModelBuilder : BuilderInterface {
 
     private var namespace: NamespaceModel = NamespaceModel()
+    private var errorStubs: Boolean = false;
 
     override fun buildStructure(structure: StructureTag) {
         val model = StructureModel(structure, namespace)
@@ -43,7 +44,8 @@ class ModelBuilder : BuilderInterface {
         var out: Writer? = null
         try {
             out = getCWriter(model, namespace)
-            model.write(CWriter(TextWriter(out)))
+            if (!errorStubs)
+			    model.write(CWriter(TextWriter(out)))
         } finally {
             out?.close()
         }
@@ -91,5 +93,9 @@ class ModelBuilder : BuilderInterface {
         } finally {
             out?.close()
         }
+    }
+    
+    override fun buildErrorStubs(build: Boolean) {
+        this.errorStubs = build;  
     }
 }
