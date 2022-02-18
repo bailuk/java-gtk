@@ -24,7 +24,7 @@ class JavaDocWriter(writer: TextWriter, val doc: JavaDoc) : CodeWriter(writer) {
     override fun writeInternalConstructor(structureModel: StructureModel) {}
 
     override fun writeConstructor(structureModel: StructureModel, methodModel: MethodModel) {
-        if (methodModel.getParameters().isNotEmpty() || methodModel.doc.length > 3) {
+        if (methodModel.parameters.isNotEmpty() || methodModel.doc.length > 3) {
             doc.writeStart(4)
             doc.writeBlock(methodModel.doc)
             doc.writeParameter(methodModel)
@@ -47,7 +47,7 @@ class JavaDocWriter(writer: TextWriter, val doc: JavaDoc) : CodeWriter(writer) {
     }
 
     override fun writeNativeMethod(structureModel: StructureModel, methodModel: MethodModel) {
-        if (methodModel.getParameters().isNotEmpty() || methodModel.doc.length > 3 || !methodModel.returnType.isVoid) {
+        if (methodModel.parameters.isNotEmpty() || methodModel.doc.length > 3 || !methodModel.returnType.isVoid) {
             doc.writeStart(4)
             doc.writeBlock(methodModel.doc)
             doc.writeParameter(methodModel)
@@ -57,7 +57,7 @@ class JavaDocWriter(writer: TextWriter, val doc: JavaDoc) : CodeWriter(writer) {
     }
 
     override fun writeSignal(structureModel: StructureModel, methodModel: MethodModel) {
-        if (methodModel.getParameters().isNotEmpty() || methodModel.doc.length > 3 || !methodModel.returnType.isVoid) {
+        if (methodModel.parameters.isNotEmpty() || methodModel.doc.length > 3 || !methodModel.returnType.isVoid) {
             doc.writeStart(8)
             doc.writeBlock(methodModel.doc)
             doc.writeParameter(methodModel)

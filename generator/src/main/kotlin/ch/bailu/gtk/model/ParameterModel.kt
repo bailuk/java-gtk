@@ -46,7 +46,7 @@ class ParameterModel(namespace: String, private val parameterTag: ParameterTag, 
         //setSupported("private", parameter.isPrivate());
         setSupported("value", filterValues(parameterTag.value))
         setSupported("jType", jType.isValid())
-        setSupported("callback", isCallbackSupported)
+        setCallbackSupported()
         isWriteable = parameterTag.isWriteable
     }
 
@@ -60,13 +60,17 @@ class ParameterModel(namespace: String, private val parameterTag: ParameterTag, 
         return null
     }
 
-
-    private val isCallbackSupported: Boolean
-        get() {
-            return if (isCallback && callbackModel != null) {
-                callbackModel.isSupported && !callbackModel.hasCallback()
-            } else true
+    private fun setCallbackSupported() {
+        if (isCallback) {
+            if (callbackModel == null) {
+                setSupported("no-cb-model", false)
+            } else if (!callbackModel.isSupported) {
+                setSupported("cb-not-supported", false)
+            } else if (callbackModel.hasCallback()) {
+                setSupported("cb-with-cb", false)
+            }
         }
+    }
 
 
     val apiType: String

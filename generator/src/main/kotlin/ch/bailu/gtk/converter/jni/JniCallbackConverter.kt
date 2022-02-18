@@ -4,17 +4,10 @@ import ch.bailu.gtk.model.StructureModel
 import ch.bailu.gtk.model.ParameterModel
 import ch.bailu.gtk.writer.getJniCallbackName
 
-class JniCallbackConverter(parameterModel: ParameterModel) : JniTypeConverter() {
+class JniCallbackConverter(private val parameterModel: ParameterModel) : JniTypeConverter() {
 
-    private val parameterModel = parameterModel
-
-   
     override fun getAllocateResourceString(structureModel: StructureModel): String {
         return "const ${parameterModel.gtkType} __${parameterModel.name} = (${parameterModel.gtkType}) ${getJniCallbackName(structureModel, parameterModel)};"
-    }
-
-    override fun getFreeResourcesString(): String {
-        return ""
     }
 
     override fun getCallSignatureString(structureModel: StructureModel): String {

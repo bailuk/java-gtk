@@ -10,10 +10,6 @@ class JniDefaultTypeConverter(parameterModel: ParameterModel) : JniTypeConverter
         return "const ${model.gtkType} __${model.name} = (${model.gtkType}) ${model.name};"
     }
 
-    override fun getFreeResourcesString(): String {
-        return ""
-    }
-
     override fun getCallSignatureString(structureModel: StructureModel): String {
         return "__" + model.name
     }

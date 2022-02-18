@@ -22,7 +22,7 @@ class ModelLists {
     fun addIfSupportedWithCallbacks(models: ModelList<MethodModel>, methodModel: MethodModel) {
         models.addIfSupported(methodModel)
         if (methodModel.isSupported) {
-            methodModel.getCallbackModel().forEach {callbacks.add(it)}
+            methodModel.callbackModel.forEach {callbacks.add(it)}
         }
     }
 

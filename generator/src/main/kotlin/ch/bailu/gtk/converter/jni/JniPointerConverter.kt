@@ -12,9 +12,6 @@ class JniPointerConverter(parameter: ParameterModel) : JniTypeConverter() {
         return ""
     }
 
-    override fun getFreeResourcesString(): String {
-        return ""
-    }
 
     override fun getCallSignatureString(structureModel: StructureModel): String {
         return "(void*) ${model.name}"

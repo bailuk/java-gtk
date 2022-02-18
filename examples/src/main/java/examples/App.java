@@ -16,7 +16,8 @@ public class App {
         ID = new Str("org.gtk.example");
 
         //new HelloWorld(args);
-        new HeaderBarSample(args);
+        new CustomLayoutTest(args);
+        //new HeaderBarSample(args);
         //new Picker(args);
         //new LinksSample(args);
         //new Pixbufs(args);

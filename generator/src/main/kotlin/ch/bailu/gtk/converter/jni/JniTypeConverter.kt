@@ -17,7 +17,6 @@ abstract class JniTypeConverter {
     }
 
     abstract fun getAllocateResourceString(structureModel: StructureModel): String
-    abstract fun getFreeResourcesString(): String
     abstract fun getCallSignatureString(structureModel: StructureModel): String
 
     abstract fun getJniType(): String
