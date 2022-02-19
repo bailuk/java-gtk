@@ -44,13 +44,18 @@ fun getCWriter(model: StructureModel, namespace: NamespaceModel): Writer {
 @Throws(IOException::class)
 private fun getCFile(name: String, namespace: NamespaceModel): File {
     val fn = StringBuilder()
-    fn.append(Configuration.HEADER_FILE_BASE).append(namespace.getNamespace()).append("_").append(name).append(".c")
+    fn.append(Configuration.HEADER_FILE_BASE).append(namespace.namespace).append("_").append(name).append(".c")
     return File(createDirectory(namespace.cSourceDirectory), fn.toString())
 }
 
 @Throws(IOException::class)
 fun getJavaImpWriter(structureModel: StructureModel, namespace: NamespaceModel): Writer {
     return BufferedWriter(FileWriter(getJavaFile(structureModel.impName, namespace)))
+}
+
+@Throws(IOException::class)
+fun getJavaJnaWriter(structureModel: StructureModel, namespace: NamespaceModel): Writer {
+    return BufferedWriter(FileWriter(getJavaFile(structureModel.jnaName, namespace)))
 }
 
 

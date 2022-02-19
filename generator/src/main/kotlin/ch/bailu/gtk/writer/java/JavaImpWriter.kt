@@ -7,12 +7,12 @@ class JavaImpWriter(writer : TextWriter) : CodeWriter(writer) {
 
     override fun writeStart(structureModel : StructureModel, namespaceModel : NamespaceModel) {
         super.writeStart(structureModel, namespaceModel)
-        out.a("package ${namespaceModel.getFullNamespace()};\n\n")
+        out.a("package ${namespaceModel.fullNamespace};\n\n")
         out.a("import ch.bailu.gtk.type.CPointer;")
         out.end(3)
     }
 
-    override fun writeClass(structureModel : StructureModel) {
+    override fun writeClass(structureModel : StructureModel, namespaceModel: NamespaceModel) {
         out.start(3)
         out.a("class " + structureModel.impName + " {\n")
         out.end(1)

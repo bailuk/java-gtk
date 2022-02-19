@@ -8,24 +8,19 @@ import ch.bailu.gtk.model.ParameterModel
 import ch.bailu.gtk.table.ReservedTokenTable.convert
 
 
-fun getJavaImpClassName(name : String): String {
-    return "Imp${name}"
-}
-
-
 /**
  * function name of a c callback function
  * gobject_Closure_onClosureNotify
  */
 fun getJniSignalCallbackName(structureModel : StructureModel, methodModel : MethodModel) : String {
-    return getJniCallbackName(structureModel.nameSpaceModel.getNamespace(), structureModel.apiName, getJavaSignalMethodName(methodModel.name))
+    return getJniCallbackName(structureModel.nameSpaceModel.namespace, structureModel.apiName, getJavaSignalMethodName(methodModel.name))
 }
 
 
 fun getJniCallbackName(structureModel : StructureModel, parameterModel: ParameterModel) : String {
     val cbModel = parameterModel.callbackModel
     val cbName = cbModel?.name ?: ""
-    return getJniCallbackName(structureModel.nameSpaceModel.getNamespace(), structureModel.apiName, getJavaSignalMethodName(cbName))
+    return getJniCallbackName(structureModel.nameSpaceModel.namespace, structureModel.apiName, getJavaSignalMethodName(cbName))
 }
 
 
@@ -40,13 +35,13 @@ fun getJniMethodName(structureModel: StructureModel, methodModel: MethodModel): 
 
 
 fun getJniMethodName(structureModel: StructureModel, methodName : String): String {
-    return Configuration.JNI_METHOD_NAME_BASE + structureModel.nameSpaceModel.getNamespace() + "_" + structureModel.impName + "_" + methodName
+    return Configuration.JNI_METHOD_NAME_BASE + structureModel.nameSpaceModel.namespace + "_" + structureModel.impName + "_" + methodName
 }
 
 
 fun getJniSignalConnectMethodName(structureModel: StructureModel, methodModel: MethodModel): String {
     return Configuration.JNI_METHOD_NAME_BASE +
-            structureModel.nameSpaceModel.getNamespace() +
+            structureModel.nameSpaceModel.namespace +
             "_" +
             structureModel.impName +
             "_" +
@@ -55,7 +50,7 @@ fun getJniSignalConnectMethodName(structureModel: StructureModel, methodModel: M
 
 
 fun getJniGlobalsName(structureModel: StructureModel, name: String): String {
-    return structureModel.nameSpaceModel.getNamespace() + "_" + structureModel.impName + "_" + name
+    return structureModel.nameSpaceModel.namespace + "_" + structureModel.impName + "_" + name
 }
 
 
@@ -65,7 +60,7 @@ fun getJniHeaderFileName(structureModel: StructureModel) : String {
 
 
 fun getJniHeaderFileBase(namespaceModel : NamespaceModel): String {
-    return Configuration.HEADER_FILE_BASE + namespaceModel.getNamespace() + "_"
+    return Configuration.HEADER_FILE_BASE + namespaceModel.namespace + "_"
 }
 
 

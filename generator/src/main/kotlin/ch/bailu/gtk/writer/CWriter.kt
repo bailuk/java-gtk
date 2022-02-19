@@ -9,7 +9,7 @@ class CWriter (writer : TextWriter) : CodeWriter(writer) {
         super.writeStart(structureModel, namespaceModel)
         out.a("\n#include <jni.h>\n")
 
-        for (include in namespaceModel.getIncludes()) {
+        for (include in namespaceModel.includes) {
             out.a("#include <${include}>\n")
         }
 
@@ -107,14 +107,14 @@ class CWriter (writer : TextWriter) : CodeWriter(writer) {
     }
 
     private fun getReturnStatement(m : MethodModel) : String {
-        if (!m.returnType.isVoid) {
+        return if (!m.returnType.isVoid) {
             if (m.returnType.isJavaNative) {
-                return "return (${m.returnType.jniType})"
+                "return (${m.returnType.jniType})"
             } else {
-                return "return (jlong)"
+                "return (jlong)"
             }
         } else {
-            return ""
+            ""
         }
     }
 
@@ -347,7 +347,7 @@ class CWriter (writer : TextWriter) : CodeWriter(writer) {
         return getJniGlobalsName(structureModel,"VM")
     }
 
-    override fun writeClass(structureModel: StructureModel) {}
+    override fun writeClass(structureModel: StructureModel, namespaceModel: NamespaceModel) {}
     override fun writeInterface(structureModel: StructureModel) {}
     override fun writeInternalConstructor(structureModel: StructureModel) {}
     override fun writeConstructor(structureModel: StructureModel, methodModel: MethodModel) {}

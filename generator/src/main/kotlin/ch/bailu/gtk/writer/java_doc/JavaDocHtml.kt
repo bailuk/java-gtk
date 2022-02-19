@@ -35,7 +35,7 @@ class JavaDocHtml(writer: Writer) : JavaDoc(writer) {
 
 
     override fun writeClassUrl(structureModel: StructureModel) {
-        NamespaceTable.with(structureModel.nameSpaceModel.getNamespace()) {
+        NamespaceTable.with(structureModel.nameSpaceModel.namespace) {
             writeLine("<p><a href=\"${it.docUrl.getUrl(structureModel)}\">${it.docUrl.getUrl(structureModel)}</a></p>", "")
         }
 

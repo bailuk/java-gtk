@@ -1,5 +1,6 @@
 package ch.bailu.gtk.model.compose
 
+import ch.bailu.gtk.model.NamespaceModel
 import ch.bailu.gtk.model.StructureModel
 import ch.bailu.gtk.model.filter.filterCreateMallocConstructor
 import ch.bailu.gtk.model.list.ModelLists
@@ -7,9 +8,9 @@ import ch.bailu.gtk.writer.CodeWriter
 
 class ClassComposer : CodeComposer() {
 
-    override fun compose(writer: CodeWriter, structureModel: StructureModel, models: ModelLists) {
+    override fun compose(writer: CodeWriter, namespaceModel: NamespaceModel, structureModel: StructureModel, models: ModelLists) {
 
-        writer.writeClass(structureModel)
+        writer.writeClass(structureModel, namespaceModel)
 
         for (cb in models.callbacks) {
             writer.writeCallback(structureModel, cb)
@@ -50,7 +51,7 @@ class ClassComposer : CodeComposer() {
         }
 
         if (structureModel.hasGetTypeFunction) {
-            writer.writeGetTypeFunction(structureModel);
+            writer.writeGetTypeFunction(structureModel)
         }
     }
 }

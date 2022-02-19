@@ -4,12 +4,14 @@ import java.util.*
 import java.util.regex.Pattern
 
 class NamespaceType(fallbackNamespace: String, typeName: String) {
-    private val NAMESPACE = Pattern.compile("^([A-Za-z]\\w+)\\.([A-Za-z]\\w+)$")
-    private val NONAMESPACE = Pattern.compile("^[A-Za-z]\\w+$")
+    companion object {
+        private val NAMESPACE = Pattern.compile("^([A-Za-z]\\w+)\\.([A-Za-z]\\w+)$")
+        private val NONAMESPACE = Pattern.compile("^[A-Za-z]\\w+$")
 
+    }
 
-    private val namespace: String
-    private val name: String
+    val namespace: String
+    val name: String
 
     init {
         var m = NAMESPACE.matcher(typeName)
@@ -26,15 +28,6 @@ class NamespaceType(fallbackNamespace: String, typeName: String) {
                 name = ""
             }
         }
-    }
-
-
-    fun getNamespace(): String {
-        return namespace
-    }
-
-    fun getName(): String {
-        return name
     }
 
 

@@ -12,7 +12,7 @@ class JavaApiWriter(writer: TextWriter, doc: JavaDoc) : CodeWriter(writer) {
 
     override fun writeStart(structureModel : StructureModel, namespaceModel : NamespaceModel) {
         super.writeStart(structureModel, namespaceModel)
-        out.a("package ${namespaceModel.getFullNamespace()};\n\n")
+        out.a("package ${namespaceModel.fullNamespace};\n\n")
         out.a("import javax.annotation.Nullable;\n")
         out.a("import javax.annotation.Nonnull;\n\n")
         out.a("import ch.bailu.gtk.type.CPointer;")
@@ -22,9 +22,9 @@ class JavaApiWriter(writer: TextWriter, doc: JavaDoc) : CodeWriter(writer) {
     }
 
 
-    override fun writeClass(structureModel : StructureModel) {
+    override fun writeClass(structureModel : StructureModel, namespaceModel: NamespaceModel) {
         out.start(3)
-        javaDoc.writeClass(structureModel)
+        javaDoc.writeClass(structureModel, namespaceModel)
         out.a("public class ${structureModel.apiName} extends ${structureModel.apiParentName} {\n")
         out.end(1)
     }

@@ -54,6 +54,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
     api("com.google.code.findbugs:jsr305:3.0.2")
 
+    implementation("com.github.jnr:jnr-ffi:2.2.11")
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
 }
 

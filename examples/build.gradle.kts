@@ -7,6 +7,8 @@ repositories {
 
 dependencies {
     implementation(project(":java-gtk"))
+    implementation("com.github.jnr:jnr-ffi:2.2.11")
+
 }
 
 application {

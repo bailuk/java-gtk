@@ -10,7 +10,7 @@ abstract class CodeWriter(val out: TextWriter)  {
         out.a("/* this file is machine generated */\n")
     }
 
-    abstract fun writeClass(structureModel : StructureModel)
+    abstract fun writeClass(structureModel : StructureModel, namespaceModel: NamespaceModel)
     abstract fun writeInterface(structureModel : StructureModel)
 
     abstract fun writeInternalConstructor(structureModel : StructureModel)

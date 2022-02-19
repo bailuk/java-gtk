@@ -79,7 +79,7 @@ class ParameterModel(namespace: String, private val parameterTag: ParameterTag, 
                 return getJavaSignalInterfaceName(callbackModel.name)
             }
             return if (classType.isClass()) {
-                classType.getFullName()
+                classType.fullName
             } else jType.getType()
         }
 

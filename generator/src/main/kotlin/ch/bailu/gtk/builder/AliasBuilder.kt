@@ -18,7 +18,7 @@ class AliasBuilder : BuilderInterface{
     }
 
     private fun convert(namespace: String, name: String): String {
-        return convert(NamespaceType(namespace, name)).getName()
+        return convert(NamespaceType(namespace, name)).name
     }
 
     override fun buildNamespaceStart(namespace: NamespaceTag, namespaceConfig: NamespaceConfig) {
@@ -26,7 +26,7 @@ class AliasBuilder : BuilderInterface{
         add(this.namespace, namespaceConfig)
     }
 
-    override fun buildNamespaceEnd(namespace: NamespaceTag) {}
+    override fun buildNamespaceEnd() {}
 
     override fun buildAlias(aliasTag: AliasTag) {
         add(namespace, aliasTag.getName(), aliasTag.getTypeName())
@@ -41,7 +41,7 @@ class AliasBuilder : BuilderInterface{
         add(namespace, callbackTag)
     }
     
-    override fun buildErrorStubs(buildStubs: Boolean) {
+    override fun buildErrorStubs(enabled: Boolean) {
         // Ignore
     }
 }

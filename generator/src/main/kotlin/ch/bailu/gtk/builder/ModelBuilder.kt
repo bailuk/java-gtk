@@ -8,13 +8,14 @@ import ch.bailu.gtk.config.NamespaceConfig
 import ch.bailu.gtk.writer.*
 import ch.bailu.gtk.writer.java.JavaApiWriter
 import ch.bailu.gtk.writer.java.JavaImpWriter
+import ch.bailu.gtk.writer.java.JavaJnaWriter
 import java.io.IOException
 import java.io.Writer
 
 class ModelBuilder : BuilderInterface {
 
     private var namespace: NamespaceModel = NamespaceModel()
-    private var errorStubs: Boolean = false;
+    private var errorStubs: Boolean = false
 
     override fun buildStructure(structure: StructureTag) {
         val model = StructureModel(structure, namespace)
@@ -53,22 +54,23 @@ class ModelBuilder : BuilderInterface {
 
 
     override fun buildNamespaceStart(namespace: NamespaceTag, namespaceConfig: NamespaceConfig) {
-        this.namespace = NamespaceModel(namespace)
+        this.namespace = NamespaceModel(namespace, namespaceConfig)
     }
 
     @Throws(IOException::class)
-    override fun buildNamespaceEnd(namespace: NamespaceTag) {
+    override fun buildNamespaceEnd() {
         // functions
         var model = StructureModel(namespace)
         writeJavaFile(model)
         if (model.hasNativeCalls()) {
             writeCFile(model)
             writeJavaImpFile(model)
+            writeJavaJnaFile(model)
         }
 
 
         // constants
-        model = StructureModel(NamespaceModel(namespace), namespace.getConstants())
+        model = StructureModel(this.namespace, namespace.constants)
         writeJavaFile(model)
     }
 
@@ -94,8 +96,20 @@ class ModelBuilder : BuilderInterface {
             out?.close()
         }
     }
-    
-    override fun buildErrorStubs(build: Boolean) {
-        this.errorStubs = build;  
+
+    @Throws(IOException::class)
+    private fun writeJavaJnaFile(model: StructureModel) {
+        var out: Writer? = null
+        try {
+            out = getJavaJnaWriter(model, namespace)
+            model.write(JavaJnaWriter(TextWriter(out)))
+        } finally {
+            out?.close()
+        }
+    }
+
+
+    override fun buildErrorStubs(enabled: Boolean) {
+        this.errorStubs = enabled
     }
 }

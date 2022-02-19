@@ -13,7 +13,7 @@ class JavaDocPlain(writer: Writer): JavaDoc(writer) {
     }
 
     override fun writeClassUrl(structureModel: StructureModel) {
-        NamespaceTable.with(structureModel.nameSpaceModel.getNamespace()) {
+        NamespaceTable.with(structureModel.nameSpaceModel.namespace) {
             writeLine(it.docUrl.getUrl(structureModel), "")
         }
 

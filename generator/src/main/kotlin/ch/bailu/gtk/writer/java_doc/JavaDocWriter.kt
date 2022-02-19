@@ -1,16 +1,17 @@
 package ch.bailu.gtk.writer.java_doc
 
-import ch.bailu.gtk.model.MethodModel
-import ch.bailu.gtk.model.Model
-import ch.bailu.gtk.model.ParameterModel
-import ch.bailu.gtk.model.StructureModel
+import ch.bailu.gtk.model.*
 import ch.bailu.gtk.writer.CodeWriter
 import ch.bailu.gtk.writer.TextWriter
 
 
 class JavaDocWriter(writer: TextWriter, val doc: JavaDoc) : CodeWriter(writer) {
 
-    override fun writeClass(structureModel: StructureModel) {
+    override fun writeClass(structureModel: StructureModel, namespaceModel: NamespaceModel) {
+        writeClassOrInterface(structureModel)
+    }
+
+    private fun writeClassOrInterface(structureModel: StructureModel) {
         doc.writeStart(0)
         doc.writeBlock(structureModel.doc)
         doc.writeClassUrl(structureModel)
@@ -18,7 +19,7 @@ class JavaDocWriter(writer: TextWriter, val doc: JavaDoc) : CodeWriter(writer) {
     }
 
     override fun writeInterface(structureModel: StructureModel) {
-        writeClass(structureModel)
+        writeClassOrInterface(structureModel)
     }
 
     override fun writeInternalConstructor(structureModel: StructureModel) {}
