@@ -19,7 +19,7 @@ public class Callback {
      * @param signal   The name of the signal or name of callback function
      * @param observer The observer to be called when receiving a signal
      */
-    public static void put(long emitter, String signal, Object observer) {
+    public static synchronized void put(long emitter, String signal, Object observer) {
         if (observer != null) {
             observers.put(emitter, signal, new ArrayList<>());
             observers.get(emitter, signal).add(observer);
@@ -33,7 +33,7 @@ public class Callback {
      * @param signal The name of the signal or name of callback function
      * @return a list with zero or one observer
      */
-    public static List<Object> get(long emitter, String signal) {
+    public static synchronized List<Object> get(long emitter, String signal) {
         if (!observers.containsKey(emitter, signal)) {
             observers.put(emitter, signal, new ArrayList<>());
         }
@@ -44,20 +44,20 @@ public class Callback {
      * Remove emitter from callback observers. Call this after the receiving object has
      * been destroyed to free resources and to prevent conflicts.
      *
-     * @param emitter
+     * @param emitterId a unique id to reference the callback
      */
-    public static void remove(Pointer emitter) {
-        remove(emitter.getCPointer());
+    public static synchronized void remove(Pointer emitterId) {
+        remove(emitterId.getCPointer());
     }
 
     /**
      * Remove emitter from callback observers. Call this after the receiving object has
      * been destroyed to free resources and to prevent conflicts.
      *
-     * @param emitter
+     * @param emitterId a unique id to reference the callback
      */
-    public static void remove(long emitter) {
-        observers.remove(emitter);
+    public static synchronized void remove(long emitterId) {
+        observers.remove(emitterId);
     }
 
 
