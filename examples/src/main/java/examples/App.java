@@ -16,8 +16,8 @@ public class App {
         GTK.init();
         ID = new Str("org.gtk.example");
 
-        new HelloWorld(args);
-        //new CustomLayoutTest(args);
+        //new HelloWorld(args);
+        new CustomLayoutTest(args);
         //new HeaderBarSample(args);
         //new Picker(args);
         //new LinksSample(args);
