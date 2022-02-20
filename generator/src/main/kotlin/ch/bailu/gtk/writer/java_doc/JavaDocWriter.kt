@@ -5,9 +5,8 @@ import ch.bailu.gtk.writer.CodeWriter
 import ch.bailu.gtk.writer.TextWriter
 
 
-class JavaDocWriter(writer: TextWriter, val doc: JavaDoc) : CodeWriter(writer) {
-
-    override fun writeClass(structureModel: StructureModel, namespaceModel: NamespaceModel) {
+class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter {
+    override fun writeClass(structureModel: StructureModel) {
         writeClassOrInterface(structureModel)
     }
 
@@ -22,8 +21,6 @@ class JavaDocWriter(writer: TextWriter, val doc: JavaDoc) : CodeWriter(writer) {
         writeClassOrInterface(structureModel)
     }
 
-    override fun writeInternalConstructor(structureModel: StructureModel) {}
-
     override fun writeConstructor(structureModel: StructureModel, methodModel: MethodModel) {
         if (methodModel.parameters.isNotEmpty() || methodModel.doc.length > 3) {
             doc.writeStart(4)
@@ -34,11 +31,11 @@ class JavaDocWriter(writer: TextWriter, val doc: JavaDoc) : CodeWriter(writer) {
     }
 
     override fun writeFactory(structureModel: StructureModel, methodModel: MethodModel) {
-        writeNativeMethod(structureModel, methodModel)
+        writeMethod(structureModel, methodModel)
     }
 
     override fun writePrivateFactory(structureModel: StructureModel, methodModel: MethodModel) {
-        writeNativeMethod(structureModel, methodModel)
+        writeMethod(structureModel, methodModel)
     }
 
     override fun writeConstant(parameterModel: ParameterModel) {
@@ -47,7 +44,7 @@ class JavaDocWriter(writer: TextWriter, val doc: JavaDoc) : CodeWriter(writer) {
         doc.writeDocEnd()
     }
 
-    override fun writeNativeMethod(structureModel: StructureModel, methodModel: MethodModel) {
+    override fun writeMethod(structureModel: StructureModel, methodModel: MethodModel) {
         if (methodModel.parameters.isNotEmpty() || methodModel.doc.length > 3 || !methodModel.returnType.isVoid) {
             doc.writeStart(4)
             doc.writeBlock(methodModel.doc)
@@ -72,18 +69,21 @@ class JavaDocWriter(writer: TextWriter, val doc: JavaDoc) : CodeWriter(writer) {
     }
 
     override fun writeFunction(structureModel: StructureModel, methodModel: MethodModel) {
-        writeNativeMethod(structureModel, methodModel)
+        writeMethod(structureModel, methodModel)
     }
-
-    override fun writeUnsupported(model: Model) {}
-
-    override fun writeEnd() {}
-    override fun writeGetTypeFunction(structureModel: StructureModel) {
-    }
-
-    override fun writeMallocConstructor(structureModel: StructureModel) {}
 
     override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel) {
         writeSignal(structureModel, methodModel)
     }
+
+    override fun writeUnsupported(model: Model) {}
+    override fun writeEnd() {}
+    override fun writeGetTypeFunction(structureModel: StructureModel) {}
+    override fun writeMallocConstructor(structureModel: StructureModel) {}
+    override fun writeStart(structureModel: StructureModel, namespaceModel: NamespaceModel) {}
+    override fun writeInternalConstructor(structureModel: StructureModel) {}
+    override fun writeBeginStruct() {}
+    override fun writeEndStruct() {}
+    override fun writeBeginInstace(namespaceModel: NamespaceModel) {}
+    override fun writeEndInstance() {}
 }

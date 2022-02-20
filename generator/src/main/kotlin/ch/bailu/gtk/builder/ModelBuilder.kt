@@ -8,6 +8,7 @@ import ch.bailu.gtk.config.NamespaceConfig
 import ch.bailu.gtk.writer.*
 import ch.bailu.gtk.writer.java.JavaApiWriter
 import ch.bailu.gtk.writer.java.JavaImpWriter
+import ch.bailu.gtk.writer.java.JavaJnaApiWriter
 import ch.bailu.gtk.writer.java.JavaJnaWriter
 import java.io.IOException
 import java.io.Writer
@@ -23,8 +24,9 @@ class ModelBuilder : BuilderInterface {
         if (model.isSupported) {
             writeJavaFile(model)
             if (model.hasNativeCalls()) {
-                writeCFile(model)
-                writeJavaImpFile(model)
+                //writeCFile(model)
+                //writeJavaImpFile(model)
+                writeJavaJnaFile(model)
             }
         }
     }
@@ -63,8 +65,8 @@ class ModelBuilder : BuilderInterface {
         var model = StructureModel(namespace)
         writeJavaFile(model)
         if (model.hasNativeCalls()) {
-            writeCFile(model)
-            writeJavaImpFile(model)
+            //writeCFile(model)
+            //writeJavaImpFile(model)
             writeJavaJnaFile(model)
         }
 
@@ -91,7 +93,7 @@ class ModelBuilder : BuilderInterface {
         var out: Writer? = null
         try {
             out = getJavaWriter(model.apiName, namespace)
-            model.write(JavaApiWriter(TextWriter(out), Configuration.createJavaDocConfig(out)))
+            model.write(JavaJnaApiWriter(TextWriter(out), Configuration.createJavaDocConfig(out)))
         } finally {
             out?.close()
         }

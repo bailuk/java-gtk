@@ -8,7 +8,7 @@ import ch.bailu.gtk.writer.CodeWriter
 class PackageComposer : CodeComposer() {
 
     override fun compose(writer: CodeWriter, namespaceModel: NamespaceModel, structureModel: StructureModel, models: ModelLists) {
-        writer.writeClass(structureModel, namespaceModel)
+        writer.writeClass(structureModel)
         for (cb in models.callbacks) {
             writer.writeCallback(structureModel, cb)
         }

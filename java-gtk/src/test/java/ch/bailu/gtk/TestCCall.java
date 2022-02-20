@@ -11,6 +11,7 @@ import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 
@@ -22,7 +23,7 @@ public class TestCCall {
             e.printStackTrace();
         }
     }
-
+/*
     @Test
     public void testRGBAMallocAndFileds() {
         RGBA rgba = new RGBA();
@@ -40,7 +41,7 @@ public class TestCCall {
         assertEquals(0.3f, rgba.getFieldGreen(),0f);
         assertEquals(0.4f, rgba.getFieldBlue(),0f);
     }
-
+*/
     private int i = 0;
     @Test
     public void testMainLoop()  {
@@ -61,7 +62,7 @@ public class TestCCall {
         assertEquals(0, i);
         loop.run();
         assertEquals(10, i);
-        assertEquals(true, System.currentTimeMillis() - start >= timeExpectMin);
+        assertTrue(System.currentTimeMillis() - start >= timeExpectMin);
         loop.unref();
 
     }

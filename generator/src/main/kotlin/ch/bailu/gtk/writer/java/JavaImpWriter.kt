@@ -3,16 +3,15 @@ package ch.bailu.gtk.writer.java
 import ch.bailu.gtk.model.*
 import ch.bailu.gtk.writer.*
 
-class JavaImpWriter(writer : TextWriter) : CodeWriter(writer) {
+class JavaImpWriter(private val out : TextWriter) : CodeWriter {
 
     override fun writeStart(structureModel : StructureModel, namespaceModel : NamespaceModel) {
-        super.writeStart(structureModel, namespaceModel)
-        out.a("package ${namespaceModel.fullNamespace};\n\n")
+        JavaJnaApiWriter.writeHeader(out, namespaceModel)
         out.a("import ch.bailu.gtk.type.CPointer;")
         out.end(3)
     }
 
-    override fun writeClass(structureModel : StructureModel, namespaceModel: NamespaceModel) {
+    override fun writeClass(structureModel : StructureModel) {
         out.start(3)
         out.a("class " + structureModel.impName + " {\n")
         out.end(1)
@@ -24,7 +23,7 @@ class JavaImpWriter(writer : TextWriter) : CodeWriter(writer) {
 
     override fun writeUnsupported(model : Model) {}
 
-    override fun writeNativeMethod(structureModel : StructureModel, methodModel : MethodModel) {
+    override fun writeMethod(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(0)
         out.a("    static native ${methodModel.returnType.impType} ${methodModel.apiName}(${getSelfSignature(methodModel.parameters)});\n")
         out.end(0)
@@ -170,4 +169,10 @@ class JavaImpWriter(writer : TextWriter) : CodeWriter(writer) {
         }
         return result.toString()
     }
+
+    override fun writeBeginStruct() {}
+    override fun writeEndStruct() {}
+    override fun writeBeginInstace(namespaceModel: NamespaceModel) {}
+    override fun writeEndInstance() {}
+
 }

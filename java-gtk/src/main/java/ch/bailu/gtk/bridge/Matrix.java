@@ -15,7 +15,9 @@ public class Matrix {
      *   flatmatrix[3]  m11 yy scaleY
      */
     public static ch.bailu.gtk.cairo.Matrix toCairoMatrix(AffineTransform transform) {
-        var matrix = new ch.bailu.gtk.cairo.Matrix();
+        var bytes = new Bytes(new byte[4*6]);
+
+        var matrix = new ch.bailu.gtk.cairo.Matrix(bytes.cast());
         matrix.init(
                 transform.getScaleX(),
                 transform.getShearY(),
@@ -25,5 +27,4 @@ public class Matrix {
                 transform.getTranslateY());
         return matrix;
     }
-
 }

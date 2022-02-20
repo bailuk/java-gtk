@@ -3,86 +3,64 @@ package ch.bailu.gtk.writer.java
 import ch.bailu.gtk.model.*
 import ch.bailu.gtk.writer.CodeWriter
 import ch.bailu.gtk.writer.TextWriter
+import ch.bailu.gtk.writer.getJavaSignalInterfaceName
+import ch.bailu.gtk.writer.getJavaSignalMethodName
 
-class JavaJnaWriter(out: TextWriter) : CodeWriter(out) {
+class JavaJnaWriter(private val out: TextWriter) : CodeWriter {
 
     override fun writeStart(structureModel: StructureModel, namespaceModel: NamespaceModel) {
-        super.writeStart(structureModel, namespaceModel)
-        out.a("package ${namespaceModel.fullNamespace};\n\n")
-        out.a("import jnr.ffi.LibraryLoader;")
+        JavaJnaApiWriter.writeHeader(out, namespaceModel)
         out.end(3)
     }
 
-    override fun writeClass(structureModel: StructureModel, namespaceModel: NamespaceModel) {
-        out.start(3)
-        out.a("""
-            class ${structureModel.jnaName} {
-                private static Instance INSTANCE;
-
-                public static Instance INST() {
-                    if (INSTANCE == null) {
-                        INSTANCE = LibraryLoader.create(Instance.class).load("${namespaceModel.namespaceConfig.pkgConfigName}");
-                    }
-                    return INSTANCE;
-                }
-
-                public interface Instance {
-        """.trimIndent())
-        out.end(1)
+    override fun writeClass(structureModel: StructureModel) {
+        out.l(3,"class ${structureModel.jnaName} {", 1)
     }
 
-    override fun writeInterface(structureModel: StructureModel) {}
-
-    override fun writeInternalConstructor(structureModel: StructureModel) {}
-
-    override fun writeConstructor(structureModel: StructureModel, methodModel: MethodModel) {}
-
-    override fun writeFactory(structureModel: StructureModel, methodModel: MethodModel) {}
 
     override fun writePrivateFactory(structureModel: StructureModel, methodModel: MethodModel) {
-        writeNativeMethod(structureModel, methodModel)
+        out.l(0,"        ${methodModel.returnType.impType} ${methodModel.gtkName}(${getSignature(methodModel)});", 0)
     }
 
     override fun writeConstant(parameterModel: ParameterModel) {}
 
-    override fun writeNativeMethod(structureModel: StructureModel, methodModel: MethodModel) {
-        out.start(0)
-        out.a("        ${methodModel.returnType.impType} ${methodModel.gtkName}(${getSelfSignature(methodModel.parameters)});\n")
-        out.end(0)
+    override fun writeMethod(structureModel: StructureModel, methodModel: MethodModel) {
+        out.l(0,"        ${methodModel.returnType.impType} ${methodModel.gtkName}(${getSelfSignature(methodModel)});", 0)
     }
 
-    private fun getSelfSignature(parameters : List<ParameterModel>) : String {
-        return "long _self${getSignature(parameters, ", ")}"
+    private fun getSelfSignature(methodModel: MethodModel) : String {
+        return "long _self${getSignature(methodModel, ", ")}"
     }
 
-    private fun getSignature(parameters : List<ParameterModel>, firstDel : String = "") : String {
+    private fun getSignature(methodModel: MethodModel, firstDel : String = "") : String {
         val result = StringBuilder()
         var del = firstDel
 
-        for (p in parameters) {
-            if (!p.isCallback) {
-                result.append("${del}${p.impType} ${p.name}")
-                del = ", "
+        methodModel.parameters.forEach {
+            if (it.isCallback && it.callbackModel != null) {
+                result.append("${del}${getJavaSignalInterfaceName(it.callbackModel.name)} ${it.name}")
+            } else {
+                result.append("${del}${it.impType} ${it.name}")
             }
+            del = ", "
+
         }
         return result.toString()
     }
 
     override fun writeSignal(structureModel: StructureModel, methodModel: MethodModel) {
-        out.start(0)
-        out.a("// TODO writeSignal\n")
-        out.end(0)
+        out.l(0,"        void g_signal_connect_data(long _self, long signalName, ${getJavaSignalInterfaceName(methodModel.name)} cb, long data, long x, int flag);", 0)
     }
 
-    override fun writeField(structureModel: StructureModel, parameterModel: ParameterModel) {}
+    override fun writeField(structureModel: StructureModel, parameterModel: ParameterModel) {
+        out.start(0)
+        out.a("        // FIELD: ${parameterModel.impType} ${parameterModel.name};\n")
+        out.end(0)
+    }
 
     override fun writeFunction(structureModel: StructureModel, methodModel: MethodModel) {
-        out.start(0)
-        out.a("        ${methodModel.returnType.impType} ${methodModel.gtkName}(${getSignature(methodModel.parameters)});\n")
-        out.end(0)
+        out.l(0, "        ${methodModel.returnType.impType} ${methodModel.gtkName}(${getSignature(methodModel)});", 0)
     }
-
-    override fun writeUnsupported(model: Model) {}
 
     override fun writeMallocConstructor(structureModel: StructureModel) {
         out.start(0)
@@ -91,16 +69,18 @@ class JavaJnaWriter(out: TextWriter) : CodeWriter(out) {
     }
 
     override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel) {
-        out.start(0)
-        out.a("// TODO writeCallback\n")
-        out.end(0)
+        out.start(1)
+        out.a("""
+            interface ${getJavaSignalInterfaceName(methodModel.name)} {
+                @jnr.ffi.annotations.Delegate
+                ${methodModel.returnType.apiType} ${getJavaSignalMethodName(methodModel.name)}(${getSignature(methodModel)});
+            }
+        """, 4)
+        out.end(1)
     }
 
     override fun writeEnd() {
-        out.start(0)
-        out.a("    }\n")
-        out.a("}\n")
-        out.end(0)
+        out.l(0,"}", 1)
     }
 
     override fun writeGetTypeFunction(structureModel: StructureModel) {
@@ -108,4 +88,48 @@ class JavaJnaWriter(out: TextWriter) : CodeWriter(out) {
         out.a("        long ${structureModel.typeFunction}();\n")
         out.end(0)
     }
+
+    override fun writeBeginStruct() {
+        out.start(0)
+        out.a("""
+            class Fields extends jnr.ffi.Struct {
+                public Fields(jnr.ffi.Runtime runtime) {
+                    super(runtime);
+                }
+        """, 4)
+        out.end(1)
+
+
+    }
+
+    override fun writeEndStruct() {
+        out.l(0,"    }", 1)
+    }
+
+    override fun writeBeginInstace(namespaceModel: NamespaceModel) {
+        out.start(3)
+        out.a("""
+            private static Instance INSTANCE;
+
+            static Instance INST() {
+                if (INSTANCE == null) {
+                    INSTANCE = jnr.ffi.LibraryLoader.create(Instance.class).load("${namespaceModel.namespaceConfig.pkgConfigName}");
+                }
+                return INSTANCE;
+            }
+                
+            interface Instance {
+        """, 4)
+        out.end(1)
+    }
+
+    override fun writeEndInstance() {
+        out.l(0,"    }", 1)
+    }
+
+    override fun writeInterface(structureModel: StructureModel) {}
+    override fun writeInternalConstructor(structureModel: StructureModel) {}
+    override fun writeConstructor(structureModel: StructureModel, methodModel: MethodModel) {}
+    override fun writeFactory(structureModel: StructureModel, methodModel: MethodModel) {}
+    override fun writeUnsupported(model: Model) {}
 }

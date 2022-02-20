@@ -3,10 +3,10 @@ package ch.bailu.gtk.writer
 import ch.bailu.gtk.model.*
 
 
-class CWriter (writer : TextWriter) : CodeWriter(writer) {
+class CWriter (private val out : TextWriter) : CodeWriter {
 
     override fun writeStart(structureModel : StructureModel, namespaceModel : NamespaceModel) {
-        super.writeStart(structureModel, namespaceModel)
+        //super.writeStart(structureModel, namespaceModel)
         out.a("\n#include <jni.h>\n")
 
         for (include in namespaceModel.includes) {
@@ -21,7 +21,7 @@ class CWriter (writer : TextWriter) : CodeWriter(writer) {
         out.end(3)
     }
 
-    override fun writeNativeMethod(structureModel : StructureModel, methodModel : MethodModel) {
+    override fun writeMethod(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(2)
         writeNativeMethodOrPrivateFactory(structureModel, methodModel, true)
         out.end(2)
@@ -347,9 +347,14 @@ class CWriter (writer : TextWriter) : CodeWriter(writer) {
         return getJniGlobalsName(structureModel,"VM")
     }
 
-    override fun writeClass(structureModel: StructureModel, namespaceModel: NamespaceModel) {}
+    override fun writeClass(structureModel: StructureModel) {}
     override fun writeInterface(structureModel: StructureModel) {}
     override fun writeInternalConstructor(structureModel: StructureModel) {}
     override fun writeConstructor(structureModel: StructureModel, methodModel: MethodModel) {}
     override fun writeFactory(structureModel: StructureModel, methodModel: MethodModel) {}
+    override fun writeBeginStruct() {}
+    override fun writeEndStruct() {}
+    override fun writeBeginInstace(namespaceModel: NamespaceModel) {}
+    override fun writeEndInstance() {}
+
 }
