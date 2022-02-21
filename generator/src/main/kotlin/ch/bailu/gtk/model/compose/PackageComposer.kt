@@ -12,8 +12,12 @@ class PackageComposer : CodeComposer() {
         for (cb in models.callbacks) {
             writer.writeCallback(structureModel, cb)
         }
+
+        writer.writeBeginInstace(namespaceModel)
         for (m in models.functions) {
             writer.writeFunction(structureModel, m)
         }
+        writer.writeEndInstance()
+
     }
 }

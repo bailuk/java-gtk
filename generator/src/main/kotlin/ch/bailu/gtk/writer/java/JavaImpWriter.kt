@@ -73,7 +73,7 @@ class JavaImpWriter(private val out : TextWriter) : CodeWriter {
         out.end(1)
     }
 
-    override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel) {
+    override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel, isSignal: Boolean) {
         out.start(1)
         writeSignalOrCallback(structureModel, methodModel, getSignature(methodModel.parameters), emitterIdFromModel(methodModel) { it.name })
         out.end(1)

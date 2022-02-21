@@ -32,9 +32,14 @@ class JavaJnaWriter(private val out: TextWriter) : CodeWriter {
         return "long _self${getSignature(methodModel, ", ")}"
     }
 
-    private fun getSignature(methodModel: MethodModel, firstDel : String = "") : String {
+    private fun getSignature(methodModel: MethodModel, firstDel : String = "", isSignal: Boolean = false) : String {
         val result = StringBuilder()
         var del = firstDel
+
+        if (isSignal) {
+            result.append("long _self, long _data")
+            del = (", ")
+        }
 
         methodModel.parameters.forEach {
             if (it.isCallback && it.callbackModel != null) {
@@ -68,12 +73,13 @@ class JavaJnaWriter(private val out: TextWriter) : CodeWriter {
         out.end(0)
     }
 
-    override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel) {
+    override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel, isSignal: Boolean) {
         out.start(1)
+
         out.a("""
-            interface ${getJavaSignalInterfaceName(methodModel.name)} {
+            public interface ${getJavaSignalInterfaceName(methodModel.name)} {
                 @jnr.ffi.annotations.Delegate
-                ${methodModel.returnType.apiType} ${getJavaSignalMethodName(methodModel.name)}(${getSignature(methodModel)});
+                ${methodModel.returnType.impType} ${getJavaSignalMethodName(methodModel.name)}(${getSignature(methodModel, "", isSignal)});
             }
         """, 4)
         out.end(1)
@@ -92,7 +98,7 @@ class JavaJnaWriter(private val out: TextWriter) : CodeWriter {
     override fun writeBeginStruct() {
         out.start(0)
         out.a("""
-            class Fields extends jnr.ffi.Struct {
+            public static class Fields extends jnr.ffi.Struct {
                 public Fields(jnr.ffi.Runtime runtime) {
                     super(runtime);
                 }
@@ -118,7 +124,7 @@ class JavaJnaWriter(private val out: TextWriter) : CodeWriter {
                 return INSTANCE;
             }
                 
-            interface Instance {
+            public interface Instance {
         """, 4)
         out.end(1)
     }

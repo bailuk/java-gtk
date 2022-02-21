@@ -8,7 +8,7 @@ import ch.bailu.gtk.writer.java_doc.JavaDocHtml
 import java.io.File
 import java.io.Writer
 
-class Configuration {
+class Configuration @Throws(RuntimeException::class) private constructor(args: Array<String>) {
 
     companion object {
         const val BASE_NAME_SPACE_DOT = "ch.bailu.gtk."
@@ -25,9 +25,9 @@ class Configuration {
 
         val NAMESPACES = arrayOf(
                     NamespaceConfig("GObject-2.0.gir",    GtkDocUrl("gobject"), "gobject-2.0"),
-                    NamespaceConfig("Gtk-4.0.gir",        GtkDocUrl("gtk4"), "gtk4"),
+                    NamespaceConfig("Gtk-4.0.gir",        GtkDocUrl("gtk4"), "gtk-4"),
                     NamespaceConfig("Gio-2.0.gir",        GtkDocUrl("gio"), "gio-2.0"),
-                    NamespaceConfig("Gdk-4.0.gir",        GtkDocUrl("gdk4"), "gtk4"),
+                    NamespaceConfig("Gdk-4.0.gir",        GtkDocUrl("gdk4"), "gtk-4"),
                     NamespaceConfig("PangoCairo-1.0.gir", GtkDocUrl("PangoCairo"), "pangocairo"),
                     NamespaceConfig("cairo-custom.gir",   StaticUrl("https://www.cairographics.org/manual/"), "cairo"),
                     NamespaceConfig("GLib-2.0.gir",       GtkDocUrl("glib"), "glib-2.0"),
@@ -63,13 +63,11 @@ class Configuration {
     val girBaseDir: File
 
 
-    @Throws(RuntimeException::class)
-    private constructor(args: Array<String>) {
+    init {
         var i = 0
         var cdir: File? = null
         var jdir: File? = null
         var gdir: File? = null
-
         while (i < args.size - 1) {
             if ("-c" == args[i]) {
                 cdir = getDirectory(args[++i], true)
@@ -80,7 +78,6 @@ class Configuration {
             }
             i++
         }
-
         if (cdir != null && jdir != null && gdir != null) {
             cBaseDir = cdir
             javaBaseDir = jdir

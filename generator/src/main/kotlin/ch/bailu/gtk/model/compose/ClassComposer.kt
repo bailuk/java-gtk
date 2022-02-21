@@ -13,7 +13,7 @@ class ClassComposer : CodeComposer() {
         writer.writeClass(structureModel)
 
         models.callbacks.forEach { writer.writeCallback(structureModel, it) }
-        models.signals.forEach   { writer.writeCallback(structureModel, it) }
+        models.signals.forEach   { writer.writeCallback(structureModel, it, true) }
 
         writer.writeInternalConstructor(structureModel)
 

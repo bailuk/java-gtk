@@ -254,7 +254,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         return result.toString()
     }
 
-    override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel) {
+    override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel, isSignal: Boolean) {
         out.start(1)
         out.a("    public interface ${getJavaSignalInterfaceName(methodModel.name)} {\n")
 

@@ -130,7 +130,7 @@ class CWriter (private val out : TextWriter) : CodeWriter {
         out.end(2)
     }
 
-    override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel) {
+    override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel, isSignal: Boolean) {
         out.start(2)
 
         out.a("""

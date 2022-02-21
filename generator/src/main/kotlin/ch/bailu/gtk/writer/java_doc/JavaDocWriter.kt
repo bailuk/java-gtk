@@ -3,6 +3,7 @@ package ch.bailu.gtk.writer.java_doc
 import ch.bailu.gtk.model.*
 import ch.bailu.gtk.writer.CodeWriter
 import ch.bailu.gtk.writer.TextWriter
+import sun.misc.Signal
 
 
 class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter {
@@ -72,7 +73,7 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
         writeMethod(structureModel, methodModel)
     }
 
-    override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel) {
+    override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel, isSignal: Boolean) {
         writeSignal(structureModel, methodModel)
     }
 
