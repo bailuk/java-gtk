@@ -3,9 +3,18 @@ package examples;
 import java.io.IOException;
 
 import ch.bailu.gtk.GTK;
+import ch.bailu.gtk.gdk.GdkConstants;
+import ch.bailu.gtk.gdk.Toplevel;
+import ch.bailu.gtk.glib.Glib;
+import ch.bailu.gtk.glib.MainLoop;
+import ch.bailu.gtk.gtk.Gtk;
+import ch.bailu.gtk.gtk.GtkConstants;
+import ch.bailu.gtk.gtk.Label;
+import ch.bailu.gtk.gtk.Widget;
+import ch.bailu.gtk.gtk.Window;
 import ch.bailu.gtk.type.Str;
 import examples.gtk4_demo.HeaderBarSample;
-import examples.gtk4_demo.Pixbufs;
+import examples.gtk4_demo.HelloWorldBoxed;
 import examples.libadwaita_demo.AdwaitaDemo;
 
 public class App {
@@ -16,7 +25,11 @@ public class App {
         GTK.init();
         ID = new Str("org.gtk.example");
 
-        new HelloWorld(args);
+        Gtk.init();
+        new HelloWorldBoxed(args);
+
+
+        //new HelloWorld(args);
         //new CustomLayoutTest(args);
         //new HeaderBarSample(args);
         //new Picker(args);

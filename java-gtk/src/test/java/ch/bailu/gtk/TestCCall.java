@@ -1,19 +1,16 @@
 package ch.bailu.gtk;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 
-import ch.bailu.gtk.gdk.RGBA;
+import java.io.IOException;
+
 import ch.bailu.gtk.glib.Glib;
 import ch.bailu.gtk.glib.MainContext;
 import ch.bailu.gtk.glib.MainLoop;
 import ch.bailu.gtk.type.CPointer;
-import ch.bailu.gtk.type.Str;
-import ch.bailu.gtk.type.Strs;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.io.IOException;
 
 public class TestCCall {
     static {

@@ -1,6 +1,7 @@
 package examples.gtk4_tutorial;
 
-import ch.bailu.gtk.Callback;
+import javax.annotation.Nullable;
+
 import ch.bailu.gtk.cairo.Content;
 import ch.bailu.gtk.cairo.Surface;
 import ch.bailu.gtk.gdk.GdkConstants;
@@ -11,6 +12,7 @@ import ch.bailu.gtk.gtk.DrawingArea;
 import ch.bailu.gtk.gtk.Frame;
 import ch.bailu.gtk.gtk.GestureClick;
 import ch.bailu.gtk.gtk.GestureDrag;
+import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
@@ -43,9 +45,9 @@ public class CustomDrawing {
             frame.setChild(drawingArea);
 
             drawingArea.setDrawFunc((self, cr, width, height, userData) -> {
-                cr.setSourceSurface(surface,0,0);
+                cr.setSourceSurface(surface, 0, 0);
                 cr.paint();
-            }, new Callback.EmitterID(), null);
+            }, null, data -> System.out.println("onDestroyNotify()"));
 
             drawingArea.onResize((width, height) -> {
                 if (surface != null) {

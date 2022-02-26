@@ -1,8 +1,5 @@
 package examples;
 
-import java.util.Objects;
-
-import ch.bailu.gtk.Callback;
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.glib.Glib;
 import ch.bailu.gtk.glib.GlibConstants;
@@ -20,32 +17,23 @@ public class GlibLoop {
     }
 
     private class Timer {
-        private final Callback.EmitterID emitterID = new Callback.EmitterID();
         private int count = 10;
 
         public Timer(String name, int interval) {
             int result = Glib.timeoutAdd(interval, user_data -> {
-
-                if (Objects.equals(user_data, emitterID)) {
-                    if (count > 0) {
-                        System.out.println(name + ": timeout " + count-- + " received");
-                        return GlibConstants.SOURCE_CONTINUE;
-                    } else {
-                        System.out.println(name + ": done");
-                        return remove();
-                    }
-
+                if (count > 0) {
+                    System.out.println(name + ": timeout " + count-- + " received");
+                    return GlibConstants.SOURCE_CONTINUE;
                 } else {
-                    System.err.println(name + ": emitterID does not equal user_data");
+                    System.out.println(name + ": done");
                     return remove();
                 }
-            }, emitterID);
+            }, null);
 
-            if (result > 0) timers ++;
+            if (result > 0) timers++;
         }
 
         public int remove() {
-            Callback.remove(emitterID);
             if (--timers == 0) {
                 loop.quit();
             }
