@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Set;
 
-import ch.bailu.gtk.Callback;
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.exception.AllocationError;
 import ch.bailu.gtk.gio.ApplicationFlags;
@@ -166,7 +165,6 @@ public class ExampleApplication {
         while (child.isNotNull()) {
             //var text = new Button(child.cast()).getLabel();
             words.remove(child);
-            Callback.remove(child);
             //text.destroy();
 
             child = words.getFirstChild();

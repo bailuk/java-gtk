@@ -140,15 +140,14 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
             out.start(1)
             //javaDoc.writeMallocConstructor(structureModel)
             out.a("""
-                /*
                 public ${structureModel.apiName}() {
-                    super(new CPointer(${structureModel.impName}.newFromMalloc()));
+                    super(new CPointer(0));
+                    //super(new CPointer(${structureModel.impName}.newFromMalloc()));
                 }
                 
                 public void destroy() {
                     ch.bailu.gtk.type.ImpUtil.destroy(getCPointer());
                 }
-                */
             """, 4)
             out.end(1)
         }

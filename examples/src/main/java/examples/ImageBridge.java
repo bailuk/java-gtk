@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import ch.bailu.gtk.Callback;
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.bridge.Image;
 import ch.bailu.gtk.cairo.Context;
@@ -69,8 +68,8 @@ public class ImageBridge {
 
         DrawingArea da = new DrawingArea();
         window.setChild(da);
-        da.onResize((width, height) -> setPixbuf(width, height));
-        da.setDrawFunc((drawing_area, cr, width, height, user_data) -> drawLogo(cr), new Callback.EmitterID(), null);
+        da.onResize(this::setPixbuf);
+        da.setDrawFunc((drawing_area, cr, width, height, user_data) -> drawLogo(cr), null, null);
         window.show();
     }
 
