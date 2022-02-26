@@ -1,7 +1,5 @@
 package examples.gtk4_demo;
 
-import javax.annotation.Nullable;
-
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.cairo.Context;
 import ch.bailu.gtk.exception.AllocationError;
@@ -20,8 +18,6 @@ import ch.bailu.gtk.gtk.DialogFlags;
 import ch.bailu.gtk.gtk.DrawingArea;
 import ch.bailu.gtk.gtk.MessageDialog;
 import ch.bailu.gtk.gtk.MessageType;
-import ch.bailu.gtk.gtk.Widget;
-import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
@@ -168,7 +164,7 @@ public class Pixbufs {
         return GlibConstants.SOURCE_CONTINUE;
     }
 
-    private Widget doPixbufs(ApplicationWindow window) {
+    private void doPixbufs(ApplicationWindow window) {
         window.setTitle(new Str("Pixbufs"));
         window.setResizable(GTK.FALSE);
         System.out.println("Working Directory = " + System.getProperty("user.dir"));
@@ -197,6 +193,5 @@ public class Pixbufs {
             dialog.show();
         }
         window.show();
-        return window;
     }
 }

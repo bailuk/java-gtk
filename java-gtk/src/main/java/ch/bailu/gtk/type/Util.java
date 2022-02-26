@@ -1,7 +1,5 @@
 package ch.bailu.gtk.type;
 
-import ch.bailu.gtk.type.Pointer;
-
 public class Util {
 
     public static long[] toPointerArray(Pointer[] pointers) {

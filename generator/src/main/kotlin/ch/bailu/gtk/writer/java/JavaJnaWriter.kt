@@ -51,6 +51,10 @@ class JavaJnaWriter(private val out: TextWriter) : CodeWriter {
 
         }
 
+        if (methodModel.throwsError) {
+            result.append("${del}long _error")
+        }
+
         if (isSignal) {
             result.append("${del}long _data")
         }
@@ -65,11 +69,7 @@ class JavaJnaWriter(private val out: TextWriter) : CodeWriter {
         out.l(0, "        ${methodModel.returnType.impType} ${methodModel.gtkName}(${getSignature(methodModel)});", 0)
     }
 
-    override fun writeMallocConstructor(structureModel: StructureModel) {
-        out.start(0)
-        out.a("// TODO writeMallocConstructor\n")
-        out.end(0)
-    }
+    override fun writeMallocConstructor(structureModel: StructureModel) {}
 
     override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel, isSignal: Boolean) {
         out.start(1)
@@ -97,8 +97,12 @@ class JavaJnaWriter(private val out: TextWriter) : CodeWriter {
         out.a("""
             @com.sun.jna.Structure.FieldOrder({${getFields(fields)}})
             public static class Fields extends com.sun.jna.Structure {
+                public Fields() {
+                    super(); 
+                }
+
                 public Fields(long _self) {
-                    super(new com.sun.jna.Pointer(_self));
+                    super(ch.bailu.gtk.type.Pointer.toJnaPointer(_self));
                 }
         """, 4)
         out.end(1)

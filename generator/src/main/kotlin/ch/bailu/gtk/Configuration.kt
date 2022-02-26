@@ -32,7 +32,7 @@ class Configuration @Throws(RuntimeException::class) private constructor(args: A
                     NamespaceConfig("cairo-custom.gir",   StaticUrl("https://www.cairographics.org/manual/"), "cairo"),
                     NamespaceConfig("GLib-2.0.gir",       GtkDocUrl("glib"), "glib-2.0"),
                     //NamespaceConfig("Atk-1.0.gir",        GtkDocUrl("atk"), "atk"),
-                    NamespaceConfig("Pango-1.0.gir",      GtkDocUrl("Pango"), "pango"),
+                    NamespaceConfig("Pango-1.0.gir",      GtkDocUrl("Pango"), "pango-1.0"),
                     NamespaceConfig("GdkPixbuf-2.0.gir",  GtkDocUrl("gdk-pixbuf"), "gdk_pixbuf-2.0"),
                     NamespaceConfig("Adw-1.gir",          StaticUrl("https://gnome.pages.gitlab.gnome.org/libadwaita/doc/"), "libadwaita-1"))
 

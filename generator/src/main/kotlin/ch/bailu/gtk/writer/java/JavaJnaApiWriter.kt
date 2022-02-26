@@ -141,8 +141,7 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
             //javaDoc.writeMallocConstructor(structureModel)
             out.a("""
                 public ${structureModel.apiName}() {
-                    super(new CPointer(0));
-                    //super(new CPointer(${structureModel.impName}.newFromMalloc()));
+                    super(toCPointer(new ${structureModel.jnaName}.Fields().getPointer()));
                 }
                 
                 public void destroy() {
@@ -355,6 +354,10 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
             }
             del = ", "
         }
+
+        if (methodModel.throwsError) {
+            result.append("${del}0L")
+        }
         return result.toString()
     }
 
@@ -388,6 +391,7 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         if (parameterModel.isJavaNative) {
             out.a("""
                 public ${parameterModel.apiType} ${getter}() {
+                    toFields().read();
                     return toFields().${parameterModel.name};
                 } 
                 """, 4)
@@ -395,6 +399,7 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         } else {
             out.a("""
                 public ${parameterModel.apiType} ${getter}() {
+                    toFields().read();
                     return new ${parameterModel.apiType}(new CPointer(toFields().${parameterModel.name}));
                 }
                 """, 4)
@@ -406,12 +411,14 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
                 out.a("""
                     public void ${setter}(${getSignature(parameters)}) {
                         toFields().${parameterModel.name} = ${parameterModel.name};
+                        toFields().write();
                     }
                 """, 4)
             } else {
                 out.a("""
                     public void ${setter}(${getSignature(parameters)}) {
                         toFields().${parameterModel.name} = ${parameterModel.name}.getCPointer();
+                        toFields().write();
                     }
                 """, 4)
             }

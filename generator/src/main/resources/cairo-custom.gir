@@ -626,6 +626,25 @@
                 </parameters>
             </method>
 
+            <field name="xx" writable="1">
+                <type name="gdouble" c:type="gdouble"/>
+            </field>
+            <field name="yx" writable="1">
+                <type name="gdouble" c:type="gdouble"/>
+            </field>
+            <field name="xy" writable="1">
+                <type name="gdouble" c:type="gdouble"/>
+            </field>
+            <field name="yy" writable="1">
+                <type name="gdouble" c:type="gdouble"/>
+            </field>
+            <field name="x0" writable="1">
+                <type name="gdouble" c:type="gdouble"/>
+            </field>
+            <field name="y0" writable="1">
+                <type name="gdouble" c:type="gdouble"/>
+            </field>
+
 
             <method name="translate" c:identifier="cairo_matrix_translate">
                 <return-value transfer-ownership="none">

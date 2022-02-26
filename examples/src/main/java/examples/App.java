@@ -5,6 +5,7 @@ import java.io.IOException;
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.gtk.Gtk;
 import ch.bailu.gtk.type.Str;
+import examples.gtk4_demo.Pixbufs;
 
 public class App {
 
@@ -18,12 +19,12 @@ public class App {
         //new HelloWorldBoxed(args);
 
 
-        new HelloWorld(args);
+        //new HelloWorld(args);
         //new CustomLayoutTest(args);
         //new HeaderBarSample(args);
         //new Picker(args);
         //new LinksSample(args);
-        //new Pixbufs(args);
+        new Pixbufs(args);
         //new PangoTextMask(args);
         //new HelloWorldBoxed(args);
         //new ImageBridge(args);

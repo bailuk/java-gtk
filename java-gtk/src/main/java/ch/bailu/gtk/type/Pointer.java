@@ -25,6 +25,26 @@ public class Pointer extends Type implements CPointerInterface {
         return pointer.getCPointer();
     }
 
+    public static com.sun.jna.Pointer toJnaPointer(Pointer p) {
+        return toJnaPointer(p);
+    }
+
+    public static com.sun.jna.Pointer toJnaPointer(long p) {
+        return new com.sun.jna.Pointer(p);
+    }
+
+    public static Pointer toPointer(com.sun.jna.Pointer p) {
+        return new Pointer(toCPointer(p));
+    }
+
+    public static CPointer toCPointer(com.sun.jna.Pointer p) {
+        return new CPointer(toNativePointer(p));
+    }
+
+    public static long toNativePointer(com.sun.jna.Pointer p) {
+        return com.sun.jna.Pointer.nativeValue(p);
+    }
+
     /**
      * Pass the return value of this function to the casting
      * constructor of any class derived from Pointer
