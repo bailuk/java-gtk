@@ -28,7 +28,7 @@ class Configuration @Throws(RuntimeException::class) private constructor(args: A
                     NamespaceConfig("Gtk-4.0.gir",        GtkDocUrl("gtk4"), "gtk-4"),
                     NamespaceConfig("Gio-2.0.gir",        GtkDocUrl("gio"), "gio-2.0"),
                     NamespaceConfig("Gdk-4.0.gir",        GtkDocUrl("gdk4"), "gtk-4"),
-                    NamespaceConfig("PangoCairo-1.0.gir", GtkDocUrl("PangoCairo"), "pangocairo"),
+                    NamespaceConfig("PangoCairo-1.0.gir", GtkDocUrl("PangoCairo"), "pangocairo-1.0"),
                     NamespaceConfig("cairo-custom.gir",   StaticUrl("https://www.cairographics.org/manual/"), "cairo"),
                     NamespaceConfig("GLib-2.0.gir",       GtkDocUrl("glib"), "glib-2.0"),
                     //NamespaceConfig("Atk-1.0.gir",        GtkDocUrl("atk"), "atk"),

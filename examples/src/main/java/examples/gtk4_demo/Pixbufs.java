@@ -1,5 +1,7 @@
 package examples.gtk4_demo;
 
+import java.io.File;
+
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.cairo.Context;
 import ch.bailu.gtk.exception.AllocationError;
@@ -20,6 +22,7 @@ import ch.bailu.gtk.gtk.MessageDialog;
 import ch.bailu.gtk.gtk.MessageType;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
+import examples.App;
 
 /*
     Pixbufs
@@ -28,17 +31,18 @@ import ch.bailu.gtk.type.Strs;
     Look at the Image demo for additional pixbuf usage examples.
 */
 public class Pixbufs {
-    private static final String BACKGROUND_NAME = "src/main/resources/background.jpg";
+    private static final File RES = App.path("examples/src/main/resources/");
+    private static final String BACKGROUND_NAME = "background.jpg";
 
     private static final String[] IMAGE_NAMES = {
-            "src/main/resources/apple-red.png",
-            "src/main/resources/gnome-applets.png",
-            "src/main/resources/gnome-calendar.png",
-            "src/main/resources/gnome-foot.png",
-            "src/main/resources/gnome-gmush.png",
-            "src/main/resources/gnome-gimp.png",
-            "src/main/resources/gnome-gsame.png",
-            "src/main/resources/gnu-keys.png"
+            "apple-red.png",
+            "gnome-applets.png",
+            "gnome-calendar.png",
+            "gnome-foot.png",
+            "gnome-gmush.png",
+            "gnome-gimp.png",
+            "gnome-gsame.png",
+            "gnu-keys.png"
     };
 
     /* Current frame */
@@ -67,14 +71,18 @@ public class Pixbufs {
     }
 
     void loadPixbufs() throws AllocationError {
-        background = Pixbuf.newFromFilePixbuf(new Str(BACKGROUND_NAME));
+        background = loadPixbuf(BACKGROUND_NAME);
 
         backWidth = background.getWidth();
         backHeight = background.getHeight();
 
         for (int i = 0; i < images.length; i++) {
-            images[i] = Pixbuf.newFromFilePixbuf(new Str(IMAGE_NAMES[i]));
+            images[i] = loadPixbuf(IMAGE_NAMES[i]);
         }
+    }
+
+    Pixbuf loadPixbuf(String name) throws AllocationError {
+        return Pixbuf.newFromFilePixbuf(new Str(new File(RES, name).toString()));
     }
 
     int onDraw(Context cr) {
@@ -167,7 +175,7 @@ public class Pixbufs {
     private void doPixbufs(ApplicationWindow window) {
         window.setTitle(new Str("Pixbufs"));
         window.setResizable(GTK.FALSE);
-        System.out.println("Working Directory = " + System.getProperty("user.dir"));
+
         try  {
             loadPixbufs();
 

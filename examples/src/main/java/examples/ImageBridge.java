@@ -21,6 +21,7 @@ import ch.bailu.gtk.type.Strs;
 
 public class ImageBridge {
 
+    private static final File SVG = App.path("examples/src/main/resources/GTK.svg");
     public ImageBridge(String[] args) {
 
         listSupportedFormats();
@@ -90,8 +91,7 @@ public class ImageBridge {
 
         FileInputStream inputStream = null;
         try {
-            File file = new File("src/main/resources/GTK.svg");
-            inputStream = new FileInputStream(file);
+            inputStream = new FileInputStream(SVG);
 
             result = Image.load(inputStream, width, height);
 

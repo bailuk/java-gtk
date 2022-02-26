@@ -223,8 +223,7 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
 
         out.a("""
             public void ${getJavaSignalMethodName(methodModel.name)}(${getJavaSignalInterfaceName(methodModel.name)} signal) {
-                long result = ${structureModel.jnaName}.INST().g_signal_connect_data(getCPointer(), new Str("${methodModel.name}").getCPointer(), to${getJavaSignalInterfaceName(methodModel.name)}(signal), 0L, 0L, 0);
-                System.out.println("${methodModel.name}: " + result);
+                ${structureModel.jnaName}.INST().g_signal_connect_data(getCPointer(), new Str("${methodModel.name}").getCPointer(), to${getJavaSignalInterfaceName(methodModel.name)}(signal), 0L, 0L, 0);
             }
         """, 4)
         out.end(1)

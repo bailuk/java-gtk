@@ -28,7 +28,7 @@ import ch.bailu.gtk.type.Str;
  * https://gitlab.gnome.org/GNOME/gtk/-/issues/2971
  */
 public class HugeList {
-    private final static String GIR_PATH = "../generator/src/main/resources/gir/";
+    private final static File GIR_PATH = App.path("generator/src/main/resources/gir/");
 
     private final HashMap<String, Integer> wordList = new HashMap<>();
 
@@ -42,7 +42,7 @@ public class HugeList {
 
             var listIndex = new ListIndex();
 
-            for (String name: new File(GIR_PATH).list()) {
+            for (String name: GIR_PATH.list()) {
                 File file = new File(GIR_PATH, name);
                 readFileIntoList(file);
             }
