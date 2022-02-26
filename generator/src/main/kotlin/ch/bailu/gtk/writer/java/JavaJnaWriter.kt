@@ -37,7 +37,7 @@ class JavaJnaWriter(private val out: TextWriter) : CodeWriter {
         var del = firstDel
 
         if (isSignal) {
-            result.append("long _self, long _data")
+            result.append("long _self")
             del = (", ")
         }
 
@@ -50,11 +50,15 @@ class JavaJnaWriter(private val out: TextWriter) : CodeWriter {
             del = ", "
 
         }
+
+        if (isSignal) {
+            result.append("${del}long _data")
+        }
         return result.toString()
     }
 
     override fun writeSignal(structureModel: StructureModel, methodModel: MethodModel) {
-        out.l(0,"        void g_signal_connect_data(long _self, long signalName, ${getJavaSignalInterfaceName(methodModel.name)} cb, long data, long x, int flag);", 0)
+        out.l(0,"        long g_signal_connect_data(long _self, long detailed_signal, ${getJavaSignalInterfaceName(methodModel.name)} cb, long data, long destroy_data, int flag);", 0)
     }
 
     override fun writeField(structureModel: StructureModel, parameterModel: ParameterModel) {
@@ -79,7 +83,7 @@ class JavaJnaWriter(private val out: TextWriter) : CodeWriter {
         out.a("""
             public interface ${getJavaSignalInterfaceName(methodModel.name)} {
                 @jnr.ffi.annotations.Delegate
-                ${methodModel.returnType.impType} ${getJavaSignalMethodName(methodModel.name)}(${getSignature(methodModel, "", isSignal)});
+                ${methodModel.returnType.impType} invoke(${getSignature(methodModel, "", isSignal)});
             }
         """, 4)
         out.end(1)

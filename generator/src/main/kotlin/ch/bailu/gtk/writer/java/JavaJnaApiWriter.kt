@@ -224,7 +224,8 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
 
         out.a("""
             public void ${getJavaSignalMethodName(methodModel.name)}(${getJavaSignalInterfaceName(methodModel.name)} signal) {
-                ${structureModel.jnaName}.INST().g_signal_connect_data(getCPointer(), new Str("${methodModel.name}").getCPointer(), to${getJavaSignalInterfaceName(methodModel.name)}(signal), 0L, 0L, 0);
+                long result = ${structureModel.jnaName}.INST().g_signal_connect_data(getCPointer(), new Str("${methodModel.name}").getCPointer(), to${getJavaSignalInterfaceName(methodModel.name)}(signal), 0L, 0L, 0);
+                System.out.println("${methodModel.name}: " + result);
             }
         """, 4)
         out.end(1)
@@ -249,6 +250,7 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
                 ${structureModel.jnaName}.${iName} out = null;
                 if (in != null) {
                     out = (${getCallbackOutSignature(methodModel, isSignal)}) -> in.${mName}${getCallbackInSignature(methodModel)};
+                    ch.bailu.gtk.Refs.add(out, in);
                 }
                 return out;
             }
@@ -290,13 +292,17 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
 
         var del = ""
         if (signal) {
-            result.append("__self, __data")
+            result.append("__self")
             del = ", "
         }
 
         methodModel.parameters.forEach {
             result.append("${del}_${it.name}")
             del = ", "
+        }
+
+        if (signal) {
+            result.append("${del}__data")
         }
         return result.toString()
     }
