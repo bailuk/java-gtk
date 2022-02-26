@@ -1,6 +1,7 @@
 package examples.gtk4_demo;
 
-import ch.bailu.gtk.Callback;
+import javax.annotation.Nullable;
+
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.cairo.Context;
 import ch.bailu.gtk.exception.AllocationError;
@@ -20,6 +21,7 @@ import ch.bailu.gtk.gtk.DrawingArea;
 import ch.bailu.gtk.gtk.MessageDialog;
 import ch.bailu.gtk.gtk.MessageType;
 import ch.bailu.gtk.gtk.Widget;
+import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
@@ -32,7 +34,7 @@ import ch.bailu.gtk.type.Strs;
 public class Pixbufs {
     private static final String BACKGROUND_NAME = "src/main/resources/background.jpg";
 
-    private static final String IMAGE_NAMES[] = {
+    private static final String[] IMAGE_NAMES = {
             "src/main/resources/apple-red.png",
             "src/main/resources/gnome-applets.png",
             "src/main/resources/gnome-calendar.png",
@@ -51,7 +53,7 @@ public class Pixbufs {
     private int backWidth, backHeight;
 
     /* Images */
-    private final Pixbuf images[] = new Pixbuf[IMAGE_NAMES.length];
+    private final Pixbuf[] images = new Pixbuf[IMAGE_NAMES.length];
 
     /* Widgets */
     private DrawingArea da;
@@ -139,6 +141,7 @@ public class Pixbufs {
             k = 2.0 * k * k;
             k = Math.max(0.25, k);
 
+
             r1.setFieldX(xpos);
             r1.setFieldY(ypos);
             r1.setFieldWidth((int) (iw * k));
@@ -176,10 +179,10 @@ public class Pixbufs {
             da = new DrawingArea();
 
 
-            da.setDrawFunc((drawingArea, cr, width, height, userData) -> onDraw(cr), new Callback.EmitterID(), null);
+            da.setDrawFunc((drawingArea, cr, width, height, userData) -> onDraw(cr), null, data -> {});
             window.setChild(da);
             window.setSizeRequest(backWidth, backHeight);
-            window.addTickCallback((widget, frame_clock, user_data) -> onTick(frame_clock), new Callback.EmitterID(), data -> {});
+            window.addTickCallback((widget, frame_clock, user_data) -> onTick(frame_clock), null, data -> {});
 
         } catch (AllocationError e) {
             System.out.println(e.getMessage());

@@ -1,6 +1,7 @@
 package ch.bailu.gtk.writer.java
 
 import ch.bailu.gtk.model.*
+import ch.bailu.gtk.model.filter.ModelList
 import ch.bailu.gtk.writer.*
 import ch.bailu.gtk.writer.java_doc.JavaDoc
 import ch.bailu.gtk.writer.java_doc.JavaDocWriter
@@ -307,13 +308,6 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         return result.toString()
     }
 
-    override fun writeField(structureModel : StructureModel, parameterModel : ParameterModel) {
-        out.start(0)
-        out.a("    // TODO write field: ${parameterModel.name}\n")
-        out.end(0)
-    }
-
-
     private fun getSignature(parameters : List<ParameterModel>) : String{
         val result = StringBuilder()
 
@@ -365,8 +359,64 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         return result.toString()
     }
 
-    override fun writeBeginStruct() {}
+    override fun writeBeginStruct(structureModel: StructureModel, fields: ModelList<ParameterModel>) {
+        out.start(0)
+        out.a("""
+            private ${structureModel.jnaName}.Fields _fields;
+
+            ${structureModel.jnaName}.Fields toFields() {
+                if (_fields == null) {
+                    _fields = new ${structureModel.jnaName}.Fields(getCPointer());
+                }
+                return _fields;
+            }
+        """, 4)
+        out.end(0)
+    }
+
     override fun writeEndStruct() {}
     override fun writeBeginInstace(namespaceModel: NamespaceModel) {}
     override fun writeEndInstance() {}
+    override fun writeField(structureModel : StructureModel, parameterModel : ParameterModel) {
+        val parameters : MutableList<ParameterModel> = ArrayList()
+
+        val getter = getJavaFieldGetterName(parameterModel.name)
+        val setter = getJavaFieldSetterName(parameterModel.name)
+
+        out.start(1)
+        //javaDoc.writeField(structureModel, parameterModel)
+
+        if (parameterModel.isJavaNative) {
+            out.a("""
+                public ${parameterModel.apiType} ${getter}() {
+                    return toFields().${parameterModel.name};
+                } 
+                """, 4)
+
+        } else {
+            out.a("""
+                public ${parameterModel.apiType} ${getter}() {
+                    return new ${parameterModel.apiType}(new CPointer(toFields().${parameterModel.name}));
+                }
+                """, 4)
+        }
+
+        if (parameterModel.isWriteable && !parameterModel.isDirectType) {
+            parameters.add(parameterModel)
+            if (parameterModel.isJavaNative) {
+                out.a("""
+                    public void ${setter}(${getSignature(parameters)}) {
+                        toFields().${parameterModel.name} = ${parameterModel.name};
+                    }
+                """, 4)
+            } else {
+                out.a("""
+                    public void ${setter}(${getSignature(parameters)}) {
+                        toFields().${parameterModel.name} = ${parameterModel.name}.getCPointer();
+                    }
+                """, 4)
+            }
+        }
+        out.end(1)
+    }
 }

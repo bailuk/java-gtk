@@ -1,10 +1,10 @@
 package ch.bailu.gtk.writer.java
 
 import ch.bailu.gtk.model.*
+import ch.bailu.gtk.model.filter.ModelList
 import ch.bailu.gtk.writer.CodeWriter
 import ch.bailu.gtk.writer.TextWriter
 import ch.bailu.gtk.writer.getJavaSignalInterfaceName
-import ch.bailu.gtk.writer.getJavaSignalMethodName
 
 class JavaJnaWriter(private val out: TextWriter) : CodeWriter {
 
@@ -61,12 +61,6 @@ class JavaJnaWriter(private val out: TextWriter) : CodeWriter {
         out.l(0,"        long g_signal_connect_data(long _self, long detailed_signal, ${getJavaSignalInterfaceName(methodModel.name)} cb, long data, long destroy_data, int flag);", 0)
     }
 
-    override fun writeField(structureModel: StructureModel, parameterModel: ParameterModel) {
-        out.start(0)
-        out.a("        // FIELD: ${parameterModel.impType} ${parameterModel.name};\n")
-        out.end(0)
-    }
-
     override fun writeFunction(structureModel: StructureModel, methodModel: MethodModel) {
         out.l(0, "        ${methodModel.returnType.impType} ${methodModel.gtkName}(${getSignature(methodModel)});", 0)
     }
@@ -81,8 +75,7 @@ class JavaJnaWriter(private val out: TextWriter) : CodeWriter {
         out.start(1)
 
         out.a("""
-            public interface ${getJavaSignalInterfaceName(methodModel.name)} {
-                @jnr.ffi.annotations.Delegate
+            public interface ${getJavaSignalInterfaceName(methodModel.name)} extends com.sun.jna.Callback {
                 ${methodModel.returnType.impType} invoke(${getSignature(methodModel, "", isSignal)});
             }
         """, 4)
@@ -99,18 +92,35 @@ class JavaJnaWriter(private val out: TextWriter) : CodeWriter {
         out.end(0)
     }
 
-    override fun writeBeginStruct() {
+    override fun writeBeginStruct(structureModel : StructureModel, fields: ModelList<ParameterModel>) {
         out.start(0)
         out.a("""
-            public static class Fields extends jnr.ffi.Struct {
-                public Fields(jnr.ffi.Runtime runtime) {
-                    super(runtime);
+            @com.sun.jna.Structure.FieldOrder({${getFields(fields)}})
+            public static class Fields extends com.sun.jna.Structure {
+                public Fields(long _self) {
+                    super(new com.sun.jna.Pointer(_self));
                 }
         """, 4)
         out.end(1)
-
-
     }
+
+    private fun getFields(fields: ModelList<ParameterModel>): String {
+        val result = StringBuilder()
+        var del = ""
+
+        fields.forEach {
+            result.append(del).append('"').append(it.name).append('"')
+            del = ", "
+        }
+        return result.toString()
+    }
+
+    override fun writeField(structureModel: StructureModel, parameterModel: ParameterModel) {
+        out.start(0)
+        out.a("        public ${parameterModel.impType} ${parameterModel.name};\n")
+        out.end(0)
+    }
+
 
     override fun writeEndStruct() {
         out.l(0,"    }", 1)
@@ -123,14 +133,14 @@ class JavaJnaWriter(private val out: TextWriter) : CodeWriter {
 
             static Instance INST() {
                 if (INSTANCE == null) {
-                    INSTANCE = jnr.ffi.LibraryLoader.create(Instance.class).load("${namespaceModel.namespaceConfig.pkgConfigName}");
+                    INSTANCE = com.sun.jna.Native.load("${namespaceModel.namespaceConfig.pkgConfigName}", Instance.class);
                 }
                 return INSTANCE;
             }
-                
-            public interface Instance {
+
+            public interface Instance extends com.sun.jna.Library {
         """, 4)
-        out.end(1)
+        out.end(0)
     }
 
     override fun writeEndInstance() {

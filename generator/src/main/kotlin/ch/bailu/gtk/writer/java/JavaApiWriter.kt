@@ -1,6 +1,7 @@
 package ch.bailu.gtk.writer.java
 
 import ch.bailu.gtk.model.*
+import ch.bailu.gtk.model.filter.ModelList
 import ch.bailu.gtk.writer.*
 import ch.bailu.gtk.writer.java_doc.JavaDoc
 import ch.bailu.gtk.writer.java_doc.JavaDocWriter
@@ -353,7 +354,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         return result.toString()
     }
 
-    override fun writeBeginStruct() {}
+    override fun writeBeginStruct(structureModel : StructureModel, fields: ModelList<ParameterModel>) {}
     override fun writeEndStruct() {}
     override fun writeBeginInstace(namespaceModel: NamespaceModel) {}
     override fun writeEndInstance() {}

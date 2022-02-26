@@ -2,6 +2,7 @@ package ch.bailu.gtk.writer
 
 import ch.bailu.gtk.model.NamespaceModel
 import ch.bailu.gtk.model.*
+import ch.bailu.gtk.model.filter.ModelList
 import java.io.Writer
 
 
@@ -29,7 +30,7 @@ interface CodeWriter  {
 
     fun writeEnd()
     fun writeGetTypeFunction(structureModel: StructureModel)
-    fun writeBeginStruct()
+    fun writeBeginStruct(structureModel : StructureModel, fields: ModelList<ParameterModel>)
     fun writeEndStruct()
     fun writeBeginInstace(namespaceModel: NamespaceModel)
     fun writeEndInstance()

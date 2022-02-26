@@ -1,6 +1,7 @@
 package ch.bailu.gtk.writer
 
 import ch.bailu.gtk.model.*
+import ch.bailu.gtk.model.filter.ModelList
 
 
 class CWriter (private val out : TextWriter) : CodeWriter {
@@ -352,7 +353,7 @@ class CWriter (private val out : TextWriter) : CodeWriter {
     override fun writeInternalConstructor(structureModel: StructureModel) {}
     override fun writeConstructor(structureModel: StructureModel, methodModel: MethodModel) {}
     override fun writeFactory(structureModel: StructureModel, methodModel: MethodModel) {}
-    override fun writeBeginStruct() {}
+    override fun writeBeginStruct(structureModel : StructureModel, fields: ModelList<ParameterModel>) {}
     override fun writeEndStruct() {}
     override fun writeBeginInstace(namespaceModel: NamespaceModel) {}
     override fun writeEndInstance() {}

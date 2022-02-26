@@ -1,6 +1,7 @@
 package ch.bailu.gtk.writer.java_doc
 
 import ch.bailu.gtk.model.*
+import ch.bailu.gtk.model.filter.ModelList
 import ch.bailu.gtk.writer.CodeWriter
 import ch.bailu.gtk.writer.TextWriter
 import sun.misc.Signal
@@ -83,7 +84,7 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
     override fun writeMallocConstructor(structureModel: StructureModel) {}
     override fun writeStart(structureModel: StructureModel, namespaceModel: NamespaceModel) {}
     override fun writeInternalConstructor(structureModel: StructureModel) {}
-    override fun writeBeginStruct() {}
+    override fun writeBeginStruct(structureModel : StructureModel, fields: ModelList<ParameterModel>) {}
     override fun writeEndStruct() {}
     override fun writeBeginInstace(namespaceModel: NamespaceModel) {}
     override fun writeEndInstance() {}

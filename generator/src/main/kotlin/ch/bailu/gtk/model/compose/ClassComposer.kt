@@ -21,9 +21,11 @@ class ClassComposer : CodeComposer() {
             writer.writeMallocConstructor(structureModel)
         }
 
-        writer.writeBeginStruct()
-        models.fields.forEach   { writer.writeField(structureModel, it) }
-        writer.writeEndStruct()
+        if (structureModel.isRecord && models.fields.isNotEmpty()) {
+            writer.writeBeginStruct(structureModel, models.fields)
+            models.fields.forEach { writer.writeField(structureModel, it) }
+            writer.writeEndStruct()
+        }
 
         writer.writeBeginInstace(namespaceModel)
         models.privateFactories.forEach { writer.writePrivateFactory(structureModel, it) }
