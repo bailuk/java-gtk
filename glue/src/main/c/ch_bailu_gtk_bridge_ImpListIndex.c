@@ -8,38 +8,17 @@
 
 static GType list_index_get_type (void);
 
-typedef struct _ListIndex ListIndex;
 typedef struct {
     GObjectClass parent_class;
 } ListIndexClass;
 
 
-
-typedef ListIndex *ListIndex_autoptr;
-typedef GList *ListIndex_listautoptr;
-typedef GSList *ListIndex_slistautoptr;
-typedef GQueue *ListIndex_queueautoptr;
-
-
-typedef ListIndexClass *ListIndexClass_autoptr;
-typedef GList *ListIndexClass_listautoptr;
-typedef GSList *ListIndexClass_slistautoptr;
-typedef GQueue *ListIndexClass_queueautoptr;
-
-
-
-
-
-
-
-
-struct _ListIndex
-{
+typedef struct {
     GObject parent_instance;
 
     int index;
     int size;
-};
+} ListIndex;
 
 
 enum
@@ -51,74 +30,17 @@ enum
 
 
 static void list_index_iface_init (GListModelInterface *iface);
-
 static void list_index_init (ListIndex *self);
-static void list_index_class_init (ListIndexClass *klass);
+
 static GType list_index_get_type_once (void);
 static gpointer list_index_parent_class = ((void *)0);
-static gint ListIndex_private_offset;
 
 
-static void list_index_class_intern_init (gpointer klass) {
-    list_index_parent_class = g_type_class_peek_parent (klass);
-    if (ListIndex_private_offset != 0) g_type_class_adjust_private_offset (klass, &ListIndex_private_offset);
-    list_index_class_init ((ListIndexClass*) klass);
-}
-
-static inline gpointer list_index_get_instance_private (ListIndex *self) {
-    return (((gpointer) ((guint8*) (self) + (glong) (ListIndex_private_offset))));
-}
-
-
-GType list_index_get_type (void) {
-    static gsize static_g_define_type_id = 0;
-
-    if (g_once_init_enter (&static_g_define_type_id)) {
-        GType g_define_type_id = list_index_get_type_once ();
-        g_once_init_leave ((&static_g_define_type_id), (gsize) (g_define_type_id));
-
-    }
-    return static_g_define_type_id;
-}
-
-
-
-static GType list_index_get_type_once (void) {
-    GType g_define_type_id = g_type_register_static_simple (
-            ((GType) ((20) << (2))),
-            g_intern_static_string ("ListIndex"),
-            sizeof (ListIndexClass),
-            (GClassInitFunc)(void (*)(void)) list_index_class_intern_init,
-            sizeof (ListIndex),
-            (GInstanceInitFunc)(void (*)(void)) list_index_init,
-            (GTypeFlags) 0);
-
-    const GInterfaceInfo g_implement_interface_info = {
-            (GInterfaceInitFunc)(void (*)(void)) list_index_iface_init, ((void *)0) , ((void *)0)
-    };
-
-
-    g_type_add_interface_static (g_define_type_id, g_list_model_get_type (), &g_implement_interface_info);
-
-    return g_define_type_id;
-};
-
-
-
-
-
-static void
-list_index_dispose (GObject *object)
-{
-    ((((GObjectClass*) g_type_check_class_cast ((GTypeClass*) ((list_index_parent_class)), (((GType) ((20) << (2))))))))->dispose (object);
-}
-
-
-static void
-list_index_get_property (GObject *object,
-                         guint property_id,
-                         GValue *value,
-                         GParamSpec *pspec)
+// callback
+static void list_index_get_property (GObject *object,
+                                     guint property_id,
+                                     GValue *value,
+                                     GParamSpec *pspec)
 {
     if (property_id == PROP_ITEM_TYPE) {
         g_value_set_gtype(value, list_index_get_type());
@@ -131,12 +53,8 @@ list_index_get_property (GObject *object,
     }
 }
 
-
-static void
-list_index_set_property (GObject *object,
-                         guint property_id,
-                         const GValue *value,
-                         GParamSpec *pspec)
+// callback
+static void list_index_set_property (GObject *object, guint property_id, const GValue *value, GParamSpec *pspec)
 {
     if (property_id != PROP_ITEM_TYPE) {
         do {
@@ -148,9 +66,21 @@ list_index_set_property (GObject *object,
 }
 
 
-static void
-list_index_class_init (ListIndexClass *klass)
+
+// callback
+static void list_index_dispose (GObject *object)
 {
+    ((((GObjectClass*) g_type_check_class_cast ((GTypeClass*) ((list_index_parent_class)), (((GType) ((20) << (2))))))))->dispose (object);
+}
+
+
+// callback
+static gint ListIndex_private_offset;
+static void list_index_class_intern_init (gpointer klass) {
+    list_index_parent_class = g_type_class_peek_parent (klass);
+    if (ListIndex_private_offset != 0) g_type_class_adjust_private_offset (klass, &ListIndex_private_offset);
+
+
     GObjectClass *object_class = ((((GObjectClass*) g_type_check_class_cast ((GTypeClass*) ((klass)), (((GType) ((20) << (2))))))));
 
     object_class->dispose = list_index_dispose;
@@ -160,26 +90,62 @@ list_index_class_init (ListIndexClass *klass)
     g_object_class_install_property (object_class, PROP_ITEM_TYPE,
                                      g_param_spec_gtype ("item-type", "", "", ((GType) ((20) << (2))),
                                                          G_PARAM_CONSTRUCT | G_PARAM_READWRITE | (G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB)));
+
 }
 
 
-static GType
-list_index_get_item_type (GListModel *list)
+// 2. create this function
+GType list_index_get_type (void) {
+    static gsize static_g_define_type_id = 0;
+
+    if (g_once_init_enter (&static_g_define_type_id)) {
+        // only call needed
+        GType g_define_type_id = list_index_get_type_once ();
+        g_once_init_leave ((&static_g_define_type_id), (gsize) (g_define_type_id));
+
+    }
+    return static_g_define_type_id;
+}
+
+
+
+// this gets called once to get a type id and to initialize this class and interface
+static GType list_index_get_type_once (void) {
+    // first call
+    GType g_define_type_id = g_type_register_static_simple (
+            ((GType) ((20) << (2))),
+            g_intern_static_string ("ListIndex"),
+            sizeof (ListIndexClass),
+            (GClassInitFunc)(void (*)(void)) list_index_class_intern_init, // <- callback
+            sizeof (ListIndex),
+            (GInstanceInitFunc)(void (*)(void)) list_index_init, // <- callback
+            (GTypeFlags) 0);
+
+    const GInterfaceInfo g_implement_interface_info = {
+            (GInterfaceInitFunc)(void (*)(void)) list_index_iface_init, ((void *)0) , ((void *)0)
+    };
+
+
+    // second call
+    g_type_add_interface_static (g_define_type_id, g_list_model_get_type (), &g_implement_interface_info);
+
+    return g_define_type_id;
+}
+
+static GType list_index_get_item_type (GListModel *list)
 {
     return list_index_get_type();
 }
 
 
-static guint
-list_index_get_n_items (GListModel *list)
+static guint list_index_get_n_items (GListModel *list)
 {
     ListIndex *listIndex = (ListIndex*) g_type_check_instance_cast ((GTypeInstance*) (list), (list_index_get_type ()));
     return (guint) listIndex->size;
 }
 
 
-static gpointer
-list_index_get_item (GListModel *list,
+static gpointer list_index_get_item (GListModel *list,
                      guint index)
 {
     ListIndex *result = g_object_new(list_index_get_type(), "item-type", list_index_get_type(), ((void *)0));
@@ -194,8 +160,7 @@ list_index_get_item (GListModel *list,
 
 
 // callback
-static void
-list_index_iface_init (GListModelInterface *iface)
+static void list_index_iface_init (GListModelInterface *iface)
 {
     iface->get_item_type = list_index_get_item_type;
     iface->get_n_items = list_index_get_n_items;
@@ -216,7 +181,8 @@ list_index_init (ListIndex *listIndex)
 __attribute__((visibility("default"))) jlong
 Java_ch_bailu_gtk_bridge_ImpListIndex_create(JNIEnv *env, jclass klass)
 {
-    return g_object_new(list_index_get_type(), "item-type", list_index_get_type(), ((void *)0));
+    // 1. create g_object_new constructor
+    return (jlong) g_object_new(list_index_get_type(), "item-type", list_index_get_type(), ((void *)0));
 }
 
 __attribute__((visibility("default"))) void
