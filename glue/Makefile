@@ -51,6 +51,7 @@ $(lib_share) : $(addprefix $(OBJDIR)/, $(OBJS)) | $(lib_share_dir)
 
 
 $(OBJDIR)/%.o : %.c | $(OBJDIR)
+	cc $(INCLUDE_DIRS) $(GTK_CFLAGS) -E $< > build/preprocessor.c
 	cc $(INCLUDE_DIRS) $(GTK_CFLAGS) -fPIC -O3 -DPIC64 -c $< -o $@
 
 
