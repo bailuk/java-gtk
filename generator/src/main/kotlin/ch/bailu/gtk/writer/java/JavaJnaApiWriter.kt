@@ -141,11 +141,11 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
             //javaDoc.writeMallocConstructor(structureModel)
             out.a("""
                 public ${structureModel.apiName}() {
-                    super(toCPointer(new ${structureModel.jnaName}.Fields().getPointer()));
+                    super(toCPointer(${structureModel.jnaName}.allocateStructure()));
                 }
                 
                 public void destroy() {
-                    ch.bailu.gtk.type.ImpUtil.destroy(getCPointer());
+                     ch.bailu.gtk.type.CLib.API().free(getCPointer());
                 }
             """, 4)
             out.end(1)
@@ -248,7 +248,7 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
                 ${structureModel.jnaName}.${iName} out = null;
                 if (in != null) {
                     out = (${getCallbackOutSignature(methodModel, isSignal)}) -> in.${mName}${getCallbackInSignature(methodModel)};
-                    ch.bailu.gtk.Refs.add(out, in);
+                    ch.bailu.gtk.Refs.add(in, out);
                 }
                 return out;
             }
@@ -390,7 +390,7 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         if (parameterModel.isJavaNative) {
             out.a("""
                 public ${parameterModel.apiType} ${getter}() {
-                    toFields().read();
+                    toFields().readField("${parameterModel.name}");
                     return toFields().${parameterModel.name};
                 } 
                 """, 4)
@@ -398,7 +398,7 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         } else {
             out.a("""
                 public ${parameterModel.apiType} ${getter}() {
-                    toFields().read();
+                    toFields().readField("${parameterModel.name}");
                     return new ${parameterModel.apiType}(new CPointer(toFields().${parameterModel.name}));
                 }
                 """, 4)
@@ -410,14 +410,14 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
                 out.a("""
                     public void ${setter}(${getSignature(parameters)}) {
                         toFields().${parameterModel.name} = ${parameterModel.name};
-                        toFields().write();
+                        toFields().writeField("${parameterModel.name}");
                     }
                 """, 4)
             } else {
                 out.a("""
                     public void ${setter}(${getSignature(parameters)}) {
                         toFields().${parameterModel.name} = ${parameterModel.name}.getCPointer();
-                        toFields().write();
+                        toFields().writeField("${parameterModel.name}");
                     }
                 """, 4)
             }

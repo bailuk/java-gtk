@@ -5,6 +5,8 @@ import java.util.Map;
 
 public class Refs {
     private static final Map<Object, Object> REFS = new HashMap<>();
+    private static long lastLog = System.currentTimeMillis();
+    private static long lastSize = 0;
 
     public synchronized static void add(Object object) {
         REFS.put(object, object);
@@ -23,6 +25,15 @@ public class Refs {
 
 
     private static void log() {
-        System.out.println("REFS: " + REFS.size());
+        long now = System.currentTimeMillis();
+
+        if (now - lastLog > 5000) {
+            long size = REFS.size();
+            if (lastSize != size) {
+                System.out.println("REFS: " + REFS.size());
+            }
+            lastLog = now;
+            lastSize = size;
+        }
     }
 }

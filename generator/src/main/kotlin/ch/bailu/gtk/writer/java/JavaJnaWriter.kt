@@ -95,6 +95,15 @@ class JavaJnaWriter(private val out: TextWriter) : CodeWriter {
     override fun writeBeginStruct(structureModel : StructureModel, fields: ModelList<ParameterModel>) {
         out.start(0)
         out.a("""
+            private static long _size = -1;
+            public static long allocateStructure() {
+                if (_size < 0) {
+                    _size = new Fields().size();
+                    System.out.println("${structureModel.apiName} size: " + _size + " bytes");
+                }
+                return ch.bailu.gtk.type.CLib.allocate(_size);
+            }
+
             @com.sun.jna.Structure.FieldOrder({${getFields(fields)}})
             public static class Fields extends com.sun.jna.Structure {
                 public Fields() {

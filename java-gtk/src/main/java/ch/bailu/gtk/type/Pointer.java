@@ -37,6 +37,10 @@ public class Pointer extends Type implements CPointerInterface {
         return new Pointer(toCPointer(p));
     }
 
+    public static CPointer toCPointer(long p) {
+        return new CPointer(p);
+    }
+
     public static CPointer toCPointer(com.sun.jna.Pointer p) {
         return new CPointer(toNativePointer(p));
     }
