@@ -123,7 +123,7 @@ javadoc:
 $(jlib): $(clib) FORCE
 	./gradlew -q java-gtk:build -Pversion=$(VERSION)
 
-$(clib): $(gen_source_marker) $(gen_header_marker)
+$(clib): glue/src/main/c/*.c $(gen_source_marker) $(gen_header_marker)
 	make -j $(JOBS) -C glue VERSION=$(VERSION)
 
 $(gen_header_marker): $(gen_source_marker)

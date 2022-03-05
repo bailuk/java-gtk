@@ -24,12 +24,12 @@ public class App {
         //new Pixbufs(args);
         //new PangoTextMask(args);
         //new HelloWorldBoxed(args);
-        new ImageBridge(args);
+        //new ImageBridge(args);
         //new CustomDrawing(args);
         //new BuilderExample(args);
         //new ExampleApplication();
         //new Words(args);
-        //new HugeList();
+        new HugeList();
         //new AppLauncher();
         //new GlibLoop();
         //new GlibSettings();
