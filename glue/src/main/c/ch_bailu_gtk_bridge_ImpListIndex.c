@@ -47,7 +47,8 @@ static void list_index_get_property (GObject *object,
     } else {
         do {
             GObject *_glib__object = (GObject*) ((object));
-            GParamSpec *_glib__pspec = (GParamSpec*) ((pspec)); guint _glib__property_id = ((property_id));
+            GParamSpec *_glib__pspec = (GParamSpec*) ((pspec));
+            guint _glib__property_id = ((property_id));
             g_log (((gchar*) 0), G_LOG_LEVEL_WARNING, "%s:%d: invalid %s id %u for \"%s\" of type '%s' in '%s'", "src/main/c/ch_bailu_gtk_bridge_ImpListIndex.c", 64, ("property"), _glib__property_id, _glib__pspec->name, g_type_name ((((((GTypeClass*) (((GTypeInstance*) (_glib__pspec))->g_class))->g_type)))), (g_type_name ((((((GTypeClass*) (((GTypeInstance*) (_glib__object))->g_class))->g_type))))));
         } while (0);
     }
@@ -78,7 +79,7 @@ static void list_index_dispose (GObject *object)
 static gint ListIndex_private_offset;
 static void list_index_class_intern_init (gpointer klass) {
     list_index_parent_class = g_type_class_peek_parent (klass);
-    if (ListIndex_private_offset != 0) g_type_class_adjust_private_offset (klass, &ListIndex_private_offset);
+    if (ListIndex_private_offset != 0) g_type_class_adjust_private_offset (klass, &ListIndex_private_offset); // ???
 
 
     GObjectClass *object_class = ((((GObjectClass*) g_type_check_class_cast ((GTypeClass*) ((klass)), (((GType) ((20) << (2))))))));
@@ -122,7 +123,9 @@ static GType list_index_get_type_once (void) {
             (GTypeFlags) 0);
 
     const GInterfaceInfo g_implement_interface_info = {
-            (GInterfaceInitFunc)(void (*)(void)) list_index_iface_init, ((void *)0) , ((void *)0)
+            (GInterfaceInitFunc)(void (*)(void)) list_index_iface_init,
+            ((void *)0),
+            ((void *)0)
     };
 
 
