@@ -1,0 +1,36 @@
+name: Create and publish debian build container
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Log in to the container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v2
+        with:
+          images: ghcr.io/bailuk/java-gtk/gtk4-fedora
+
+      - name: Build and push build image
+        uses: docker/build-push-action@v2
+        with:
+          context: ci/fedora
+          push: true
+          tags: ghcr.io/bailuk/java-gtk/gtk4-fedora:latest,${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
