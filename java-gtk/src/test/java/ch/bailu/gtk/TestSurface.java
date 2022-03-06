@@ -1,5 +1,8 @@
 package ch.bailu.gtk;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 import org.junit.jupiter.api.Test;
 
 import ch.bailu.gtk.cairo.Cairo;
@@ -8,18 +11,8 @@ import ch.bailu.gtk.cairo.Format;
 import ch.bailu.gtk.cairo.Surface;
 import ch.bailu.gtk.type.Bytes;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.io.IOException;
-
 public class TestSurface {
-    static {
-        try {
-            GTK.init();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     @Test
     public void testSurface() {

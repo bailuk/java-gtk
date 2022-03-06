@@ -11,8 +11,7 @@ public class App {
 
     public static Str ID = null;
 
-    public static void main (String[] args) throws IOException {
-        GTK.init();
+    public static void main (String[] args)  {
         ID = new Str("org.gtk.example");
 
         Gtk.init();

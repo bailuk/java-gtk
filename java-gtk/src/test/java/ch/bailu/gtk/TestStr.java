@@ -4,19 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
 public class TestStr {
-    static {
-        try {
-            GTK.init();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     @Test
     public void testStr() {

@@ -5,6 +5,8 @@ import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Structure;
 
+import ch.bailu.gtk.gobject.InterfaceInfo;
+
 public class GObject {
     private static GObject.Api _API = null;
 
@@ -60,9 +62,11 @@ public class GObject {
         public Callback dispatchPropertiesChanged;
         public Callback notify;
         public Callback constructed;
-        long flags;
+        public long flags;
     }
 
+
+    @Structure.FieldOrder({"interface_init", "interface_finalize", "interface_data"})
     public static class InterfaceInfo extends Structure {
         public Callback interface_init;
         public long interface_finalize;

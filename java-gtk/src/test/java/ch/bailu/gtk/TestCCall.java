@@ -5,22 +5,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
+import ch.bailu.gtk.gdk.RGBA;
+import ch.bailu.gtk.gio.Application;
+import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.glib.Glib;
 import ch.bailu.gtk.glib.MainContext;
 import ch.bailu.gtk.glib.MainLoop;
 import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.Str;
+import ch.bailu.gtk.type.Strs;
 
 public class TestCCall {
-    static {
-        try {
-            GTK.init();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-/*
+
     @Test
     public void testRGBAMallocAndFileds() {
         RGBA rgba = new RGBA();
@@ -38,7 +34,7 @@ public class TestCCall {
         assertEquals(0.3f, rgba.getFieldGreen(),0f);
         assertEquals(0.4f, rgba.getFieldBlue(),0f);
     }
-*/
+
     private int i = 0;
     @Test
     public void testMainLoop()  {
@@ -64,11 +60,11 @@ public class TestCCall {
         loop.unref();
 
     }
-/*
+
     @Test
     public void testApplicationLoop() {
         final var app = new Application(new Str("com.example.test"), ApplicationFlags.FLAGS_NONE);
-        app.onActivate(() -> app.quit());
+        app.onActivate(app::quit);
         app.run(2, new Strs(new String[]{"test", "test"}));
-    }*/
+    }
 }

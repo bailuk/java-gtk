@@ -9,13 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.IOException;
 
 public class TestInt {
-    static {
-        try {
-            GTK.init();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 
         @Test
         public void testInt() {

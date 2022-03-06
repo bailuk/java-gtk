@@ -1,6 +1,6 @@
 # This project uses GNU Make as its main build system.
 # This is the top-level build file. It sticks to conventions expected by debuild.
-# It will call ./gradlew for java related builds and make -C glue to build C code.
+# It will call ./gradlew for java related builds.
 #
 # Usages:
 #
@@ -28,7 +28,6 @@ generator_jar = generator/build/libs/generator.jar
 gen_source_marker = build/gen-source.marker
 gen_header_marker = build/gen-header.marker
 
-clib = glue/build/libjava-gtk-$(VERSION).so
 jlib = java-gtk/build/libs/java-gtk-$(VERSION).jar
 
 ifdef DESTDIR
@@ -65,13 +64,11 @@ install_global: all uninstall
 
 clean:
 	./gradlew -q clean
-	make -C glue clean
 	- rm -rf build
 
 distclean: FORCE
 	- rm -rf .gradle
 	- rm -rf build
-	- rm -rf glue/build
 	- rm -rf java-gtk/build
 	- rm -rf generator/build
 	- rm -rf examples/build
@@ -122,9 +119,6 @@ javadoc:
 
 $(jlib): $(clib) FORCE
 	./gradlew -q java-gtk:build -Pversion=$(VERSION)
-
-$(clib): glue/src/main/c/*.c $(gen_source_marker) $(gen_header_marker)
-	make -j $(JOBS) -C glue VERSION=$(VERSION)
 
 $(gen_header_marker): $(gen_source_marker)
 	./gradlew -q java-gtk:classes

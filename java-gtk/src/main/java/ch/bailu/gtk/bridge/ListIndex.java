@@ -73,6 +73,7 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
     private static synchronized void registerInterface(long type) {
         System.out.println("ListIndex::registerInterface");
         GObject.InterfaceInfo info = new GObject.InterfaceInfo();
+        info.read();
         info.interface_init = interfaceInit;
         info.interface_data = 0;
         info.interface_finalize = 0;
@@ -90,6 +91,7 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
 
             GObject.ObjectClass objectClass = new GObject.ObjectClass(object_class);
 
+            //objectClass.read();
             objectClass.dispose = instaceDispose;
             objectClass.getProperty = getProperty;
             objectClass.setProperty = setProperty;
@@ -114,6 +116,7 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
             System.out.println("ListIndex::interfaceInit");
             GIO.GListModelInterface iface = new GIO.GListModelInterface(inst);
 
+            iface.read();
             iface.get_item      = getItem;
             iface.get_n_items   = getNItems;
             iface.get_item_type = getItemType;
@@ -160,10 +163,9 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
 
     public void setSize(int size) {
         System.out.println("ListIndex::setSize");
+
         instance.readField("size");
-
         int oldSize = instance.size;
-
         instance.size = size;
         instance.writeField("size");
 

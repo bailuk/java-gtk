@@ -1,22 +1,14 @@
 package ch.bailu.gtk;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
 import ch.bailu.gtk.type.Dbl;
 import ch.bailu.gtk.type.Dbls;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.io.IOException;
-
 public class TestDbl {
-    static {
-        try {
-            GTK.init();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     @Test
     public void testDbl() {
