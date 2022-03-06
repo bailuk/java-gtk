@@ -13,6 +13,19 @@ import ch.bailu.gtk.type.Sizes;
 import ch.bailu.jgtk.lib.GIO;
 import ch.bailu.jgtk.lib.GObject;
 
+/**
+ * A ListModel that provides indices for n items.
+ * Use this model to back a gtk.ListView with any
+ * Java data structure.
+ * @see ch.bailu.gtk.gtk.ListView (view for this model)
+ * see examples.HugeList for example usage
+ *
+ * ListIndex subclasses GObject and implements ListModel.
+ * This class provides a proof of concept for implementing and
+ * subclassing GObject structures with java-gtk.
+ * @see ch.bailu.gtk.gobject.Object (parent class)
+ * @see ch.bailu.gtk.gio.ListModel (interface)
+ */
 public class ListIndex extends ch.bailu.gtk.gobject.Object {
 
     private static final int PROP_ITEM_TYPE = 1;
@@ -44,13 +57,11 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
     }
 
     private static CPointer create(long type, String property_name, long property_value) {
-        System.out.println("ListIndex::create");
         return new CPointer(GObject.API().g_object_new(type, property_name, property_value, 0));
     }
 
     private static long type = 0;
     public synchronized static long getTypeID() {
-        System.out.println("ListIndex::getTypeID");
         if (type == 0) {
             type = registerClass();
             registerInterface(type);
@@ -85,14 +96,14 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
     private static Callback classInit = new Callback() {
         public void invoke(long klass) {
             System.out.println("ListIndex::classInit");
-            parentClass = GObject.API().g_type_class_peek(klass);
+            parentClass = GObject.API().g_type_class_peek_parent(klass);
 
             long object_class = GObject.API().g_type_check_class_cast(klass, PARENT_TYPE);
 
             GObject.ObjectClass objectClass = new GObject.ObjectClass(object_class);
 
             //objectClass.read();
-            objectClass.dispose = instaceDispose;
+            objectClass.dispose = instanceDispose;
             objectClass.getProperty = getProperty;
             objectClass.setProperty = setProperty;
 
@@ -131,39 +142,32 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
     };
     private static Callback getNItems = new Callback() {
         public int invoke(long inst) {
-            System.out.println("ListIndex::getNItems");
             return new ListIndex(toCPointer(inst)).getSize();
         }
     };
     private static Callback getItem = new Callback() {
         public long invoke(long inst, int position) {
-            System.out.println("ListIndex::cb::getItem");
             return new ListIndex(toCPointer(inst)).getItem(position).cast().getCPointer();
         }
     };
 
     public ListIndex getItem(int position) {
-        System.out.println("ListIndex::getItem");
         ListIndex result = new ListIndex(getSize());
         result.setIndex(position);
         return result;
     }
 
     public int getIndex() {
-        System.out.println("ListIndex::getIndex");
         instance.readField("index");
         return instance.index;
     }
 
     public int getSize() {
-        System.out.println("ListIndex::getSize");
         instance.readField("size");
         return instance.size;
     }
 
     public void setSize(int size) {
-        System.out.println("ListIndex::setSize");
-
         instance.readField("size");
         int oldSize = instance.size;
         instance.size = size;
@@ -174,7 +178,6 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
     }
 
     public void setIndex(int index) {
-        System.out.println("ListIndex::setIndex");
         instance.index = index;
         instance.writeField("index");
     }
@@ -182,40 +185,44 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
 
     private static Callback instanceInit = new Callback() {
         public void invoke(long inst) {
-            System.out.println("ListIndex::instanceInit");
             new ListIndex(toCPointer(inst)).initInstance();
         }
     };
 
     private void initInstance() {
-        System.out.println("ListIndex::initInstance");
         instance.index = 0;
         instance.size = 0;
         instance.writeField("index");
         instance.writeField("size");
     }
 
-    private static Callback instaceDispose = new Callback() {
-        public void invoke(long instance) {
-            System.out.println("ListIndex::instanceDispose (TODO)");
+    private static GObject.DisposeCallback instanceDispose = instance -> {
+        if (parentClass == 0) {
+            System.out.println("ListIndex::instanceDispose (no parent)");
+        } else {
+            GObject.ObjectClass pClass = new GObject.ObjectClass(parentClass);
+            pClass.readField("dispose");
+            pClass.dispose.invoke(instance);
         }
     };
 
     private static Callback setProperty = new Callback() {
         public void invoke(long object, int property_id, long value, long pspec) {
-            System.out.println("ListIndex::setProperty");
+            if (property_id != PROP_ITEM_TYPE) {
+                System.out.println("ListIndex::setProperty (unknown property");
+            }
         }
     };
 
     private static Callback getProperty = new Callback() {
         public void invoke(long object, int property_id, long value, long pspec) {
-            System.out.println("ListIndex::getProperty");
             if (property_id == PROP_ITEM_TYPE) {
                 GObject.API().g_value_set_gtype(value, getTypeID());
+            } else {
+                System.out.println("ListIndex::getProperty (unknown property");
             }
         }
     };
-
 
 
     public ListModel asListModel() {

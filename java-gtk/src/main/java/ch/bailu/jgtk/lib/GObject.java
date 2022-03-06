@@ -27,7 +27,7 @@ public class GObject {
                                          int instance_size,
                                          Callback instance_init,
                                          int flags);
-        long g_type_class_peek(long type);
+        long g_type_class_peek_parent(long type);
         long g_type_check_class_cast(long g_class, long is_a_type);
         void g_type_add_interface_static(long instance_type, long interface_type, InterfaceInfo info);
         long g_param_spec_gtype(String name, String nick, String blurb, long is_a_type, long flags);
@@ -57,7 +57,7 @@ public class GObject {
         public Callback constructor;
         public Callback setProperty;
         public Callback getProperty;
-        public Callback dispose;
+        public DisposeCallback dispose;
         public Callback finalize;
         public Callback dispatchPropertiesChanged;
         public Callback notify;
@@ -66,6 +66,9 @@ public class GObject {
     }
 
 
+    public interface DisposeCallback extends Callback {
+        void invoke(long pointer);
+    }
     @Structure.FieldOrder({"interface_init", "interface_finalize", "interface_data"})
     public static class InterfaceInfo extends Structure {
         public Callback interface_init;
