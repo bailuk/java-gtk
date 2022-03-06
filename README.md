@@ -1,4 +1,5 @@
-[![Build inside container](https://github.com/bailuk/java-gtk/actions/workflows/build-on-container.yml/badge.svg)](https://github.com/bailuk/java-gtk/actions/workflows/build-on-container.yml)
+[![Build inside container](https://github.com/bailuk/java-gtk/actions/workflows/build-on-debian.yml/badge.svg)](https://github.com/bailuk/java-gtk/actions/workflows/build-on-debian.yml)
+[![Build inside container](https://github.com/bailuk/java-gtk/actions/workflows/build-on-fedora.yml/badge.svg)](https://github.com/bailuk/java-gtk/actions/workflows/build-on-fedora.yml)
 
 # Java-GTK
 Experimental GTK 4 bindings for Java.

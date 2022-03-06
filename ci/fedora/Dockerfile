@@ -6,7 +6,7 @@
 # => ./clone-and-build.sh
 
 FROM docker.io/fedora:35
-LABEL version="0.2"
+LABEL version="0.3"
 
 ENV JAVA_TOOL_OPTIONS "-Dfile.encoding=UTF8"
 
@@ -18,5 +18,6 @@ RUN dnf -y install gtk4
 RUN dnf -y install java-11-openjdk
 RUN dnf -y install java-11-openjdk-devel
 RUN dnf -y install git
+RUN dnf -y install make
 RUN dnf -y install libadwaita
 RUN dnf -y clean all
