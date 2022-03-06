@@ -1,5 +1,7 @@
 package ch.bailu.gtk.type;
 
+import ch.bailu.jgtk.lib.CLib;
+
 public class ImpBytes {
     public static long createBytes(byte[] bytes) {
         long result = CLib.API().malloc(bytes.length);

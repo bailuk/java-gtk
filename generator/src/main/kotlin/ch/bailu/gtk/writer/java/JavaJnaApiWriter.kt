@@ -145,7 +145,7 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
                 }
                 
                 public void destroy() {
-                     ch.bailu.gtk.type.CLib.API().free(getCPointer());
+                     ch.bailu.jgtk.lib.CLib.API().free(getCPointer());
                 }
             """, 4)
             out.end(1)

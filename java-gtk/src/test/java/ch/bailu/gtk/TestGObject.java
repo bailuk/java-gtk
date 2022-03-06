@@ -22,5 +22,6 @@ public class TestGObject {
     @Test void testGObject() {
         assertEquals(GTK.TRUE,  Gobject.signalIsValidName(new Str("activate")));
         assertEquals(GTK.FALSE, Gobject.signalIsValidName(new Str("äctivate")));
+        assertEquals((20) << (2), ch.bailu.gtk.gobject.Object.getTypeID());
     }
 }

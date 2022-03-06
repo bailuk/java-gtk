@@ -1,5 +1,7 @@
 package ch.bailu.gtk.type;
 
+import ch.bailu.jgtk.lib.CLib;
+
 public class ImpUtil {
     public static long createPointerArray(long[] pointers) {
         long size = (long) pointers.length * Long.BYTES;

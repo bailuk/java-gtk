@@ -1,4 +1,4 @@
-package ch.bailu.gtk.type;
+package ch.bailu.jgtk.lib;
 
 import com.sun.jna.Callback;
 import com.sun.jna.Library;
@@ -50,7 +50,7 @@ public class GObject {
             super(ch.bailu.gtk.type.Pointer.toJnaPointer(_self));
         }
 
-        public long gtype; // TODO size of gtype?
+        public long gtype;
         public long construct_properties;
         public Callback constructor;
         public Callback setProperty;
@@ -61,7 +61,6 @@ public class GObject {
         public Callback notify;
         public Callback constructed;
         long flags;
-        //long[6] dummy;
     }
 
     public static class InterfaceInfo extends Structure {

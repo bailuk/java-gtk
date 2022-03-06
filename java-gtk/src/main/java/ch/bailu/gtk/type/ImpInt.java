@@ -1,5 +1,7 @@
 package ch.bailu.gtk.type;
 
+import ch.bailu.jgtk.lib.CLib;
+
 public class ImpInt {
 
     public static long createInt(int value) {

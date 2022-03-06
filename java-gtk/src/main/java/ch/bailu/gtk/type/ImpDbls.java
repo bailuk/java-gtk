@@ -1,5 +1,7 @@
 package ch.bailu.gtk.type;
 
+import ch.bailu.jgtk.lib.CLib;
+
 public class ImpDbls {
 
     public static long createDoubleArray(double[] doubles) {

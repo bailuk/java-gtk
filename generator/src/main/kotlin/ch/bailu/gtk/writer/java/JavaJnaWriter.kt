@@ -101,7 +101,7 @@ class JavaJnaWriter(private val out: TextWriter) : CodeWriter {
                     _size = new Fields().size();
                     System.out.println("${structureModel.apiName} size: " + _size + " bytes");
                 }
-                return ch.bailu.gtk.type.CLib.allocate(_size);
+                return ch.bailu.jgtk.lib.CLib.allocate(_size);
             }
 
             @com.sun.jna.Structure.FieldOrder({${getFields(fields)}})

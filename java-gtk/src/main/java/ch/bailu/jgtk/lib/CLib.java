@@ -1,4 +1,4 @@
-package ch.bailu.gtk.type;
+package ch.bailu.jgtk.lib;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;
