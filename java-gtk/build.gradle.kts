@@ -55,7 +55,7 @@ dependencies {
     api("com.google.code.findbugs:jsr305:3.0.2")
 
     api("net.java.dev.jna:jna:5.10.0")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
 }
 
 

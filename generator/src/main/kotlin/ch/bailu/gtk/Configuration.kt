@@ -30,7 +30,7 @@ object Configuration  {
                 NamespaceConfig("GLib-2.0.gir",       "glib-2.0",       GtkDocUrl("glib")),
                 NamespaceConfig("Pango-1.0.gir",      "pango-1.0",      GtkDocUrl("Pango")),
                 NamespaceConfig("GdkPixbuf-2.0.gir",  "gdk_pixbuf-2.0", GtkDocUrl("gdk-pixbuf")),
-                NamespaceConfig("Adw-1.gir",          "libadwaita-1",   StaticUrl("https://gnome.pages.gitlab.gnome.org/libadwaita/doc/")))
+                NamespaceConfig("Adw-1.gir",          "adwaita-1",      StaticUrl("https://gnome.pages.gitlab.gnome.org/libadwaita/doc/")))
 
 
     fun createJavaDocConfig(out: Writer): JavaDoc {
