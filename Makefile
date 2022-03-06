@@ -44,9 +44,8 @@ else
 endif
 
 m2_dir = $(m2_repo)/ch/bailu/java-gtk/
-clib_target = $(DESTDIR)/usr/lib/jni
 
-all: $(clib) $(jlib)
+all: $(jlib)
 
 
 install: $(install_target)
@@ -58,9 +57,6 @@ install_local: all uninstall
 
 install_global: all uninstall
 	./gradlew -q publishToMavenLocal -Dmaven.repo.local=$(m2_repo) -Pversion=$(VERSION) -PjarType=shared
-	mkdir -p $(clib_target)
-	cp $(clib) $(clib_target)/
-
 
 clean:
 	./gradlew -q clean
@@ -90,8 +86,6 @@ dist-nogen:
 distcheck:
 	echo "distcheck"
 
-clib: $(clib)
-
 examples: $(jlib)
 	./gradlew examples:build -Pversion=$(VERSION)
 
@@ -117,7 +111,7 @@ javadoc:
 	mkdir javadoc
 
 
-$(jlib): $(clib) FORCE
+$(jlib): gen FORCE
 	./gradlew -q java-gtk:build -Pversion=$(VERSION)
 
 $(gen_header_marker): $(gen_source_marker)

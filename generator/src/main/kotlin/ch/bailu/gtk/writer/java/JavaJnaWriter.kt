@@ -146,7 +146,7 @@ class JavaJnaWriter(private val out: TextWriter) : CodeWriter {
 
             static Instance INST() {
                 if (INSTANCE == null) {
-                    INSTANCE = com.sun.jna.Native.load("${namespaceModel.namespaceConfig.pkgConfigName}", Instance.class);
+                    INSTANCE = com.sun.jna.Native.load("${namespaceModel.namespaceConfig.library}", Instance.class);
                 }
                 return INSTANCE;
             }

@@ -4,7 +4,7 @@ import ch.bailu.gtk.Configuration
 import java.io.File
 import java.io.IOException
 
-data class NamespaceConfig(val girFile: String, val docUrl: DocUrl, val pkgConfigName: String? = null) {
+data class NamespaceConfig(val girFile: String, val library: String, val docUrl: DocUrl) {
 
     fun getFile(): File {
         var result = File(Configuration.GIR_DIR_CUSTOM, girFile)
@@ -22,17 +22,5 @@ data class NamespaceConfig(val girFile: String, val docUrl: DocUrl, val pkgConfi
         }
         println("  --> ${type}: ${result}")
         return result
-    }
-
-    fun notAvailable(): Boolean {
-        if (pkgConfigName == null) {
-            return false
-        }
-        val error = ProcessBuilder("pkg-config", pkgConfigName)
-                        .redirectError(ProcessBuilder.Redirect.INHERIT)
-                        .redirectOutput(ProcessBuilder.Redirect.INHERIT)
-                        .start()
-                        .waitFor()
-        return error != 0
     }
 }

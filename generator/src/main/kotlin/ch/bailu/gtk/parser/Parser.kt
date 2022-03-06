@@ -11,16 +11,12 @@ import org.xmlpull.v1.XmlPullParserFactory
 import java.io.IOException
 import java.io.Reader
 
-class Parser {
+class Parser(namespaceConfig: NamespaceConfig, builder: BuilderInterface) {
 
-    constructor(namespaceConfig: NamespaceConfig, builder: BuilderInterface, noStubsNeeded: Boolean) {
+    init {
         var reader: Reader? = null
         try {
-            if (!noStubsNeeded) {
-                println("Generating error stubs for ${namespaceConfig.pkgConfigName} as pkg-config couldn't find the library!")
-            }
             reader = getReader(namespaceConfig.getFile())
-            builder.buildErrorStubs(!noStubsNeeded);
             parse(getParser(reader), DocumentTag(builder, namespaceConfig))
         } finally {
             reader?.close()
@@ -46,7 +42,7 @@ class Parser {
         var tag = rootTag
         while (parser.eventType != XmlPullParser.END_DOCUMENT) {
             if (parser.eventType == XmlPullParser.START_TAG) {
-                tag = tag.getChild(toPrefixed(parser.name, parser.prefix));
+                tag = tag.getChild(toPrefixed(parser.name, parser.prefix))
                 for (i in 0 until parser.attributeCount) {
                     tag.setAttribute(toPrefixed(parser.getAttributeName(i), parser.getAttributePrefix(i)), parser.getAttributeValue(i))
                 }
@@ -64,7 +60,7 @@ class Parser {
 
     private fun toPrefixed(name: String, prefix: String?) : String {
         if (prefix == null) {
-            return name;
+            return name
         }
         return "$prefix:$name"
     }

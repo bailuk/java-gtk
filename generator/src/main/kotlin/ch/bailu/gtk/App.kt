@@ -9,7 +9,10 @@ import ch.bailu.gtk.table.AliasTable
 import ch.bailu.gtk.table.CallbackTable
 import ch.bailu.gtk.table.StructureTable
 import org.xmlpull.v1.XmlPullParserException
-import java.io.*
+import java.io.BufferedWriter
+import java.io.FileWriter
+import java.io.IOException
+import java.io.Writer
 
 
 fun main(args: Array<String>) {
@@ -32,7 +35,7 @@ fun main(args: Array<String>) {
 
 @Throws(IOException::class, XmlPullParserException::class)
 fun parse(builder: BuilderInterface) {
-    Configuration.NAMESPACES.forEach {Parser(it, builder, !it.notAvailable())}
+    Configuration.NAMESPACES.forEach {Parser(it, builder)}
 }
 
 @Throws(IOException::class)
@@ -44,7 +47,7 @@ private fun logTables() {
 
 @Throws(IOException::class)
 private fun logTable(logable: Logable, file: String) {
-    println("  --> ${file}")
+    println("  --> $file")
     var out: Writer? = null
     try {
         out = BufferedWriter(FileWriter(file))

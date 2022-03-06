@@ -24,17 +24,16 @@ class Configuration @Throws(RuntimeException::class) private constructor(args: A
         const val LOG_CALLBACK_TABLE_FILE = "build/callback_table.out"
 
         val NAMESPACES = arrayOf(
-                    NamespaceConfig("GObject-2.0.gir",    GtkDocUrl("gobject"), "gobject-2.0"),
-                    NamespaceConfig("Gtk-4.0.gir",        GtkDocUrl("gtk4"), "gtk-4"),
-                    NamespaceConfig("Gio-2.0.gir",        GtkDocUrl("gio"), "gio-2.0"),
-                    NamespaceConfig("Gdk-4.0.gir",        GtkDocUrl("gdk4"), "gtk-4"),
-                    NamespaceConfig("PangoCairo-1.0.gir", GtkDocUrl("PangoCairo"), "pangocairo-1.0"),
-                    NamespaceConfig("cairo-custom.gir",   StaticUrl("https://www.cairographics.org/manual/"), "cairo"),
-                    NamespaceConfig("GLib-2.0.gir",       GtkDocUrl("glib"), "glib-2.0"),
-                    //NamespaceConfig("Atk-1.0.gir",        GtkDocUrl("atk"), "atk"),
-                    NamespaceConfig("Pango-1.0.gir",      GtkDocUrl("Pango"), "pango-1.0"),
-                    NamespaceConfig("GdkPixbuf-2.0.gir",  GtkDocUrl("gdk-pixbuf"), "gdk_pixbuf-2.0"),
-                    NamespaceConfig("Adw-1.gir",          StaticUrl("https://gnome.pages.gitlab.gnome.org/libadwaita/doc/"), "libadwaita-1"))
+                    NamespaceConfig("GObject-2.0.gir",    "gobject-2.0",    GtkDocUrl("gobject")),
+                    NamespaceConfig("Gtk-4.0.gir",        "gtk-4",          GtkDocUrl("gtk4")),
+                    NamespaceConfig("Gio-2.0.gir",        "gio-2.0",        GtkDocUrl("gio")),
+                    NamespaceConfig("Gdk-4.0.gir",        "gtk-4",          GtkDocUrl("gdk4")),
+                    NamespaceConfig("PangoCairo-1.0.gir", "pangocairo-1.0", GtkDocUrl("PangoCairo")),
+                    NamespaceConfig("cairo-custom.gir",   "cairo",          StaticUrl("https://www.cairographics.org/manual/")),
+                    NamespaceConfig("GLib-2.0.gir",       "glib-2.0",       GtkDocUrl("glib")),
+                    NamespaceConfig("Pango-1.0.gir",      "pango-1.0",      GtkDocUrl("Pango")),
+                    NamespaceConfig("GdkPixbuf-2.0.gir",  "gdk_pixbuf-2.0", GtkDocUrl("gdk-pixbuf")),
+                    NamespaceConfig("Adw-1.gir",          "libadwaita-1",   StaticUrl("https://gnome.pages.gitlab.gnome.org/libadwaita/doc/")))
 
 
 

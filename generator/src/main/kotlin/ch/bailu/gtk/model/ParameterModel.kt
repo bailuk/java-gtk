@@ -98,12 +98,6 @@ class ParameterModel(namespace: String, private val parameterTag: ParameterTag, 
             return !classType.isClass()
         }
 
-    val jniType: String
-        get() {
-            return jniConverter.getJniType()
-        }
-
-
     val gtkType: String
         get() {
             return cType.type
@@ -123,22 +117,6 @@ class ParameterModel(namespace: String, private val parameterTag: ParameterTag, 
                 apiType))
     }
 
-
-    val impDefaultConstant: String
-        get() {
-            return jniConverter.getImpDefaultConstant()
-        }
-
-    val jniSignatureID: String
-        get() {
-            return jniConverter.getJniSignatureID()
-        }
-
-
-    val jniCallbackMethodName: String
-        get() {
-            return jniConverter.getJniCallbackMethodName()
-        }
 
     val isCallback: Boolean
         get() {

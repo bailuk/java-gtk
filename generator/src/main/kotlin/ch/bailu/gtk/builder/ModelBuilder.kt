@@ -6,8 +6,6 @@ import ch.bailu.gtk.model.NamespaceModel
 import ch.bailu.gtk.parser.tag.*
 import ch.bailu.gtk.config.NamespaceConfig
 import ch.bailu.gtk.writer.*
-import ch.bailu.gtk.writer.java.JavaApiWriter
-import ch.bailu.gtk.writer.java.JavaImpWriter
 import ch.bailu.gtk.writer.java.JavaJnaApiWriter
 import ch.bailu.gtk.writer.java.JavaJnaWriter
 import java.io.IOException
@@ -16,7 +14,6 @@ import java.io.Writer
 class ModelBuilder : BuilderInterface {
 
     private var namespace: NamespaceModel = NamespaceModel()
-    private var errorStubs: Boolean = false
 
     override fun buildStructure(structure: StructureTag) {
         val model = StructureModel(structure, namespace)
@@ -24,33 +21,8 @@ class ModelBuilder : BuilderInterface {
         if (model.isSupported) {
             writeJavaFile(model)
             if (model.hasNativeCalls()) {
-                //writeCFile(model)
-                //writeJavaImpFile(model)
                 writeJavaJnaFile(model)
             }
-        }
-    }
-
-    @Throws(IOException::class)
-    private fun writeJavaImpFile(model: StructureModel) {
-        var out: Writer? = null
-        try {
-            out = getJavaImpWriter(model, namespace)
-            model.write(JavaImpWriter(TextWriter(out)))
-        } finally {
-            out?.close()
-        }
-    }
-
-    @Throws(IOException::class)
-    private fun writeCFile(model: StructureModel) {
-        var out: Writer? = null
-        try {
-            out = getCWriter(model, namespace)
-            if (!errorStubs)
-			    model.write(CWriter(TextWriter(out)))
-        } finally {
-            out?.close()
         }
     }
 
@@ -65,8 +37,6 @@ class ModelBuilder : BuilderInterface {
         var model = StructureModel(namespace)
         writeJavaFile(model)
         if (model.hasNativeCalls()) {
-            //writeCFile(model)
-            //writeJavaImpFile(model)
             writeJavaJnaFile(model)
         }
 
@@ -108,10 +78,5 @@ class ModelBuilder : BuilderInterface {
         } finally {
             out?.close()
         }
-    }
-
-
-    override fun buildErrorStubs(enabled: Boolean) {
-        this.errorStubs = enabled
     }
 }

@@ -40,8 +40,4 @@ class AliasBuilder : BuilderInterface{
     override fun buildCallback(callbackTag: CallbackTag) {
         add(namespace, callbackTag)
     }
-    
-    override fun buildErrorStubs(enabled: Boolean) {
-        // Ignore
-    }
 }

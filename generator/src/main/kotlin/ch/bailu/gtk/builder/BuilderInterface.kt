@@ -18,6 +18,4 @@ interface BuilderInterface {
 
     @Throws(IOException::class)
     fun buildCallback(callbackTag: CallbackTag)
-    
-    fun buildErrorStubs(enabled: Boolean)
 }
