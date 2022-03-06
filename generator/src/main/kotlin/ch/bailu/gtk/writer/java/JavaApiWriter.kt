@@ -6,7 +6,7 @@ import ch.bailu.gtk.writer.*
 import ch.bailu.gtk.writer.java_doc.JavaDoc
 import ch.bailu.gtk.writer.java_doc.JavaDocWriter
 
-class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
+class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
 
     private val javaDoc = JavaDocWriter(out, doc)
 
@@ -30,14 +30,14 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
 
     override fun writeClass(structureModel : StructureModel) {
         out.start(3)
-        //javaDoc.writeClass(structureModel, namespaceModel)
+        javaDoc.writeClass(structureModel)
         out.a("public class ${structureModel.apiName} extends ${structureModel.apiParentName} {\n")
         out.end(1)
     }
 
     override fun writeInterface(structureModel : StructureModel) {
         out.start(3)
-        //javaDoc.writeInterface(structureModel)
+        javaDoc.writeInterface(structureModel)
         out.a("public interface ${structureModel.apiName} {\n")
         out.end(1)
     }
@@ -51,7 +51,7 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
 
     override fun writeMethod(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(1)
-        //javaDoc.writeNativeMethod(structureModel, methodModel)
+        javaDoc.writeMethod(structureModel, methodModel)
         writeFunctionCall(structureModel, methodModel, true)
         out.end(1)
     }
@@ -69,7 +69,7 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
 
     override fun writeFunction(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(1)
-        //javaDoc.writeFunction(structureModel, methodModel)
+        javaDoc.writeFunction(structureModel, methodModel)
         writeFunctionCall(structureModel, methodModel, false)
         out.end(1)
     }
@@ -125,7 +125,7 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
 
     override fun writeInternalConstructor(structureModel : StructureModel) {
         out.start(1)
-        //javaDoc.writeInternalConstructor(structureModel)
+        javaDoc.writeInternalConstructor(structureModel)
         out.a("""
             public ${structureModel.apiName}(CPointer pointer) {
                 super(pointer);
@@ -138,7 +138,7 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
     override fun writeMallocConstructor(structureModel : StructureModel) {
         if (!structureModel.hasDefaultConstructor()) {
             out.start(1)
-            //javaDoc.writeMallocConstructor(structureModel)
+            javaDoc.writeMallocConstructor(structureModel)
             out.a("""
                 public ${structureModel.apiName}() {
                     super(toCPointer(${structureModel.jnaName}.allocateStructure()));
@@ -154,7 +154,7 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
 
     override fun writeConstructor(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(1)
-        //javaDoc.writeConstructor(structureModel, methodModel)
+        javaDoc.writeConstructor(structureModel, methodModel)
         out.a("""
             public ${structureModel.apiName}(${getSignature(methodModel.parameters)}) {
                 super(new CPointer(${structureModel.jnaName}.INST().${methodModel.gtkName}(${getFactoryCallSignature(methodModel)})));
@@ -165,7 +165,7 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
 
     override fun writeFactory(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(1)
-        //javaDoc.writeFactory(structureModel, methodModel)
+        javaDoc.writeFactory(structureModel, methodModel)
         out.a("""
             public static ${structureModel.apiName} ${methodModel.apiName}${structureModel.apiName}(${getSignature(methodModel.parameters)}) ${getThrowsExtension(methodModel)} {
                 CPointer pointerToObject = new CPointer(${structureModel.jnaName}.INST().${methodModel.gtkName}(${getFactoryCallSignature(methodModel)}));
@@ -187,7 +187,7 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
 
     override fun writeConstant(parameterModel : ParameterModel) {
         out.start(0)
-        //javaDoc.writeConstant(parameterModel)
+        javaDoc.writeConstant(parameterModel)
 
         var value = parameterModel.value
         var type  = parameterModel.apiType
@@ -238,7 +238,7 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         out.start(1)
         out.a("    public interface ${getJavaSignalInterfaceName(methodModel.name)} {\n")
 
-        //javaDoc.writeCallback(structureModel, methodModel)
+        javaDoc.writeCallback(structureModel, methodModel)
 
         out.a("""
                 ${methodModel.returnType.apiType} ${mName}(${getSignature(methodModel.parameters)});
@@ -385,7 +385,7 @@ class JavaJnaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         val setter = getJavaFieldSetterName(parameterModel.name)
 
         out.start(1)
-        //javaDoc.writeField(structureModel, parameterModel)
+        javaDoc.writeField(structureModel, parameterModel)
 
         if (parameterModel.isJavaNative) {
             out.a("""

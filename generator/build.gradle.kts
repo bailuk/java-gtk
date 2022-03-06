@@ -40,8 +40,7 @@ tasks.register("generate", JavaExec::class) {
 
     args(setOf(
             "-i", "/usr/share/gir-1.0",
-            "-j", "${project.getRootDir()}/java-gtk/build/generated/src/main/java/ch/bailu/gtk/",
-            "-c", "${project.getRootDir()}/glue/build/generated/src/main/c/"))
+            "-j", "${project.getRootDir()}/java-gtk/build/generated/src/main/java/ch/bailu/gtk/"))
 }
 
 tasks.compileJava {

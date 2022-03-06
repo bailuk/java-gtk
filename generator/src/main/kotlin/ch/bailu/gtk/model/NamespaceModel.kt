@@ -1,14 +1,12 @@
 package ch.bailu.gtk.model
 
 import ch.bailu.gtk.Configuration
-import ch.bailu.gtk.config.NamespaceConfig
+import ch.bailu.gtk.NamespaceConfig
 import ch.bailu.gtk.converter.RelativeNamespaceType
 import ch.bailu.gtk.parser.tag.MethodTag
-import ch.bailu.gtk.table.NamespaceTable
 import ch.bailu.gtk.parser.tag.NamespaceTag
 import ch.bailu.gtk.parser.tag.ParameterTag
-import java.io.File
-import kotlin.collections.ArrayList
+import ch.bailu.gtk.table.NamespaceTable
 
 class NamespaceModel(
     val namespace: String = "",
@@ -31,12 +29,6 @@ class NamespaceModel(
     constructor(type: RelativeNamespaceType) : this(type.namespace) {
         setSupported("Namespace", NamespaceTable.contains(namespace))
     }
-
-    val javaSourceDirectory: File
-        get() = File(Configuration.getInstance().javaBaseDir, namespace)
-    val cSourceDirectory: File
-        get() = Configuration.getInstance().cBaseDir
-
 
     val fullNamespace: String
         get() = if ("" == namespace) {

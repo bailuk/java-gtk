@@ -6,10 +6,10 @@ import ch.bailu.gtk.writer.CodeWriter
 import ch.bailu.gtk.writer.TextWriter
 import ch.bailu.gtk.writer.getJavaSignalInterfaceName
 
-class JavaJnaWriter(private val out: TextWriter) : CodeWriter {
+class JavaImpWriter(private val out: TextWriter) : CodeWriter {
 
     override fun writeStart(structureModel: StructureModel, namespaceModel: NamespaceModel) {
-        JavaJnaApiWriter.writeHeader(out, namespaceModel)
+        JavaApiWriter.writeHeader(out, namespaceModel)
         out.end(3)
     }
 

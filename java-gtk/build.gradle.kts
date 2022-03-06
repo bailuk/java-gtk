@@ -60,8 +60,6 @@ dependencies {
 
 
 tasks.test {
-    val libraryPath = file("${project(":glue").buildDir}/lib/main/debug").absolutePath
-    systemProperty( "java.library.path", libraryPath)
     useJUnitPlatform()
 }
 
@@ -73,28 +71,6 @@ sourceSets {
             val src = File(project(":java-gtk").buildDir,"generated/src/main/java")
             srcDir(src)
         }
-
-        resources {
-            val res = File("../glue/build/lib/")
-            srcDir(res)
-        }
-
-    }
-}
-
-
-/** exclude C library from source jar **/
-tasks.named("sourcesJar") {
-    if (this is org.gradle.jvm.tasks.Jar) {
-        exclude("/glue/")
-    }
-}
-
-
-tasks.jar {
-    // exclude C library from shared installation
-    if (getProperty("jarType", "resource") == "shared") {
-        exclude("/glue/*-*")
     }
 }
 

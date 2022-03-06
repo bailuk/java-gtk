@@ -27,8 +27,6 @@ jobs:
       run: ./gradlew generator:generate
     - name: Generate JNI headers
       run: ./gradlew java-gtk:classes
-    - name: Compile C code
-      run: make -C glue -j 3
     - name: Build library
       run: ./gradlew java-gtk:build
     - name: Build exsamples

@@ -1,7 +1,8 @@
 [![Build inside container](https://github.com/bailuk/java-gtk/actions/workflows/build-on-container.yml/badge.svg)](https://github.com/bailuk/java-gtk/actions/workflows/build-on-container.yml)
 
 # Java-GTK
-Experimental GTK 4 bindings for Java
+Experimental GTK 4 bindings for Java.
+It uses [Java Native Access (JNA)](https://github.com/java-native-access/jna) to access GTK libraries. 
 
 [![POC screenshot](screenshot.png)](examples/src/main/java/examples/ImageBridge.java)
 
@@ -9,7 +10,6 @@ Experimental GTK 4 bindings for Java
 ```java
 package examples;
 
-import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.ApplicationWindow;
@@ -18,8 +18,7 @@ import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
 public class HelloWorld {
-    public static void main(String[] args) throws IOException {
-        GTK.init();
+    public static void main(String[] args) {
         new HelloWorld(args);
     }
 
@@ -48,19 +47,13 @@ public class HelloWorld {
 
 ## Build
 `make gen`  
-Compiles and runs the code generator. This will generate Java and C code from [GIR](https://gi.readthedocs.io/en/latest/) files.
-Then generates JNI headers.
+Compiles and runs the code generator. This will generate Java code from [GIR](https://gi.readthedocs.io/en/latest/) files.
 - Input: `generator/src/resources/gir/*`
 - Output Java: `java-gtk/build/generated/src/main/java/[...]/*.java`
-- Output C: `glue/build/generated/src/main/c/*.c`
 - Configuration: [generator/src/main/kotlin/ch/bailu/gtk/Configuration.kt](generator/src/main/kotlin/ch/bailu/gtk/Configuration.kt)
 
 `make`  
-Compile C code and generate C library
-- Input: JNI headers and generated C code
-- Output: `glue/build/lib/[...]/libglue.so`
-
-And creates library, javadoc and run tests
+Creates library, javadoc and run tests
 - Output: jar, javadoc.jar and sources.jar in `libray/build/libs/` 
 
 `make run`  
@@ -68,15 +61,14 @@ Run the default demo application.
 The default demo application can be selected in [examples/src/main/java/examples/App.java](examples/src/main/java/examples/App.java)
 
 `make install`  
-Compile Java and C library, generate JAR archive and copy JAR archive as artifact to local Maven repository (`~/.m2/repository`).
+Compile Java library, generate JAR archive and copy JAR archive as artifact to local Maven repository (`~/.m2/repository`).
 
 ## Integration
 [SNAPSHOT builds](https://jitpack.io/#bailuk/java-gtk/main-SNAPSHOT) and [Javadoc](https://javadoc.jitpack.io/com/github/bailuk/java-gtk/main-SNAPSHOT/javadoc/) are available via [JitPack](https://jitpack.io).  
  
 ## Modules
-- `generator/`: Kotlin application that generates C and Java code from GIR files (xml parser -> model builder -> writer). GIR files are taken from Debian dev packages.
+- `generator/`: Kotlin application that generates Java code from GIR files (xml parser -> model builder -> writer). GIR files are taken from Debian dev packages.
 - `java-gtk/` : java-gtk library depends on generated Java code.
-- `glue/`     : JNI C-Library. Depends on generated C code.
 - `examples/` : Some examples to test the bindings. Mostly ported from [https://gitlab.gnome.org/GNOME/gtk/-/tree/main/demos/gtk-demo](https://gitlab.gnome.org/GNOME/gtk/-/tree/main/demos/gtk-demo).
  
 ## License

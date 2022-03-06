@@ -1,7 +1,7 @@
 package ch.bailu.gtk.builder
 
+import ch.bailu.gtk.NamespaceConfig
 import ch.bailu.gtk.parser.tag.*
-import ch.bailu.gtk.config.NamespaceConfig
 import java.io.IOException
 
 interface BuilderInterface {

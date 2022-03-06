@@ -20,16 +20,22 @@ class GtkDocUrl(val section: String): DocUrl() {
     }
 
     private fun getType(structureType: StructureType): String {
-        return if (structureType.compare(StructureType.Types.RECORD)) {
-            "struct"
-        } else if (structureType.compare(StructureType.Types.CLASS)) {
-            "class"
-        } else if (structureType.compare(StructureType.Types.INTERFACE)) {
-            "iface"
-        } else if (structureType.compare(StructureType.Types.CALLBACK)) {
-            "callback"
-        } else {
-            ""
+        return when {
+            structureType.compare(StructureType.Types.RECORD) -> {
+                "struct"
+            }
+            structureType.compare(StructureType.Types.CLASS) -> {
+                "class"
+            }
+            structureType.compare(StructureType.Types.INTERFACE) -> {
+                "iface"
+            }
+            structureType.compare(StructureType.Types.CALLBACK) -> {
+                "callback"
+            }
+            else -> {
+                ""
+            }
         }
     }
 }

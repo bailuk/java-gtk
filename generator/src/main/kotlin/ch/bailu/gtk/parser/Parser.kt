@@ -1,25 +1,21 @@
 package ch.bailu.gtk.parser
 
+import ch.bailu.gtk.Directories
+import ch.bailu.gtk.NamespaceConfig
 import ch.bailu.gtk.builder.BuilderInterface
 import ch.bailu.gtk.parser.tag.DocumentTag
 import ch.bailu.gtk.parser.tag.Tag
-import ch.bailu.gtk.config.NamespaceConfig
-import ch.bailu.gtk.writer.getReader
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
 import org.xmlpull.v1.XmlPullParserFactory
 import java.io.IOException
 import java.io.Reader
 
-class Parser(namespaceConfig: NamespaceConfig, builder: BuilderInterface) {
+class Parser(directories: Directories, namespaceConfig: NamespaceConfig, builder: BuilderInterface) {
 
     init {
-        var reader: Reader? = null
-        try {
-            reader = getReader(namespaceConfig.getFile())
-            parse(getParser(reader), DocumentTag(builder, namespaceConfig))
-        } finally {
-            reader?.close()
+        directories.getGirReader(namespaceConfig.girFile).use {
+            parse(getParser(it), DocumentTag(builder, namespaceConfig))
         }
     }
 

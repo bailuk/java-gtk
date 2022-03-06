@@ -1,14 +1,14 @@
 package ch.bailu.gtk.builder
 
+import ch.bailu.gtk.NamespaceConfig
 import ch.bailu.gtk.converter.NamespaceType
+import ch.bailu.gtk.parser.tag.*
 import ch.bailu.gtk.table.AliasTable.add
 import ch.bailu.gtk.table.AliasTable.convert
 import ch.bailu.gtk.table.CallbackTable.add
 import ch.bailu.gtk.table.EnumTable.add
 import ch.bailu.gtk.table.NamespaceTable.add
 import ch.bailu.gtk.table.StructureTable.add
-import ch.bailu.gtk.parser.tag.*
-import ch.bailu.gtk.config.NamespaceConfig
 
 class AliasBuilder : BuilderInterface{
     private var namespace = ""

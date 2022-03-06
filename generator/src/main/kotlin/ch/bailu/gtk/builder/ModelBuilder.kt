@@ -1,17 +1,17 @@
 package ch.bailu.gtk.builder
 
 import ch.bailu.gtk.Configuration
+import ch.bailu.gtk.Directories
+import ch.bailu.gtk.NamespaceConfig
 import ch.bailu.gtk.model.StructureModel
 import ch.bailu.gtk.model.NamespaceModel
 import ch.bailu.gtk.parser.tag.*
-import ch.bailu.gtk.config.NamespaceConfig
 import ch.bailu.gtk.writer.*
-import ch.bailu.gtk.writer.java.JavaJnaApiWriter
-import ch.bailu.gtk.writer.java.JavaJnaWriter
+import ch.bailu.gtk.writer.java.JavaApiWriter
+import ch.bailu.gtk.writer.java.JavaImpWriter
 import java.io.IOException
-import java.io.Writer
 
-class ModelBuilder : BuilderInterface {
+class ModelBuilder(val directories: Directories) : BuilderInterface {
 
     private var namespace: NamespaceModel = NamespaceModel()
 
@@ -60,23 +60,15 @@ class ModelBuilder : BuilderInterface {
 
     @Throws(IOException::class)
     private fun writeJavaFile(model: StructureModel) {
-        var out: Writer? = null
-        try {
-            out = getJavaWriter(model.apiName, namespace)
-            model.write(JavaJnaApiWriter(TextWriter(out), Configuration.createJavaDocConfig(out)))
-        } finally {
-            out?.close()
+        directories.getJavaWriter(model.apiName, namespace).use {
+            model.write(JavaApiWriter(TextWriter(it), Configuration.createJavaDocConfig(it)))
         }
     }
 
     @Throws(IOException::class)
     private fun writeJavaJnaFile(model: StructureModel) {
-        var out: Writer? = null
-        try {
-            out = getJavaJnaWriter(model, namespace)
-            model.write(JavaJnaWriter(TextWriter(out)))
-        } finally {
-            out?.close()
-        }
+       directories.getJavaJnaWriter(model, namespace).use {
+            model.write(JavaImpWriter(TextWriter(it)))
+       }
     }
 }
