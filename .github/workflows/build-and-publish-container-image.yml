@@ -25,7 +25,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v2
         with:
-          images: ghcr.io/bailuk/java-gtk/gtk4
+          images: ghcr.io/bailuk/java-gtk/gtk4-debian
 
       - name: Build and push build image
         uses: docker/build-push-action@v2
