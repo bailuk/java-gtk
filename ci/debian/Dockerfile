@@ -7,7 +7,7 @@
 
 
 FROM docker.io/debian:bookworm
-LABEL version="0.4"
+LABEL version="0.5"
 
 ENV JAVA_TOOL_OPTIONS "-Dfile.encoding=UTF8"
 

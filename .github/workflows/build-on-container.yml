@@ -1,4 +1,4 @@
-name: Build inside container
+name: Build on debian
 
 on:
   push:
