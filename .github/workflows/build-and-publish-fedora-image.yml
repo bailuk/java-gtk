@@ -1,4 +1,4 @@
-name: Create and publish debian build container
+name: Create and publish fedora build image
 
 on:
   workflow_dispatch:
