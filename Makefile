@@ -1,6 +1,6 @@
 # This project uses GNU Make as its main build system.
 # This is the top-level build file. It sticks to conventions expected by debuild.
-# It will call ./gradlew for java related builds and make -C glue to build C code.
+# It will call ./gradlew for java related builds.
 #
 # Usages:
 #
@@ -28,7 +28,6 @@ generator_jar = generator/build/libs/generator.jar
 gen_source_marker = build/gen-source.marker
 gen_header_marker = build/gen-header.marker
 
-clib = glue/build/libjava-gtk-$(VERSION).so
 jlib = java-gtk/build/libs/java-gtk-$(VERSION).jar
 
 ifdef DESTDIR
@@ -45,9 +44,8 @@ else
 endif
 
 m2_dir = $(m2_repo)/ch/bailu/java-gtk/
-clib_target = $(DESTDIR)/usr/lib/jni
 
-all: $(clib) $(jlib)
+all: $(jlib)
 
 
 install: $(install_target)
@@ -59,19 +57,14 @@ install_local: all uninstall
 
 install_global: all uninstall
 	./gradlew -q publishToMavenLocal -Dmaven.repo.local=$(m2_repo) -Pversion=$(VERSION) -PjarType=shared
-	mkdir -p $(clib_target)
-	cp $(clib) $(clib_target)/
-
 
 clean:
 	./gradlew -q clean
-	make -C glue clean
 	- rm -rf build
 
 distclean: FORCE
 	- rm -rf .gradle
 	- rm -rf build
-	- rm -rf glue/build
 	- rm -rf java-gtk/build
 	- rm -rf generator/build
 	- rm -rf examples/build
@@ -92,8 +85,6 @@ dist-nogen:
 
 distcheck:
 	echo "distcheck"
-
-clib: $(clib)
 
 examples: $(jlib)
 	./gradlew examples:build -Pversion=$(VERSION)
@@ -120,11 +111,8 @@ javadoc:
 	mkdir javadoc
 
 
-$(jlib): $(clib) FORCE
+$(jlib): gen FORCE
 	./gradlew -q java-gtk:build -Pversion=$(VERSION)
-
-$(clib): $(gen_source_marker) $(gen_header_marker)
-	make -j $(JOBS) -C glue VERSION=$(VERSION)
 
 $(gen_header_marker): $(gen_source_marker)
 	./gradlew -q java-gtk:classes

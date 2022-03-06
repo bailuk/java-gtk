@@ -1,20 +1,19 @@
 package ch.bailu.gtk.builder
 
 import ch.bailu.gtk.Configuration
+import ch.bailu.gtk.Directories
+import ch.bailu.gtk.NamespaceConfig
 import ch.bailu.gtk.model.StructureModel
 import ch.bailu.gtk.model.NamespaceModel
 import ch.bailu.gtk.parser.tag.*
-import ch.bailu.gtk.config.NamespaceConfig
 import ch.bailu.gtk.writer.*
 import ch.bailu.gtk.writer.java.JavaApiWriter
 import ch.bailu.gtk.writer.java.JavaImpWriter
 import java.io.IOException
-import java.io.Writer
 
-class ModelBuilder : BuilderInterface {
+class ModelBuilder(val directories: Directories) : BuilderInterface {
 
     private var namespace: NamespaceModel = NamespaceModel()
-    private var errorStubs: Boolean = false;
 
     override fun buildStructure(structure: StructureTag) {
         val model = StructureModel(structure, namespace)
@@ -22,53 +21,28 @@ class ModelBuilder : BuilderInterface {
         if (model.isSupported) {
             writeJavaFile(model)
             if (model.hasNativeCalls()) {
-                writeCFile(model)
-                writeJavaImpFile(model)
+                writeJavaJnaFile(model)
             }
-        }
-    }
-
-    @Throws(IOException::class)
-    private fun writeJavaImpFile(model: StructureModel) {
-        var out: Writer? = null
-        try {
-            out = getJavaImpWriter(model, namespace)
-            model.write(JavaImpWriter(TextWriter(out)))
-        } finally {
-            out?.close()
-        }
-    }
-
-    @Throws(IOException::class)
-    private fun writeCFile(model: StructureModel) {
-        var out: Writer? = null
-        try {
-            out = getCWriter(model, namespace)
-            if (!errorStubs)
-			    model.write(CWriter(TextWriter(out)))
-        } finally {
-            out?.close()
         }
     }
 
 
     override fun buildNamespaceStart(namespace: NamespaceTag, namespaceConfig: NamespaceConfig) {
-        this.namespace = NamespaceModel(namespace)
+        this.namespace = NamespaceModel(namespace, namespaceConfig)
     }
 
     @Throws(IOException::class)
-    override fun buildNamespaceEnd(namespace: NamespaceTag) {
+    override fun buildNamespaceEnd() {
         // functions
         var model = StructureModel(namespace)
         writeJavaFile(model)
         if (model.hasNativeCalls()) {
-            writeCFile(model)
-            writeJavaImpFile(model)
+            writeJavaJnaFile(model)
         }
 
 
         // constants
-        model = StructureModel(NamespaceModel(namespace), namespace.getConstants())
+        model = StructureModel(this.namespace, namespace.constants)
         writeJavaFile(model)
     }
 
@@ -86,16 +60,15 @@ class ModelBuilder : BuilderInterface {
 
     @Throws(IOException::class)
     private fun writeJavaFile(model: StructureModel) {
-        var out: Writer? = null
-        try {
-            out = getJavaWriter(model.apiName, namespace)
-            model.write(JavaApiWriter(TextWriter(out), Configuration.createJavaDocConfig(out)))
-        } finally {
-            out?.close()
+        directories.getJavaWriter(model.apiName, namespace).use {
+            model.write(JavaApiWriter(TextWriter(it), Configuration.createJavaDocConfig(it)))
         }
     }
-    
-    override fun buildErrorStubs(build: Boolean) {
-        this.errorStubs = build;  
+
+    @Throws(IOException::class)
+    private fun writeJavaJnaFile(model: StructureModel) {
+       directories.getJavaJnaWriter(model, namespace).use {
+            model.write(JavaImpWriter(TextWriter(it)))
+       }
     }
 }

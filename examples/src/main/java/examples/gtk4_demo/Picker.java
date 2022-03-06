@@ -2,7 +2,6 @@ package examples.gtk4_demo;
 
 import java.util.Arrays;
 
-import ch.bailu.gtk.Callback;
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.gdk.Gdk;
 import ch.bailu.gtk.gdk.RGBA;
@@ -82,7 +81,7 @@ public class Picker {
         fontChooser.setFilterFunc((family, face, data) -> {
             Str familyStr = family.getName();
             return Arrays.asList(FONT_FAMILIES).contains(familyStr.toString()) ? GTK.TRUE : GTK.FALSE;
-        }, new Callback.EmitterID(), null);
+        }, null, null);
 
         table.attach(fontPicker, 2,1,1,1);
 
@@ -108,7 +107,7 @@ public class Picker {
         da.setDrawFunc((drawing_area, cr, width, height, user_data) -> {
             Gdk.cairoSetSourceRgba(cr, rgba);
             cr.paint();
-        }, new Callback.EmitterID(), null);
+        }, null, null);
 
         table.attach(da,1,4,1,1);
 

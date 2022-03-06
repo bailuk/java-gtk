@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Set;
 
-import ch.bailu.gtk.Callback;
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.exception.AllocationError;
 import ch.bailu.gtk.gio.ApplicationFlags;
@@ -32,6 +31,7 @@ import ch.bailu.gtk.gtk.Window;
 import ch.bailu.gtk.helper.ActionHelper;
 import ch.bailu.gtk.helper.BuilderHelper;
 import ch.bailu.gtk.type.Str;
+import examples.App;
 
 /**
  * https://docs.gtk.org/gtk4/getting_started.html
@@ -39,7 +39,7 @@ import ch.bailu.gtk.type.Str;
 public class ExampleApplication {
 
     private final static Str APP_ID = new Str("org.gtk.example");
-    private final static String BASE_PATH = "src/main/java/examples/gtk4_tutorial/";
+    private final static String BASE_PATH = App.path("examples/src/main/java/examples/gtk4_tutorial").toString();
 
     public ExampleApplication() {
         final var app = new Application(APP_ID, ApplicationFlags.FLAGS_NONE);
@@ -166,7 +166,6 @@ public class ExampleApplication {
         while (child.isNotNull()) {
             //var text = new Button(child.cast()).getLabel();
             words.remove(child);
-            Callback.remove(child);
             //text.destroy();
 
             child = words.getFirstChild();

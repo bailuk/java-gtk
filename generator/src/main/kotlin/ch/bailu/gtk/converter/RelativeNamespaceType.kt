@@ -2,7 +2,7 @@ package ch.bailu.gtk.converter
 
 class RelativeNamespaceType(currentNamespace: String, namespaceType: NamespaceType) {
     private val type: NamespaceType = namespaceType
-    private val hasCurrentNamespace = namespaceType.getNamespace() == currentNamespace
+    private val hasCurrentNamespace = namespaceType.namespace == currentNamespace
 
 
     constructor(currentNamespace: String, typeName: String)
@@ -17,11 +17,9 @@ class RelativeNamespaceType(currentNamespace: String, namespaceType: NamespaceTy
         return hasCurrentNamespace
     }
 
-    fun getNamespace(): String {
-        return type.getNamespace()
-    }
+    val namespace: String
+        get() = type.namespace
 
-    fun getName(): String {
-        return type.getName()
-    }
+    val name: String
+        get() = type.name
 }

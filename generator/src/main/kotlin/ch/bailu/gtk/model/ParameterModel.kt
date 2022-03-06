@@ -79,7 +79,7 @@ class ParameterModel(namespace: String, private val parameterTag: ParameterTag, 
                 return getJavaSignalInterfaceName(callbackModel.name)
             }
             return if (classType.isClass()) {
-                classType.getFullName()
+                classType.fullName
             } else jType.getType()
         }
 
@@ -97,12 +97,6 @@ class ParameterModel(namespace: String, private val parameterTag: ParameterTag, 
         get() {
             return !classType.isClass()
         }
-
-    val jniType: String
-        get() {
-            return jniConverter.getJniType()
-        }
-
 
     val gtkType: String
         get() {
@@ -123,22 +117,6 @@ class ParameterModel(namespace: String, private val parameterTag: ParameterTag, 
                 apiType))
     }
 
-
-    val impDefaultConstant: String
-        get() {
-            return jniConverter.getImpDefaultConstant()
-        }
-
-    val jniSignatureID: String
-        get() {
-            return jniConverter.getJniSignatureID()
-        }
-
-
-    val jniCallbackMethodName: String
-        get() {
-            return jniConverter.getJniCallbackMethodName()
-        }
 
     val isCallback: Boolean
         get() {

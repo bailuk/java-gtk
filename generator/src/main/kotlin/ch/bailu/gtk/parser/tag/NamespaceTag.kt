@@ -19,7 +19,7 @@ class NamespaceTag(parent: TagWithParent): NamedWithDocTag(parent) {
 
     @Throws(IOException::class)
     override fun end() {
-        getBuilder().buildNamespaceEnd(this)
+        getBuilder().buildNamespaceEnd()
     }
 
     override fun getChild(name: String): TagWithParent {

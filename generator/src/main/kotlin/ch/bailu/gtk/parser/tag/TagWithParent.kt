@@ -1,14 +1,11 @@
 package ch.bailu.gtk.parser.tag
 
+import ch.bailu.gtk.NamespaceConfig
 import ch.bailu.gtk.builder.BuilderInterface
-import ch.bailu.gtk.config.NamespaceConfig
 
-abstract class TagWithParent (parent: Tag): Tag() {
-
-    private var parent = parent
+abstract class TagWithParent (private var parent: Tag): Tag() {
 
     override fun getParent(): Tag { return parent}
-
 
     override fun getBuilder(): BuilderInterface {
         return parent.getBuilder()

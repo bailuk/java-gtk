@@ -1,4 +1,4 @@
-name: Build inside container
+name: Build on debian
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: ghcr.io/bailuk/java-gtk/gtk4:latest
+      image: ghcr.io/bailuk/java-gtk/gtk4-debian:latest
 
     steps:
       - name: Checkout repository

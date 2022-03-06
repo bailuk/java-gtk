@@ -1,52 +1,40 @@
 package ch.bailu.gtk.model
 
 import ch.bailu.gtk.Configuration
+import ch.bailu.gtk.NamespaceConfig
 import ch.bailu.gtk.converter.RelativeNamespaceType
-import ch.bailu.gtk.table.NamespaceTable
+import ch.bailu.gtk.parser.tag.MethodTag
 import ch.bailu.gtk.parser.tag.NamespaceTag
-import java.io.File
-import java.util.*
+import ch.bailu.gtk.parser.tag.ParameterTag
+import ch.bailu.gtk.table.NamespaceTable
 
-class NamespaceModel : Model {
-    private val includes: MutableList<String> = ArrayList()
-    private val namespace: String
+class NamespaceModel(
+    val namespace: String = "",
+    val namespaceConfig: NamespaceConfig = Configuration.NAMESPACES[0],
+    val functions: List<MethodTag> = ArrayList(),
+    val constants: List<ParameterTag> = ArrayList()
+) : Model() {
 
-    constructor(namespace: NamespaceTag) {
-        this.namespace = namespace.getName().lowercase()
-        for (i in namespace.getIncludes()) {
+    val includes: MutableList<String> = ArrayList()
+
+    constructor(tag: NamespaceTag, config: NamespaceConfig) :
+            this(tag.getName().lowercase(), config, tag.getFunctions(), tag.getConstants()) {
+
+        for (i in tag.getIncludes()) {
             includes.add(i.getName())
         }
-        setSupported("Namespace", NamespaceTable.contains(this.namespace))
-    }
-
-    constructor() {
-        namespace = ""
-        setSupported("", true)
-    }
-
-    constructor(type: RelativeNamespaceType) {
-        namespace = type.getNamespace()
         setSupported("Namespace", NamespaceTable.contains(namespace))
     }
 
-    val javaSourceDirectory: File
-        get() = File(Configuration.getInstance().javaBaseDir, namespace)
-    val cSourceDirectory: File
-        get() = Configuration.getInstance().cBaseDir
-
-    fun getIncludes(): List<String> {
-        return includes
+    constructor(type: RelativeNamespaceType) : this(type.namespace) {
+        setSupported("Namespace", NamespaceTable.contains(namespace))
     }
 
-    fun getNamespace(): String {
-        return namespace
-    }
-
-    fun getFullNamespace(): String {
-        return if ("" == namespace) {
+    val fullNamespace: String
+        get() = if ("" == namespace) {
             Configuration.BASE_NAME_SPACE_NODOT
         } else {
             Configuration.BASE_NAME_SPACE_DOT + namespace
         }
-    }
+
 }

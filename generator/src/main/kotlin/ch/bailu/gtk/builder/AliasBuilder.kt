@@ -1,14 +1,14 @@
 package ch.bailu.gtk.builder
 
+import ch.bailu.gtk.NamespaceConfig
 import ch.bailu.gtk.converter.NamespaceType
+import ch.bailu.gtk.parser.tag.*
 import ch.bailu.gtk.table.AliasTable.add
 import ch.bailu.gtk.table.AliasTable.convert
 import ch.bailu.gtk.table.CallbackTable.add
 import ch.bailu.gtk.table.EnumTable.add
 import ch.bailu.gtk.table.NamespaceTable.add
 import ch.bailu.gtk.table.StructureTable.add
-import ch.bailu.gtk.parser.tag.*
-import ch.bailu.gtk.config.NamespaceConfig
 
 class AliasBuilder : BuilderInterface{
     private var namespace = ""
@@ -18,7 +18,7 @@ class AliasBuilder : BuilderInterface{
     }
 
     private fun convert(namespace: String, name: String): String {
-        return convert(NamespaceType(namespace, name)).getName()
+        return convert(NamespaceType(namespace, name)).name
     }
 
     override fun buildNamespaceStart(namespace: NamespaceTag, namespaceConfig: NamespaceConfig) {
@@ -26,7 +26,7 @@ class AliasBuilder : BuilderInterface{
         add(this.namespace, namespaceConfig)
     }
 
-    override fun buildNamespaceEnd(namespace: NamespaceTag) {}
+    override fun buildNamespaceEnd() {}
 
     override fun buildAlias(aliasTag: AliasTag) {
         add(namespace, aliasTag.getName(), aliasTag.getTypeName())
@@ -39,9 +39,5 @@ class AliasBuilder : BuilderInterface{
 
     override fun buildCallback(callbackTag: CallbackTag) {
         add(namespace, callbackTag)
-    }
-    
-    override fun buildErrorStubs(buildStubs: Boolean) {
-        // Ignore
     }
 }

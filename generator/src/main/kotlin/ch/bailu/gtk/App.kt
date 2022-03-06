@@ -9,21 +9,24 @@ import ch.bailu.gtk.table.AliasTable
 import ch.bailu.gtk.table.CallbackTable
 import ch.bailu.gtk.table.StructureTable
 import org.xmlpull.v1.XmlPullParserException
-import java.io.*
+import java.io.BufferedWriter
+import java.io.FileWriter
+import java.io.IOException
+import java.io.Writer
 
 
 fun main(args: Array<String>) {
     try {
-        Configuration.init(args)
+        val directories = Directories(args)
 
         println("==> fill tables")
-        parse(AliasBuilder())
+        parse(directories, AliasBuilder())
 
         println("==> log tables")
         logTables()
 
         println("==> build model and write code files")
-        parse(ModelBuilder())
+        parse(directories, ModelBuilder(directories))
 
     } catch (e: Exception) {
         e.printStackTrace()
@@ -31,25 +34,21 @@ fun main(args: Array<String>) {
 }
 
 @Throws(IOException::class, XmlPullParserException::class)
-fun parse(builder: BuilderInterface) {
-    Configuration.NAMESPACES.forEach {Parser(it, builder, !it.notAvailable())}
+fun parse(directories: Directories, builder: BuilderInterface) {
+    Configuration.NAMESPACES.forEach {Parser(directories, it, builder)}
 }
 
 @Throws(IOException::class)
 private fun logTables() {
     logTable(StructureTable, Configuration.LOG_STRUCTURE_TABLE_FILE)
-    logTable(AliasTable, Configuration.LOG_ALIAS_TABLE_FILE)
-    logTable(CallbackTable, Configuration.LOG_CALLBACK_TABLE_FILE)
+    logTable(AliasTable,     Configuration.LOG_ALIAS_TABLE_FILE)
+    logTable(CallbackTable,  Configuration.LOG_CALLBACK_TABLE_FILE)
 }
 
 @Throws(IOException::class)
 private fun logTable(logable: Logable, file: String) {
-    println("  --> ${file}")
-    var out: Writer? = null
-    try {
-        out = BufferedWriter(FileWriter(file))
-        logable.log(out)
-    } finally {
-        out?.close()
+    println("  --> $file")
+    BufferedWriter(FileWriter(file)).use {
+        logable.log(it)
     }
 }

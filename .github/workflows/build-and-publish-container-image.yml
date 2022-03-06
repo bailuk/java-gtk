@@ -1,4 +1,4 @@
-name: Create and publish a build container image
+name: Create and publish debian build container
 
 on:
   workflow_dispatch:
@@ -25,12 +25,12 @@ jobs:
         id: meta
         uses: docker/metadata-action@v2
         with:
-          images: ghcr.io/bailuk/java-gtk/gtk4
+          images: ghcr.io/bailuk/java-gtk/gtk4-debian
 
       - name: Build and push build image
         uses: docker/build-push-action@v2
         with:
           context: ci/debian
           push: true
-          tags: ghcr.io/bailuk/java-gtk/gtk4:latest,${{ steps.meta.outputs.tags }}
+          tags: ghcr.io/bailuk/java-gtk/gtk4-debian:latest,${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

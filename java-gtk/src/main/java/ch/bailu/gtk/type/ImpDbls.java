@@ -1,13 +1,36 @@
 package ch.bailu.gtk.type;
 
+import ch.bailu.jgtk.lib.CLib;
+
 public class ImpDbls {
 
-    public static native long createDoubleArray(double[] doubles);
-    public static native long createDoubleArrayFromFloats(float[] floats);
+    public static long createDoubleArray(double[] doubles) {
+        long result = CLib.API().malloc((long) doubles.length * Double.BYTES);
+        Pointer.toJnaPointer(result).write(0, doubles, 0, doubles.length);
+        return result;
+    }
 
-    public static native void setAt(long cPointer, int index, double value);
+    public static long createDoubleArrayFromFloats(float[] floats) {
+        long result = CLib.API().malloc((long) floats.length * Double.BYTES);
+        com.sun.jna.Pointer p = Pointer.toJnaPointer(result);
+        for (int i = 0; i< floats.length; i++) {
+            p.setDouble((long) i *Double.BYTES, floats[i]);
+        }
+        return result;
 
-    public static native long createDbl(double value);
+    }
 
-    public static native double getAt(long cPointer, int index);
+    public static void setAt(long cPointer, int index, double value) {
+        Pointer.toJnaPointer(cPointer).setDouble((long) index * Double.BYTES, value);
+    }
+
+    public static long createDbl(double value) {
+        long result = CLib.API().malloc(Double.BYTES);
+        Pointer.toJnaPointer(result).setDouble(0, value);
+        return result;
+    }
+
+    public static double getAt(long cPointer, int index) {
+        return Pointer.toJnaPointer(cPointer).getDouble((long) index * Double.BYTES);
+    }
 }

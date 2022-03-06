@@ -1,8 +1,13 @@
 package ch.bailu.gtk;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 
 import ch.bailu.gtk.gdk.RGBA;
+import ch.bailu.gtk.gio.Application;
+import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.glib.Glib;
 import ch.bailu.gtk.glib.MainContext;
 import ch.bailu.gtk.glib.MainLoop;
@@ -10,18 +15,7 @@ import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.io.IOException;
-
 public class TestCCall {
-    static {
-        try {
-            GTK.init();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Test
     public void testRGBAMallocAndFileds() {
@@ -51,6 +45,7 @@ public class TestCCall {
         final long start = System.currentTimeMillis();
         final var loop = new MainLoop(new MainContext(CPointer.NULL), GTK.TRUE);
         Glib.timeoutAdd(100, user_data -> {
+            System.out.println(i);
             i++;
             if (i==10) {
                 loop.quit();
@@ -61,15 +56,15 @@ public class TestCCall {
         assertEquals(0, i);
         loop.run();
         assertEquals(10, i);
-        assertEquals(true, System.currentTimeMillis() - start >= timeExpectMin);
+        assertTrue(System.currentTimeMillis() - start >= timeExpectMin);
         loop.unref();
 
     }
-/*
+
     @Test
     public void testApplicationLoop() {
         final var app = new Application(new Str("com.example.test"), ApplicationFlags.FLAGS_NONE);
-        app.onActivate(() -> app.quit());
+        app.onActivate(app::quit);
         app.run(2, new Strs(new String[]{"test", "test"}));
-    }*/
+    }
 }

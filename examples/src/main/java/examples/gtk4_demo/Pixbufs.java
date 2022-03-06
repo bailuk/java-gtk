@@ -1,6 +1,7 @@
 package examples.gtk4_demo;
 
-import ch.bailu.gtk.Callback;
+import java.io.File;
+
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.cairo.Context;
 import ch.bailu.gtk.exception.AllocationError;
@@ -19,9 +20,9 @@ import ch.bailu.gtk.gtk.DialogFlags;
 import ch.bailu.gtk.gtk.DrawingArea;
 import ch.bailu.gtk.gtk.MessageDialog;
 import ch.bailu.gtk.gtk.MessageType;
-import ch.bailu.gtk.gtk.Widget;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
+import examples.App;
 
 /*
     Pixbufs
@@ -30,17 +31,18 @@ import ch.bailu.gtk.type.Strs;
     Look at the Image demo for additional pixbuf usage examples.
 */
 public class Pixbufs {
-    private static final String BACKGROUND_NAME = "src/main/resources/background.jpg";
+    private static final File RES = App.path("examples/src/main/resources/");
+    private static final String BACKGROUND_NAME = "background.jpg";
 
-    private static final String IMAGE_NAMES[] = {
-            "src/main/resources/apple-red.png",
-            "src/main/resources/gnome-applets.png",
-            "src/main/resources/gnome-calendar.png",
-            "src/main/resources/gnome-foot.png",
-            "src/main/resources/gnome-gmush.png",
-            "src/main/resources/gnome-gimp.png",
-            "src/main/resources/gnome-gsame.png",
-            "src/main/resources/gnu-keys.png"
+    private static final String[] IMAGE_NAMES = {
+            "apple-red.png",
+            "gnome-applets.png",
+            "gnome-calendar.png",
+            "gnome-foot.png",
+            "gnome-gmush.png",
+            "gnome-gimp.png",
+            "gnome-gsame.png",
+            "gnu-keys.png"
     };
 
     /* Current frame */
@@ -51,7 +53,7 @@ public class Pixbufs {
     private int backWidth, backHeight;
 
     /* Images */
-    private final Pixbuf images[] = new Pixbuf[IMAGE_NAMES.length];
+    private final Pixbuf[] images = new Pixbuf[IMAGE_NAMES.length];
 
     /* Widgets */
     private DrawingArea da;
@@ -69,14 +71,18 @@ public class Pixbufs {
     }
 
     void loadPixbufs() throws AllocationError {
-        background = Pixbuf.newFromFilePixbuf(new Str(BACKGROUND_NAME));
+        background = loadPixbuf(BACKGROUND_NAME);
 
         backWidth = background.getWidth();
         backHeight = background.getHeight();
 
         for (int i = 0; i < images.length; i++) {
-            images[i] = Pixbuf.newFromFilePixbuf(new Str(IMAGE_NAMES[i]));
+            images[i] = loadPixbuf(IMAGE_NAMES[i]);
         }
+    }
+
+    Pixbuf loadPixbuf(String name) throws AllocationError {
+        return Pixbuf.newFromFilePixbuf(new Str(new File(RES, name).toString()));
     }
 
     int onDraw(Context cr) {
@@ -139,6 +145,7 @@ public class Pixbufs {
             k = 2.0 * k * k;
             k = Math.max(0.25, k);
 
+
             r1.setFieldX(xpos);
             r1.setFieldY(ypos);
             r1.setFieldWidth((int) (iw * k));
@@ -165,10 +172,10 @@ public class Pixbufs {
         return GlibConstants.SOURCE_CONTINUE;
     }
 
-    private Widget doPixbufs(ApplicationWindow window) {
+    private void doPixbufs(ApplicationWindow window) {
         window.setTitle(new Str("Pixbufs"));
         window.setResizable(GTK.FALSE);
-        System.out.println("Working Directory = " + System.getProperty("user.dir"));
+
         try  {
             loadPixbufs();
 
@@ -176,10 +183,10 @@ public class Pixbufs {
             da = new DrawingArea();
 
 
-            da.setDrawFunc((drawingArea, cr, width, height, userData) -> onDraw(cr), new Callback.EmitterID(), null);
+            da.setDrawFunc((drawingArea, cr, width, height, userData) -> onDraw(cr), null, data -> {});
             window.setChild(da);
             window.setSizeRequest(backWidth, backHeight);
-            window.addTickCallback((widget, frame_clock, user_data) -> onTick(frame_clock), new Callback.EmitterID(), data -> {});
+            window.addTickCallback((widget, frame_clock, user_data) -> onTick(frame_clock), null, data -> {});
 
         } catch (AllocationError e) {
             System.out.println(e.getMessage());
@@ -194,6 +201,5 @@ public class Pixbufs {
             dialog.show();
         }
         window.show();
-        return window;
     }
 }

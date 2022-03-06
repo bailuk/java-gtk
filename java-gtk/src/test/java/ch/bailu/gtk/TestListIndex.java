@@ -1,11 +1,8 @@
 package ch.bailu.gtk;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
 
 import ch.bailu.gtk.bridge.ListIndex;
 import ch.bailu.gtk.gio.ListModel;
@@ -14,13 +11,6 @@ import ch.bailu.gtk.gtk.SingleSelection;
 
 public class TestListIndex {
 
-    static {
-        try {
-            GTK.init();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Test
     public void testListIndex() {

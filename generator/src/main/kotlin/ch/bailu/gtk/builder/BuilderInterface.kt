@@ -1,7 +1,7 @@
 package ch.bailu.gtk.builder
 
+import ch.bailu.gtk.NamespaceConfig
 import ch.bailu.gtk.parser.tag.*
-import ch.bailu.gtk.config.NamespaceConfig
 import java.io.IOException
 
 interface BuilderInterface {
@@ -10,7 +10,7 @@ interface BuilderInterface {
     fun buildNamespaceStart(namespace: NamespaceTag, namespaceConfig: NamespaceConfig)
 
     @Throws(IOException::class)
-    fun buildNamespaceEnd(namespace: NamespaceTag)
+    fun buildNamespaceEnd()
     fun buildAlias(aliasTag: AliasTag)
 
     @Throws(IOException::class)
@@ -18,6 +18,4 @@ interface BuilderInterface {
 
     @Throws(IOException::class)
     fun buildCallback(callbackTag: CallbackTag)
-    
-    fun buildErrorStubs(enabled: Boolean)
 }

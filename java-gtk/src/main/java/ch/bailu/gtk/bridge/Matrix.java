@@ -25,5 +25,4 @@ public class Matrix {
                 transform.getTranslateY());
         return matrix;
     }
-
 }

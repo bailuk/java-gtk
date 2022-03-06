@@ -1,5 +1,6 @@
 package ch.bailu.gtk.model.compose
 
+import ch.bailu.gtk.model.NamespaceModel
 import ch.bailu.gtk.model.StructureModel
 import ch.bailu.gtk.model.list.ModelLists
 import ch.bailu.gtk.model.type.StructureType
@@ -18,11 +19,11 @@ abstract class CodeComposer {
             }
         }
     }
-    abstract fun compose(writer: CodeWriter, structureModel: StructureModel, models: ModelLists)
+    abstract fun compose(writer: CodeWriter, namespaceModel: NamespaceModel, structureModel: StructureModel, models: ModelLists)
 
-    fun write(writer: CodeWriter, structureModel: StructureModel, models: ModelLists) {
+    fun write(writer: CodeWriter, namespaceModel: NamespaceModel, structureModel: StructureModel, models: ModelLists) {
         writeStart(writer, structureModel)
-        compose(writer, structureModel, models)
+        compose(writer, namespaceModel, structureModel, models)
         writeEnd(writer, models)
     }
 

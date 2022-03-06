@@ -3,7 +3,7 @@ plugins {
     java
     
     // https://kotlinlang.org/docs/gradle.html#targeting-the-jvm
-    kotlin("jvm") version "1.5.30"    
+    kotlin("jvm") version "1.6.10"
 }
 
 repositories {
@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
 
     /**
      *  https://mvnrepository.com/artifact/net.sf.kxml/kxml2
@@ -40,8 +40,7 @@ tasks.register("generate", JavaExec::class) {
 
     args(setOf(
             "-i", "/usr/share/gir-1.0",
-            "-j", "${project.getRootDir()}/java-gtk/build/generated/src/main/java/ch/bailu/gtk/",
-            "-c", "${project.getRootDir()}/glue/build/generated/src/main/c/"))
+            "-j", "${project.getRootDir()}/java-gtk/build/generated/src/main/java/ch/bailu/gtk/"))
 }
 
 tasks.compileJava {

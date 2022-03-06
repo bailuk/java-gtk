@@ -8,7 +8,7 @@ object EnumTable {
 
     fun add(type: NamespaceType) {
         if (type.isValid()) {
-            getTable(type.getNamespace())[type.getName()] = type.getName()
+            getTable(type.namespace)[type.name] = type.name
         }
     }
 
@@ -22,6 +22,6 @@ object EnumTable {
     }
 
     operator fun contains(type: NamespaceType): Boolean {
-        return type.isValid() && getTable(type.getNamespace()).containsKey(type.getName())
+        return type.isValid() && getTable(type.namespace).containsKey(type.name)
     }
 }

@@ -1,6 +1,6 @@
 package ch.bailu.gtk.table
 
-import ch.bailu.gtk.config.NamespaceConfig
+import ch.bailu.gtk.NamespaceConfig
 import java.util.*
 
 object NamespaceTable {

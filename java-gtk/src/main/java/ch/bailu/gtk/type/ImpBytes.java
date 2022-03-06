@@ -1,8 +1,26 @@
 package ch.bailu.gtk.type;
 
+import ch.bailu.jgtk.lib.CLib;
+
 public class ImpBytes {
-    public static native long createBytes(byte[] bytes);
-    public static native byte getByte(long cPointer, int index);
-    public static native byte[] toBytes(long cPointer, int start, int size);
-    public static native int getSizeOfNullTerminatedSequence(long cPointer);
+    public static long createBytes(byte[] bytes) {
+        long result = CLib.API().malloc(bytes.length);
+
+        com.sun.jna.Pointer pointer = Pointer.toJnaPointer(result);
+        pointer.write(0, bytes, 0, bytes.length);
+        return result;
+    }
+
+    public static byte getByte(long cPointer, int index) {
+        com.sun.jna.Pointer pointer = Pointer.toJnaPointer(cPointer);
+        return pointer.getByte(index);
+    }
+
+    public static byte[] toBytes(long cPointer, int start, int size) {
+        byte[] result = new byte[size];
+
+        com.sun.jna.Pointer pointer = Pointer.toJnaPointer(cPointer);
+        pointer.read(start, result, 0, size);
+        return result;
+    }
 }

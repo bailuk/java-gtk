@@ -2,34 +2,36 @@ package ch.bailu.gtk.writer
 
 import ch.bailu.gtk.model.NamespaceModel
 import ch.bailu.gtk.model.*
+import ch.bailu.gtk.model.filter.ModelList
 import java.io.Writer
 
 
-abstract class CodeWriter(val out: TextWriter)  {
-    open fun writeStart(structureModel : StructureModel, namespaceModel : NamespaceModel) {
-        out.a("/* this file is machine generated */\n")
-    }
+interface CodeWriter  {
+    fun writeStart(structureModel : StructureModel, namespaceModel : NamespaceModel)
 
-    abstract fun writeClass(structureModel : StructureModel)
-    abstract fun writeInterface(structureModel : StructureModel)
+    fun writeClass(structureModel : StructureModel)
+    fun writeInterface(structureModel : StructureModel)
 
-    abstract fun writeInternalConstructor(structureModel : StructureModel)
-    abstract fun writeConstructor(structureModel : StructureModel, methodModel : MethodModel)
+    fun writeInternalConstructor(structureModel : StructureModel)
+    fun writeConstructor(structureModel : StructureModel, methodModel : MethodModel)
 
-    abstract fun writeFactory(structureModel : StructureModel, methodModel : MethodModel)
-    abstract fun writePrivateFactory(structureModel : StructureModel, methodModel : MethodModel)
+    fun writeFactory(structureModel : StructureModel, methodModel : MethodModel)
+    fun writePrivateFactory(structureModel : StructureModel, methodModel : MethodModel)
 
-    abstract fun writeConstant(parameterModel : ParameterModel) 
-    abstract fun writeNativeMethod(structureModel : StructureModel, methodModel : MethodModel)
-    abstract fun writeSignal(structureModel : StructureModel, methodModel : MethodModel)
-    abstract fun writeField(structureModel : StructureModel, parameterModel : ParameterModel)
-    abstract fun writeFunction(structureModel : StructureModel, methodModel : MethodModel)
-    abstract fun writeUnsupported(model : Model)
+    fun writeConstant(parameterModel : ParameterModel) 
+    fun writeMethod(structureModel : StructureModel, methodModel : MethodModel)
+    fun writeSignal(structureModel : StructureModel, methodModel : MethodModel)
+    fun writeField(structureModel : StructureModel, parameterModel : ParameterModel)
+    fun writeFunction(structureModel : StructureModel, methodModel : MethodModel)
+    fun writeUnsupported(model : Model)
 
-    abstract fun writeMallocConstructor(structureModel : StructureModel)
-    abstract fun writeCallback(structureModel: StructureModel, methodModel: MethodModel)
+    fun writeMallocConstructor(structureModel : StructureModel)
+    fun writeCallback(structureModel: StructureModel, methodModel: MethodModel, isSignal: Boolean = false)
 
-    abstract fun writeEnd()
-    abstract fun writeGetTypeFunction(structureModel: StructureModel)
+    fun writeEnd()
+    fun writeGetTypeFunction(structureModel: StructureModel)
+    fun writeBeginStruct(structureModel : StructureModel, fields: ModelList<ParameterModel>)
+    fun writeEndStruct()
+    fun writeBeginInstace(namespaceModel: NamespaceModel)
+    fun writeEndInstance()
 }
-

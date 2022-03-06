@@ -2,6 +2,7 @@ package ch.bailu.gtk.bridge;
 
 import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Int64;
+import ch.bailu.gtk.type.Pointer;
 
 public class Bytes extends ch.bailu.gtk.glib.Bytes {
     public Bytes(CPointer pointer) {
@@ -9,7 +10,7 @@ public class Bytes extends ch.bailu.gtk.glib.Bytes {
     }
 
     public Bytes(byte[] bytes) {
-        super(new CPointer(ImpBytes.createFromArray(bytes)));
+        super(new ch.bailu.gtk.type.Bytes(bytes), bytes.length);
     }
 
     public Bytes(ch.bailu.gtk.type.Bytes bytes) {
@@ -22,7 +23,8 @@ public class Bytes extends ch.bailu.gtk.glib.Bytes {
         if (bytes.getSize() < 1) {
             bytes.throwNullPointerException("size == " + bytes.getSize());
         }
-        return new CPointer(ImpBytes.createFromWrapper(bytes.getCPointer(), bytes.getSize()));
+
+        return new ch.bailu.gtk.glib.Bytes(new Pointer(bytes.cast()), bytes.getSize()).cast();
     }
 
 
@@ -33,6 +35,7 @@ public class Bytes extends ch.bailu.gtk.glib.Bytes {
         size.destroy();
         return result;
     }
+
 
     public byte[] toBytes(int start, int end) {
         return toBytesWrapper().toBytes(start, end);

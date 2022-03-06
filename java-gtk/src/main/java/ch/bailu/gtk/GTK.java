@@ -1,21 +1,13 @@
 package ch.bailu.gtk;
 
-import java.io.IOException;
-
-import ch.bailu.gtk.glue.LibLoader;
-
 public class GTK {
     public final static int TRUE = 1;
     public final static int FALSE = 0;
 
-    public static void init() throws IOException {
-        new LibLoader();
-    }
-
     /**
      * convert GTK boolean to Java boolean
      * @param bool value to convert
-     * @return
+     * @return boolean representation of parameter
      */
     public static boolean IS(int bool) {
         return is(bool);
@@ -24,7 +16,7 @@ public class GTK {
     /**
      * convert Java boolean to GTK boolean.
      * @param bool value to convert
-     * @return
+     * @return integer representation of boolean parameter
      */
     public static int IS(boolean bool) {
         return is(bool);
@@ -33,7 +25,7 @@ public class GTK {
     /**
      * convert GTK boolean to Java boolean
      * @param bool value to convert
-     * @return
+     * @return boolean representation of parameter
      */
     public static boolean is(int bool) {
         return bool == TRUE;
@@ -42,7 +34,7 @@ public class GTK {
     /**
      * convert Java boolean to GTK boolean
      * @param bool value to convert
-     * @return
+     * @return integer representation of boolean parameter
      */
     public static int is(boolean bool) {
         if (bool) {

@@ -1,7 +1,6 @@
 jdk:
   - openjdk11
 install:
-  - ci/jitpack-setup.sh
   - ./gradlew -q generator:generate java-gtk:build java-gtk:publishToMavenLocal -xtest
 env:
   MYVAR: "custom environment variable"

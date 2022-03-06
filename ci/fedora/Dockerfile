@@ -14,10 +14,9 @@ COPY clone-and-build.sh clone-and-build.sh
 RUN chmod +x clone-and-build.sh
 
 RUN dnf -y upgrade
-RUN dnf -y install gtk4-devel
+RUN dnf -y install gtk4
 RUN dnf -y install java-11-openjdk
 RUN dnf -y install java-11-openjdk-devel
-RUN dnf -y install gcc
 RUN dnf -y install git
-RUN dnf -y install libadwaita-devel
+RUN dnf -y install libadwaita
 RUN dnf -y clean all
