@@ -66,8 +66,27 @@ The default demo application can be selected in [examples/src/main/java/examples
 Compile Java library, generate JAR archive and copy JAR archive as artifact to local Maven repository (`~/.m2/repository`).
 
 ## Integration
-[SNAPSHOT builds](https://jitpack.io/#bailuk/java-gtk/main-SNAPSHOT) and [Javadoc](https://javadoc.jitpack.io/com/github/bailuk/java-gtk/main-SNAPSHOT/javadoc/) are available via [JitPack](https://jitpack.io).  
- 
+Library and [Javadoc](https://javadoc.jitpack.io/com/github/bailuk/java-gtk/0.1/javadoc/) is available via [JitPack](https://jitpack.io).
+
+```kotlin
+// build.gradle.kts
+plugins {
+    application
+}
+
+repositories {
+    maven { url = uri("https://jitpack.io") }
+}
+
+dependencies {
+    implementation("com.github.bailuk:java-gtk:0.1")
+}
+
+application {
+    mainClass.set("examples.HelloWorld")
+}
+```
+
 ## Modules
 - `generator/`: Kotlin application that generates Java code from GIR files (xml parser -> model builder -> writer). GIR files are taken from Debian dev packages.
 - `java-gtk/` : java-gtk library depends on generated Java code.
