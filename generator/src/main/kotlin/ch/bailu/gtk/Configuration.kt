@@ -11,7 +11,6 @@ object Configuration  {
 
     const val BASE_NAME_SPACE_NODOT    = "ch.bailu.gtk"
     const val BASE_NAME_SPACE_DOT      = "ch.bailu.gtk."
-    const val HEADER_FILE_BASE         = "ch_bailu_gtk_"
 
     const val GIR_DIR_CUSTOM           = "src/main/resources"
     const val GIR_DIR_LOCAL            = "src/main/resources/gir"
@@ -30,6 +29,7 @@ object Configuration  {
                 NamespaceConfig("GLib-2.0.gir",       "glib-2.0",       GtkDocUrl("glib")),
                 NamespaceConfig("Pango-1.0.gir",      "pango-1.0",      GtkDocUrl("Pango")),
                 NamespaceConfig("GdkPixbuf-2.0.gir",  "gdk_pixbuf-2.0", GtkDocUrl("gdk-pixbuf")),
+                NamespaceConfig("Geoclue-2.0.gir",    "geoclue-2",      StaticUrl("https://www.freedesktop.org/software/geoclue/docs/libgeoclue/")),
                 NamespaceConfig("Adw-1.gir",          "adwaita-1",      StaticUrl("https://gnome.pages.gitlab.gnome.org/libadwaita/doc/")))
 
 
