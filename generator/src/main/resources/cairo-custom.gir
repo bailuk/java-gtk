@@ -64,6 +64,20 @@
                 </parameters>
             </method>
 
+            <method name="paint_with_alpha" c:identifier="cairo_paint">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                    <parameter name="alpha">
+                        <type name="double" c:type="double"/>
+                    </parameter>
+                </parameters>
+            </method>
+
             <!--void cairo_set_source_surface (cairo_t *cr, cairo_surface_t *surface, double x, double y);-->
             <method name="set_source_surface" c:identifier="cairo_set_source_surface">
                 <return-value transfer-ownership="none">
