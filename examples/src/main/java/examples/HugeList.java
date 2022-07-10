@@ -21,7 +21,6 @@ import ch.bailu.gtk.gtk.ListView;
 import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.ScrolledWindow;
 import ch.bailu.gtk.gtk.SignalListItemFactory;
-import ch.bailu.gtk.helper.LabelHelper;
 import ch.bailu.gtk.type.Str;
 
 /**
@@ -71,9 +70,9 @@ public class HugeList {
                 var key = keyList.get(idx);
                 var cnt = wordList.get(key);
 
-                LabelHelper.setLabel(word,  key);
-                LabelHelper.setLabel(count, String.valueOf(cnt));
-                LabelHelper.setLabel(index, String.valueOf(idx));
+                setLabel(word, key);
+                setLabel(count, String.valueOf(cnt));
+                setLabel(index, String.valueOf(idx));
 
             });
 
@@ -88,6 +87,11 @@ public class HugeList {
         app.run(0, null);
     }
 
+    private static void setLabel(Label label, String text) {
+        Str str = new Str(text);
+        label.setLabel(str);
+        str.destroy();
+    }
     public void readFileIntoList(File file) {
         InputStream input = null;
         try  {

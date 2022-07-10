@@ -31,8 +31,8 @@ public class App {
         //new BuilderExample(args);
         //new ExampleApplication();
         //new Words(args);
-        new HeaderBarSample(args);
-        //new HugeList();
+        //new HeaderBarSample(args);
+        new HugeList();
         //new AppLauncher();
         //new GlibLoop();
         //new GlibSettings();
