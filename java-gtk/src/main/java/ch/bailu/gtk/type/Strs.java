@@ -1,6 +1,8 @@
 package ch.bailu.gtk.type;
 
 public class Strs extends Pointer {
+    public final static Strs NULL = new Strs(CPointer.NULL);
+
     private Str[] strs;
     private boolean destroyAll = false;
 
