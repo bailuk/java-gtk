@@ -1,6 +1,9 @@
 package ch.bailu.gtk.type;
 
 public abstract class Array extends Wrapper {
+    private final static int SIZE_UNKNOWN = -1;
+
+
     private int length;
     private final int bytes;
 
@@ -33,16 +36,16 @@ public abstract class Array extends Wrapper {
     }
 
     public void checkLimit(int index) {
-        if (isLimitKnown() && !isWithinLimit(index)) {
+        if (isSizeKnown() && !isWithinLimit(index)) {
             throw new IndexOutOfBoundsException("length: " + length + " index: " + index);
         }
     }
 
     private boolean isWithinLimit(int index) {
-        return index < length && index > -1;
+        return index < length && index >= 0;
     }
 
-    private boolean isLimitKnown() {
-        return length != -1;
+    public boolean isSizeKnown() {
+        return length != SIZE_UNKNOWN;
     }
 }

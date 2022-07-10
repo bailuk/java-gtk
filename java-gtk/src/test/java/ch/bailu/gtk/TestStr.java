@@ -44,4 +44,10 @@ public class TestStr {
         assertEquals("", strs.get(2).toString());
     }
 
+    @Test
+    public void testNullStr() {
+        Str str = Str.NULL;
+        assertEquals(0, str.getSize());
+        assertEquals(0, str.getLength());
+    }
 }

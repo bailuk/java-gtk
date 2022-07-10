@@ -684,9 +684,32 @@
                 </parameters>
             </method>
 
+
+            <!-- custom: https://www.cairographics.org/manual/cairo-cairo-surface-t.html -->
+            <method name="flush" c:identifier="cairo_surface_flush">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="imageSurface" transfer-ownership="none">
+                        <type name="Surface" c:type="cairo_surface_t*"/>
+                    </instance-parameter>
+                </parameters>
+            </method>
+
+
+            <!-- custom: https://www.cairographics.org/manual/cairo-cairo-surface-t.html -->
+            <method name="mark_dirty" c:identifier="cairo_surface_mark_dirty">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="imageSurface" transfer-ownership="none">
+                        <type name="Surface" c:type="cairo_surface_t*"/>
+                    </instance-parameter>
+                </parameters>
+            </method>
         </record>
-
-
 
 
         <record name="Matrix" c:type="cairo_matrix_t" foreign="1">

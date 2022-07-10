@@ -16,11 +16,21 @@ public class ImpBytes {
         return pointer.getByte(index);
     }
 
+    public static void setByte(long cPointer, int index, byte value) {
+        com.sun.jna.Pointer pointer = Pointer.toJnaPointer(cPointer);
+        pointer.setByte(index, value);
+    }
+
     public static byte[] toBytes(long cPointer, int start, int size) {
         byte[] result = new byte[size];
 
         com.sun.jna.Pointer pointer = Pointer.toJnaPointer(cPointer);
         pointer.read(start, result, 0, size);
         return result;
+    }
+
+    public static void setInt(long cPointer, int index, int value) {
+        com.sun.jna.Pointer pointer = Pointer.toJnaPointer(cPointer);
+        pointer.setInt(index, value);
     }
 }

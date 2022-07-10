@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import ch.bailu.gtk.type.Bytes;
+import ch.bailu.gtk.type.CPointer;
 
 public class TestBytes {
 
@@ -21,6 +22,10 @@ public class TestBytes {
         assertEquals(200, bytesA.getSize());
         assertEquals(42, bytesA.getByte(0));
         assertEquals(99, bytesA.getByte(199));
+
+        bytesA.setByte(199, (byte) 98);
+        assertEquals(98, bytesA.getByte(199));
+
         bytesA.destroy();
         assertEquals(0, bytesA.getSize());
 
@@ -28,8 +33,12 @@ public class TestBytes {
         Bytes bytesB = new Bytes(new byte[0]);
         assertEquals(0, bytesB.getSize());
         bytesB.destroy();
-
     }
 
-
+    @Test
+    public void testNullBytes() {
+        Bytes bytes = new Bytes(CPointer.NULL);
+        assertEquals(0, bytes.getSize());
+        assertEquals(0, bytes.getLength());
+    }
 }
