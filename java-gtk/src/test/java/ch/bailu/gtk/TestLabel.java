@@ -37,6 +37,6 @@ public class TestLabel {
     private static void setText(Label label, String text) {
         Str str = new Str(text);
         label.setText(str);
-        str.destroy();
+        //str.destroy();
     }
 }

@@ -89,9 +89,10 @@ public class HugeList {
 
     private static void setLabel(Label label, String text) {
         Str str = new Str(text);
-        label.setLabel(str);
-        str.destroy();
+        label.setText(str);
+        //str.destroy();
     }
+
     public void readFileIntoList(File file) {
         InputStream input = null;
         try  {
