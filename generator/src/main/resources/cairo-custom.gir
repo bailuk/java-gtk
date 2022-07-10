@@ -623,6 +623,67 @@
                     </instance-parameter>
                 </parameters>
             </method>
+
+            <!-- custom: https://www.cairographics.org/manual/cairo-Image-Surfaces.html -->
+            <method name="get_format" c:identifier="cairo_image_surface_get_format">
+                <return-value transfer-ownership="none">
+                    <type name="Format" c:type="cairo_format_t"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="imageSurface" transfer-ownership="none">
+                        <type name="Surface" c:type="cairo_surface_t*"/>
+                    </instance-parameter>
+                </parameters>
+            </method>
+
+            <!-- custom: https://www.cairographics.org/manual/cairo-Image-Surfaces.html -->
+            <method name="get_stride" c:identifier="cairo_image_surface_get_stride">
+                <return-value transfer-ownership="none">
+                    <type name="int" c:type="int"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="imageSurface" transfer-ownership="none">
+                        <type name="Surface" c:type="cairo_surface_t*"/>
+                    </instance-parameter>
+                </parameters>
+            </method>
+
+            <!-- custom: https://www.cairographics.org/manual/cairo-Image-Surfaces.html -->
+            <method name="get_height" c:identifier="cairo_image_surface_get_height">
+                <return-value transfer-ownership="none">
+                    <type name="int" c:type="int"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="imageSurface" transfer-ownership="none">
+                        <type name="Surface" c:type="cairo_surface_t*"/>
+                    </instance-parameter>
+                </parameters>
+            </method>
+
+            <!-- custom: https://www.cairographics.org/manual/cairo-Image-Surfaces.html -->
+            <method name="get_width" c:identifier="cairo_image_surface_get_width">
+                <return-value transfer-ownership="none">
+                    <type name="int" c:type="int"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="imageSurface" transfer-ownership="none">
+                        <type name="Surface" c:type="cairo_surface_t*"/>
+                    </instance-parameter>
+                </parameters>
+            </method>
+
+            <!-- custom: https://www.cairographics.org/manual/cairo-Image-Surfaces.html -->
+            <method name="get_data" c:identifier="cairo_image_surface_get_data">
+                <return-value transfer-ownership="none">
+                    <type name="unsigned char*" c:type="unsigned char*"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="imageSurface" transfer-ownership="none">
+                        <type name="Surface" c:type="cairo_surface_t*"/>
+                    </instance-parameter>
+                </parameters>
+            </method>
+
         </record>
 
 
@@ -811,11 +872,6 @@
             </method>
         </record>
 
-
-
-
-
-
         <record name="Pattern" c:type="cairo_pattern_t" foreign="1"
             glib:type-name="CairoPattern"
             glib:get-type="cairo_gobject_pattern_get_type">
@@ -928,7 +984,6 @@
                 </parameters>
             </method>
         </record>
-
 
         <record name="Region" c:type="cairo_region_t" foreign="1"
             glib:type-name="CairoRegion"
@@ -1614,20 +1669,15 @@
                     </parameter>
 
                 </parameters>
-
-
         </function>
 
 
-
-
-
+        <!-- custom -->
         <function name="image_surface_create_for_data" c:identifier="cairo_image_surface_create_for_data">
             <return-value transfer-ownership="full">
                 <type name="Surface" c:type="cairo_surface_t*"/>
             </return-value>
 
-            <!-- custom -->
             <parameters>
                 <parameter name="data" transfer-ownership="none">
                     <type name="unsigned char*" c:type="unsigned char*"/>
@@ -1646,8 +1696,21 @@
                 </parameter>
 
             </parameters>
+        </function>
 
-
+        <!-- custom: https://www.cairographics.org/manual/cairo-Image-Surfaces.html -->
+        <function name="format_stride_for_width" c:identifier="cairo_format_stride_for_width">
+            <return-value transfer-ownership="none">
+                <type name="int" c:type="int"/>
+            </return-value>
+            <parameters>
+                <parameter name="format" transfer-ownership="none">
+                    <type name="Format" c:type="cairo_format_t"/>
+                </parameter>
+                <parameter name="width" transfer-ownership="none">
+                    <type name="int" c:type="int"/>
+                </parameter>
+            </parameters>
         </function>
 
     </namespace>

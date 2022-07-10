@@ -33,9 +33,16 @@ public abstract class Array extends Wrapper {
     }
 
     public void checkLimit(int index) {
-        // -1 means unknown
-        if (index >= length || index < -1) {
+        if (isLimitKnown() && !isWithinLimit(index)) {
             throw new IndexOutOfBoundsException("length: " + length + " index: " + index);
         }
+    }
+
+    private boolean isWithinLimit(int index) {
+        return index < length && index > -1;
+    }
+
+    private boolean isLimitKnown() {
+        return length != -1;
     }
 }

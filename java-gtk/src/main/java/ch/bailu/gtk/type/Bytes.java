@@ -7,7 +7,7 @@ public class Bytes extends Array {
     }
 
     public Bytes(CPointer pointer) {
-        super(pointer, 1, 0);
+        super(pointer, 1, -1);
     }
 
     public Bytes(byte[] bytes) {
