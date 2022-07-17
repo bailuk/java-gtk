@@ -48,7 +48,8 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
 
     public ListIndex(int size) {
         this();
-        setSize(size);
+        instance.size = size;
+        instance.writeField("size");
     }
 
     public ListIndex() {
@@ -147,13 +148,21 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
     };
     private static Callback getItem = new Callback() {
         public long invoke(long inst, int position) {
-            return new ListIndex(toCPointer(inst)).getItem(position).cast().getCPointer();
+            long result = 0;
+            ListIndex item = new ListIndex(toCPointer(inst)).getItem(position);
+            if (item != null) {
+                result = item.cast().getCPointer();
+            }
+            return result;
         }
     };
 
     public ListIndex getItem(int position) {
-        ListIndex result = new ListIndex(getSize());
-        result.setIndex(position);
+        ListIndex result = null;
+        if (position < getSize() && position > -1) {
+            result = new ListIndex(getSize());
+            result.setIndex(position);
+        }
         return result;
     }
 
