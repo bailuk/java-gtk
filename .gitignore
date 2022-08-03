@@ -1,14 +1,10 @@
 ## Generated
 /javadoc/
 
-## Emulator
-/ci/qemu/
-
 ## Drafts
 gtk4_playground/
 
 # From https://gist.github.com/dedunumax/54e82214715e35439227
-
 
 ## Java
 .mtj.tmp/
@@ -19,21 +15,6 @@ gtk4_playground/
 *.nar
 hs_err_pid*
 
-
-## Maven
-target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-pom.xml.bak
-release.properties
-dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
-.mvn/wrapper/maven-wrapper.jar
-
-
 ## Gradle
 bin/
 build/
@@ -42,7 +23,6 @@ build/
 gradle-app.setting
 !gradle-wrapper.jar
 
-
 ## IntelliJ
 out/
 .idea/
@@ -50,7 +30,6 @@ out/
 *.iml
 *.ipr
 *.iws
-
 
 ## Eclipse
 .settings/
@@ -66,7 +45,6 @@ local.properties
 .loadpath
 .factorypath
 
-
 ## NetBeans
 nbproject/private/
 nbbuild/
@@ -75,11 +53,13 @@ nbdist/
 nbactions.xml
 nb-configuration.xml
 
-
 ## Visual Studio Code
 .vscode/
 .code-workspace
 
-
 ## OS X
 .DS_Store
+
+# Development
+todo/
+/ci/qemu/
