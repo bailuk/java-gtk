@@ -15,7 +15,7 @@
 #
 
 ifndef VERSION
-	VERSION=0.1-SNAPSHOT
+	VERSION=0.2-SNAPSHOT
 endif
 
 ifndef JOBS

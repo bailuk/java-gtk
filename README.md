@@ -66,7 +66,7 @@ The default demo application can be selected in [examples/src/main/java/examples
 Compile Java library, generate JAR archive and copy JAR archive as artifact to local Maven repository (`~/.m2/repository`).
 
 ## Integration
-Library and [Javadoc](https://javadoc.jitpack.io/com/github/bailuk/java-gtk/0.1/javadoc/) is available via [JitPack](https://jitpack.io).
+Library and [Javadoc](https://javadoc.jitpack.io/com/github/bailuk/java-gtk/0.2/javadoc/) is available via [JitPack](https://jitpack.io).
 
 ```kotlin
 // build.gradle.kts
@@ -79,7 +79,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.bailuk:java-gtk:0.1")
+    implementation("com.github.bailuk:java-gtk:0.2")
 }
 
 application {
