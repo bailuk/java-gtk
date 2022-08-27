@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+    <object class="GtkWindow" id="window">
+        <property name="title">Grid
+        </property>
+        <child>
+            <object class="GtkGrid" id="grid">
+                <child>
+                    <object class="GtkButton" id="button1">
+                        <property name="label">Button 1
+                        </property>
+                        <layout>
+                            <property name="column">0
+                            </property>
+                            <property name="row">0
+                            </property>
+                        </layout>
+                    </object>
+                </child>
+                <child>
+                    <object class="GtkButton" id="button2">
+                        <property name="label">Button 2
+                        </property>
+                        <layout>
+                            <property name="column">1
+                            </property>
+                            <property name="row">0</property>
+                        </layout>
+                    </object>
+                </child>
+                <child>
+                    <object class="GtkButton" id="quit">
+                        <property name="label">Quit
+                        </property>
+                        <layout>
+                            <property name="column">0
+                            </property>
+                            <property name="row">1</property>
+                            <property name="column-span">2</property>
+                        </layout>
+                    </object>
+                </child>
+            </object>
+        </child>
+    </object>
+</interface>

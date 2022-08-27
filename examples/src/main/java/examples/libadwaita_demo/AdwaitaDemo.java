@@ -6,7 +6,6 @@ import ch.bailu.gtk.adw.PreferencesWindow;
 import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.Label;
-import ch.bailu.gtk.helper.ActionHelper;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 

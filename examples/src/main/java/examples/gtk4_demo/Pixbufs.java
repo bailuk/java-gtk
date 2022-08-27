@@ -1,8 +1,10 @@
 package examples.gtk4_demo;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 import ch.bailu.gtk.GTK;
+import ch.bailu.gtk.bridge.Image;
 import ch.bailu.gtk.cairo.Context;
 import ch.bailu.gtk.exception.AllocationError;
 import ch.bailu.gtk.gdk.FrameClock;
@@ -11,38 +13,38 @@ import ch.bailu.gtk.gdk.Rectangle;
 import ch.bailu.gtk.gdkpixbuf.Colorspace;
 import ch.bailu.gtk.gdkpixbuf.InterpType;
 import ch.bailu.gtk.gdkpixbuf.Pixbuf;
-import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.glib.GlibConstants;
-import ch.bailu.gtk.gtk.Application;
-import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.ButtonsType;
 import ch.bailu.gtk.gtk.DialogFlags;
 import ch.bailu.gtk.gtk.DrawingArea;
 import ch.bailu.gtk.gtk.MessageDialog;
 import ch.bailu.gtk.gtk.MessageType;
+import ch.bailu.gtk.gtk.Window;
+import ch.bailu.gtk.lib.resources.JavaResource;
 import ch.bailu.gtk.type.Str;
-import ch.bailu.gtk.type.Strs;
-import examples.App;
+import examples.DemoInterface;
 
-/*
-    Pixbufs
-    A GdkPixbuf represents an image, normally in RGB or RGBA format. Pixbufs are normally used to load files from disk and perform image scaling.
-    This demo is not all that educational, but looks cool. It was written by Extreme Pixbuf Hacker Federico Mena Quintero. It also shows off how to use GtkDrawingArea to do a simple animation.
-    Look at the Image demo for additional pixbuf usage examples.
-*/
-public class Pixbufs {
-    private static final File RES = App.path("examples/src/main/resources/");
-    private static final String BACKGROUND_NAME = "background.jpg";
+public class Pixbufs implements DemoInterface {
+    private final static Str TITLE = new Str("Pixbufs");
+    private final static Str DESCRIPTION = new Str(
+            "A GdkPixbuf represents an image, normally in RGB or RGBA format.\n" +
+            "Pixbufs are normally used to load files from disk and perform image scaling.\n" +
+            "This demo is not all that educational, but looks cool.\n" +
+            "It was written by Extreme Pixbuf Hacker Federico Mena Quintero.\n" +
+            "It also shows off how to use GtkDrawingArea to do a simple animation.\n" +
+            "Look at the Image demo for additional pixbuf usage examples.\n");
+
+    private static final String BACKGROUND_NAME = "/pixbufs/background.jpg";
 
     private static final String[] IMAGE_NAMES = {
-            "apple-red.png",
-            "gnome-applets.png",
-            "gnome-calendar.png",
-            "gnome-foot.png",
-            "gnome-gmush.png",
-            "gnome-gimp.png",
-            "gnome-gsame.png",
-            "gnu-keys.png"
+            "/pixbufs/apple-red.png",
+            "/pixbufs/gnome-applets.png",
+            "/pixbufs/gnome-calendar.png",
+            "/pixbufs/gnome-foot.png",
+            "/pixbufs/gnome-gmush.png",
+            "/pixbufs/gnome-gimp.png",
+            "/pixbufs/gnome-gsame.png",
+            "/pixbufs/gnu-keys.png"
     };
 
     /* Current frame */
@@ -62,15 +64,7 @@ public class Pixbufs {
     private long startTime;
 
 
-    public Pixbufs(String[] args) {
-        var app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
-        app.onActivate(() -> doPixbufs(new ApplicationWindow(app)));
-        app.run(args.length, new Strs(args));
-
-
-    }
-
-    void loadPixbufs() throws AllocationError {
+    void loadPixbufs() throws AllocationError, IOException {
         background = loadPixbuf(BACKGROUND_NAME);
 
         backWidth = background.getWidth();
@@ -81,8 +75,10 @@ public class Pixbufs {
         }
     }
 
-    Pixbuf loadPixbuf(String name) throws AllocationError {
-        return Pixbuf.newFromFilePixbuf(new Str(new File(RES, name).toString()));
+    Pixbuf loadPixbuf(String resourcePath) throws IOException {
+        try (InputStream inputStream = new JavaResource(resourcePath).asStream()) {
+            return Image.load(inputStream);
+        }
     }
 
     int onDraw(Context cr) {
@@ -172,34 +168,44 @@ public class Pixbufs {
         return GlibConstants.SOURCE_CONTINUE;
     }
 
-    private void doPixbufs(ApplicationWindow window) {
-        window.setTitle(new Str("Pixbufs"));
-        window.setResizable(GTK.FALSE);
+    @Override
+    public Window runDemo() {
+        var demoWindow = new Window();
+        demoWindow.setResizable(GTK.FALSE);
 
         try  {
             loadPixbufs();
-
             frame = new Pixbuf(Colorspace.RGB, GTK.FALSE, 8, backWidth, backHeight);
             da = new DrawingArea();
 
 
             da.setDrawFunc((drawingArea, cr, width, height, userData) -> onDraw(cr), null, data -> {});
-            window.setChild(da);
-            window.setSizeRequest(backWidth, backHeight);
-            window.addTickCallback((widget, frame_clock, user_data) -> onTick(frame_clock), null, data -> {});
+            demoWindow.setChild(da);
+            demoWindow.setSizeRequest(backWidth, backHeight);
+            demoWindow.addTickCallback((widget, frame_clock, user_data) -> onTick(frame_clock), null, data -> {});
 
-        } catch (AllocationError e) {
+        } catch (AllocationError | IOException e) {
             System.out.println(e.getMessage());
             var dialog = new MessageDialog(
-                    window,
+                    demoWindow,
                     DialogFlags.DESTROY_WITH_PARENT,
                     MessageType.ERROR,
                     ButtonsType.CLOSE,
                     new Str("Failed to load an image: " + e.getMessage()));
 
-            dialog.onResponse(response_id -> window.destroy());
+            dialog.onResponse(response_id -> demoWindow.destroy());
             dialog.show();
         }
-        window.show();
+        return demoWindow;
+    }
+
+    @Override
+    public Str getTitle() {
+        return TITLE;
+    }
+
+    @Override
+    public Str getDescription() {
+        return DESCRIPTION;
     }
 }

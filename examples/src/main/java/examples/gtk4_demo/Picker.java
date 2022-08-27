@@ -2,14 +2,13 @@ package examples.gtk4_demo;
 
 import java.util.Arrays;
 
+import javax.annotation.Nullable;
+
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.gdk.Gdk;
 import ch.bailu.gtk.gdk.RGBA;
-import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gtk.Align;
 import ch.bailu.gtk.gtk.AppChooserButton;
-import ch.bailu.gtk.gtk.Application;
-import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.Button;
 import ch.bailu.gtk.gtk.ColorButton;
 import ch.bailu.gtk.gtk.ColorChooserDialog;
@@ -20,11 +19,15 @@ import ch.bailu.gtk.gtk.FontChooserLevel;
 import ch.bailu.gtk.gtk.Grid;
 import ch.bailu.gtk.gtk.Label;
 import ch.bailu.gtk.gtk.ResponseType;
+import ch.bailu.gtk.gtk.Window;
 import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
-import ch.bailu.gtk.type.Strs;
+import examples.DemoInterface;
 
-public class Picker {
+public class Picker implements DemoInterface {
+
+    private final static Str TITLE = new Str("Pickers");
 
     private final static String[] FONT_FAMILIES = {
         "Cursive",
@@ -35,16 +38,10 @@ public class Picker {
         "System-ui",
     };
 
-    public Picker(String[] args) {
-
-        var app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
-        app.onActivate(() -> colorSelection(new ApplicationWindow(app)));
-        app.run(args.length, new Strs(args));
-
-    }
-
-    private void colorSelection(ApplicationWindow window) {
-        window.setTitle(new Str("Pickers"));
+    @Override
+    public Window runDemo() {
+        var demoWindow = new Window();
+        demoWindow.setTitle(TITLE);
 
         var table = new Grid();
         table.setMarginStart(20);
@@ -53,7 +50,7 @@ public class Picker {
         table.setMarginBottom(20);
         table.setRowSpacing(3);
         table.setColumnSpacing(10);
-        window.setChild(table);
+        demoWindow.setChild(table);
 
         var label = new Label(new Str("Color:"));
         label.setHalign(Align.START);
@@ -81,7 +78,7 @@ public class Picker {
         fontChooser.setFilterFunc((family, face, data) -> {
             Str familyStr = family.getName();
             return Arrays.asList(FONT_FAMILIES).contains(familyStr.toString()) ? GTK.TRUE : GTK.FALSE;
-        }, null, null);
+        }, null, data -> {});
 
         table.attach(fontPicker, 2,1,1,1);
 
@@ -107,12 +104,12 @@ public class Picker {
         da.setDrawFunc((drawing_area, cr, width, height, user_data) -> {
             Gdk.cairoSetSourceRgba(cr, rgba);
             cr.paint();
-        }, null, null);
+        }, null, data -> {});
 
         table.attach(da,1,4,1,1);
 
         button.onClicked(() -> {
-            var dialog = new ColorChooserDialog(new Str("Changing color"), window);
+            var dialog = new ColorChooserDialog(new Str("Changing color"), demoWindow);
             dialog.setModal(1);
 
             dialog.onResponse(response_id -> {
@@ -126,10 +123,17 @@ public class Picker {
             dialog.show();
 
         });
-
-        window.show();
+        return demoWindow;
     }
 
 
-}
+    @Override
+    public Str getTitle() {
+        return TITLE;
+    }
 
+    @Override
+    public Str getDescription() {
+        return TITLE;
+    }
+}

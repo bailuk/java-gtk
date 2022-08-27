@@ -1,52 +1,30 @@
 package examples.gtk4_demo;
 
-import ch.bailu.gtk.gio.ApplicationFlags;
-import ch.bailu.gtk.gtk.Application;
-import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.Label;
 import ch.bailu.gtk.gtk.Window;
 import ch.bailu.gtk.type.Str;
-import ch.bailu.gtk.type.Strs;
+import examples.DemoInterface;
 
-public class LinksSample {
+public class LinksSample implements DemoInterface {
 
-    public LinksSample(String[] args) {
-        var app = new Application(new Str("com.example.GtkApplication"),
-                ApplicationFlags.FLAGS_NONE);
+    private static final Str TITLE = new Str("Links");
+    private static final Str LABEL = new Str(
+            "Some <a href=\"http://en.wikipedia.org/wiki/Text\"" +
+            "title=\"plain text\">text</a> may be marked up\n" +
+            "as hyperlinks, which can be clicked\n" +
+            "or activated via <a href=\"keynav\">keynav</a>\n" +
+            "and they work fine with other markup, like when\n" +
+            "searching on <a href=\"http://www.google.com/\">" +
+            "<span color=\"#0266C8\">G</span><span color=\"#F90101\">o</span>" +
+            "<span color=\"#F2B50F\">o</span><span color=\"#0266C8\">g</span>" +
+            "<span color=\"#00933B\">l</span><span color=\"#F90101\">e</span>" +
+            "</a>."
+    );
 
-        app.onActivate(() -> {
-
-            // Create a new window
-            var window = init(new ApplicationWindow(app));
-
-            window.show();
-            window.present();
-
-        });
-
-        app.run(args.length, new Strs(args));
-    }
-
-
-
-
-    private Window init(Window window) {
-        StringBuilder labelString = new StringBuilder();
-
-        labelString
-                .append("Some <a href=\"http://en.wikipedia.org/wiki/Text\"")
-                .append("title=\"plain text\">text</a> may be marked up\n")
-                .append("as hyperlinks, which can be clicked\n")
-                .append("or activated via <a href=\"keynav\">keynav</a>\n")
-                .append("and they work fine with other markup, like when\n")
-                .append("searching on <a href=\"http://www.google.com/\">")
-                .append("<span color=\"#0266C8\">G</span><span color=\"#F90101\">o</span>")
-                .append("<span color=\"#F2B50F\">o</span><span color=\"#0266C8\">g</span>")
-                .append("<span color=\"#00933B\">l</span><span color=\"#F90101\">e</span>")
-                .append("</a>.");
-        window.setTitle(new Str("Links"));
-        //window.setBorderWidth(12);
-        Label label = new Label(new Str(labelString.toString()));
+    @Override
+    public Window runDemo() {
+        var window  = new Window();
+        Label label = new Label(LABEL);
 
         label.setUseMarkup(1);
         label.onActivateLink(uri -> {
@@ -58,4 +36,13 @@ public class LinksSample {
         return window;
     }
 
+    @Override
+    public Str getTitle() {
+        return TITLE;
+    }
+
+    @Override
+    public Str getDescription() {
+        return TITLE;
+    }
 }

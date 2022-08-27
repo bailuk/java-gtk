@@ -1,12 +1,10 @@
 
 package examples.gtk4_demo;
 
-import ch.bailu.gtk.GTK;
-import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gio.Menu;
 import ch.bailu.gtk.gio.MenuItem;
+import ch.bailu.gtk.gio.MenuModel;
 import ch.bailu.gtk.gtk.Application;
-import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.Box;
 import ch.bailu.gtk.gtk.Button;
 import ch.bailu.gtk.gtk.HeaderBar;
@@ -15,28 +13,30 @@ import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.PopoverMenu;
 import ch.bailu.gtk.gtk.Switch;
 import ch.bailu.gtk.gtk.TextView;
+import ch.bailu.gtk.gtk.Window;
 import ch.bailu.gtk.helper.ActionHelper;
 import ch.bailu.gtk.type.Str;
-import ch.bailu.gtk.type.Strs;
+import examples.DemoInterface;
 
-public class HeaderBarSample {
+public class HeaderBarSample implements DemoInterface {
 
+    private static final Str TITLE = new Str("Header bar demo");
 
-    public HeaderBarSample(String[] args) {
-        Application app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
+    private final MenuModel menuModel;
 
-        var menuModel = createMenuModel(app);
-
-        app.onActivate(() -> show(app, new ApplicationWindow(app), menuModel));
-        app.run(args.length, new Strs(args));
+    public HeaderBarSample(Application app) {
+        menuModel = createMenuModel(app);
     }
 
-    public void show(Application app, ApplicationWindow window, Menu menuModel) {
+    @Override
+    public Window runDemo() {
+
+        var window = new Window();
 
         var header = new HeaderBar();
 
         window.setDefaultSize(600, 400);
-        window.setTitle(new Str("Welcome to GTK"));
+        window.setTitle(TITLE);
 
         var popover = PopoverMenu.newFromModelPopoverMenu(menuModel);
         var button = new MenuButton();
@@ -59,10 +59,9 @@ public class HeaderBarSample {
         window.setTitlebar(header);
         window.setChild(new TextView());
 
-        window.setShowMenubar(GTK.TRUE);
-        app.setMenubar(menuModel);
-
-        window.show();
+        //window.setShowMenubar(GTK.TRUE);
+        //app.setMenubar(menuModel);
+        return window;
     }
 
     /**
@@ -99,5 +98,14 @@ public class HeaderBarSample {
 
         return result;
     }
-}
 
+    @Override
+    public Str getTitle() {
+        return TITLE;
+    }
+
+    @Override
+    public Str getDescription() {
+        return TITLE;
+    }
+}

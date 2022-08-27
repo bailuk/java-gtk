@@ -1,9 +1,10 @@
 
 package examples;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+
+import javax.annotation.Nullable;
 
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.bridge.Image;
@@ -11,25 +12,33 @@ import ch.bailu.gtk.cairo.Context;
 import ch.bailu.gtk.gdk.Gdk;
 import ch.bailu.gtk.gdkpixbuf.Pixbuf;
 import ch.bailu.gtk.gdkpixbuf.PixbufFormat;
-import ch.bailu.gtk.gio.ApplicationFlags;
-import ch.bailu.gtk.gtk.Application;
-import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.DrawingArea;
+import ch.bailu.gtk.gtk.Window;
+import ch.bailu.gtk.lib.resources.JavaResource;
 import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
-import ch.bailu.gtk.type.Strs;
 
-public class ImageBridge {
+public class ImageBridge implements DemoInterface {
 
-    private static final File SVG = App.path("examples/src/main/resources/GTK.svg");
-    public ImageBridge(String[] args) {
+    private static final Str TITLE = new Str("Image bridge");
+    private static final Str DESCRIPTION = new Str("Load and display GTK logo from Java stream");
 
+    private Pixbuf pixbuf = null;
+
+    @Override
+    public Window runDemo() {
         listSupportedFormats();
 
-        var app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
-        app.onActivate(() -> doLogoLoadAndDisplay(new ApplicationWindow(app)));
-        app.run(args.length, new Strs(args));
+        var demoWindow = new Window();
+        demoWindow.setResizable(GTK.TRUE);
+        demoWindow.setSizeRequest(App.WIDTH, App.HEIGHT);
 
+        DrawingArea drawingArea = new DrawingArea();
+        demoWindow.setChild(drawingArea);
+        drawingArea.onResize(this::setPixbuf);
+        drawingArea.setDrawFunc((drawing_area, cr, width, height, user_data) -> drawLogo(cr), null, data -> {});
+        return demoWindow;
     }
 
     private void listSupportedFormats() {
@@ -60,56 +69,25 @@ public class ImageBridge {
         }
     }
 
-    private Pixbuf pixbuf = null;
-
-    private void doLogoLoadAndDisplay(ApplicationWindow window) {
-        window.setResizable(GTK.TRUE);
-        window.setSizeRequest(400,200);
-        window.setTitle(new Str("GTK Logo from Java stream"));
-
-        DrawingArea da = new DrawingArea();
-        window.setChild(da);
-        da.onResize(this::setPixbuf);
-        da.setDrawFunc((drawing_area, cr, width, height, user_data) -> drawLogo(cr), null, null);
-        window.show();
-    }
-
-
     private void setPixbuf(int width, int height) {
-        Pixbuf pixbufNew = loadPixbuf(width, height);
-        if (pixbufNew != null) {
+        try {
+            Pixbuf pixbufNew = loadPixbuf(width, height);
             if (pixbuf != null) {
-                pixbuf.unref();
+               pixbuf.unref();
             }
             pixbuf = pixbufNew;
+
+        } catch (IOException e) {
+            System.err.println("ERROR reading image");
         }
     }
 
 
-    private Pixbuf loadPixbuf(int width, int height) {
-        Pixbuf result = null;
-
-        FileInputStream inputStream = null;
-        try {
-            inputStream = new FileInputStream(SVG);
-
-            result = Image.load(inputStream, width, height);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("ERROR reading image");
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    System.out.println("ERROR closing stream");
-                }
-            }
+    private Pixbuf loadPixbuf(int width, int height) throws IOException {
+        try (InputStream inputStream = new JavaResource("/GTK.svg").asStream()) {
+            return Image.load(inputStream, width, height);
         }
-        return result;
     }
-
 
     private int drawLogo(Context cr) {
         if (pixbuf != null) {
@@ -120,5 +98,14 @@ public class ImageBridge {
         }
         return GTK.FALSE;
     }
-}
 
+    @Override
+    public Str getTitle() {
+        return TITLE;
+    }
+
+    @Override
+    public Str getDescription() {
+        return DESCRIPTION;
+    }
+}

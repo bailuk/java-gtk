@@ -9,7 +9,6 @@ import java.util.Set;
 
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.exception.AllocationError;
-import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gio.MenuModel;
 import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.Button;
@@ -32,106 +31,111 @@ import ch.bailu.gtk.helper.ActionHelper;
 import ch.bailu.gtk.helper.BuilderHelper;
 import ch.bailu.gtk.type.Str;
 import examples.App;
+import examples.DemoInterface;
 
 /**
  * https://docs.gtk.org/gtk4/getting_started.html
  */
-public class ExampleApplication {
+public class ExampleApplication implements DemoInterface {
 
-    private final static Str APP_ID = new Str("org.gtk.example");
+    private final static Str TITLE = new Str("Example application (.ui resources)");
     private final static String BASE_PATH = App.path("examples/src/main/java/examples/gtk4_tutorial").toString();
 
-    public ExampleApplication() {
-        final var app = new Application(APP_ID, ApplicationFlags.FLAGS_NONE);
+    private final ActionHelper actions;
+    private final Application application;
 
-        app.onActivate(() -> {
-            try {
-                var appBuilder = new BuilderHelper(BASE_PATH,"window.ui");
-                var mnuBuilder = new BuilderHelper(BASE_PATH,"menu.ui");
-                var dlgBuilder = new BuilderHelper(BASE_PATH,"preferences.ui");
+    public ExampleApplication(Application app) {
+        application = app;
+        actions = new ActionHelper(app);
+    }
 
-                var menuModel = new MenuModel(mnuBuilder.getObject("menu"));
-                var menuButton = new MenuButton(appBuilder.getObject("gears"));
+    @Override
+    public Window runDemo() {
 
-                menuButton.setMenuModel(menuModel);
+        try {
+            // Load ui description from java resources
+            var appBuilder = BuilderHelper.fromResource("/example-application/window.ui");
+            var mnuBuilder = BuilderHelper.fromResource("/example-application/menu.ui");
+            var dlgBuilder = BuilderHelper.fromResource("/example-application/preferences.ui");
 
-                var window = new Window(appBuilder.getObject("window"));
-                window.setApplication(app);
+            // Get loaded ui elements
+            var menuModel = new MenuModel(mnuBuilder.getObject("menu"));
+            var menuButton = new MenuButton(appBuilder.getObject("gears"));
 
-                var actions = new ActionHelper(app);
-                actions.add("quit", (parameter)->app.quit());
-                actions.setAccels("quit", new String[]{"<Ctrl>Q", null});
+            menuButton.setMenuModel(menuModel);
 
-                actions.add("preferences",(parameter)->{
-                    var dialog = new Dialog(dlgBuilder.getObject("preferences"));
-                    dialog.setTransientFor(window);
-                    dialog.present();
-                });
+            var window = new Window(appBuilder.getObject("window"));
+            window.setApplication(application);
 
-                actions.add("show-words", false, (parameter) ->{
-                    var revealer = new Revealer(appBuilder.getObject("sidebar"));
-                    revealer.setRevealChild(GTK.IS(actions.getBooleanState("show-words")));
-                });
+            actions.add("quit", (parameter) -> window.close());
+            actions.setAccels("quit", new String[]{"<Ctrl>Q", null});
 
-                var stack = new Stack(appBuilder.getObject("stack"));
+            actions.add("preferences", (parameter) -> {
+                var dialog = new Dialog(dlgBuilder.getObject("preferences"));
+                dialog.setTransientFor(window);
+                dialog.present();
+            });
+
+            actions.add("show-words", false, (parameter) -> {
+                var revealer = new Revealer(appBuilder.getObject("sidebar"));
+                revealer.setRevealChild(GTK.IS(actions.getBooleanState("show-words")));
+            });
+
+            var stack = new Stack(appBuilder.getObject("stack"));
 
 
-                for (File file: new File(BASE_PATH).listFiles()) {
-                    try {
-                        open(stack, file);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+            for (File file : new File(BASE_PATH).listFiles()) {
+                try {
+                    open(stack, file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            var searchToggle = new ToggleButton(appBuilder.getObject("search"));
+            var searchEntry = new SearchEntry(appBuilder.getObject("searchentry"));
+            var searchBar = new SearchBar(appBuilder.getObject("searchbar"));
+
+            searchToggle.onToggled(() -> searchBar.setSearchMode(searchToggle.getActive()));
+
+            stack.onNotify(pspec -> {
+                System.out.println(pspec.getName().toString());
+                if ("visible-child".equals(pspec.getName().toString())) {
+                    if (stack.inDestruction() == GTK.FALSE) {
+                        searchBar.setSearchMode(GTK.FALSE);
+                        updateWords(stack, new ListBox(appBuilder.getObject("words")), new Editable(searchEntry.cast()));
                     }
                 }
+            });
 
-                var searchToggle = new ToggleButton(appBuilder.getObject("search"));
-                var searchEntry = new SearchEntry(appBuilder.getObject("searchentry"));
-                var searchBar = new SearchBar(appBuilder.getObject("searchbar"));
+            searchEntry.onSearchChanged(() -> {
+                Str text = new Editable(searchEntry.cast()).getText();
+                var tab = new ScrolledWindow(stack.getVisibleChild().cast());
+                var view = new TextView(tab.getChild().cast());
+                var buffer = getCurrentBuffer(stack);
+                var start = new TextIter();
+                var match_start = new TextIter();
+                var match_end = new TextIter();
 
-                searchToggle.onToggled(()-> searchBar.setSearchMode(searchToggle.getActive()));
+                buffer.getStartIter(start);
+                if (GTK.IS(start.forwardSearch(text, TextSearchFlags.CASE_INSENSITIVE, match_start, match_end, null))) {
+                    buffer.selectRange(match_start, match_end);
+                    view.scrollToIter(match_start, 0.0, GTK.FALSE, 0.0, 0.0);
+                }
 
-                stack.onNotify(pspec -> {
-                    System.out.println(pspec.getName().toString());
-                    if ("visible-child".equals(pspec.getName().toString())) {
-                        if (stack.inDestruction() == GTK.FALSE) {
-                            searchBar.setSearchMode(GTK.FALSE);
-                            updateWords(stack, new ListBox(appBuilder.getObject("words")), new Editable(searchEntry.cast()));
-                        }
-                    }
-                });
-
-                searchEntry.onSearchChanged(() -> {
-                    Str text = new Editable(searchEntry.cast()).getText();
-                    var tab = new ScrolledWindow(stack.getVisibleChild().cast());
-                    var view = new TextView(tab.getChild().cast());
-                    var buffer = getCurrentBuffer(stack);
-                    var start = new TextIter();
-                    var match_start = new TextIter();
-                    var match_end = new TextIter();
-
-                    buffer.getStartIter(start);
-                    if (GTK.IS(start.forwardSearch(text, TextSearchFlags.CASE_INSENSITIVE, match_start, match_end, null))) {
-                        buffer.selectRange(match_start, match_end);
-                        view.scrollToIter(match_start,0.0, GTK.FALSE, 0.0, 0.0);
-                    }
-
-                    match_end.destroy();
-                    match_start.destroy();
-                    start.destroy();
-                });
+                match_end.destroy();
+                match_start.destroy();
+                start.destroy();
+            });
 
 
-                updateWords(stack, new ListBox(appBuilder.getObject("words")), new Editable(searchEntry.cast()));
-                window.show();
+            updateWords(stack, new ListBox(appBuilder.getObject("words")), new Editable(searchEntry.cast()));
+            return window;
 
-            } catch (AllocationError e) {
-                System.err.println(e.getMessage());
-                app.quit();
-            }
-        });
-
-        app.run(0, null);
-        app.unref();
+        } catch (AllocationError | IOException e) {
+            System.err.println(e.getMessage());
+        }
+        return new Window();
     }
 
     private TextBuffer getCurrentBuffer(Stack stack) {
@@ -164,14 +168,11 @@ public class ExampleApplication {
 
         var child = words.getFirstChild();
         while (child.isNotNull()) {
-            //var text = new Button(child.cast()).getLabel();
             words.remove(child);
-            //text.destroy();
-
             child = words.getFirstChild();
         }
 
-        for (String w: list) {
+        for (String w : list) {
             var word = new Str(w);
             var row = Button.newWithLabelButton(word);
             row.onClicked(() -> entry.setText(word));
@@ -204,5 +205,16 @@ public class ExampleApplication {
             }
         }
         return list.keySet();
+    }
+
+
+    @Override
+    public Str getTitle() {
+        return TITLE;
+    }
+
+    @Override
+    public Str getDescription() {
+        return TITLE;
     }
 }

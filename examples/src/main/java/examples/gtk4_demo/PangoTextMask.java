@@ -1,38 +1,34 @@
 package examples.gtk4_demo;
 
+import javax.annotation.Nullable;
+
 import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.cairo.Context;
 import ch.bailu.gtk.cairo.Pattern;
-import ch.bailu.gtk.gio.ApplicationFlags;
-import ch.bailu.gtk.gtk.Application;
-import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.DrawingArea;
 import ch.bailu.gtk.gtk.Widget;
+import ch.bailu.gtk.gtk.Window;
 import ch.bailu.gtk.pango.FontDescription;
 import ch.bailu.gtk.pango.Layout;
 import ch.bailu.gtk.pango.Pango;
 import ch.bailu.gtk.pangocairo.Pangocairo;
+import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
-import ch.bailu.gtk.type.Strs;
+import examples.DemoInterface;
 
-public class PangoTextMask {
-    public PangoTextMask(String[] args) {
+public class PangoTextMask implements DemoInterface {
+    private static final Str TITLE = new Str("Pango text mask");
 
-        var app = new Application(new Str("org.gtk.example"), ApplicationFlags.FLAGS_NONE);
-        app.onActivate(() -> doTextmask(new ApplicationWindow(app)));
-        app.run(args.length, new Strs(args));
-
-    }
-
-    void doTextmask(ApplicationWindow window) {
+    @Override
+    public Window runDemo() {
+        var window = new Window();
         window.setResizable(GTK.TRUE);
         window.setSizeRequest(400,200);
-        window.setTitle(new Str("Text Mask"));
 
         DrawingArea da = new DrawingArea();
         window.setChild(da);
-        da.setDrawFunc((drawing_area, cr, width, height, user_data) -> drawText(window, cr), null, null);
-        window.show();
+        da.setDrawFunc((drawing_area, cr, width, height, user_data) -> drawText(window, cr), null, data -> {});
+        return window;
     }
 
 
@@ -72,4 +68,13 @@ public class PangoTextMask {
 
     }
 
+    @Override
+    public Str getTitle() {
+        return TITLE;
+    }
+
+    @Override
+    public Str getDescription() {
+        return TITLE;
+    }
 }
