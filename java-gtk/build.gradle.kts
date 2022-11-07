@@ -54,8 +54,12 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
     api("com.google.code.findbugs:jsr305:3.0.2")
 
-    api("net.java.dev.jna:jna:5.10.0")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
+    // https://github.com/java-native-access/jna
+    // https://mvnrepository.com/artifact/net.java.dev.jna/jna
+    api("net.java.dev.jna:jna:5.12.1")
+
+    //https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
 }
 
 
@@ -93,4 +97,3 @@ tasks.javadoc {
     (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
     (options as StandardJavadocDocletOptions).footer = "Test"
 }
-
