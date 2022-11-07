@@ -24,6 +24,7 @@ import examples.gtk4_demo.Pixbufs;
 import examples.gtk4_tutorial.BuilderExample;
 import examples.gtk4_tutorial.CustomDrawing;
 import examples.gtk4_tutorial.ExampleApplication;
+import examples.test.MultiThreadingCallbacks;
 
 public class App {
 
@@ -59,6 +60,8 @@ public class App {
             addSample(demoList, window, new HugeList());
             addSample(demoList, window, new ExampleApplication(app));
             addSample(demoList, window, new GlibSettings());
+            addSample(demoList, window, new MultiThreadingCallbacks());
+
 
             window.show();
         });
