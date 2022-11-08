@@ -145,7 +145,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
                 }
                 
                 public void destroy() {
-                     ch.bailu.jgtk.lib.CLib.API().free(getCPointer());
+                     ch.bailu.gtk.lib.CLib.API().free(getCPointer());
                 }
             """, 4)
             out.end(1)
@@ -222,8 +222,9 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         out.start(1)
 
         out.a("""
-            public void ${getJavaSignalMethodName(methodModel.name)}(${getJavaSignalInterfaceName(methodModel.name)} signal) {
-                ${structureModel.jnaName}.INST().g_signal_connect_data(getCPointer(), new Str("${methodModel.name}").getCPointer(), to${getJavaSignalInterfaceName(methodModel.name)}(signal), 0L, 0L, 0);
+            public final static String ${methodModel.signalNameVariable} = "${methodModel.name}"; 
+            public ch.bailu.gtk.lib.callback.Signal ${getJavaSignalMethodName(methodModel.name)}(${getJavaSignalInterfaceName(methodModel.name)} signal) {
+                return new ch.bailu.gtk.lib.callback.Signal(this, ${methodModel.signalNameVariable}, to${getJavaSignalInterfaceName(methodModel.name)}(signal));
             }
         """, 4)
         out.end(1)
@@ -248,7 +249,6 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
                 ${structureModel.jnaName}.${iName} out = null;
                 if (in != null) {
                     out = (${getCallbackOutSignature(methodModel, isSignal)}) -> in.${mName}${getCallbackInSignature(methodModel)};
-                    ch.bailu.gtk.Refs.add(in, out);
                 }
                 return out;
             }

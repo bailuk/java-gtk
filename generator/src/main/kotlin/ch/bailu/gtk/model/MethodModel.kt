@@ -51,6 +51,8 @@ class MethodModel (namespace: String, method: MethodTag) : Model() {
     val apiName: String
         get() = getJavaMethodName(name)
 
+    val signalNameVariable: String
+        get() = "SIGNAL_ON_${name.uppercase().replace('-', '_')}"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

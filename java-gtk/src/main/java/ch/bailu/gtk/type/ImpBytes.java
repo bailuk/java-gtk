@@ -1,6 +1,6 @@
 package ch.bailu.gtk.type;
 
-import ch.bailu.jgtk.lib.CLib;
+import ch.bailu.gtk.lib.CLib;
 
 public class ImpBytes {
     public static long createBytes(byte[] bytes) {

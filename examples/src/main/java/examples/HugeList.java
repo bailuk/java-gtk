@@ -14,6 +14,7 @@ import java.util.List;
 import ch.bailu.gtk.bridge.ListIndex;
 import ch.bailu.gtk.gtk.Box;
 import ch.bailu.gtk.gtk.Label;
+import ch.bailu.gtk.gtk.ListItem;
 import ch.bailu.gtk.gtk.ListView;
 import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.ScrolledWindow;
@@ -55,15 +56,15 @@ public class HugeList implements DemoInterface {
             box.append(createLabel());
             box.append(createLabel());
 
-            item.setChild(box);
+            new ListItem(item.cast()).setChild(box);
         });
 
         factory.onBind(item -> {
-            var index = new Label(item.getChild().getFirstChild().cast());
+            var index = new Label(new ListItem(item.cast()).getChild().getFirstChild().cast());
             var count = new Label(index.getNextSibling().cast());
             var word = new Label(count.getNextSibling().cast());
 
-            var idx = ListIndex.toIndex(item);
+            var idx = ListIndex.toIndex(new ListItem(item.cast()));
             var key = keyList.get(idx);
             var cnt = wordList.get(key);
 

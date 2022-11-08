@@ -59,11 +59,10 @@ public class MultiThreadingCallbacks implements DemoInterface {
         buttonAddCallback.setLabel(new Str("Add Click handler"));
         buttonAddCallback.onClicked(()->buttonOnClickedTest.onClicked(onClicked));
 
-        // TODO Refs.remove();
         box.append(buttonAddCallback);
         window.setChild(box);
 
-
+        buttonAddCallback.disconnectSignals();
         return window;
     }
 

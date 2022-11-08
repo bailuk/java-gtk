@@ -1,23 +1,19 @@
-package ch.bailu.jgtk.lib;
+package ch.bailu.gtk.lib;
 
 import com.sun.jna.Callback;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Structure;
 
-import ch.bailu.gtk.gobject.InterfaceInfo;
-
 public class GObject {
-    private static GObject.Api _API = null;
 
-    public static GObject.Api API() {
-        if (_API == null) {
-            _API = Native.load("gobject-2.0", GObject.Api.class);
-        }
-        return _API;
+    public final static Instance INST = Native.load("gobject-2.0", Instance.class);
+
+    public static Instance API() {
+        return INST;
     }
 
-    public interface Api extends Library {
+    public interface Instance extends Library {
         long g_object_new(long type, String property_name, long property, long terminate);
         void g_object_class_install_property(long oclass, int property_id, long pspec);
         long g_type_register_static_simple(long parent_type,
@@ -32,6 +28,8 @@ public class GObject {
         void g_type_add_interface_static(long instance_type, long interface_type, InterfaceInfo info);
         long g_param_spec_gtype(String name, String nick, String blurb, long is_a_type, long flags);
         void g_value_set_gtype(long value, long v_gtype);
+        long g_signal_connect_data(long instance, String detailed_signal, Callback cb, long data, long destroy_data, int flag);
+        void g_signal_handler_disconnect (long instance, long handler_id);
     }
 
     @Structure.FieldOrder({

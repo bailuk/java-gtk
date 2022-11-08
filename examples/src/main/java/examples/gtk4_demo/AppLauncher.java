@@ -12,6 +12,7 @@ import ch.bailu.gtk.gtk.DialogFlags;
 import ch.bailu.gtk.gtk.IconSize;
 import ch.bailu.gtk.gtk.Image;
 import ch.bailu.gtk.gtk.Label;
+import ch.bailu.gtk.gtk.ListItem;
 import ch.bailu.gtk.gtk.ListView;
 import ch.bailu.gtk.gtk.MessageDialog;
 import ch.bailu.gtk.gtk.MessageType;
@@ -51,13 +52,13 @@ public class AppLauncher implements DemoInterface {
             box.append(image);
             var label = new Label(new Str(""));
             box.append(label);
-            item.setChild(box);
+            new ListItem(item.cast()).setChild(box);
         });
 
         factory.onBind(item -> {
-            var image = new Image(item.getChild().getFirstChild().cast());
+            var image = new Image(new ListItem(item.cast()).getChild().getFirstChild().cast());
             var label = new Label(image.getNextSibling().cast());
-            var appInfo = new AppInfo(item.getItem().cast());
+            var appInfo = new AppInfo(new ListItem(item.cast()).getItem().cast());
 
             var icon = appInfo.getIcon();
 

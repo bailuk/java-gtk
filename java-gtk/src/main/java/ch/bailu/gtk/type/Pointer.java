@@ -3,6 +3,8 @@ package ch.bailu.gtk.type;
 
 import java.util.Objects;
 
+import ch.bailu.gtk.lib.callback.Signal;
+
 public class Pointer extends Type implements CPointerInterface {
 
     public final static Pointer NULL = new Pointer(CPointer.NULL);
@@ -105,4 +107,13 @@ public class Pointer extends Type implements CPointerInterface {
     public final boolean isNull() {
         return pointer.isNull();
     }
+
+    public final void disconnectSignals() {
+        Signal.disconnect(this);
+    }
+
+    public final void disconnectSignals(String detailedSignal) {
+        Signal.disconnect(this, detailedSignal);
+    }
+
 }

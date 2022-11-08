@@ -61,9 +61,7 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
         return result.toString()
     }
 
-    override fun writeSignal(structureModel: StructureModel, methodModel: MethodModel) {
-        out.l(0,"        long g_signal_connect_data(long _self, long detailed_signal, ${getJavaSignalInterfaceName(methodModel.name)} cb, long data, long destroy_data, int flag);", 0)
-    }
+    override fun writeSignal(structureModel: StructureModel, methodModel: MethodModel) {}
 
     override fun writeFunction(structureModel: StructureModel, methodModel: MethodModel) {
         out.l(0, "        ${methodModel.returnType.impType} ${methodModel.gtkName}(${getSignature(methodModel)});", 0)
@@ -101,7 +99,7 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
                     _size = new Fields().size();
                     System.out.println("${structureModel.apiName} size: " + _size + " bytes");
                 }
-                return ch.bailu.jgtk.lib.CLib.allocate(_size);
+                return ch.bailu.gtk.lib.CLib.allocate(_size);
             }
 
             @com.sun.jna.Structure.FieldOrder({${getFields(fields)}})

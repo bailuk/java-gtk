@@ -1,4 +1,4 @@
-package ch.bailu.jgtk.lib;
+package ch.bailu.gtk.lib;
 
 import com.sun.jna.Callback;
 import com.sun.jna.Library;
