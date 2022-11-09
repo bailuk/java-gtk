@@ -179,10 +179,10 @@ public class Pixbufs implements DemoInterface {
             da = new DrawingArea();
 
 
-            da.setDrawFunc((drawingArea, cr, width, height, userData) -> onDraw(cr), null, data -> {});
+            da.setDrawFunc((cb, drawingArea, cr, width, height, userData) -> onDraw(cr), null, (cb, data) -> {});
             demoWindow.setChild(da);
             demoWindow.setSizeRequest(backWidth, backHeight);
-            demoWindow.addTickCallback((widget, frame_clock, user_data) -> onTick(frame_clock), null, data -> {});
+            demoWindow.addTickCallback((cb, widget, frame_clock, user_data) -> onTick(frame_clock), null, (cb, data) -> {});
 
         } catch (AllocationError | IOException e) {
             System.out.println(e.getMessage());

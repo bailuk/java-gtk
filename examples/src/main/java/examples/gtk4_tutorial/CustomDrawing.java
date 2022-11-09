@@ -44,10 +44,10 @@ public class CustomDrawing implements DemoInterface {
         var drawingArea = new DrawingArea();
         frame.setChild(drawingArea);
 
-        drawingArea.setDrawFunc((self, cr, width, height, userData) -> {
+        drawingArea.setDrawFunc((cb, self, cr, width, height, userData) -> {
             cr.setSourceSurface(surface, 0, 0);
             cr.paint();
-        }, null, data -> System.out.println("onDestroyNotify()"));
+        }, null, (cb, data) -> System.out.println("onDestroyNotify()"));
 
         drawingArea.onResize((width, height) -> {
             if (surface != null) {

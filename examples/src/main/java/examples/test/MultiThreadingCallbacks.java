@@ -1,13 +1,13 @@
 package examples.test;
 
 import ch.bailu.gtk.GTK;
-import ch.bailu.gtk.Refs;
 import ch.bailu.gtk.glib.Glib;
 import ch.bailu.gtk.gtk.Box;
 import ch.bailu.gtk.gtk.Button;
 import ch.bailu.gtk.gtk.Button.OnClicked;
 import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.Window;
+import ch.bailu.gtk.lib.callback.Signal;
 import ch.bailu.gtk.type.Str;
 import examples.DemoInterface;
 
@@ -97,18 +97,20 @@ public class MultiThreadingCallbacks implements DemoInterface {
         }
     }
 
-    private MyOnClicked onClicked = new MyOnClicked("");
+    private Signal onClickedSignal = null;
 
 
-    private Glib.OnSourceFunc onSourceFunc = user_data -> {
+    private Glib.OnSourceFunc onSourceFunc = (cb, user_data) -> {
         Str data = new Str(user_data.cast());
         buttonTest.setLabel(data);
-        MyOnClicked old = onClicked;
-        onClicked = new MyOnClicked(data.toString());
-        buttonTest.onClicked(onClicked);
-        data.destroy();
 
-        Refs.remove(old);
+        var onClickedOld = onClickedSignal;
+        onClickedSignal = buttonTest.onClicked(new MyOnClicked(data.toString()));
+
+        if (onClickedOld != null) {
+            onClickedOld.disconnect();
+        }
+        data.destroy();
         return GTK.FALSE;
     };
 }

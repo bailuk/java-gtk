@@ -27,7 +27,7 @@ public class PangoTextMask implements DemoInterface {
 
         DrawingArea da = new DrawingArea();
         window.setChild(da);
-        da.setDrawFunc((drawing_area, cr, width, height, user_data) -> drawText(window, cr), null, data -> {});
+        da.setDrawFunc((cb, drawing_area, cr, width, height, user_data) -> drawText(window, cr), null, (cb, data) -> {});
         return window;
     }
 

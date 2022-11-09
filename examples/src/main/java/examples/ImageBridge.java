@@ -37,7 +37,7 @@ public class ImageBridge implements DemoInterface {
         DrawingArea drawingArea = new DrawingArea();
         demoWindow.setChild(drawingArea);
         drawingArea.onResize(this::setPixbuf);
-        drawingArea.setDrawFunc((drawing_area, cr, width, height, user_data) -> drawLogo(cr), null, data -> {});
+        drawingArea.setDrawFunc((cb, drawing_area, cr, width, height, user_data) -> drawLogo(cr), null, (cb, data) -> {});
         return demoWindow;
     }
 

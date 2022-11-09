@@ -20,7 +20,7 @@ public class GlibLoop {
         private int count = 10;
 
         public Timer(String name, int interval) {
-            int result = Glib.timeoutAdd(interval, user_data -> {
+            int result = Glib.timeoutAdd(interval, (cb, user_data) -> {
                 if (count > 0) {
                     System.out.println(name + ": timeout " + count-- + " received");
                     return GlibConstants.SOURCE_CONTINUE;

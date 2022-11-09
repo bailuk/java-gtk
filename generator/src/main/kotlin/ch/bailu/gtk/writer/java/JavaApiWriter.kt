@@ -48,43 +48,31 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         out.end(0)
     }
 
-
     override fun writeMethod(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(1)
         javaDoc.writeMethod(structureModel, methodModel)
-        writeFunctionCall(structureModel, methodModel, true)
+        writeFunctionCall(structureModel, methodModel, "this", "getCPointer()")
         out.end(1)
-    }
-
-
-    private fun writeFunctionCall(structureModel : StructureModel, methodModel : MethodModel, selfCall: Boolean) {
-        val staticToken = if (selfCall) "" else "static "
-
-        out.a("""
-            public ${staticToken}${methodModel.returnType.apiType} ${methodModel.apiName}(${getSignature(methodModel.parameters)}) ${getThrowsExtension(methodModel)} {
-                ${getFunctionCall(structureModel, methodModel, selfCall)};
-            }
-            """,4)
     }
 
     override fun writeFunction(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(1)
         javaDoc.writeFunction(structureModel, methodModel)
-        writeFunctionCall(structureModel, methodModel, false)
+        writeFunctionCall(structureModel, methodModel, "NULL", "", "static ") // TODO use class instance instead of NULL
         out.end(1)
     }
 
-    private fun getCallSignature(methodModel : MethodModel, selfCall : Boolean) : String {
-        return if (selfCall) {
-            getSelfCallSignature(methodModel)
-        } else {
-            getCallSignature(methodModel, "")
-        }
+    private fun writeFunctionCall(structureModel : StructureModel, methodModel : MethodModel, self: String, prefix: String, staticToken: String = "") {
+        out.a("""
+            public ${staticToken}${methodModel.returnType.apiType} ${methodModel.apiName}(${getSignature(methodModel.parameters)}) ${getThrowsExtension(methodModel)} {
+                ${getFunctionCall(structureModel, methodModel, prefix, self)};
+            }
+            """,4)
     }
 
-    private fun getFunctionCall(c : StructureModel, m : MethodModel, selfCall : Boolean) : String {
+    private fun getFunctionCall(c : StructureModel, m : MethodModel, prefix: String, self: String) : String {
         val result = StringBuilder()
-        val signature = getCallSignature(m, selfCall)
+        val signature = getCallSignature(m, prefix, self)
 
         if (m.returnType.isVoid) {
             result.append(getFullCall(c, m, signature))
@@ -157,7 +145,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         javaDoc.writeConstructor(structureModel, methodModel)
         out.a("""
             public ${structureModel.apiName}(${getSignature(methodModel.parameters)}) {
-                super(new CPointer(${structureModel.jnaName}.INST().${methodModel.gtkName}(${getFactoryCallSignature(methodModel)})));
+                super(new CPointer(${structureModel.jnaName}.INST().${methodModel.gtkName}(${getCallSignature(methodModel, "", "NULL")}))); // TODO use class instance instead of NULL
             }
         """, 4)
         out.end(1)
@@ -168,13 +156,11 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         javaDoc.writeFactory(structureModel, methodModel)
         out.a("""
             public static ${structureModel.apiName} ${methodModel.apiName}${structureModel.apiName}(${getSignature(methodModel.parameters)}) ${getThrowsExtension(methodModel)} {
-                CPointer pointerToObject = new CPointer(${structureModel.jnaName}.INST().${methodModel.gtkName}(${getFactoryCallSignature(methodModel)}));
-               
-                if (pointerToObject.isNull()) {
+                CPointer __self = new CPointer(${structureModel.jnaName}.INST().${methodModel.gtkName}(${getCallSignature(methodModel, "", "NULL")}));  // TODO use class instance instead of NULL
+                if (__self.isNull()) {
                     ${getThrowsOnNullStatement(structureModel, methodModel)};
                 }
-        
-                return new ${structureModel.apiName}(pointerToObject);
+                return new ${structureModel.apiName}(__self);
             }        
 
         """, 4)
@@ -232,7 +218,14 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
 
 
     override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel, isSignal: Boolean) {
+        if (isSignal) {
+            writeSignalInterface(structureModel, methodModel)
+        } else {
+            writeCallbackInterface(structureModel, methodModel)
+        }
+    }
 
+    private fun writeSignalInterface(structureModel: StructureModel, methodModel: MethodModel) {
         val iName = getJavaSignalInterfaceName(methodModel.name)
         val mName = getJavaSignalMethodName(methodModel.name)
 
@@ -248,7 +241,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
             private static ${structureModel.jnaName}.${iName} to${iName}(${iName} in) {
                 ${structureModel.jnaName}.${iName} out = null;
                 if (in != null) {
-                    out = (${getCallbackOutSignature(methodModel, isSignal)}) -> in.${mName}${getCallbackInSignature(methodModel)};
+                    out = (${getCallbackOutSignature(methodModel, "__self", "__data")}) -> in.${mName}${getCallbackInSignature(methodModel)};
                 }
                 return out;
             }
@@ -257,10 +250,38 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         out.end(1)
     }
 
-    private fun getCallbackInSignature(methodModel : MethodModel) : String {
+    private fun writeCallbackInterface(structureModel: StructureModel, methodModel: MethodModel) {
+
+        val iName = getJavaSignalInterfaceName(methodModel.name)
+        val mName = getJavaSignalMethodName(methodModel.name)
+
+        out.start(1)
+        out.a("    public interface ${getJavaSignalInterfaceName(methodModel.name)} {\n")
+
+        javaDoc.writeCallback(structureModel, methodModel)
+
+        out.a("""
+                ${methodModel.returnType.apiType} ${mName}(${getSignature(methodModel.parameters, "ch.bailu.gtk.lib.callback.Callback __self")});
+            }
+            
+            private static ${structureModel.jnaName}.${iName} to${iName}(ch.bailu.gtk.type.Pointer instance, $iName in) {
+                ${structureModel.jnaName}.${iName} out = null;
+                if (in != null) {
+                    ch.bailu.gtk.lib.callback.Callback __callback = new ch.bailu.gtk.lib.callback.Callback(instance, "callback-name-placeholder");
+                    out = (${getCallbackOutSignature(methodModel)}) -> in.${mName}${getCallbackInSignature(methodModel, "__callback")};
+                    __callback.register(out);
+                }
+                return out;
+            }
+        """, 4)
+
+        out.end(1)
+    }
+
+    private fun getCallbackInSignature(methodModel : MethodModel, prefix: String = "") : String {
         val result = StringBuilder()
 
-        result.append("(${getSignalInterfaceCallSignature(methodModel)})")
+        result.append("(${getSignalInterfaceCallSignature(methodModel, prefix)})")
 
         if (!methodModel.returnType.isVoid && !methodModel.returnType.isJavaNative) {
             result.append(".getCPointer()")
@@ -268,9 +289,9 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         return result.toString()
     }
 
-    private fun getSignalInterfaceCallSignature(methodModel : MethodModel) : String {
-        val result = StringBuilder()
-        var del = ""
+    private fun getSignalInterfaceCallSignature(methodModel : MethodModel, prefix : String = "") : String {
+        val result = StringBuilder(prefix)
+        var del = if (prefix.isNotEmpty()) ", " else ""
 
         for (p in (methodModel).parameters) {
             result.append(del)
@@ -282,33 +303,29 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
             del = ", "
         }
         return result.toString()
-
     }
 
-    private fun getCallbackOutSignature(methodModel: MethodModel, signal: Boolean): String {
-        val result = StringBuilder()
+    private fun getCallbackOutSignature(methodModel: MethodModel, prefix: String = "", postfix: String = ""): String {
+        val result = StringBuilder(prefix)
 
-        var del = ""
-        if (signal) {
-            result.append("__self")
-            del = ", "
-        }
+        var del = if (prefix.isEmpty()) "" else ", "
 
         methodModel.parameters.forEach {
             result.append("${del}_${it.name}")
             del = ", "
         }
 
-        if (signal) {
-            result.append("${del}__data")
+        if (postfix.isNotEmpty()) {
+            result.append("${del}${postfix}")
         }
+
         return result.toString()
     }
 
-    private fun getSignature(parameters : List<ParameterModel>) : String{
-        val result = StringBuilder()
+    private fun getSignature(parameters : List<ParameterModel>, prefix: String = "") : String{
+        val result = StringBuilder(prefix)
+        var del = if (prefix.isEmpty()) "" else ", "
 
-        var del = ""
         for (p in parameters) {
             val nonnull = if (!p.isJavaNative) {
                 if (p.nullable) {
@@ -326,24 +343,15 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         return result.toString()
     }
 
-
-    private fun getSelfCallSignature(methodModel: MethodModel) : String {
-        return "getCPointer()${getCallSignature(methodModel, ", ")}"
-    }
-
-    private fun getFactoryCallSignature(methodModel: MethodModel) : String {
-        return getCallSignature(methodModel, " ")
-    }
-
-    private fun getCallSignature(methodModel: MethodModel, firstDel : String) : String{
-        val result = StringBuilder()
-        var del = firstDel
+    private fun getCallSignature(methodModel: MethodModel, prefix : String, self: String) : String{
+        val result = StringBuilder(prefix)
+        var del = if (prefix.isEmpty()) "" else ", "
 
 
         for (p in methodModel.parameters) {
             if (p.isCallback && p.callbackModel != null) {
                 val iName = getJavaSignalInterfaceName(p.callbackModel.name)
-                result.append("${del}to${iName}(${p.name})")
+                result.append("${del}to${iName}(${self}, ${p.name})")
             } else if  (p.isJavaNative) {
                 result.append("${del}${p.name}")
             } else if (p.nullable) {

@@ -75,10 +75,10 @@ public class Picker implements DemoInterface {
         var fontChooser = new FontChooser(fontPicker.cast());
         fontChooser.setLevel(FontChooserLevel.FAMILY | FontChooserLevel.SIZE);
 
-        fontChooser.setFilterFunc((family, face, data) -> {
+        fontChooser.setFilterFunc((cb, family, face, data) -> {
             Str familyStr = family.getName();
             return Arrays.asList(FONT_FAMILIES).contains(familyStr.toString()) ? GTK.TRUE : GTK.FALSE;
-        }, null, data -> {});
+        }, null, (cb, data) -> {});
 
         table.attach(fontPicker, 2,1,1,1);
 
@@ -101,10 +101,10 @@ public class Picker implements DemoInterface {
         rgba.setFieldGreen(0f);
         rgba.setFieldAlpha(1f);
 
-        da.setDrawFunc((drawing_area, cr, width, height, user_data) -> {
+        da.setDrawFunc((cb, drawing_area, cr, width, height, user_data) -> {
             Gdk.cairoSetSourceRgba(cr, rgba);
             cr.paint();
-        }, null, data -> {});
+        }, null, (cb, data) -> {});
 
         table.attach(da,1,4,1,1);
 

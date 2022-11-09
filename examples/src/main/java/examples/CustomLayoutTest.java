@@ -16,13 +16,13 @@ public class CustomLayoutTest {
             // Create a new window
             var window = new ApplicationWindow(app);
 
-            var layoutManager = new CustomLayout(widget -> {
+            var layoutManager = new CustomLayout((cb, widget) -> {
                 System.out.println("onCustomRequestModeFunc called");
                 return 0;
-            }, (widget, orientation, for_size, minimum, natural, minimum_baseline, natural_baseline) -> {
+            }, (cb, widget, orientation, for_size, minimum, natural, minimum_baseline, natural_baseline) -> {
                 System.out.println("onCustomMeasureFunc called");
                 System.out.println(orientation + ":" + for_size);
-            }, (widget, width, height, baseline) -> {
+            }, (cb, widget, width, height, baseline) -> {
                 System.out.println("onCustomAllocateFunc called");
                 System.out.println(width + ":" + height + ":" + baseline);
             });
