@@ -32,6 +32,9 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         out.start(3)
         javaDoc.writeClass(structureModel)
         out.a("public class ${structureModel.apiName} extends ${structureModel.apiParentName} {\n")
+        out.a("    public static ch.bailu.gtk.lib.handler.ClassHandler getClassHandler() {\n")
+        out.a("        return ch.bailu.gtk.lib.handler.ClassHandler.get(${structureModel.apiName}.class.getCanonicalName());\n")
+        out.a("    }\n")
         out.end(1)
     }
 
@@ -58,7 +61,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
     override fun writeFunction(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(1)
         javaDoc.writeFunction(structureModel, methodModel)
-        writeFunctionCall(structureModel, methodModel, "NULL", "", "static ") // TODO use class instance instead of NULL
+        writeFunctionCall(structureModel, methodModel, "getClassHandler().getInstance()", "", "static ")
         out.end(1)
     }
 
@@ -145,7 +148,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         javaDoc.writeConstructor(structureModel, methodModel)
         out.a("""
             public ${structureModel.apiName}(${getSignature(methodModel.parameters)}) {
-                super(new CPointer(${structureModel.jnaName}.INST().${methodModel.gtkName}(${getCallSignature(methodModel, "", "NULL")}))); // TODO use class instance instead of NULL
+                super(new CPointer(${structureModel.jnaName}.INST().${methodModel.gtkName}(${getCallSignature(methodModel, "", "getClassHandler().getInstance()")})));
             }
         """, 4)
         out.end(1)
@@ -156,7 +159,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         javaDoc.writeFactory(structureModel, methodModel)
         out.a("""
             public static ${structureModel.apiName} ${methodModel.apiName}${structureModel.apiName}(${getSignature(methodModel.parameters)}) ${getThrowsExtension(methodModel)} {
-                CPointer __self = new CPointer(${structureModel.jnaName}.INST().${methodModel.gtkName}(${getCallSignature(methodModel, "", "NULL")}));  // TODO use class instance instead of NULL
+                CPointer __self = new CPointer(${structureModel.jnaName}.INST().${methodModel.gtkName}(${getCallSignature(methodModel, "", "getClassHandler().getInstance()")}));
                 if (__self.isNull()) {
                     ${getThrowsOnNullStatement(structureModel, methodModel)};
                 }
@@ -209,8 +212,8 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
 
         out.a("""
             public final static String ${methodModel.signalNameVariable} = "${methodModel.name}"; 
-            public ch.bailu.gtk.lib.callback.Signal ${getJavaSignalMethodName(methodModel.name)}(${getJavaSignalInterfaceName(methodModel.name)} signal) {
-                return new ch.bailu.gtk.lib.callback.Signal(this, ${methodModel.signalNameVariable}, to${getJavaSignalInterfaceName(methodModel.name)}(signal));
+            public ch.bailu.gtk.lib.handler.SignalHandler ${getJavaSignalMethodName(methodModel.name)}(${getJavaSignalInterfaceName(methodModel.name)} signal) {
+                return new ch.bailu.gtk.lib.handler.SignalHandler(this, ${methodModel.signalNameVariable}, to${getJavaSignalInterfaceName(methodModel.name)}(signal));
             }
         """, 4)
         out.end(1)
@@ -261,13 +264,13 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         javaDoc.writeCallback(structureModel, methodModel)
 
         out.a("""
-                ${methodModel.returnType.apiType} ${mName}(${getSignature(methodModel.parameters, "ch.bailu.gtk.lib.callback.Callback __self")});
+                ${methodModel.returnType.apiType} ${mName}(${getSignature(methodModel.parameters, "ch.bailu.gtk.lib.handler.CallbackHandler __self")});
             }
             
-            private static ${structureModel.jnaName}.${iName} to${iName}(ch.bailu.gtk.type.Pointer instance, $iName in) {
+            private static ${structureModel.jnaName}.${iName} to${iName}(ch.bailu.gtk.type.Pointer instance, String methodName, $iName in) {
                 ${structureModel.jnaName}.${iName} out = null;
                 if (in != null) {
-                    ch.bailu.gtk.lib.callback.Callback __callback = new ch.bailu.gtk.lib.callback.Callback(instance, "callback-name-placeholder");
+                    ch.bailu.gtk.lib.handler.CallbackHandler __callback = new ch.bailu.gtk.lib.handler.CallbackHandler(instance, methodName);
                     out = (${getCallbackOutSignature(methodModel)}) -> in.${mName}${getCallbackInSignature(methodModel, "__callback")};
                     __callback.register(out);
                 }
@@ -351,7 +354,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         for (p in methodModel.parameters) {
             if (p.isCallback && p.callbackModel != null) {
                 val iName = getJavaSignalInterfaceName(p.callbackModel.name)
-                result.append("${del}to${iName}(${self}, ${p.name})")
+                result.append("${del}to${iName}(${self}, \"${methodModel.apiName}\", ${p.name})")
             } else if  (p.isJavaNative) {
                 result.append("${del}${p.name}")
             } else if (p.nullable) {

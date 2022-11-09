@@ -1,23 +1,25 @@
-package ch.bailu.gtk.lib.callback;
+package ch.bailu.gtk.lib.handler;
 
 import java.util.Objects;
 
+import ch.bailu.gtk.lib.util.IDGen;
 import ch.bailu.gtk.lib.util.MMap;
 import ch.bailu.gtk.lib.util.SizeLog;
 import ch.bailu.gtk.type.Pointer;
 
-public class Callback {
+public class CallbackHandler {
+    private static final IDGen idGen = new IDGen();
     private final Pointer instance;
-    private final String detailedCallback;
+    private final String methodName;
     private com.sun.jna.Callback callback;
-    private final long callbackId = CallbackID.gen();
+    private final long callbackId = idGen.gen();
 
-    private static final MMap<Long, Long, Callback> mmap = new MMap<>();
-    private static final SizeLog sizeLog = new SizeLog(Callback.class.getSimpleName());
+    private static final MMap<Long, Long, CallbackHandler> mmap = new MMap<>();
+    private static final SizeLog sizeLog = new SizeLog(CallbackHandler.class.getSimpleName());
 
-    public Callback(Pointer instance, String detailedCallback) {
+    public CallbackHandler(Pointer instance, String methodName) {
         this.instance = instance;
-        this.detailedCallback = detailedCallback;
+        this.methodName = methodName;
     }
 
     public synchronized void register(com.sun.jna.Callback callback)  {
@@ -38,23 +40,23 @@ public class Callback {
     public static void unregister(Pointer instance) {
         synchronized (mmap) {
             var values = mmap.getValues(instance.getCPointer());
-            for (Callback callback: values.toArray(new Callback[0])) {
+            for (CallbackHandler callback: values.toArray(new CallbackHandler[0])) {
                 callback.unregister();
             }
         }
     }
 
-    public synchronized void unregisterIf(String detailedCallback) {
-        if (Objects.equals(detailedCallback, this.detailedCallback)) {
+    public synchronized void unregister(String detailedCallback) {
+        if (Objects.equals(detailedCallback, this.methodName)) {
             unregister();
         }
     }
 
-    public static void unregisterIf(Pointer instance, String detailedCallback) {
+    public static void unregister(Pointer instance, String detailedCallback) {
         synchronized (mmap) {
             var values = mmap.getValues(instance.getCPointer());
-            for (Callback callback: values.toArray(new Callback[0])) {
-                callback.unregisterIf(detailedCallback);
+            for (CallbackHandler callback: values.toArray(new CallbackHandler[0])) {
+                callback.unregister(detailedCallback);
             }
         }
     }

@@ -3,7 +3,8 @@ package ch.bailu.gtk.type;
 
 import java.util.Objects;
 
-import ch.bailu.gtk.lib.callback.Signal;
+import ch.bailu.gtk.lib.handler.CallbackHandler;
+import ch.bailu.gtk.lib.handler.SignalHandler;
 
 public class Pointer extends Type implements CPointerInterface {
 
@@ -109,11 +110,18 @@ public class Pointer extends Type implements CPointerInterface {
     }
 
     public final void disconnectSignals() {
-        Signal.disconnect(this);
+        SignalHandler.disconnect(this);
     }
 
     public final void disconnectSignals(String detailedSignal) {
-        Signal.disconnect(this, detailedSignal);
+        SignalHandler.disconnect(this, detailedSignal);
     }
 
+    public final void unregisterCallbacks() {
+        CallbackHandler.unregister(this);
+    }
+
+    public final void unregisterCallbacks(String detailedName) {
+        CallbackHandler.unregister(this, detailedName);
+    }
 }

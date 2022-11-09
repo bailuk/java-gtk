@@ -7,7 +7,7 @@ import ch.bailu.gtk.gtk.Button;
 import ch.bailu.gtk.gtk.Button.OnClicked;
 import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.Window;
-import ch.bailu.gtk.lib.callback.Signal;
+import ch.bailu.gtk.lib.handler.SignalHandler;
 import ch.bailu.gtk.type.Str;
 import examples.DemoInterface;
 
@@ -97,7 +97,7 @@ public class MultiThreadingCallbacks implements DemoInterface {
         }
     }
 
-    private Signal onClickedSignal = null;
+    private SignalHandler onClickedSignal = null;
 
 
     private Glib.OnSourceFunc onSourceFunc = (cb, user_data) -> {

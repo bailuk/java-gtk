@@ -1,4 +1,4 @@
-package ch.bailu.gtk.lib.callback;
+package ch.bailu.gtk.lib.handler;
 
 import com.sun.jna.Callback;
 
@@ -9,16 +9,16 @@ import ch.bailu.gtk.lib.GObject;
 import ch.bailu.gtk.lib.util.SizeLog;
 import ch.bailu.gtk.type.Pointer;
 
-public class Signal {
+public class SignalHandler {
     private final Callback callback;
     private final long handlerId;
     private final String detailedSignal;
     private final Pointer instance;
 
-    private static final MMap<Long, Long, Signal> mmap = new MMap<>();
-    private static final SizeLog sizeLog = new SizeLog(Signal.class.getSimpleName());
+    private static final MMap<Long, Long, SignalHandler> mmap = new MMap<>();
+    private static final SizeLog sizeLog = new SizeLog(SignalHandler.class.getSimpleName());
 
-    public Signal(Pointer instance, String detailedSignal, Callback callback) {
+    public SignalHandler(Pointer instance, String detailedSignal, Callback callback) {
         this.callback = callback;
         this.instance = instance;
         this.detailedSignal = detailedSignal;
@@ -42,7 +42,7 @@ public class Signal {
     public static void disconnect(Pointer instance) {
         synchronized (mmap) {
             var values = mmap.getValues(instance.getCPointer());
-            for (Signal signal: values.toArray(new Signal[0])) {
+            for (SignalHandler signal: values.toArray(new SignalHandler[0])) {
                 signal.disconnect();
             }
         }
@@ -51,7 +51,7 @@ public class Signal {
     public static void disconnect(Pointer instance, String detailedSignal) {
         synchronized (mmap) {
             var values = mmap.getValues(instance.getCPointer());
-            for (Signal signal: values.toArray(new Signal[0])) {
+            for (SignalHandler signal: values.toArray(new SignalHandler[0])) {
                 signal.disconnectIf(detailedSignal);
             }
         }
