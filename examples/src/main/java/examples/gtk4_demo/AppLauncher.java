@@ -1,6 +1,5 @@
 package examples.gtk4_demo;
 
-import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.exception.AllocationError;
 import ch.bailu.gtk.gio.AppInfo;
 import ch.bailu.gtk.gio.Gio;
@@ -76,14 +75,14 @@ public class AppLauncher implements DemoInterface {
             var appInfo = new AppInfo(model.getItem(position).cast());
             var context = list.getDisplay().getAppLaunchContext();
 
-            var result = GTK.FALSE;
+            var result = false;
             try {
                 result = appInfo.launch(null, context);
             } catch (AllocationError allocationError) {
-                result = GTK.FALSE;
+                result = false;
             }
 
-            if (result == GTK.FALSE) {
+            if (!result) {
                 var dialog = new MessageDialog(
                         window,
                         DialogFlags.DESTROY_WITH_PARENT | DialogFlags.MODAL,

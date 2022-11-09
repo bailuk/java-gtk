@@ -3,7 +3,6 @@ package examples.gtk4_demo;
 import java.io.IOException;
 import java.io.InputStream;
 
-import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.bridge.Image;
 import ch.bailu.gtk.cairo.Context;
 import ch.bailu.gtk.exception.AllocationError;
@@ -81,17 +80,17 @@ public class Pixbufs implements DemoInterface {
         }
     }
 
-    int onDraw(Context cr) {
+    boolean onDraw(Context cr) {
         Gdk.cairoSetSourcePixbuf(cr, frame, 0, 0);
         cr.paint();
-        return GTK.TRUE;
+        return true;
     }
 
 
     // TODO implement free() or destroy():
     private Rectangle r1 = new Rectangle(), r2 = new Rectangle(), dest = new Rectangle();
 
-    private int onTick(FrameClock frameClock) {
+    private boolean onTick(FrameClock frameClock) {
         long currentTime;
         double f;
         double xmid, ymid;
@@ -152,7 +151,7 @@ public class Pixbufs implements DemoInterface {
             r2.setFieldWidth(backWidth);
             r2.setFieldHeight(backHeight);
 
-            if (r1.intersect(r2, dest) == GTK.TRUE) {
+            if (r1.intersect(r2, dest)) {
                 images[i].composite(frame,
                         dest.getFieldX(),
                         dest.getFieldY(),
@@ -171,11 +170,11 @@ public class Pixbufs implements DemoInterface {
     @Override
     public Window runDemo() {
         var demoWindow = new Window();
-        demoWindow.setResizable(GTK.FALSE);
+        demoWindow.setResizable(false);
 
         try  {
             loadPixbufs();
-            frame = new Pixbuf(Colorspace.RGB, GTK.FALSE, 8, backWidth, backHeight);
+            frame = new Pixbuf(Colorspace.RGB, false, 8, backWidth, backHeight);
             da = new DrawingArea();
 
 

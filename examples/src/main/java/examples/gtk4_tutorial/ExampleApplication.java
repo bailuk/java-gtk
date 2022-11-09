@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Set;
 
-import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.exception.AllocationError;
 import ch.bailu.gtk.gio.MenuModel;
 import ch.bailu.gtk.gtk.Application;
@@ -78,7 +77,7 @@ public class ExampleApplication implements DemoInterface {
 
             actions.add("show-words", false, (parameter) -> {
                 var revealer = new Revealer(appBuilder.getObject("sidebar"));
-                revealer.setRevealChild(GTK.IS(actions.getBooleanState("show-words")));
+                revealer.setRevealChild(actions.getBooleanState("show-words"));
             });
 
             var stack = new Stack(appBuilder.getObject("stack"));
@@ -101,8 +100,8 @@ public class ExampleApplication implements DemoInterface {
             stack.onNotify(pspec -> {
                 System.out.println(pspec.getName().toString());
                 if ("visible-child".equals(pspec.getName().toString())) {
-                    if (stack.inDestruction() == GTK.FALSE) {
-                        searchBar.setSearchMode(GTK.FALSE);
+                    if (!stack.inDestruction()) {
+                        searchBar.setSearchMode(false);
                         updateWords(stack, new ListBox(appBuilder.getObject("words")), new Editable(searchEntry.cast()));
                     }
                 }
@@ -118,9 +117,9 @@ public class ExampleApplication implements DemoInterface {
                 var match_end = new TextIter();
 
                 buffer.getStartIter(start);
-                if (GTK.IS(start.forwardSearch(text, TextSearchFlags.CASE_INSENSITIVE, match_start, match_end, null))) {
+                if (start.forwardSearch(text, TextSearchFlags.CASE_INSENSITIVE, match_start, match_end, null)) {
                     buffer.selectRange(match_start, match_end);
-                    view.scrollToIter(match_start, 0.0, GTK.FALSE, 0.0, 0.0);
+                    view.scrollToIter(match_start, 0.0, false, 0.0, 0.0);
                 }
 
                 match_end.destroy();
@@ -148,12 +147,12 @@ public class ExampleApplication implements DemoInterface {
         var name = new Str(file.getName());
 
         var scrolled = new ScrolledWindow();
-        scrolled.setHexpand(GTK.TRUE);
-        scrolled.setVexpand(GTK.TRUE);
+        scrolled.setHexpand(true);
+        scrolled.setVexpand(true);
 
         var text = new TextView();
-        text.setEditable(GTK.FALSE);
-        text.setCursorVisible(GTK.FALSE);
+        text.setEditable(false);
+        text.setCursorVisible(false);
         scrolled.setChild(text);
         stack.addTitled(scrolled, name, name);
 
@@ -189,18 +188,18 @@ public class ExampleApplication implements DemoInterface {
         buffer.getStartIter(start);
         buffer.getStartIter(end);
 
-        while (!GTK.IS(start.isEnd())) {
-            while (!GTK.IS(start.startsWord()) && GTK.IS(start.forwardChar()) && GTK.IS(end.forwardChar()));
+        while (!start.isEnd()) {
+            while (!start.startsWord() && start.forwardChar() && end.forwardChar());
 
-            if (!GTK.IS(end.forwardWordEnd())) {
+            if (!(end.forwardWordEnd())) {
                 break;
             }
 
-            Str word = buffer.getText(start, end, GTK.FALSE);
+            Str word = buffer.getText(start, end, false);
             list.put(word.toString(), 0);
             word.destroy();
 
-            if (!GTK.IS(start.forwardWordEnd())) {
+            if (!(start.forwardWordEnd())) {
                 break;
             }
         }

@@ -26,10 +26,10 @@ public class LinksSample implements DemoInterface {
         var window  = new Window();
         Label label = new Label(LABEL);
 
-        label.setUseMarkup(1);
+        label.setUseMarkup(true);
         label.onActivateLink(uri -> {
             System.out.println("link clicked");
-            return 0;
+            return false;
         });
         window.setChild(label);
         label.show();

@@ -59,7 +59,7 @@ public class HeaderBarSample implements DemoInterface {
         window.setTitlebar(header);
         window.setChild(new TextView());
 
-        //window.setShowMenubar(GTK.TRUE);
+        //window.setShowMenubar(true);
         //app.setMenubar(menuModel);
         return window;
     }

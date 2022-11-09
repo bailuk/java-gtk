@@ -43,16 +43,16 @@ public class TestCCall {
 
         final long timeExpectMin = 100*10;
         final long start = System.currentTimeMillis();
-        final var loop = new MainLoop(new MainContext(CPointer.NULL), GTK.TRUE);
+        final var loop = new MainLoop(new MainContext(CPointer.NULL), true);
         Glib.timeoutAdd(100, (self, user_data) -> {
             System.out.println(i);
             i++;
             if (i==10) {
                 loop.quit();
                 self.unregister();
-                return GTK.FALSE;
+                return false;
             }
-            return GTK.TRUE;
+            return true;
         }, null);
         assertEquals(0, i);
         loop.run();

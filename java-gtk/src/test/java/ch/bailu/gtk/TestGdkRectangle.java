@@ -1,6 +1,8 @@
 package ch.bailu.gtk;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -25,10 +27,10 @@ public class TestGdkRectangle {
         r2.setFieldY(5);
         r2.setFieldWidth(10);
 
-        assertEquals(GTK.TRUE, r1.equal(r2));
+        assertTrue(r1.equal(r2));
 
         r2.setFieldHeight(2);
         assertEquals(2, r2.getFieldHeight());
-        assertEquals(GTK.FALSE, r1.equal(r2));
+        assertFalse(r1.equal(r2));
     }
 }

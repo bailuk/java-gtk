@@ -2,9 +2,6 @@ package examples.gtk4_demo;
 
 import java.util.Arrays;
 
-import javax.annotation.Nullable;
-
-import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.gdk.Gdk;
 import ch.bailu.gtk.gdk.RGBA;
 import ch.bailu.gtk.gtk.Align;
@@ -21,7 +18,6 @@ import ch.bailu.gtk.gtk.Label;
 import ch.bailu.gtk.gtk.ResponseType;
 import ch.bailu.gtk.gtk.Window;
 import ch.bailu.gtk.type.CPointer;
-import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
 import examples.DemoInterface;
 
@@ -55,7 +51,7 @@ public class Picker implements DemoInterface {
         var label = new Label(new Str("Color:"));
         label.setHalign(Align.START);
         label.setValign(Align.CENTER);
-        label.setHexpand(GTK.TRUE);
+        label.setHexpand(true);
         table.attach(label, 0,0,1,1);
 
 
@@ -65,7 +61,7 @@ public class Picker implements DemoInterface {
         label = new Label(new Str("Font:"));
         label.setHalign(Align.START);
         label.setValign(Align.CENTER);
-        label.setHexpand(GTK.TRUE);
+        label.setHexpand(true);
         table.attach(label,0,1,1,1);
 
         var fontPicker = new FontButton();
@@ -77,7 +73,7 @@ public class Picker implements DemoInterface {
 
         fontChooser.setFilterFunc((cb, family, face, data) -> {
             Str familyStr = family.getName();
-            return Arrays.asList(FONT_FAMILIES).contains(familyStr.toString()) ? GTK.TRUE : GTK.FALSE;
+            return Arrays.asList(FONT_FAMILIES).contains(familyStr.toString());
         }, null, (cb, data) -> {});
 
         table.attach(fontPicker, 2,1,1,1);
@@ -85,10 +81,10 @@ public class Picker implements DemoInterface {
         label = new Label(new Str("Mail:"));
         label.setHalign(Align.START);
         label.setValign(Align.CENTER);
-        label.setHexpand(GTK.TRUE);
+        label.setHexpand(true);
 
         var appPicker = new AppChooserButton(new Str("x-scheme-handler/mailto"));
-        appPicker.setShowDefaultItem(GTK.TRUE);
+        appPicker.setShowDefaultItem(true);
         table.attach(label, 0,3,1,1);
         table.attach(appPicker, 1,3,1,1);
 
@@ -110,7 +106,7 @@ public class Picker implements DemoInterface {
 
         button.onClicked(() -> {
             var dialog = new ColorChooserDialog(new Str("Changing color"), demoWindow);
-            dialog.setModal(1);
+            dialog.setModal(true);
 
             dialog.onResponse(response_id -> {
                 if (response_id == ResponseType.OK) {

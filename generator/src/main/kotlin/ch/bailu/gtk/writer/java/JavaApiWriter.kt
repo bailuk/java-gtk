@@ -184,11 +184,6 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         if (parameterModel.apiType.endsWith("Str")) {
             type = "String"
             value = "\"$value\""
-        } else if ("true" == value){
-            value = "ch.bailu.gtk.GTK.TRUE"
-
-        } else if ("false" == value){
-            value = "ch.bailu.gtk.GTK.FALSE"
         }
 
         out.a("    " + type + " " + parameterModel.name + " = " + value + ";\n")

@@ -1,8 +1,5 @@
 package examples.gtk4_demo;
 
-import javax.annotation.Nullable;
-
-import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.cairo.Context;
 import ch.bailu.gtk.cairo.Pattern;
 import ch.bailu.gtk.gtk.DrawingArea;
@@ -12,7 +9,6 @@ import ch.bailu.gtk.pango.FontDescription;
 import ch.bailu.gtk.pango.Layout;
 import ch.bailu.gtk.pango.Pango;
 import ch.bailu.gtk.pangocairo.Pangocairo;
-import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
 import examples.DemoInterface;
 
@@ -22,7 +18,7 @@ public class PangoTextMask implements DemoInterface {
     @Override
     public Window runDemo() {
         var window = new Window();
-        window.setResizable(GTK.TRUE);
+        window.setResizable(true);
         window.setSizeRequest(400,200);
 
         DrawingArea da = new DrawingArea();
@@ -32,7 +28,7 @@ public class PangoTextMask implements DemoInterface {
     }
 
 
-    private int drawText(Widget da, Context cr) {
+    private boolean drawText(Widget da, Context cr) {
         cr.save();
 
         Layout layout = da.createPangoLayout(new Str("Pango power!\nPango power!\nPango power!"));
@@ -64,7 +60,7 @@ public class PangoTextMask implements DemoInterface {
         cr.setLineWidth(0.5);
         cr.stroke();
         cr.restore();
-        return GTK.TRUE;
+        return true;
 
     }
 

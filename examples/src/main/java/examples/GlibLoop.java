@@ -1,6 +1,5 @@
 package examples;
 
-import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.glib.Glib;
 import ch.bailu.gtk.glib.GlibConstants;
 import ch.bailu.gtk.glib.MainLoop;
@@ -10,7 +9,7 @@ public class GlibLoop {
     static int timers = 0;
 
     public GlibLoop() {
-        loop = new MainLoop(Glib.mainContextDefault(), GTK.FALSE);
+        loop = new MainLoop(Glib.mainContextDefault(), false);
         new Timer("Timer one", 777);
         new Timer("Timer two", 1024);
         loop.run();
@@ -33,7 +32,7 @@ public class GlibLoop {
             if (result > 0) timers++;
         }
 
-        public int remove() {
+        public boolean remove() {
             if (--timers == 0) {
                 loop.quit();
             }

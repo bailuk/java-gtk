@@ -9,7 +9,7 @@ object PrimitivesTable {
     init {
         add("none", "void")
         add("void", "void")
-        add("gboolean", "int")
+        add("gboolean", "boolean")
         add("gint", "int")
         add("glong", "long")
         add("guint", "int")

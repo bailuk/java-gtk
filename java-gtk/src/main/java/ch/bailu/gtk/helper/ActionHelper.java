@@ -2,7 +2,6 @@ package ch.bailu.gtk.helper;
 
 import java.util.HashMap;
 
-import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.gio.Action;
 import ch.bailu.gtk.gio.ActionMap;
 import ch.bailu.gtk.gio.SimpleAction;
@@ -35,7 +34,7 @@ public class ActionHelper {
     }
 
     public void add(String name, boolean initial, SimpleAction.OnActivate run) {
-        var action = SimpleAction.newStatefulSimpleAction(new Str(name), null, Variant.newBooleanVariant(GTK.IS(initial)));
+        var action = SimpleAction.newStatefulSimpleAction(new Str(name), null, Variant.newBooleanVariant(initial));
         addAction(name, new Action(action.cast()));
         action.onActivate(parameter -> {
             toggleState(name);
@@ -57,7 +56,7 @@ public class ActionHelper {
         Action action = actions.get(name);
 
         if (action != null) {
-            action.changeState(Variant.newBooleanVariant(GTK.IS(checked)));
+            action.changeState(Variant.newBooleanVariant(checked));
         }
     }
 
@@ -65,7 +64,7 @@ public class ActionHelper {
         Action action = actions.get(name);
 
         if (action != null) {
-            action.changeState(Variant.newBooleanVariant(GTK.TOGGLE(action.getState().getBoolean())));
+            action.changeState(Variant.newBooleanVariant(!action.getState().getBoolean()));
             return getBooleanState(name);
         }
         return false;
@@ -83,7 +82,7 @@ public class ActionHelper {
         Action action = actions.get(name);
 
         if (action != null) {
-            return GTK.IS(action.getState().getBoolean());
+            return action.getState().getBoolean();
         }
         return false;
     }

@@ -1,6 +1,7 @@
 package ch.bailu.gtk;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +36,7 @@ public class TestListIndex {
         assertEquals(3,singleSelection.getSelected());
 
         var selectionModel = new SelectionModel(singleSelection.cast());
-        selectionModel.selectItem(4,GTK.TRUE);
-        assertEquals(GTK.TRUE, selectionModel.isSelected(4));
+        selectionModel.selectItem(4, true);
+        assertTrue(selectionModel.isSelected(4));
     }
 }

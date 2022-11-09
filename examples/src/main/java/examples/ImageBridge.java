@@ -4,9 +4,6 @@ package examples;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.annotation.Nullable;
-
-import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.bridge.Image;
 import ch.bailu.gtk.cairo.Context;
 import ch.bailu.gtk.gdk.Gdk;
@@ -16,7 +13,6 @@ import ch.bailu.gtk.gtk.DrawingArea;
 import ch.bailu.gtk.gtk.Window;
 import ch.bailu.gtk.lib.resources.JavaResource;
 import ch.bailu.gtk.type.CPointer;
-import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
 
 public class ImageBridge implements DemoInterface {
@@ -31,7 +27,7 @@ public class ImageBridge implements DemoInterface {
         listSupportedFormats();
 
         var demoWindow = new Window();
-        demoWindow.setResizable(GTK.TRUE);
+        demoWindow.setResizable(true);
         demoWindow.setSizeRequest(App.WIDTH, App.HEIGHT);
 
         DrawingArea drawingArea = new DrawingArea();
@@ -52,15 +48,15 @@ public class ImageBridge implements DemoInterface {
             System.out.println("Format " + count + ":");
             System.out.println(format.getName());
             System.out.println(format.getDescription());
-            if (format.isDisabled() == GTK.TRUE) {
+            if (format.isDisabled()) {
                 System.out.println("disabled");
             }
 
-            if (format.isScalable() == GTK.TRUE) {
+            if (format.isScalable()) {
                 System.out.println("scalable");
             }
 
-            if (format.isWritable() == GTK.TRUE) {
+            if (format.isWritable()) {
                 System.out.println("writeable");
             }
 
@@ -89,14 +85,14 @@ public class ImageBridge implements DemoInterface {
         }
     }
 
-    private int drawLogo(Context cr) {
+    private boolean drawLogo(Context cr) {
         if (pixbuf != null) {
             cr.save();
             Gdk.cairoSetSourcePixbuf(cr, pixbuf, 0, 0);
             cr.paint();
-            return GTK.TRUE;
+            return true;
         }
-        return GTK.FALSE;
+        return false;
     }
 
     @Override

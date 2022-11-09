@@ -2,7 +2,6 @@ package examples;
 
 import java.io.File;
 
-import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.ApplicationWindow;
@@ -78,7 +77,7 @@ public class App {
         entry.setMarginTop(10);
         entry.setMarginStart(10);
         entry.setMarginBottom(10);
-        label.setHexpand(GTK.TRUE);
+        label.setHexpand(true);
         label.setXalign(0);
         button.setLabel(new Str("Run"));
         button.onClicked(() -> runDemo(demo, window));
@@ -93,7 +92,7 @@ public class App {
         demoWindow.setDisplay(parent.getDisplay());
         demoWindow.setTitle(demo.getTitle());
         demoWindow.setTransientFor(parent);
-        demoWindow.setModal(GTK.TRUE);
+        demoWindow.setModal(true);
         demoWindow.show();
     }
 

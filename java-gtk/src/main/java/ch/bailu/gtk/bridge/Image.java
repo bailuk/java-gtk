@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.exception.AllocationError;
 import ch.bailu.gtk.gdkpixbuf.Pixbuf;
 import ch.bailu.gtk.gio.MemoryInputStream;
@@ -46,12 +45,11 @@ public class Image {
      * @throws IOException
      */
     public static Pixbuf load(InputStream inputStream, int width, int height, boolean preserveAspectRatio) throws IOException {
-        final int keepAspect = GTK.is(preserveAspectRatio);
         final Bytes bytes = new Bytes(inputStream.readAllBytes());
         final MemoryInputStream stream = MemoryInputStream.newFromBytesMemoryInputStream(bytes);
 
         try {
-            final Pixbuf result = Pixbuf.newFromStreamAtScalePixbuf(stream, width, height, keepAspect, null);
+            final Pixbuf result = Pixbuf.newFromStreamAtScalePixbuf(stream, width, height, preserveAspectRatio, null);
             stream.close(null);
             result.throwIfNull();
             return result;
@@ -79,7 +77,7 @@ public class Image {
             final MemoryOutputStream stream = MemoryOutputStream.newResizableMemoryOutputStream();
             final Str format = new Str(imageFormat);
 
-            if (GTK.is(pixbuf.saveToStreamv(stream, format, null, null, null))) {
+            if (pixbuf.saveToStreamv(stream, format, null, null, null)) {
                 ch.bailu.gtk.type.Bytes bytes = new ch.bailu.gtk.type.Bytes(stream.getData().cast(), (int) stream.getDataSize());
                 outputStream.write(bytes.toBytes());
             }

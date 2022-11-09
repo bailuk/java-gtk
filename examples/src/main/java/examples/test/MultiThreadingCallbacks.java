@@ -1,6 +1,5 @@
 package examples.test;
 
-import ch.bailu.gtk.GTK;
 import ch.bailu.gtk.glib.Glib;
 import ch.bailu.gtk.gtk.Box;
 import ch.bailu.gtk.gtk.Button;
@@ -111,6 +110,6 @@ public class MultiThreadingCallbacks implements DemoInterface {
             onClickedOld.disconnect();
         }
         data.destroy();
-        return GTK.FALSE;
+        return false;
     };
 }
