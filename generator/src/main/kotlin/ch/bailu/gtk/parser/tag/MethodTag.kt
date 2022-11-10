@@ -70,14 +70,13 @@ open class MethodTag(parent: TagWithParent): NamedWithDocTag(parent) {
     }
 
     override fun toString(): String {
-        var strings = ArrayList<String>()
+        val strings = ArrayList<String>()
         strings.add(returnValue.toString())
-        strings.add(getName());
+        strings.add(getName())
         getParameters().forEach{
             strings.add(it.toString())
         }
         return colonList(strings)
 
     }
-
 }

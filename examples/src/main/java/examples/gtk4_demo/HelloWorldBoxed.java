@@ -19,7 +19,7 @@ public class HelloWorldBoxed implements DemoInterface {
 
         var verticalBox = new Box(Orientation.VERTICAL, 0);
         var buttonBox = new Box(Orientation.HORIZONTAL, 0);
-        buttonBox.addCssClass(new Str("linked"));
+        buttonBox.addCssClass("linked");
         buttonBox.setMarginBottom(MARGIN);
         buttonBox.setMarginTop(MARGIN);
         buttonBox.setMarginStart(MARGIN);
@@ -31,8 +31,8 @@ public class HelloWorldBoxed implements DemoInterface {
         verticalBox.setMarginBottom(MARGIN);
 
         var buttonHello = new Button();
-        buttonHello.setLabel(new Str("Hello"));
-        buttonHello.onClicked(() -> label.setText(new Str("Hello")));
+        buttonHello.setLabel("Hello");
+        buttonHello.onClicked(() -> label.setText("Hello"));
         buttonBox.append(buttonHello);
 
         var buttonWorld = new Button();

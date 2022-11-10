@@ -5,13 +5,10 @@ import com.sun.jna.Native;
 
 
 public class CLib {
-    private static Api _API = null;
+    public static final Api INST = Native.load("c", Api.class);
 
     public static Api API() {
-        if (_API == null) {
-            _API = Native.load("c", Api.class);
-        }
-        return _API;
+        return INST;
     }
 
     public interface Api extends Library {

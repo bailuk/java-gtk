@@ -14,17 +14,17 @@ public class BuilderHelper {
 
     private BuilderHelper(String ui) throws AllocationError {
         var uiStr = new Str(ui);
-        builder.addFromString(uiStr, uiStr.getLength());
+        builder.addFromString(ui, uiStr.getLength());
     }
     private BuilderHelper(File file) throws AllocationError {
         Str path = new Str(file.getAbsolutePath());
-        builder.addFromFile(path);
+        builder.addFromFile(file.getAbsolutePath());
         path.destroy();
     }
 
     public CPointer getObject(String name) {
         var strName = new Str(name);
-        var result = builder.getObject(strName).cast();
+        var result = builder.getObject(name).cast();
         strName.destroy();
         return result;
     }

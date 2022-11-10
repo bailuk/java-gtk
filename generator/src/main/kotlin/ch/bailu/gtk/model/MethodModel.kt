@@ -3,15 +3,26 @@ package ch.bailu.gtk.model
 import ch.bailu.gtk.log.colonList
 import ch.bailu.gtk.parser.tag.MethodTag
 import ch.bailu.gtk.writer.getJavaMethodName
-import java.util.*
 
-class MethodModel (namespace: String, method: MethodTag) : Model() {
+class MethodModel(namespace: String, method: MethodTag, preferNative: Boolean) : Model() {
     val parameters: MutableList<ParameterModel> = ArrayList()
 
     val name: String = method.getName()
     val gtkName: String = method.getIdentifier()
 
-    val returnType: ParameterModel = ParameterModel(namespace, method.getReturnValue(), false, false)
+    val returnType: ParameterModel = ParameterModel(
+        namespace,
+        method.getReturnValue(),
+        preferNative = false,
+        toUpper = false,
+        supportsDirectAccess = false
+    )
+
+    var hasNativeVariant = false
+        private set
+
+    var isNativeVariant = false
+        private set
 
     val isConstructorType: Boolean
     val throwsError: Boolean = method.throwsError()
@@ -23,14 +34,21 @@ class MethodModel (namespace: String, method: MethodTag) : Model() {
         setSupported("Deprecated", !method.isDeprecated())
         setSupported("Return value", returnType.isSupported)
         setSupported("Return cb", !returnType.isCallback)
+
         for (t in method.getParameters()) {
-            if (!t.isVarargs) {
-                val parameterModel = ParameterModel(namespace, t, false, false)
-                parameters.add(parameterModel)
-                setSupported(parameterModel.supportedState, parameterModel.isSupported)
-                if (parameterModel.isCallback) {
-                    parameterModel.callbackModel?.let { callbackModel.add(it) }
-                }
+            val parameterModel = ParameterModel(
+                namespace, t,
+                preferNative = preferNative,
+                toUpper = false,
+                supportsDirectAccess = false
+            )
+            hasNativeVariant = hasNativeVariant || parameterModel.hasNativeVariant
+            isNativeVariant = isNativeVariant || parameterModel.isNativeVariant
+
+            parameters.add(parameterModel)
+            setSupported(parameterModel.supportedState, parameterModel.isSupported)
+            if (parameterModel.isCallback) {
+                parameterModel.callbackModel?.let { callbackModel.add(it) }
             }
         }
         isConstructorType = "new" == method.getName()
@@ -62,6 +80,7 @@ class MethodModel (namespace: String, method: MethodTag) : Model() {
 
         if (name != other.name) return false
         if (gtkName != other.gtkName) return false
+        if (isNativeVariant != other.isNativeVariant) return false
 
         return true
     }

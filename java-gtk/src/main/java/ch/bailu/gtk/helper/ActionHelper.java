@@ -89,7 +89,7 @@ public class ActionHelper {
 
     public void setAccels(String name, String[] accels) {
         if (accels != null && accels.length > 1 && accels[accels.length-1] == null) {
-            app.setAccelsForAction(new Str(this.name + "." + name), new Strs(accels));
+            app.setAccelsForAction(this.name + "." + name, new Strs(accels));
         }
     }
 

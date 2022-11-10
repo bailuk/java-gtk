@@ -77,7 +77,7 @@ public class Image {
             final MemoryOutputStream stream = MemoryOutputStream.newResizableMemoryOutputStream();
             final Str format = new Str(imageFormat);
 
-            if (pixbuf.saveToStreamv(stream, format, null, null, null)) {
+            if (pixbuf.saveToStreamv(stream, imageFormat, null, null, null)) {
                 ch.bailu.gtk.type.Bytes bytes = new ch.bailu.gtk.type.Bytes(stream.getData().cast(), (int) stream.getDataSize());
                 outputStream.write(bytes.toBytes());
             }

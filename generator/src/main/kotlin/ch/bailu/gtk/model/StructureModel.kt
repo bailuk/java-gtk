@@ -17,13 +17,13 @@ import java.io.IOException
 class StructureModel : Model {
     val apiName: String
     val nameSpaceModel: NamespaceModel
-    
+
     private var parent: StructureModel
     private var models = ModelLists()
 
     val structureType: StructureType
     val typeFunction: String
-    
+
     val cType: String
     val doc: String
 
@@ -41,7 +41,13 @@ class StructureModel : Model {
         parent = StructureModel(nameSpace.namespace, structure.parent, structureType)
         doc = structure.getDoc()
         for (m in structure.constructors) {
-            models.addIfSupportedWithCallbacks(models.privateFactories, filterConstructor(MethodModel(nameSpace.namespace, m)))
+            val methodModel = MethodModel(nameSpace.namespace, m, preferNative = false)
+            models.addIfSupportedWithCallbacks(models.privateFactories, filterConstructor(methodModel))
+
+            if (methodModel.isSupported && methodModel.hasNativeVariant) {
+                val methodModel = MethodModel(nameSpace.namespace, m, preferNative = true)
+                models.addIfSupportedWithCallbacks(models.privateFactories, filterConstructor(methodModel))
+            }
         }
 
         models.privateFactories.forEach {
@@ -53,17 +59,28 @@ class StructureModel : Model {
         }
 
         for (method in structure.methods) {
-            models.addIfSupportedWithCallbacks(models.methods, filter(MethodModel(nameSpace.namespace, method)))
+            val methodModel = MethodModel(nameSpace.namespace, method, preferNative = false)
+            models.addIfSupportedWithCallbacks(models.methods, filter(methodModel))
+
+            if (methodModel.isSupported && methodModel.hasNativeVariant) {
+                val methodModel = MethodModel(nameSpace.namespace, method, preferNative = true)
+                models.addIfSupportedWithCallbacks(models.methods, filter(methodModel))
+            }
         }
+
         for (signal in structure.signals) {
-            models.signals.addIfSupported(MethodModel(nameSpace.namespace, signal))
+            models.signals.addIfSupported(MethodModel(nameSpace.namespace, signal, preferNative = false))
         }
         for (field in structure.fields) {
-            val fieldModel = ParameterModel(nameSpace.namespace, field, false, filterFieldDirectAccess(this))
+            val fieldModel = ParameterModel(
+                nameSpace.namespace,
+                field, toUpper = false,
+                supportsDirectAccess = filterFieldDirectAccess(this),
+                preferNative = false)
             models.fields.addIfSupported(filterField(fieldModel))
         }
         for (m in structure.functions) {
-            models.addIfSupportedWithCallbacks(models.functions, filter(MethodModel(nameSpace.namespace, m)))
+            models.addIfSupportedWithCallbacks(models.functions, filter(MethodModel(nameSpace.namespace, m, preferNative = false)))
         }
 
         setSupported("name", apiName != "")
@@ -104,7 +121,8 @@ class StructureModel : Model {
         apiName = getJavaClassName(nameSpaceModel.namespace)
         parent = StructureModel(nameSpaceModel.namespace, "", structureType)
         for (m in namespace.functions) {
-            models.addIfSupportedWithCallbacks(models.functions, filter(MethodModel(nameSpaceModel.namespace, m)))
+            // TODO support preferred natives
+            models.addIfSupportedWithCallbacks(models.functions, filter(MethodModel(nameSpaceModel.namespace, m, preferNative = false)))
         }
     }
 
@@ -140,7 +158,13 @@ class StructureModel : Model {
         parent = this
 
         for (parameterTag in members) {
-            models.constants.addIfSupported(ParameterModel(namespace.namespace, parameterTag, toUpper, false))
+            models.constants.addIfSupported(
+                ParameterModel(namespace.namespace, parameterTag,
+                    toUpper = toUpper,
+                    preferNative = false,
+                    supportsDirectAccess = false
+                )
+            )
         }
     }
 
