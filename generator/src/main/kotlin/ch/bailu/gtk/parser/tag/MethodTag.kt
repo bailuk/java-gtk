@@ -1,6 +1,6 @@
 package ch.bailu.gtk.parser.tag
 
-import ch.bailu.gtk.log.colonList
+import ch.bailu.gtk.log.DebugPrint
 
 open class MethodTag(parent: TagWithParent): NamedWithDocTag(parent) {
     private val returnValue = ParameterTag(this)
@@ -76,7 +76,7 @@ open class MethodTag(parent: TagWithParent): NamedWithDocTag(parent) {
         getParameters().forEach{
             strings.add(it.toString())
         }
-        return colonList(strings)
+        return DebugPrint.colon(*strings.toTypedArray())
 
     }
 }

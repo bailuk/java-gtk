@@ -1,93 +1,153 @@
 package ch.bailu.gtk.writer
 
-import ch.bailu.gtk.model.ParameterModel
-import ch.bailu.gtk.model.StructureModel
+import ch.bailu.gtk.Configuration
 import ch.bailu.gtk.table.ReservedTokenTable.convert
 
+object Names {
 
-fun getJniCallbackName(structureModel : StructureModel, parameterModel: ParameterModel) : String {
-    val cbModel = parameterModel.callbackModel
-    val cbName = cbModel?.name ?: ""
-    return getJniCallbackName(structureModel.nameSpaceModel.namespace, structureModel.apiName, getJavaSignalMethodName(cbName))
-}
-
-
-private fun getJniCallbackName(namespace: String, className: String, methodName: String) : String {
-    return "${namespace}_${className}_${methodName}"
-}
-
-
-
-fun getJavaMethodName(name: String): String {
-    if (name.length < 3) {
-        return name
-    }
-    val result = StringBuilder()
-    val names = name.split("_".toRegex()).toTypedArray()
-    result.append(names[0])
-    for (i in 1 until names.size) {
-        firstUpper(result, names[i])
-    }
-    return fixToken(result.toString())
-}
-
-
-fun getJavaClassName(name: String): String {
-    val result = StringBuilder()
-    val names = name.split("_".toRegex()).toTypedArray()
-    for (i in names.indices) {
-        firstUpper(result, names[i])
-    }
-    return fixToken(result.toString())
-}
-
-
-private fun firstUpper(result: StringBuilder, s: String) {
-    if (s.isNotEmpty()) {
-        result.append(Character.toUpperCase(s[0]))
-        if (s.length > 1) {
-            result.append(s.substring(1))
+    /**
+     * Convert any name into a valid and conventional Java method name
+     * Convert to lower camel case and replace reserved words
+     * Example "get_file_manager" -> "getFileManager"
+     */
+    fun getJavaMethodName(name: String): String {
+        if (name.length < 3) {
+            return name
         }
-    } else {
-        result.append(s)
+        val result = StringBuilder()
+        val names = name.split("_".toRegex()).toTypedArray()
+        result.append(names[0])
+        for (i in 1 until names.size) {
+            firstUpper(result, names[i])
+        }
+        return fixToken(result.toString())
     }
-}
 
 
-fun getJavaSignalMethodName(name: String): String {
-    return getJavaSignalName("on", name)
-}
-
-fun getJavaSignalInterfaceName(name: String): String {
-    return getJavaSignalName("On", name)
-}
-
-private fun getJavaSignalName(prefix: String, name: String): String {
-    val result = StringBuilder()
-    result.append(prefix)
-    val names = name.split("-".toRegex()).toTypedArray()
-    for (i in names.indices) {
-        firstUpper(result, names[i])
+    /**
+     * Convert any name into a valid and conventional Java class name
+     * Convert to upper camel case and change reserved words
+     * Example "file_manager" -> "FileManager"
+     */
+    fun getJavaClassName(name: String): String {
+        val result = StringBuilder()
+        val names = name.split("_".toRegex()).toTypedArray()
+        for (i in names.indices) {
+            firstUpper(result, names[i])
+        }
+        return fixToken(result.toString())
     }
-    return fixToken(result.toString())
-}
 
 
-fun fixToken(token: String): String {
-    return convert(token)
-}
+    private fun firstUpper(result: StringBuilder, s: String) {
+        if (s.isNotEmpty()) {
+            result.append(Character.toUpperCase(s[0]))
+            if (s.length > 1) {
+                result.append(s.substring(1))
+            }
+        } else {
+            result.append(s)
+        }
+    }
 
 
-fun getJavaFieldSetterName(name: String): String {
-    return getJavaMethodName("set_field_$name")
-}
+    fun getJavaCallbackMethodName(name: String): String {
+        return getJavaSignalName("on", name)
+    }
+
+    /**
+     * Add callback interface prefix to already valid class name
+     */
+    fun getJavaCallbackInterfaceName(name: String): String {
+        return getJavaSignalName("On", name)
+    }
+
+    private fun getJavaSignalName(prefix: String, name: String): String {
+        val result = StringBuilder()
+        result.append(prefix)
+        val names = name.split("-".toRegex()).toTypedArray()
+        for (i in names.indices) {
+            firstUpper(result, names[i])
+        }
+        return fixToken(result.toString())
+    }
 
 
-fun getJavaFieldGetterName(name: String): String {
-    return getJavaMethodName("get_field_$name")
-}
+    private fun fixToken(token: String): String {
+        return convert(token)
+    }
 
 
-fun getJavaPackageConstantsInterfaceName(namespace: String): String {
-    return getJavaClassName(namespace) + "Constants"
+    /**
+     * Get valid and conventional (lower camel case) function name with
+     * field setter prefix
+     */
+    fun getJavaFieldSetterName(name: String): String {
+        return getJavaMethodName("set_field_$name")
+    }
+
+    /**
+     * Get valid and conventional (lower camel case) function name with
+     * field getter prefix
+     */
+    fun getJavaFieldGetterName(name: String): String {
+        return getJavaMethodName("get_field_$name")
+    }
+
+
+    /**
+     * Convert to valid and conventional Java class Name
+     * @see getJavaClassName
+     * and add "Constants" postfix
+     */
+    fun getJavaPackageConstantsInterfaceName(namespace: String): String {
+        return getJavaClassName(namespace) + "Constants"
+    }
+
+    /**
+     * Add prefix for implementation class to already valid class name
+     *
+     */
+    fun getImpClassName(apiName: String): String {
+        return "Jna${apiName}"
+    }
+
+    /**
+     * Return name into valid and conventional java constant name
+     * Replaces reserved keywords
+     */
+    fun getJavaConstantName(name: String): String {
+        return fixToken(name.uppercase())
+    }
+
+    /**
+     * Return name into valid and conventional java name
+     * Replaces reserved keywords
+     */
+    fun getJavaVariableName(name: String): String {
+        return fixToken(name)
+    }
+
+    /**
+     * Add complete namespace prefix to already valid Java name
+     * @param namespace subpackage name like "gobject"
+     * @param name valid java class name
+     */
+    fun getJavaClassNameWithNamespacePrefix(namespace: String, name: String): String {
+        return if (name.startsWith(Configuration.BASE_NAME_SPACE_DOT)) {
+            name
+        } else {
+            "${Configuration.BASE_NAME_SPACE_DOT}${namespace}.${name}"
+        }
+    }
+
+    /**
+     * Convert to valid and conventional Java constant name
+     * Add signal prefix
+     */
+    fun getSignalNameConstantName(name: String): String {
+        return "SIGNAL_ON_${name.uppercase().replace('-', '_')}"
+    }
+
+
 }

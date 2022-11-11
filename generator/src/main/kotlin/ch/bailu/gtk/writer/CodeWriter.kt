@@ -18,7 +18,7 @@ interface CodeWriter  {
     fun writeFactory(structureModel : StructureModel, methodModel : MethodModel)
     fun writePrivateFactory(structureModel : StructureModel, methodModel : MethodModel)
 
-    fun writeConstant(parameterModel : ParameterModel) 
+    fun writeConstant(structureModel: StructureModel, parameterModel : ParameterModel)
     fun writeMethod(structureModel : StructureModel, methodModel : MethodModel)
     fun writeSignal(structureModel : StructureModel, methodModel : MethodModel)
     fun writeField(structureModel : StructureModel, parameterModel : ParameterModel)

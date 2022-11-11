@@ -30,7 +30,6 @@ class NamespaceType(fallbackNamespace: String, typeName: String) {
         }
     }
 
-
     override fun hashCode(): Int {
         return Objects.hash(namespace, name)
     }
@@ -53,5 +52,9 @@ class NamespaceType(fallbackNamespace: String, typeName: String) {
         if (name != other.name) return false
 
         return true
+    }
+
+    fun isCurrentNameSpace(currentNameSpace: String): Boolean {
+        return namespace == currentNameSpace
     }
 }

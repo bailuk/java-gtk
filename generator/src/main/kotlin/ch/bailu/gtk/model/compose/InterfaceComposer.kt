@@ -10,7 +10,7 @@ class InterfaceComposer : CodeComposer() {
     override fun compose(writer: CodeWriter, namespaceModel: NamespaceModel, structureModel: StructureModel, models: ModelLists) {
         writer.writeInterface(structureModel)
         for (p in models.constants) {
-            writer.writeConstant(p)
+            writer.writeConstant(structureModel, p)
         }
     }
 }

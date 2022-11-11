@@ -1,10 +1,10 @@
 package ch.bailu.gtk.model
 
-import ch.bailu.gtk.log.colonList
+import ch.bailu.gtk.log.DebugPrint
 import ch.bailu.gtk.parser.tag.MethodTag
-import ch.bailu.gtk.writer.getJavaMethodName
+import ch.bailu.gtk.writer.Names
 
-class MethodModel(namespace: String, method: MethodTag, preferNative: Boolean) : Model() {
+class MethodModel(namespace: String, parameterNamespace: String, method: MethodTag, preferNative: Boolean) : Model() {
     val parameters: MutableList<ParameterModel> = ArrayList()
 
     val name: String = method.getName()
@@ -14,7 +14,7 @@ class MethodModel(namespace: String, method: MethodTag, preferNative: Boolean) :
         namespace,
         method.getReturnValue(),
         preferNative = false,
-        toUpper = false,
+        isConstant = false,
         supportsDirectAccess = false
     )
 
@@ -31,15 +31,15 @@ class MethodModel(namespace: String, method: MethodTag, preferNative: Boolean) :
     val doc : String = method.getDoc()
 
     init {
-        setSupported("Deprecated", !method.isDeprecated())
-        setSupported("Return value", returnType.isSupported)
-        setSupported("Return cb", !returnType.isCallback)
+        setSupported("deprecated", !method.isDeprecated())
+        setSupported("return-value-not-supported", returnType.isSupported)
+        setSupported("returns-callback", !returnType.isCallback)
 
         for (t in method.getParameters()) {
             val parameterModel = ParameterModel(
-                namespace, t,
+                parameterNamespace, t,
                 preferNative = preferNative,
-                toUpper = false,
+                isConstant = false,
                 supportsDirectAccess = false
             )
             hasNativeVariant = hasNativeVariant || parameterModel.hasNativeVariant
@@ -59,18 +59,18 @@ class MethodModel(namespace: String, method: MethodTag, preferNative: Boolean) :
     }
 
     override fun toString(): String {
-        val result = StringBuilder().append(colonList(arrayOf(supportedState,returnType.toString(),apiName)))
+        val result = StringBuilder().append(DebugPrint.colon(supportedState,returnType.toString(),apiName))
         for (p in parameters) {
-            result.append(":").append(p.toString())
+            result.append("\n        ").append(p.toString())
         }
         return result.toString()
     }
 
     val apiName: String
-        get() = getJavaMethodName(name)
+        get() = Names.getJavaMethodName(name)
 
     val signalNameVariable: String
-        get() = "SIGNAL_ON_${name.uppercase().replace('-', '_')}"
+        get() = Names.getSignalNameConstantName(name)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

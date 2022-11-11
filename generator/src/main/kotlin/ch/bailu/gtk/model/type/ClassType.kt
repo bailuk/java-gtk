@@ -1,18 +1,17 @@
 package ch.bailu.gtk.model.type
 
-import ch.bailu.gtk.Configuration
 import ch.bailu.gtk.converter.NamespaceType
-import ch.bailu.gtk.converter.RelativeNamespaceType
 import ch.bailu.gtk.converter.isEnum
-import ch.bailu.gtk.table.AliasTable.convert
+import ch.bailu.gtk.parser.tag.CallbackTag
+import ch.bailu.gtk.parser.tag.ParameterTag
+import ch.bailu.gtk.table.AliasTable
 import ch.bailu.gtk.table.CallbackTable
 import ch.bailu.gtk.table.StructureTable.contains
 import ch.bailu.gtk.table.WrapperTable
-import ch.bailu.gtk.parser.tag.CallbackTag
-import ch.bailu.gtk.parser.tag.ParameterTag
+import ch.bailu.gtk.writer.Names
 
 class ClassType {
-    private var type: RelativeNamespaceType
+    private var type: NamespaceType
 
     // Non-pointer access needed to access records inside records as fields
     private var directType = false
@@ -21,11 +20,6 @@ class ClassType {
     private var wrapper = false
 
     private var callbackTag: CallbackTag? = null
-
-
-    constructor() {
-        type = RelativeNamespaceType("", "")
-    }
 
 
     constructor(namespace: String, parameter: ParameterTag, supportsDirectType: Boolean) : this(namespace,
@@ -57,7 +51,7 @@ class ClassType {
         return wrapper || isCallback()
     }
 
-    private fun supportedClass(type: RelativeNamespaceType, ctype: CType, supportsDirectType: Boolean): Boolean {
+    private fun supportedClass(type: NamespaceType, ctype: CType, supportsDirectType: Boolean): Boolean {
         return isInStructureTable(type) && isPointerSupported(ctype, supportsDirectType)
     }
 
@@ -65,20 +59,19 @@ class ClassType {
         return ctype.isSinglePointer || supportsDirectType && ctype.isDirectType
     }
 
-    private fun convert(namespace: String, typeName: String): RelativeNamespaceType {
-        val converted = convert(NamespaceType(namespace, typeName))
-        return RelativeNamespaceType(namespace, converted)
+    private fun convert(namespace: String, typeName: String): NamespaceType {
+        return AliasTable.convert(NamespaceType(namespace, typeName))
     }
 
     fun getCallbackTag(): CallbackTag? {
         return callbackTag
     }
 
-    private fun getCallbackTagFromTable(n: RelativeNamespaceType): CallbackTag? {
+    private fun getCallbackTagFromTable(n: NamespaceType): CallbackTag? {
         return CallbackTable[n.namespace, n.name]
     }
 
-    private fun isInStructureTable(n: RelativeNamespaceType): Boolean {
+    private fun isInStructureTable(n: NamespaceType): Boolean {
         return contains(n.namespace, n.name)
     }
 
@@ -92,11 +85,12 @@ class ClassType {
     }
 
 
-    val fullName: String
-        get() = if (isClass() && !type.hasCurrentNamespace()) {
-            "${Configuration.BASE_NAME_SPACE_DOT}${type.namespace}.${type.name}"
+    fun getApiTypeName(namespace: String): String {
+        return if (isClass() && !type.isCurrentNameSpace(namespace)) {
+            Names.getJavaClassNameWithNamespacePrefix(this.namespace, this.name)
         } else name
 
+    }
 
     val namespace: String
         get() = type.namespace

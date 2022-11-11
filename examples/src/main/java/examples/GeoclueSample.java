@@ -1,42 +1,44 @@
 package examples;
 
-import ch.bailu.gtk.exception.AllocationError;
 import ch.bailu.gtk.geoclue.AccuracyLevel;
-import ch.bailu.gtk.gio.ApplicationFlags;
-import ch.bailu.gtk.gtk.Application;
-import ch.bailu.gtk.gtk.ApplicationWindow;
-import ch.bailu.gtk.gtk.Button;
-import ch.bailu.gtk.type.Str;
-import ch.bailu.gtk.type.Strs;
 import ch.bailu.gtk.geoclue.Simple;
+import ch.bailu.gtk.glib.MainLoop;
+import ch.bailu.gtk.type.Str;
 
+/**
+ * https://gitlab.freedesktop.org/geoclue/geoclue
+ * https://gitlab.freedesktop.org/geoclue/geoclue/-/tree/master/demo
+ */
 public class GeoclueSample {
-    public GeoclueSample(String[] args) {
-        var app = new Application(new Str("com.example.GtkApplication"),
-                ApplicationFlags.FLAGS_NONE);
+    public static void main(String[] args) {
+        Simple.newWithThresholds(new Str("geoclue-where-am-i"),
+                AccuracyLevel.EXACT, 0, 0, null, (__self, source_object, res, user_data) -> {
 
-        app.onActivate(() -> {
+                    try {
+                        var simple = Simple.newWithThresholdsFinishSimple(res);
+                        var client = simple.getClient();
+                        client.ref();
+                        System.out.println("Client object: %s " + client.getObjectPath());
 
+                        client.onNotify(pspec -> System.out.println("Signal received"));
 
-            try {
-                var simple = Simple.newSyncSimple(new Str("geoclue-where-am-i"), AccuracyLevel.EXACT, null);
-                simple.getLocation();
-            } catch (AllocationError e) {
-                System.err.println(e.getMessage());
-            }
+                        printLocation(simple);
 
-            // Create a new window
-            var window = new ApplicationWindow(app);
+                    } catch (Exception e) {
+                        System.err.println("Failed to connect to GeoClue2 service: " + e.getMessage());
+                    }
 
-            // Create a new button
-            var button = Button.newWithLabelButton(new Str("Hello, World!"));
+                    __self.unregister();
+                }, null);
 
-            // When the button is clicked, close the window
-            button.onClicked(window::close);
-            window.setChild(button);
-            window.show();
-        });
+        new MainLoop(null, false).run();
+    }
 
-        app.run(args.length, new Strs(args));
+    private static void printLocation(Simple simple) {
+        var location = simple.getLocation();
+        System.out.println("New location:");
+        System.out.println("Latitude: "  + location.getLatitude());
+        System.out.println("Longitude: " + location.getLongitude());
+        System.out.println("Accuracy: "  + location.getAccuracy() + "meters");
     }
 }

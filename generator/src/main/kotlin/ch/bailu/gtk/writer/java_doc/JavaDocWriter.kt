@@ -40,7 +40,7 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
         writeMethod(structureModel, methodModel)
     }
 
-    override fun writeConstant(parameterModel: ParameterModel) {
+    override fun writeConstant(structureModel: StructureModel, parameterModel: ParameterModel) {
         doc.writeStart(4)
         doc.writeBlock(parameterModel.doc)
         doc.writeDocEnd()

@@ -9,7 +9,7 @@ class JavaType(t: String) {
         return "" != type
     }
 
-    fun getType(): String {
+    fun getApiTypeName(): String {
         return type
     }
 

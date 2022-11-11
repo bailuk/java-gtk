@@ -1,6 +1,6 @@
 package ch.bailu.gtk.parser.tag
 
-import ch.bailu.gtk.log.colonList
+import ch.bailu.gtk.log.DebugPrint
 
 
 /**
@@ -121,6 +121,6 @@ open class ParameterTag(parent: TagWithParent): NamedWithDocTag(parent) {
 
 
     override fun toString(): String {
-        return colonList(arrayOf(getTypeName(), getType(), value))
+        return DebugPrint.colon(getTypeName(), getType(), value)
     }
 }

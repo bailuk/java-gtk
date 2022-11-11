@@ -3,8 +3,8 @@ package ch.bailu.gtk.writer.java
 import ch.bailu.gtk.model.*
 import ch.bailu.gtk.model.filter.ModelList
 import ch.bailu.gtk.writer.CodeWriter
+import ch.bailu.gtk.writer.Names
 import ch.bailu.gtk.writer.TextWriter
-import ch.bailu.gtk.writer.getJavaSignalInterfaceName
 
 class JavaImpWriter(private val out: TextWriter) : CodeWriter {
 
@@ -22,7 +22,7 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
         out.l(0,"        ${methodModel.returnType.impType} ${methodModel.gtkName}(${getSignature(methodModel)});", 0)
     }
 
-    override fun writeConstant(parameterModel: ParameterModel) {}
+    override fun writeConstant(structureModel: StructureModel, parameterModel: ParameterModel) {}
 
     override fun writeMethod(structureModel: StructureModel, methodModel: MethodModel) {
         out.l(0,"        ${methodModel.returnType.impType} ${methodModel.gtkName}(${getSelfSignature(methodModel)});", 0)
@@ -43,7 +43,7 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
 
         methodModel.parameters.forEach {
             if (it.isCallback && it.callbackModel != null) {
-                result.append("${del}${getJavaSignalInterfaceName(it.callbackModel.name)} ${it.name}")
+                result.append("${del}${Names.getJavaCallbackInterfaceName(it.callbackModel.name)} ${it.name}")
             } else {
                 result.append("${del}${it.impType} ${it.name}")
             }
@@ -73,7 +73,7 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
         out.start(1)
 
         out.a("""
-            public interface ${getJavaSignalInterfaceName(methodModel.name)} extends com.sun.jna.Callback {
+            public interface ${Names.getJavaCallbackInterfaceName(methodModel.name)} extends com.sun.jna.Callback {
                 ${methodModel.returnType.impType} invoke(${getSignature(methodModel, "", isSignal)});
             }
         """, 4)

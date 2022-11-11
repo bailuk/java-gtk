@@ -1,18 +1,17 @@
 package ch.bailu.gtk.model
 
 import ch.bailu.gtk.converter.isEnum
-import ch.bailu.gtk.log.colonList
+import ch.bailu.gtk.log.DebugPrint
 import ch.bailu.gtk.model.filter.filterValues
 import ch.bailu.gtk.model.type.CType
 import ch.bailu.gtk.model.type.ClassType
 import ch.bailu.gtk.model.type.JavaType
 import ch.bailu.gtk.parser.tag.ParameterTag
-import ch.bailu.gtk.writer.fixToken
-import ch.bailu.gtk.writer.getJavaSignalInterfaceName
+import ch.bailu.gtk.writer.Names
 
 class ParameterModel(namespace: String,
                      private val parameterTag: ParameterTag,
-                     toUpper: Boolean,
+                     isConstant: Boolean,
                      supportsDirectAccess: Boolean,
                      preferNative: Boolean) : Model() {
 
@@ -22,11 +21,12 @@ class ParameterModel(namespace: String,
     val hasNativeVariant: Boolean
     val isNativeVariant: Boolean
 
-    var name: String = if (toUpper) {
-        fixToken(parameterTag.getName().uppercase())
+    var name: String = if (isConstant) {
+        Names.getJavaConstantName(parameterTag.getName())
     } else {
-        fixToken(parameterTag.getName())
+        Names.getJavaVariableName(parameterTag.getName())
     }
+
     val isWriteable: Boolean
     val callbackModel: MethodModel?
 
@@ -62,17 +62,23 @@ class ParameterModel(namespace: String,
 
         callbackModel = createCallbackModel(classType, namespace)
 
-        setSupported("value", filterValues(parameterTag.value))
-        setSupported("jType", jType.isValid())
+        setSupported("value-not-supported", filterValues(parameterTag.value))
+        setSupported("jType-not-supported", jType.isValid())
         setCallbackSupported()
         isWriteable = parameterTag.isWriteable
     }
 
     private fun createCallbackModel(classType: ClassType, namespace: String): MethodModel? {
+        val parameterNamespace = if (classType.namespace.isNotEmpty()) {
+            classType.namespace
+        } else {
+            namespace
+        }
+
         if (classType.isCallback()) {
             val callbackTag = classType.getCallbackTag()
             if (callbackTag != null) {
-                return MethodModel(namespace, callbackTag, preferNative = false)
+                return MethodModel(namespace, parameterNamespace, callbackTag, preferNative = false)
             }
         }
         return null
@@ -90,19 +96,24 @@ class ParameterModel(namespace: String,
         }
     }
 
-    val apiType: String
-        get() {
-            if (isCallback && callbackModel != null) {
-                return getJavaSignalInterfaceName(callbackModel.name)
-            }
-            return if (classType.isClass() && !isNativeVariant) {
-                classType.fullName
-            } else jType.getType()
+    /**
+     * Return valid and conventional Java type name or native type name
+     * Add namespace to classes if they are in a different namespace
+     * @param namespace namespace where other namespace is relative for
+     */
+    fun getApiTypeName(namespace: String): String {
+        return if (isCallback && callbackModel != null) {
+            Names.getJavaCallbackInterfaceName(callbackModel.name)
+        } else if (classType.isClass() && !isNativeVariant) {
+            classType.getApiTypeName(namespace)
+        } else {
+            jType.getApiTypeName()
         }
+    }
 
     val impType: String
         get() {
-            return jType.getType()
+            return jType.getApiTypeName()
         }
 
     val isVoid: Boolean
@@ -121,16 +132,18 @@ class ParameterModel(namespace: String,
         }
 
     override fun toString(): String {
-        val supported = if (isSupported) "(s)" else ""
+        return if (isCallback) {
+            val cb = DebugPrint.colon(supportedState, callbackModel.toString())
+            "<cb>\n${" ".repeat(8)}${cb}\n${" ".repeat(8)}<cb>}"
 
-        return colonList(arrayOf(
-                supported,
-                parameterTag.getType(),
-                parameterTag.getTypeName(),  // <-
-                parameterTag.getName(),  // <-
-                parameterTag.value,
+        } else {
+            DebugPrint.colon(
+                supportedState,
+                parameterTag.toString(),
                 gtkType,
-                apiType))
+                getApiTypeName("")
+            )
+        }
     }
 
     val isCallback: Boolean
