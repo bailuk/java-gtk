@@ -1,4 +1,4 @@
-package examples.libadwaita_demo;
+package examples.libadwaita.hello;
 
 import ch.bailu.gtk.adw.Adw;
 import ch.bailu.gtk.adw.Application;
@@ -9,16 +9,19 @@ import ch.bailu.gtk.gtk.Label;
 import ch.bailu.gtk.type.Strs;
 
 
-public class AdwaitaDemo {
-
+/**
+ * https://gitlab.gnome.org/GNOME/libadwaita/-/blob/main/examples/hello-world/hello.c
+ *
+ */
+public class AdwaitaHello {
     public static void main(String[] args) {
-        new AdwaitaDemo(args);
+        new AdwaitaHello(args);
     }
 
     PreferencesWindow prefs;
-    public AdwaitaDemo(String[] args) {
+    public AdwaitaHello(String[] args) {
         Adw.init();
-        Application app = new Application("org.adw.example", ApplicationFlags.FLAGS_NONE);
+        Application app = new Application("org.example.Hello", ApplicationFlags.FLAGS_NONE);
         app.onActivate(() -> {
             var window = new ApplicationWindow(app);
             var label = new Label("Hello, World");
