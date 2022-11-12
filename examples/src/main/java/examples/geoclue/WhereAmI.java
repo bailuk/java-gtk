@@ -8,6 +8,8 @@ import ch.bailu.gtk.type.Int64;
 import ch.bailu.gtk.type.Str;
 
 /**
+ * Port of where-am-i C code
+ *
  * <a href="https://gitlab.freedesktop.org/geoclue/geoclue">GitLab: GeoClue</a>
  * <a href="https://gitlab.freedesktop.org/geoclue/geoclue/-/tree/master/demo">GitLab: GeoClue demos</a>
  */
