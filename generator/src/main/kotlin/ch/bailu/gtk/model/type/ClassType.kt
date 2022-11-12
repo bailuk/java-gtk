@@ -1,11 +1,11 @@
 package ch.bailu.gtk.model.type
 
 import ch.bailu.gtk.converter.NamespaceType
-import ch.bailu.gtk.converter.isEnum
 import ch.bailu.gtk.parser.tag.CallbackTag
 import ch.bailu.gtk.parser.tag.ParameterTag
 import ch.bailu.gtk.table.AliasTable
 import ch.bailu.gtk.table.CallbackTable
+import ch.bailu.gtk.table.EnumTable
 import ch.bailu.gtk.table.StructureTable.contains
 import ch.bailu.gtk.table.WrapperTable
 import ch.bailu.gtk.writer.Names
@@ -25,7 +25,8 @@ class ClassType {
     constructor(namespace: String, parameter: ParameterTag, supportsDirectType: Boolean) : this(namespace,
                 parameter.getTypeName(),
                 CType(parameter.getType()),
-                !parameter.inDirection && isEnum(namespace, parameter), supportsDirectType)
+                isOutEnum = !parameter.inDirection && EnumTable.isEnum(namespace, parameter),
+                supportsDirectType = supportsDirectType)
 
     constructor(namespace: String, typeName: String, ctype: String, supportsDirectType: Boolean) : this(namespace, typeName, CType(ctype), false, supportsDirectType)
 

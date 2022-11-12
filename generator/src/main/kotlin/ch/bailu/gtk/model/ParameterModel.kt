@@ -1,12 +1,12 @@
 package ch.bailu.gtk.model
 
-import ch.bailu.gtk.converter.isEnum
 import ch.bailu.gtk.log.DebugPrint
 import ch.bailu.gtk.model.filter.filterValues
 import ch.bailu.gtk.model.type.CType
 import ch.bailu.gtk.model.type.ClassType
 import ch.bailu.gtk.model.type.JavaType
 import ch.bailu.gtk.parser.tag.ParameterTag
+import ch.bailu.gtk.table.EnumTable
 import ch.bailu.gtk.writer.Names
 
 class ParameterModel(namespace: String,
@@ -31,7 +31,7 @@ class ParameterModel(namespace: String,
     val callbackModel: MethodModel?
 
     init {
-        if (!classType.isClass() && isEnum(namespace, parameterTag)) {
+        if (!classType.isClass() && EnumTable.isEnum(namespace, parameterTag)) {
             this.cType = CType("int")
             this.jType = JavaType("int")
             hasNativeVariant = false

@@ -181,14 +181,13 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         var value = parameterModel.value
         var type  = parameterModel.getApiTypeName(structureModel.nameSpaceModel.namespace)
 
-        // TODO use preverNative
         if (parameterModel.getApiTypeName(structureModel.nameSpaceModel.namespace).endsWith("Str")) {
             type = "String"
             value = "\"$value\""
         }
 
         out.a("    " + type + " " + parameterModel.name + " = " + value + ";\n")
-        out.end(0)
+        out.end(1)
     }
 
     override fun writeEnd() {

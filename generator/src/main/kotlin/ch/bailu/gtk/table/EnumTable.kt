@@ -1,9 +1,12 @@
 package ch.bailu.gtk.table
 
 import ch.bailu.gtk.converter.NamespaceType
+import ch.bailu.gtk.log.Logable
+import ch.bailu.gtk.parser.tag.ParameterTag
+import java.io.Writer
 import java.util.*
 
-object EnumTable {
+object EnumTable: Logable {
     private val table: MutableMap<String, MutableMap<String, String>> = HashMap()
 
     fun add(type: NamespaceType) {
@@ -23,5 +26,23 @@ object EnumTable {
 
     operator fun contains(type: NamespaceType): Boolean {
         return type.isValid() && getTable(type.namespace).containsKey(type.name)
+    }
+
+    fun isEnum(namespace: String, parameter: ParameterTag): Boolean {
+        return isEnum(namespace, parameter.getTypeName()) || isEnum(namespace, parameter.getType())
+    }
+
+    private fun isEnum(namespace: String, typeName: String): Boolean {
+        return contains(NamespaceType(namespace, typeName))
+    }
+
+    override fun log(writer: Writer) {
+        table.onEach { namespace ->
+            writer.write("{${namespace.key}\n")
+            namespace.value.forEach {
+                writer.write(String.format("    %-40s\n", it.key))
+            }
+            writer.write("}\n\n")
+        }
     }
 }

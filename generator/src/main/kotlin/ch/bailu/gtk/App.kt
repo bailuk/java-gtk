@@ -7,12 +7,12 @@ import ch.bailu.gtk.log.Logable
 import ch.bailu.gtk.parser.Parser
 import ch.bailu.gtk.table.AliasTable
 import ch.bailu.gtk.table.CallbackTable
+import ch.bailu.gtk.table.EnumTable
 import ch.bailu.gtk.table.StructureTable
 import org.xmlpull.v1.XmlPullParserException
 import java.io.BufferedWriter
 import java.io.FileWriter
 import java.io.IOException
-import java.io.Writer
 
 
 fun main(args: Array<String>) {
@@ -43,6 +43,7 @@ private fun logTables() {
     logTable(StructureTable, Configuration.LOG_STRUCTURE_TABLE_FILE)
     logTable(AliasTable,     Configuration.LOG_ALIAS_TABLE_FILE)
     logTable(CallbackTable,  Configuration.LOG_CALLBACK_TABLE_FILE)
+    logTable(EnumTable,      Configuration.LOG_ENUM_TABLE_FILE)
 }
 
 @Throws(IOException::class)

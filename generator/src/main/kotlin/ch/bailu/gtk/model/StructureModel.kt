@@ -2,13 +2,11 @@ package ch.bailu.gtk.model
 
 import ch.bailu.gtk.converter.NamespaceType
 import ch.bailu.gtk.model.compose.CodeComposer
-import ch.bailu.gtk.model.filter.filterCreateMallocConstructor
-import ch.bailu.gtk.model.filter.filterField
-import ch.bailu.gtk.model.filter.filterFieldDirectAccess
-import ch.bailu.gtk.model.filter.filterMethod
+import ch.bailu.gtk.model.filter.*
 import ch.bailu.gtk.model.list.ModelLists
 import ch.bailu.gtk.model.type.StructureType
 import ch.bailu.gtk.parser.tag.EnumerationTag
+import ch.bailu.gtk.parser.tag.MethodTag
 import ch.bailu.gtk.parser.tag.ParameterTag
 import ch.bailu.gtk.parser.tag.StructureTag
 import ch.bailu.gtk.table.AliasTable.convert
@@ -43,14 +41,8 @@ class StructureModel : Model {
         apiName = convert(nameSpace.namespace, structure.getName())
         parent = StructureModel(nameSpace.namespace, structure.parent, structureType)
         doc = structure.getDoc()
-        for (m in structure.constructors) {
-            val methodModel = MethodModel(nameSpace.namespace,nameSpace.namespace, m, preferNative = false)
-            models.addIfSupportedWithCallbacks(models.privateFactories, filterConstructor(methodModel))
-
-            if (methodModel.isSupported && methodModel.hasNativeVariant) {
-                val methodModel = MethodModel(nameSpace.namespace,nameSpace.namespace, m, preferNative = true)
-                models.addIfSupportedWithCallbacks(models.privateFactories, filterConstructor(methodModel))
-            }
+        for (methodTag in structure.constructors) {
+            generateAndAddMethodModel(nameSpace, models.privateFactories, methodTag)
         }
 
         models.privateFactories.forEach {
@@ -61,14 +53,8 @@ class StructureModel : Model {
             }
         }
 
-        for (method in structure.methods) {
-            val methodModel = MethodModel(nameSpace.namespace, nameSpace.namespace,method, preferNative = false)
-            models.addIfSupportedWithCallbacks(models.methods, filter(methodModel))
-
-            if (methodModel.isSupported && methodModel.hasNativeVariant) {
-                val methodModel = MethodModel(nameSpace.namespace, nameSpace.namespace,method, preferNative = true)
-                models.addIfSupportedWithCallbacks(models.methods, filter(methodModel))
-            }
+        for (methodTag in structure.methods) {
+            generateAndAddMethodModel(nameSpace, models.methods, methodTag)
         }
 
         for (signal in structure.signals) {
@@ -89,6 +75,16 @@ class StructureModel : Model {
         setSupported("name-is-empty", apiName != "")
     }
 
+    private fun generateAndAddMethodModel(namespace: NamespaceModel, models: ModelList<MethodModel>, methodTag: MethodTag) {
+        val methodModel = MethodModel(namespace.namespace,namespace.namespace, methodTag, preferNative = false)
+        this.models.addIfSupportedWithCallbacks(models, filterConstructor(methodModel))
+
+        if (methodModel.isSupported && methodModel.hasNativeVariant) {
+            val methodModelNativeOverload = MethodModel(namespace.namespace,namespace.namespace, methodTag, preferNative = true)
+            this.models.addIfSupportedWithCallbacks(models, filterConstructor(methodModelNativeOverload))
+        }
+    }
+
     private fun convert(namespace: String, name: String): String {
         val from = NamespaceType(namespace, name)
         return convert(from).name
@@ -101,7 +97,6 @@ class StructureModel : Model {
     }
 
     private fun filterConstructor(methodModel: MethodModel): MethodModel {
-        //methodModel.setSupported("cb-constructor", !methodModel.hasCallback())
         return filter(methodModel)
     }
 
@@ -165,7 +160,7 @@ class StructureModel : Model {
             models.constants.addIfSupported(
                 ParameterModel(namespace.namespace, parameterTag,
                     isConstant = toUpper,
-                    preferNative = false,
+                    preferNative = true,
                     supportsDirectAccess = false
                 )
             )

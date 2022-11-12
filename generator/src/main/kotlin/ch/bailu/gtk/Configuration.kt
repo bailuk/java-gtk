@@ -18,6 +18,7 @@ object Configuration  {
     const val LOG_STRUCTURE_TABLE_FILE = "build/structure_table.out"
     const val LOG_ALIAS_TABLE_FILE     = "build/alias_table.out"
     const val LOG_CALLBACK_TABLE_FILE  = "build/callback_table.out"
+    const val LOG_ENUM_TABLE_FILE      = "build/enum_table.out"
 
     val NAMESPACES = arrayOf(
                 NamespaceConfig("GObject-2.0.gir",    "gobject-2.0",    GtkDocUrl("gobject")),
