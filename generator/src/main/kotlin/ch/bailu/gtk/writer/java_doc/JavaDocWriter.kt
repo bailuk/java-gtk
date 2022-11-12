@@ -4,7 +4,6 @@ import ch.bailu.gtk.model.*
 import ch.bailu.gtk.model.filter.ModelList
 import ch.bailu.gtk.writer.CodeWriter
 import ch.bailu.gtk.writer.TextWriter
-import sun.misc.Signal
 
 
 class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter {
@@ -60,10 +59,14 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
         if (methodModel.parameters.isNotEmpty() || methodModel.doc.length > 3 || !methodModel.returnType.isVoid) {
             doc.writeStart(8)
             doc.writeBlock(methodModel.doc)
-            doc.writeParameter(methodModel)
-            doc.writeReturn(methodModel)
+
+            // TODO: write @see to interface -> method
+            // TODO: write @param for onSignalName
+
             doc.writeDocEnd()
         }
+
+
     }
 
     override fun writeField(structureModel: StructureModel, parameterModel: ParameterModel) {

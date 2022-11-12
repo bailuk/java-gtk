@@ -1,26 +1,14 @@
 package examples;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import ch.bailu.gtk.bridge.ListIndex;
+import ch.bailu.gtk.gtk.*;
+import ch.bailu.gtk.type.Str;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-
-import ch.bailu.gtk.bridge.ListIndex;
-import ch.bailu.gtk.gtk.Box;
-import ch.bailu.gtk.gtk.Label;
-import ch.bailu.gtk.gtk.ListItem;
-import ch.bailu.gtk.gtk.ListView;
-import ch.bailu.gtk.gtk.Orientation;
-import ch.bailu.gtk.gtk.ScrolledWindow;
-import ch.bailu.gtk.gtk.SignalListItemFactory;
-import ch.bailu.gtk.gtk.Window;
-import ch.bailu.gtk.type.Str;
 
 /**
  * https://gitlab.gnome.org/GNOME/gtk/-/issues/2971
@@ -29,7 +17,6 @@ public class HugeList implements DemoInterface {
     private static final Str TITLE = new Str("Huge list");
 
     private final static File GIR_PATH = App.path("generator/src/main/resources/gir/");
-
     private final HashMap<String, Integer> wordList = new HashMap<>();
 
     @Override
@@ -45,6 +32,7 @@ public class HugeList implements DemoInterface {
         }
 
         List<String> keyList = new ArrayList<>(wordList.keySet());
+
         keyList.sort(Comparator.comparingInt(wordList::get).reversed());
         listIndex.setSize(wordList.size());
 
@@ -54,7 +42,15 @@ public class HugeList implements DemoInterface {
             var box = new Box(Orientation.HORIZONTAL, 5);
             box.append(createLabel());
             box.append(createLabel());
-            box.append(createLabel());
+
+            var label = createLabel();
+            label.setHexpand(true);
+            box.append(label);
+
+            var button = new Button();
+            button.onDestroy(button::disconnectSignals); // Make sure all resources are getting released on tear down
+
+            box.append(button);
 
             new ListItem(item.cast()).setChild(box);
         });
@@ -63,10 +59,17 @@ public class HugeList implements DemoInterface {
             var index = new Label(new ListItem(item.cast()).getChild().getFirstChild().cast());
             var count = new Label(index.getNextSibling().cast());
             var word = new Label(count.getNextSibling().cast());
+            var button = new Button(word.getNextSibling().cast());
 
             var idx = ListIndex.toIndex(new ListItem(item.cast()));
             var key = keyList.get(idx);
             var cnt = wordList.get(key);
+
+            button.setLabel(String.valueOf(idx));
+
+            // Reconnect "clicked" signal
+            button.disconnectSignals(Button.SIGNAL_ON_CLICKED);
+            button.onClicked(() -> System.out.println(idx));
 
             setLabel(word, key);
             setLabel(count, String.valueOf(cnt));

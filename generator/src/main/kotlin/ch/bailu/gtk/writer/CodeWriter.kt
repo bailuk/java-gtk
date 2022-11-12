@@ -1,9 +1,7 @@
 package ch.bailu.gtk.writer
 
-import ch.bailu.gtk.model.NamespaceModel
 import ch.bailu.gtk.model.*
 import ch.bailu.gtk.model.filter.ModelList
-import java.io.Writer
 
 
 interface CodeWriter  {
@@ -20,6 +18,7 @@ interface CodeWriter  {
 
     fun writeConstant(structureModel: StructureModel, parameterModel : ParameterModel)
     fun writeMethod(structureModel : StructureModel, methodModel : MethodModel)
+
     fun writeSignal(structureModel : StructureModel, methodModel : MethodModel)
     fun writeField(structureModel : StructureModel, parameterModel : ParameterModel)
     fun writeFunction(structureModel : StructureModel, methodModel : MethodModel)

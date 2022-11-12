@@ -207,7 +207,12 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         out.start(1)
 
         out.a("""
-            public final static String ${methodModel.signalNameVariable} = "${methodModel.name}"; 
+            public final static String ${methodModel.signalNameVariable} = "${methodModel.name}";
+            
+        """, 4)
+
+        javaDoc.writeSignal(structureModel, methodModel)
+        out.a("""
             public ch.bailu.gtk.lib.handler.SignalHandler ${Names.getJavaCallbackMethodName(methodModel.name)}(${Names.getJavaCallbackInterfaceName(methodModel.name)} signal) {
                 return new ch.bailu.gtk.lib.handler.SignalHandler(this, ${methodModel.signalNameVariable}, to${Names.getJavaCallbackInterfaceName(methodModel.name)}(signal));
             }
