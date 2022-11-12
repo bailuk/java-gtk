@@ -87,7 +87,7 @@ public class WhereAmI {
 
             var dateTime = DateTime.newFromUnixLocalDateTime(sec.get());
             var formattedDate = dateTime.format(dateFormatString);
-            System.out.println("Timestamp: " + formattedDate);
+            System.out.println(formattedDate);
             formattedDate.destroy();
         }
     }
