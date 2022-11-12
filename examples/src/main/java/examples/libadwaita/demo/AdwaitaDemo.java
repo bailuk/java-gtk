@@ -19,8 +19,8 @@ import ch.bailu.gtk.type.Strs;
 /**
  *
  * 1:1 port (Rust to Java) of libadwaita-demo
- * https://github.com/Northshore-Hero/libadwaita-demo
- * https://github.com/Northshore-Hero/libadwaita-demo/blob/main/src/main.rs
+ * <a href="https://github.com/Northshore-Hero/libadwaita-demo">GitHub: libadwaita-demo</a>
+ * <a href="https://github.com/Northshore-Hero/libadwaita-demo/blob/main/src/main.rs">GitHub: main.rs</a>
  *
  */
 public class AdwaitaDemo {
@@ -28,9 +28,7 @@ public class AdwaitaDemo {
         var app = new Application("com.Libadwaita-Example", ApplicationFlags.FLAGS_NONE);
 
         app.onStartup(() -> StyleManager.getDefault().setColorScheme(ColorScheme.PREFER_DARK));
-
         app.onActivate(() -> buildUI(app));
-
         app.run(args.length, new Strs(args));
         app.unref();
     }
