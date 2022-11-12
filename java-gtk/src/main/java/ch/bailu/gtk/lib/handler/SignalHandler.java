@@ -22,7 +22,7 @@ public class SignalHandler {
         this.callback = callback;
         this.instance = instance;
         this.detailedSignal = detailedSignal;
-        this.handlerId = GObject.INST.g_signal_connect_data(instance.getCPointer(), detailedSignal, this.callback, 0, 0, 0);
+        this.handlerId = GObject.INST().g_signal_connect_data(instance.getCPointer(), detailedSignal, this.callback, 0, 0, 0);
 
         mmap.put(instance.getCPointer(), handlerId, this);
         sizeLog.log(mmap.size());
@@ -35,7 +35,7 @@ public class SignalHandler {
     }
 
     public synchronized void disconnect() {
-        GObject.INST.g_signal_handler_disconnect(instance.getCPointer(), handlerId);
+        GObject.INST().g_signal_handler_disconnect(instance.getCPointer(), handlerId);
         mmap.remove(instance.getCPointer(), handlerId);
     }
 

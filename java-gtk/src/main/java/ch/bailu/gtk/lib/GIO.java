@@ -8,18 +8,6 @@ import com.sun.jna.Structure;
 import ch.bailu.gtk.type.Sizes;
 
 public class GIO {
-    private static GIO.Api _API = null;
-
-    public static GIO.Api API() {
-        if (_API == null) {
-            _API = Native.load("gobject-2.0", GIO.Api.class);
-        }
-        return _API;
-    }
-
-    public interface Api extends Library {
-
-    }
 
     @Structure.FieldOrder({"g_iface", "get_item_type", "get_n_items", "get_item"})
     public static class GListModelInterface extends Structure {

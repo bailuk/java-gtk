@@ -5,21 +5,25 @@ import com.sun.jna.Native;
 
 
 public class CLib {
-    public static final Api INST = Native.load("c", Api.class);
 
-    public static Api API() {
-        return INST;
+    private static Instance _INST = null;
+
+    public static Instance INST() {
+        if (_INST == null) {
+            _INST = Native.load("c", Instance.class);
+        }
+        return _INST;
     }
 
-    public interface Api extends Library {
+    public interface Instance extends Library {
         long malloc(long size);
         long memset(long pointer, int value, long size);
         void free(long pointer);
     }
 
     public static long allocate(long size) {
-        long result = API().malloc(size);
-        API().memset(result, 0, size);
+        long result = INST().malloc(size);
+        INST().memset(result, 0, size);
         return result;
     }
 }

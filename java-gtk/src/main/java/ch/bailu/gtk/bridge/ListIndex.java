@@ -58,7 +58,7 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
     }
 
     private static CPointer create(long type, String property_name, long property_value) {
-        return new CPointer(GObject.API().g_object_new(type, property_name, property_value, 0));
+        return new CPointer(GObject.INST().g_object_new(type, property_name, property_value, 0));
     }
 
     private static long type = 0;
@@ -72,7 +72,7 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
 
     private static synchronized long registerClass() {
         System.out.println("ListIndex::registerClass");
-        return GObject.API().g_type_register_static_simple(
+        return GObject.INST().g_type_register_static_simple(
                 PARENT_TYPE,
                 TYPE_NAME,
                 CLASS_SIZE,
@@ -90,16 +90,16 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
         info.interface_data = 0;
         info.interface_finalize = 0;
         info.write();
-        GObject.API().g_type_add_interface_static(type, ListModel.getTypeID(), info);
+        GObject.INST().g_type_add_interface_static(type, ListModel.getTypeID(), info);
   }
 
     private static long parentClass = 0;
     private static Callback classInit = new Callback() {
         public void invoke(long klass) {
             System.out.println("ListIndex::classInit");
-            parentClass = GObject.API().g_type_class_peek_parent(klass);
+            parentClass = GObject.INST().g_type_class_peek_parent(klass);
 
-            long object_class = GObject.API().g_type_check_class_cast(klass, PARENT_TYPE);
+            long object_class = GObject.INST().g_type_check_class_cast(klass, PARENT_TYPE);
 
             GObject.ObjectClass objectClass = new GObject.ObjectClass(object_class);
 
@@ -112,14 +112,14 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
             objectClass.writeField("getProperty");
             objectClass.writeField("setProperty");
 
-            long paramType = GObject.API().g_param_spec_gtype(PROP_NAME, "", "", PARENT_TYPE,
+            long paramType = GObject.INST().g_param_spec_gtype(PROP_NAME, "", "", PARENT_TYPE,
                       ParamFlags.CONSTRUCT   |
                             ParamFlags.READWRITE   |
                             ParamFlags.STATIC_NAME |
                             ParamFlags.STATIC_NICK |
                             ParamFlags.STATIC_BLURB);
 
-            GObject.API().g_object_class_install_property(object_class, PROP_ITEM_TYPE, paramType);
+            GObject.INST().g_object_class_install_property(object_class, PROP_ITEM_TYPE, paramType);
         }
     };
 
@@ -226,7 +226,7 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
     private static Callback getProperty = new Callback() {
         public void invoke(long object, int property_id, long value, long pspec) {
             if (property_id == PROP_ITEM_TYPE) {
-                GObject.API().g_value_set_gtype(value, getTypeID());
+                GObject.INST().g_value_set_gtype(value, getTypeID());
             } else {
                 System.out.println("ListIndex::getProperty (unknown property");
             }

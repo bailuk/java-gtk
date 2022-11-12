@@ -4,7 +4,7 @@ import ch.bailu.gtk.lib.CLib;
 
 public class ImpBytes {
     public static long createBytes(byte[] bytes) {
-        long result = CLib.API().malloc(bytes.length);
+        long result = CLib.INST().malloc(bytes.length);
 
         com.sun.jna.Pointer pointer = Pointer.toJnaPointer(result);
         pointer.write(0, bytes, 0, bytes.length);

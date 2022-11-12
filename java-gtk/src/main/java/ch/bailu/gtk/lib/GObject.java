@@ -6,11 +6,13 @@ import com.sun.jna.Native;
 import com.sun.jna.Structure;
 
 public class GObject {
+    private static Instance _INST = null;
 
-    public final static Instance INST = Native.load("gobject-2.0", Instance.class);
-
-    public static Instance API() {
-        return INST;
+    public static Instance INST() {
+        if (_INST == null) {
+            _INST = Native.load("gobject-2.0", Instance.class);
+        }
+        return _INST;
     }
 
     public interface Instance extends Library {

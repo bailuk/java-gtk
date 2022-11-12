@@ -5,7 +5,7 @@ import ch.bailu.gtk.lib.CLib;
 public class ImpInt {
 
     public static long createInt(int value) {
-        long result = CLib.API().malloc(Integer.BYTES);
+        long result = CLib.INST().malloc(Integer.BYTES);
         Pointer.toJnaPointer(result).setInt(0, value);
         return result;
     }
@@ -20,7 +20,7 @@ public class ImpInt {
 
 
     public static long createLong(long value) {
-        long result = CLib.API().malloc(Long.BYTES);
+        long result = CLib.INST().malloc(Long.BYTES);
         Pointer.toJnaPointer(result).setLong(0, value);
         return result;
     }
