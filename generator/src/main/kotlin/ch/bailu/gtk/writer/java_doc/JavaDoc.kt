@@ -23,6 +23,7 @@ abstract class JavaDoc(val writer: Writer): Append {
 
 
     abstract fun writeClassUrl(structureModel: StructureModel)
+    abstract fun writeBlockPlain(doc: String)
     abstract fun writeBlock(doc: String)
     abstract fun writeParameter(methodModel: MethodModel)
     abstract fun writeReturn(methodModel: MethodModel)
@@ -33,8 +34,8 @@ abstract class JavaDoc(val writer: Writer): Append {
 
     fun writeStart(intend: Int) {
         intent = intend
-        space = " ".repeat(intent);
-        begin = "${space} * "
+        space = " ".repeat(intent)
+        begin = "$space * "
 
         a("${space}/**\n")
     }

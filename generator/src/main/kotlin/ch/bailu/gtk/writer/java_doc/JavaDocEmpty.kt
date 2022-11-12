@@ -6,6 +6,7 @@ import java.io.Writer
 
 class JavaDocEmpty(writer: Writer) : JavaDoc(writer) {
     override fun writeClassUrl(structureModel: StructureModel) {}
+    override fun writeBlockPlain(doc: String) {}
     override fun writeBlock(doc: String) {}
     override fun writeParameter(methodModel: MethodModel) {}
     override fun writeReturn(methodModel: MethodModel) {}

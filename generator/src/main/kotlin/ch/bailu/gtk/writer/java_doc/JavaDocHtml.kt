@@ -7,6 +7,12 @@ import java.io.Writer
 
 class JavaDocHtml(writer: Writer) : JavaDoc(writer) {
 
+    override fun writeBlockPlain(doc: String) {
+        doc.lines().forEach {
+            writeLine(it, "")
+        }
+    }
+
     override fun writeBlock(doc: String) {
         val evenPre = isEvenPre(doc)
         var nl = ""

@@ -6,6 +6,11 @@ import ch.bailu.gtk.table.NamespaceTable
 import java.io.Writer
 
 class JavaDocPlain(writer: Writer): JavaDoc(writer) {
+
+    override fun writeBlockPlain(doc: String) {
+        writeBlock(doc)
+    }
+
     override fun writeBlock(doc: String) {
         doc.lines().forEach {
             writeLine(it, "")

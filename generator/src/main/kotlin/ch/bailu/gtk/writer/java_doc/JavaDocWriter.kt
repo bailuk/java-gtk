@@ -3,6 +3,7 @@ package ch.bailu.gtk.writer.java_doc
 import ch.bailu.gtk.model.*
 import ch.bailu.gtk.model.filter.ModelList
 import ch.bailu.gtk.writer.CodeWriter
+import ch.bailu.gtk.writer.Names
 import ch.bailu.gtk.writer.TextWriter
 
 
@@ -55,19 +56,23 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
         }
     }
 
+
     override fun writeSignal(structureModel: StructureModel, methodModel: MethodModel) {
-        if (methodModel.parameters.isNotEmpty() || methodModel.doc.length > 3 || !methodModel.returnType.isVoid) {
-            doc.writeStart(8)
-            doc.writeBlock(methodModel.doc)
+        doc.writeStart(4)
 
-            // TODO: write @see to interface -> method
-            // TODO: write @param for onSignalName
+        val block = """
+            Connect to signal "${methodModel.name}".
+            <br>See {@link ${Names.getJavaCallbackInterfaceName(methodModel.name)}#${Names.getJavaCallbackMethodName(methodModel.name)}} for signal description.
+            <br>Field {@link #${methodModel.signalNameVariable}} contains original signal name and can be used as resource reference.
+            <br>
+            @param signal callback function (lambda).
+            @returns {@link ch.bailu.gtk.lib.handler.SignalHandler}. Can be used to disconnect signal and to release callback function.
+        """.trimIndent()
 
-            doc.writeDocEnd()
-        }
-
-
+        doc.writeBlockPlain(block)
+        doc.writeDocEnd()
     }
+
 
     override fun writeField(structureModel: StructureModel, parameterModel: ParameterModel) {
         //writeConstant(structureModel, parameterModel)
@@ -78,7 +83,13 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
     }
 
     override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel, isSignal: Boolean) {
-        writeSignal(structureModel, methodModel)
+        if (methodModel.parameters.isNotEmpty() || methodModel.doc.length > 3 || !methodModel.returnType.isVoid) {
+            doc.writeStart(8)
+            doc.writeBlock(methodModel.doc)
+            doc.writeParameter(methodModel)
+            doc.writeReturn(methodModel)
+            doc.writeDocEnd()
+        }
     }
 
     override fun writeUnsupported(model: Model) {}
