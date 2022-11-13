@@ -16,8 +16,9 @@ jobs:
       image: ghcr.io/bailuk/java-gtk/gtk4-debian:latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Generate source code
         run: make gen
