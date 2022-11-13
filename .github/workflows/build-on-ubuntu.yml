@@ -5,7 +5,7 @@ on:
     branches:
       - '*'
       - '!master'
-  workflow-dispatch:
+  workflow_dispatch:
 
 
 jobs:
