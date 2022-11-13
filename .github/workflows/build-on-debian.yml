@@ -16,9 +16,12 @@ jobs:
       image: ghcr.io/bailuk/java-gtk/gtk4-debian:latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - name: Git test
+        run: git tag
 
       - name: Version
         run: ./gradlew cV
