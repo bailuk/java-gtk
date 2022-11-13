@@ -21,6 +21,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Allow permission
+        run: git config --global --add safe.directory /__w/java-gtk/java-gtk
+
       - name: Git test
         run: git tag
 
