@@ -3,19 +3,6 @@ plugins {
     `maven-publish`
 }
 
-fun getProperty(property: String, default: String) : String {
-    var result = default
-
-    if (project.hasProperty(property)) {
-        val r = project.property(property)
-        if (r is String && r != "unspecified") {
-            result = r
-        }
-    }
-    return result
-}
-
-project.version = getProperty("version", "SNAPSHOT")
 project.group = "ch.bailu.java-gtk"
 
 java {

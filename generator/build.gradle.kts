@@ -1,7 +1,7 @@
 
 plugins {
     java
-    
+
     // https://kotlinlang.org/docs/gradle.html#targeting-the-jvm
     kotlin("jvm") version "1.6.10"
 }
@@ -34,7 +34,7 @@ tasks.test {
 
 tasks.register("generate", JavaExec::class) {
     dependsOn("build")
-    setDescription("Generate source code from introspective files")
+    description = "Generate source code from introspective files"
     classpath = sourceSets["main"].runtimeClasspath
     mainClass.set("ch.bailu.gtk.AppKt")
 

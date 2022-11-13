@@ -15,7 +15,7 @@
 #
 
 ifndef VERSION
-	VERSION=0.2-SNAPSHOT
+	VERSION=$(shell ./gradlew cV -q -Prelease.quiet)
 endif
 
 ifndef JOBS
@@ -52,11 +52,11 @@ install: $(install_target)
 
 
 install_local: all uninstall
-	./gradlew -q publishToMavenLocal -Dmaven.repo.local=$(m2_repo) -Pversion=$(VERSION)
+	./gradlew -q publishToMavenLocal -Dmaven.repo.local=$(m2_repo)
 
 
 install_global: all uninstall
-	./gradlew -q publishToMavenLocal -Dmaven.repo.local=$(m2_repo) -Pversion=$(VERSION) -PjarType=shared
+	./gradlew -q publishToMavenLocal -Dmaven.repo.local=$(m2_repo) -PjarType=shared
 
 clean:
 	./gradlew -q clean
@@ -87,21 +87,15 @@ distcheck:
 	echo "distcheck"
 
 examples: $(jlib)
-	./gradlew examples:build -Pversion=$(VERSION)
+	./gradlew examples:build
 
 run: $(jlib)
-	./gradlew examples:run -Pversion=$(VERSION)
+	./gradlew examples:run
 
 gen: $(gen_source_marker) $(gen_header_marker)
 
-deb: FORCE
-	make -C ci/debian VERSION=$(VERSION)
-
-deb-clean:
-	make -C ci/debian clean
-
 jdoc: $(gen_source_marker)
-	./gradlew -q java-gtk:javadocJar -Pversion=$(VERSION)
+	./gradlew -q java-gtk:javadocJar
 
 jdoc-install: $(jdoc) javadoc
 	rm -rf javadoc/*
@@ -112,7 +106,7 @@ javadoc:
 
 
 $(jlib): gen FORCE
-	./gradlew -q java-gtk:build -Pversion=$(VERSION)
+	./gradlew -q java-gtk:build
 
 $(gen_header_marker): $(gen_source_marker)
 	./gradlew -q java-gtk:classes
