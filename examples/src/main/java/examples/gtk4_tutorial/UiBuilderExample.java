@@ -6,16 +6,16 @@ import ch.bailu.gtk.type.exception.AllocationError;
 import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.Button;
 import ch.bailu.gtk.gtk.Window;
-import ch.bailu.gtk.lib.bridge.helper.BuilderHelper;
+import ch.bailu.gtk.lib.bridge.UiBuilder;
 import ch.bailu.gtk.type.Str;
 import examples.DemoInterface;
 
-public class BuilderExample implements DemoInterface {
+public class UiBuilderExample implements DemoInterface {
     private static final Str TITLE = new Str("UI builder demo");
 
     private final Application application;
 
-    public BuilderExample(Application app) {
+    public UiBuilderExample(Application app) {
         this.application = app;
     }
 
@@ -23,7 +23,7 @@ public class BuilderExample implements DemoInterface {
     public Window runDemo() {
 
         try {
-            var builder = BuilderHelper.fromResource("/builder-example/window.ui");
+            var builder = UiBuilder.fromResource("/builder-example/window.ui");
 
             var window = new Window(builder.getObject("window"));
             window.setApplication(application);

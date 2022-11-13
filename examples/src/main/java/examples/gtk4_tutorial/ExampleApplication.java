@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Set;
 
+import ch.bailu.gtk.lib.bridge.menu.Actions;
 import ch.bailu.gtk.type.exception.AllocationError;
 import ch.bailu.gtk.gio.MenuModel;
 import ch.bailu.gtk.gtk.Application;
@@ -26,8 +27,7 @@ import ch.bailu.gtk.gtk.TextSearchFlags;
 import ch.bailu.gtk.gtk.TextView;
 import ch.bailu.gtk.gtk.ToggleButton;
 import ch.bailu.gtk.gtk.Window;
-import ch.bailu.gtk.lib.bridge.helper.ActionHelper;
-import ch.bailu.gtk.lib.bridge.helper.BuilderHelper;
+import ch.bailu.gtk.lib.bridge.UiBuilder;
 import ch.bailu.gtk.type.Str;
 import examples.App;
 import examples.DemoInterface;
@@ -40,12 +40,12 @@ public class ExampleApplication implements DemoInterface {
     private final static Str TITLE = new Str("Example application (.ui resources)");
     private final static String BASE_PATH = App.path("examples/src/main/java/examples/gtk4_tutorial").toString();
 
-    private final ActionHelper actions;
+    private final Actions actions;
     private final Application application;
 
     public ExampleApplication(Application app) {
         application = app;
-        actions = new ActionHelper(app);
+        actions = new Actions(app);
     }
 
     @Override
@@ -53,9 +53,9 @@ public class ExampleApplication implements DemoInterface {
 
         try {
             // Load ui description from java resources
-            var appBuilder = BuilderHelper.fromResource("/example-application/window.ui");
-            var mnuBuilder = BuilderHelper.fromResource("/example-application/menu.ui");
-            var dlgBuilder = BuilderHelper.fromResource("/example-application/preferences.ui");
+            var appBuilder = UiBuilder.fromResource("/example-application/window.ui");
+            var mnuBuilder = UiBuilder.fromResource("/example-application/menu.ui");
+            var dlgBuilder = UiBuilder.fromResource("/example-application/preferences.ui");
 
             // Get loaded ui elements
             var menuModel = new MenuModel(mnuBuilder.getObject("menu"));

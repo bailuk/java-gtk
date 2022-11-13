@@ -20,7 +20,7 @@ import examples.gtk4_demo.LinksSample;
 import examples.gtk4_demo.PangoTextMask;
 import examples.gtk4_demo.Picker;
 import examples.gtk4_demo.Pixbufs;
-import examples.gtk4_tutorial.BuilderExample;
+import examples.gtk4_tutorial.UiBuilderExample;
 import examples.gtk4_tutorial.CustomDrawing;
 import examples.gtk4_tutorial.ExampleApplication;
 import examples.test.MultiThreadingCallbacks;
@@ -55,7 +55,7 @@ public class App {
             addSample(demoList, window, new PangoTextMask());
             addSample(demoList, window, new HelloWorldBoxed());
             addSample(demoList, window, new CustomDrawing());
-            addSample(demoList, window, new BuilderExample(app));
+            addSample(demoList, window, new UiBuilderExample(app));
             addSample(demoList, window, new HugeList());
             addSample(demoList, window, new ExampleApplication(app));
             addSample(demoList, window, new GlibSettings());

@@ -3,7 +3,6 @@ package examples.gtk4_demo;
 
 import ch.bailu.gtk.gio.Menu;
 import ch.bailu.gtk.gio.MenuItem;
-import ch.bailu.gtk.gio.MenuModel;
 import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.Box;
 import ch.bailu.gtk.gtk.Button;
@@ -13,7 +12,7 @@ import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.Switch;
 import ch.bailu.gtk.gtk.TextView;
 import ch.bailu.gtk.gtk.Window;
-import ch.bailu.gtk.lib.bridge.helper.ActionHelper;
+import ch.bailu.gtk.lib.bridge.menu.Actions;
 import ch.bailu.gtk.lib.bridge.menu.MenuModelBuilder;
 import ch.bailu.gtk.type.Str;
 import examples.DemoInterface;
@@ -22,12 +21,10 @@ public class HeaderBarSample implements DemoInterface {
 
     private static final Str TITLE = new Str("Header bar demo");
 
-    private final MenuModel menuModel;
-    private final MenuModel menuModelFromBuilder;
+    private final Application app;
 
     public HeaderBarSample(Application app) {
-        menuModel = createMenuModel(app);
-        menuModelFromBuilder = createMenuModelWithBuilder(app);
+        this.app = app;
     }
 
     @Override
@@ -35,19 +32,18 @@ public class HeaderBarSample implements DemoInterface {
         var window = new Window();
         var header = new HeaderBar();
 
+        window.setApplication(app); // Menu actions only work if application is set
         window.setDefaultSize(600, 400);
         window.setTitle(TITLE);
 
         var button = new MenuButton();
-        button.setMenuModel(menuModel);
-
+        button.setMenuModel(createMenuModel(app));
         header.packEnd(button);
 
         var menuButton = new MenuButton();
-        menuButton.setMenuModel(menuModelFromBuilder);
+        menuButton.setMenuModel(createMenuModelWithBuilder(app));
 
         header.packStart(menuButton);
-
 
         var box = new Box(Orientation.HORIZONTAL, 0);
         box.getStyleContext().addClass(new Str("linked"));
@@ -76,7 +72,7 @@ public class HeaderBarSample implements DemoInterface {
         var serverMenu = new Menu();
         var radioMenu = new Menu();
 
-        var actions = new ActionHelper(app);
+        var actions = new Actions(app);
 
         result.appendSubmenu(new Str("Network"), networkMenu);
         result.appendSubmenu(new Str("Server"), serverMenu);
@@ -103,9 +99,24 @@ public class HeaderBarSample implements DemoInterface {
     }
 
     private Menu createMenuModelWithBuilder(Application app) {
-        var network = new MenuModelBuilder().check("Enable", false, (enabled) -> System.out.println("Toggle"));
+        var menu = new MenuModelBuilder();
+        var radioMenu = new MenuModelBuilder();
+        var serverMenu = new MenuModelBuilder();
+        var networkMenu = new MenuModelBuilder();
 
-        var menu = new MenuModelBuilder().submenu("Network", network);
+        radioMenu.radioGroup((idx)->{}, 0);
+        for (int i = 0; i< 5; i++) {
+            radioMenu.radio("eth"+i);
+        }
+
+        serverMenu.label("Connect", () -> System.out.println("Connect selected"));
+        serverMenu.label("Disconnect", () -> System.out.println("Disconnect selected"));
+
+        networkMenu.check("Enable",true, (enabled) -> System.out.println("Toggle"));
+        networkMenu.separator("Select device", radioMenu);
+
+        menu.submenu("Network", networkMenu);
+        menu.submenu("Server", serverMenu);
 
         return menu.create(app);
     }

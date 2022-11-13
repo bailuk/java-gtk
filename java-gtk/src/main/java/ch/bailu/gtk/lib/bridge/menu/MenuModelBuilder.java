@@ -96,14 +96,13 @@ public class MenuModelBuilder {
             var strActionId = new Str("app." + actionId.get());
             menu.appendItem(new MenuItem(new Str(label), strActionId));
             strActionId.destroy();
-            actions.add(actionId.get(), parameter -> {
+            actions.add(actionId.get(), selected, parameter -> {
                 if (parameter != null) {
                     onChecked.onChecked(parameter.getBoolean());
                 }
             });
         }
     }
-
 
 
     private class SubmenuItem extends Item {
@@ -144,10 +143,10 @@ public class MenuModelBuilder {
         private final OnActivated onActivated;
         private final int initialIndex;
 
-        public RadioGroup(OnActivated onActivated, int initalIndex) {
+        public RadioGroup(OnActivated onActivated, int initialIndex) {
             super("");
             this.onActivated = onActivated;
-            this.initialIndex = initalIndex;
+            this.initialIndex = initialIndex;
         }
 
         public void add(String label) {
