@@ -1,6 +1,12 @@
 name: Build on ubuntu
 
-on: [pull_request, push, workflow_dispatch]
+on:
+  push:
+    branches:
+      - '*'
+      - '!master'
+  workflow_dispatch:
+
 
 jobs:
   build:
@@ -20,9 +26,6 @@ jobs:
 
       - name: Version
         run: ./gradlew cV
-
-      - name: Version quiet
-        run: ./gradlew cV -q -Prelease.quiet
 
       - name: Generate source code
         run: ./gradlew generate

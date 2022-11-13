@@ -17,9 +17,18 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - name: Accept permission
+        run: git config --global --add safe.directory /__w/java-gtk/java-gtk
+
+      - name: Display tags
+        run: git tag
+
+      - name: Display version
+        run: ./gradlew cV
 
       - name: Generate source code
         run: make gen
