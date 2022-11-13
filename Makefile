@@ -52,13 +52,16 @@ install: $(install_target)
 
 
 install_local: all uninstall
+	./gradlew cV -q -Prelease.quiet
 	./gradlew -q publishToMavenLocal -Dmaven.repo.local=$(m2_repo)
 
 
 install_global: all uninstall
+	./gradlew cV -q -Prelease.quiet
 	./gradlew -q publishToMavenLocal -Dmaven.repo.local=$(m2_repo) -PjarType=shared
 
 clean:
+	./gradlew cV -q -Prelease.quiet
 	./gradlew -q clean
 	- rm -rf build
 
@@ -87,14 +90,17 @@ distcheck:
 	echo "distcheck"
 
 examples: $(jlib)
+	./gradlew cV -q -Prelease.quiet
 	./gradlew examples:build
 
 run: $(jlib)
+	./gradlew cV -q -Prelease.quiet
 	./gradlew examples:run
 
 gen: $(gen_source_marker) $(gen_header_marker)
 
 jdoc: $(gen_source_marker)
+	./gradlew cV -q -Prelease.quiet
 	./gradlew -q java-gtk:javadocJar
 
 jdoc-install: $(jdoc) javadoc
@@ -106,17 +112,21 @@ javadoc:
 
 
 $(jlib): gen FORCE
+	./gradlew cV -q -Prelease.quiet
 	./gradlew -q java-gtk:build
 
 $(gen_header_marker): $(gen_source_marker)
+	./gradlew cV -q -Prelease.quiet
 	./gradlew -q java-gtk:classes
 	touch $(gen_header_marker)
 
 $(gen_source_marker): $(generator_jar)
+	./gradlew cV -q -Prelease.quiet
 	./gradlew -q generator:generate
 	touch $(gen_source_marker)
 
 $(generator_jar): FORCE
+	./gradlew cV -q -Prelease.quiet
 	./gradlew -q generator:build
 
 FORCE:
