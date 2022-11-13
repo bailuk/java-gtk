@@ -61,7 +61,6 @@ public class App {
             addSample(demoList, window, new GlibSettings());
             addSample(demoList, window, new MultiThreadingCallbacks());
 
-
             window.show();
         });
 

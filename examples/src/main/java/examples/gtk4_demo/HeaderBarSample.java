@@ -10,11 +10,11 @@ import ch.bailu.gtk.gtk.Button;
 import ch.bailu.gtk.gtk.HeaderBar;
 import ch.bailu.gtk.gtk.MenuButton;
 import ch.bailu.gtk.gtk.Orientation;
-import ch.bailu.gtk.gtk.PopoverMenu;
 import ch.bailu.gtk.gtk.Switch;
 import ch.bailu.gtk.gtk.TextView;
 import ch.bailu.gtk.gtk.Window;
 import ch.bailu.gtk.lib.bridge.helper.ActionHelper;
+import ch.bailu.gtk.lib.bridge.menu.MenuModelBuilder;
 import ch.bailu.gtk.type.Str;
 import examples.DemoInterface;
 
@@ -23,26 +23,31 @@ public class HeaderBarSample implements DemoInterface {
     private static final Str TITLE = new Str("Header bar demo");
 
     private final MenuModel menuModel;
+    private final MenuModel menuModelFromBuilder;
 
     public HeaderBarSample(Application app) {
         menuModel = createMenuModel(app);
+        menuModelFromBuilder = createMenuModelWithBuilder(app);
     }
 
     @Override
     public Window runDemo() {
-
         var window = new Window();
-
         var header = new HeaderBar();
 
         window.setDefaultSize(600, 400);
         window.setTitle(TITLE);
 
-        var popover = PopoverMenu.newFromModelPopoverMenu(menuModel);
         var button = new MenuButton();
-        button.setPopover(popover);
+        button.setMenuModel(menuModel);
 
         header.packEnd(button);
+
+        var menuButton = new MenuButton();
+        menuButton.setMenuModel(menuModelFromBuilder);
+
+        header.packStart(menuButton);
+
 
         var box = new Box(Orientation.HORIZONTAL, 0);
         box.getStyleContext().addClass(new Str("linked"));
@@ -59,8 +64,6 @@ public class HeaderBarSample implements DemoInterface {
         window.setTitlebar(header);
         window.setChild(new TextView());
 
-        //window.setShowMenubar(true);
-        //app.setMenubar(menuModel);
         return window;
     }
 
@@ -98,6 +101,15 @@ public class HeaderBarSample implements DemoInterface {
 
         return result;
     }
+
+    private Menu createMenuModelWithBuilder(Application app) {
+        var network = new MenuModelBuilder().check("Enable", false, (enabled) -> System.out.println("Toggle"));
+
+        var menu = new MenuModelBuilder().submenu("Network", network);
+
+        return menu.create(app);
+    }
+
 
     @Override
     public Str getTitle() {
