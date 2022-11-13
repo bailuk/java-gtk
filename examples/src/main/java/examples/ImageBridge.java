@@ -4,14 +4,14 @@ package examples;
 import java.io.IOException;
 import java.io.InputStream;
 
-import ch.bailu.gtk.bridge.Image;
+import ch.bailu.gtk.lib.bridge.Image;
 import ch.bailu.gtk.cairo.Context;
 import ch.bailu.gtk.gdk.Gdk;
 import ch.bailu.gtk.gdkpixbuf.Pixbuf;
 import ch.bailu.gtk.gdkpixbuf.PixbufFormat;
 import ch.bailu.gtk.gtk.DrawingArea;
 import ch.bailu.gtk.gtk.Window;
-import ch.bailu.gtk.lib.resources.JavaResource;
+import ch.bailu.gtk.lib.util.JavaResource;
 import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Str;
 

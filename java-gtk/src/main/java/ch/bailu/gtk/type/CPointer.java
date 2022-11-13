@@ -4,7 +4,7 @@ public class CPointer implements CPointerInterface {
     public final static CPointer NULL = new CPointer(0);
 
     private final long pointer;
-    
+
     public CPointer(long pointer) {
         this.pointer = pointer;
     }

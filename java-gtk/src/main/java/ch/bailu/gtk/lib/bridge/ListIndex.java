@@ -1,4 +1,4 @@
-package ch.bailu.gtk.bridge;
+package ch.bailu.gtk.lib.bridge;
 
 import com.sun.jna.Callback;
 import com.sun.jna.Structure;

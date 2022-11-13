@@ -1,4 +1,4 @@
-package ch.bailu.gtk.helper;
+package ch.bailu.gtk.lib.bridge.helper;
 
 import java.util.HashMap;
 

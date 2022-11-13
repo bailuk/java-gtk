@@ -3,9 +3,9 @@ package examples.gtk4_demo;
 import java.io.IOException;
 import java.io.InputStream;
 
-import ch.bailu.gtk.bridge.Image;
+import ch.bailu.gtk.lib.bridge.Image;
 import ch.bailu.gtk.cairo.Context;
-import ch.bailu.gtk.exception.AllocationError;
+import ch.bailu.gtk.type.exception.AllocationError;
 import ch.bailu.gtk.gdk.FrameClock;
 import ch.bailu.gtk.gdk.Gdk;
 import ch.bailu.gtk.gdk.Rectangle;
@@ -19,7 +19,7 @@ import ch.bailu.gtk.gtk.DrawingArea;
 import ch.bailu.gtk.gtk.MessageDialog;
 import ch.bailu.gtk.gtk.MessageType;
 import ch.bailu.gtk.gtk.Window;
-import ch.bailu.gtk.lib.resources.JavaResource;
+import ch.bailu.gtk.lib.util.JavaResource;
 import ch.bailu.gtk.type.Str;
 import examples.DemoInterface;
 

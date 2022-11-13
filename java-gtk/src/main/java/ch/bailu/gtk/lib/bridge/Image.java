@@ -1,10 +1,10 @@
-package ch.bailu.gtk.bridge;
+package ch.bailu.gtk.lib.bridge;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import ch.bailu.gtk.exception.AllocationError;
+import ch.bailu.gtk.type.exception.AllocationError;
 import ch.bailu.gtk.gdkpixbuf.Pixbuf;
 import ch.bailu.gtk.gio.MemoryInputStream;
 import ch.bailu.gtk.gio.MemoryOutputStream;
@@ -16,7 +16,6 @@ public class Image {
      * Loads an image from the stream into Pixbuf
      * @param inputStream stream with image data
      * @return Pixbuf
-     * @throws IOException
      */
     public static Pixbuf load(InputStream inputStream) throws IOException  {
         return load(inputStream, -1, -1, true);
@@ -28,7 +27,6 @@ public class Image {
      * @param width the width of the returned Pixbuf
      * @param height the height of the returned Pixbuf
      * @return Pixbuf
-     * @throws IOException
      */
     public static Pixbuf load(InputStream inputStream, int width, int height) throws IOException {
         return load(inputStream, width, height, false);
@@ -42,7 +40,6 @@ public class Image {
      * @param height the height of the returned Pixbuf
      * @param preserveAspectRatio `TRUE` to preserve the image's aspect ratio
      * @return Pixbuf
-     * @throws IOException
      */
     public static Pixbuf load(InputStream inputStream, int width, int height, boolean preserveAspectRatio) throws IOException {
         final Bytes bytes = new Bytes(inputStream.readAllBytes());
@@ -69,7 +66,6 @@ public class Image {
      * @param outputStream the image will be written to this stream
      * @param pixbuf pixbuf to convert
      * @param imageFormat one of the following formats: "jpeg", "tiff", "png", "ico" or "bmp"
-     * @throws IOException
      */
     public static void save(OutputStream outputStream, Pixbuf pixbuf, String imageFormat) throws IOException {
         pixbuf.throwIfNull();

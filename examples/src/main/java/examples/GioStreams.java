@@ -1,6 +1,6 @@
 package examples;
 
-import ch.bailu.gtk.exception.AllocationError;
+import ch.bailu.gtk.type.exception.AllocationError;
 import ch.bailu.gtk.gio.DataInputStream;
 import ch.bailu.gtk.gio.File;
 import ch.bailu.gtk.type.Str;

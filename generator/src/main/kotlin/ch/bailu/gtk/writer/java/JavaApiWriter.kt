@@ -96,7 +96,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
 
     private fun getThrowsExtension(methodModel : MethodModel) : String {
         return if (methodModel.throwsError) {
-            "throws ch.bailu.gtk.exception.AllocationError"
+            "throws ch.bailu.gtk.type.exception.AllocationError"
         } else {
             ""
         }
@@ -107,7 +107,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         val msg = "${structureModel.apiName}:${methodModel.apiName}"
 
         return if (methodModel.throwsError) {
-            "throw new ch.bailu.gtk.exception.AllocationError(\"${msg}\")"
+            "throw new ch.bailu.gtk.type.exception.AllocationError(\"${msg}\")"
         } else {
             "throw new NullPointerException(\"${msg}\")"
         }

@@ -1,5 +1,6 @@
 package ch.bailu.gtk.model
 
+import ch.bailu.gtk.Configuration
 import ch.bailu.gtk.converter.NamespaceType
 import ch.bailu.gtk.model.compose.CodeComposer
 import ch.bailu.gtk.model.filter.*
@@ -30,6 +31,7 @@ class StructureModel : Model {
 
     val hasGetTypeFunction: Boolean
         get() = "" != typeFunction
+
 
 
     constructor(structure: StructureTag, nameSpace: NamespaceModel) {
@@ -177,20 +179,8 @@ class StructureModel : Model {
 
         if (className == "") {
             nameSpaceModel = NamespaceModel()
-            apiName = when {
-                structType.isRecord -> {
-                    nameSpaceModel.fullNamespace + ".type.Record"
-                }
-                structType.isPackage -> {
-                    nameSpaceModel.fullNamespace + ".type.Package"
-                }
-                structType.isCallback -> {
-                    nameSpaceModel.fullNamespace + ".type.Callback"
-                }
-                else -> {
-                    nameSpaceModel.fullNamespace + ".type.Pointer"
-                }
-            }
+            apiName = structType.apiParentClassName
+
         } else {
             val type = NamespaceType(defaultNamespace, className)
             val typeNamespaceModel = NamespaceModel(type)
@@ -203,7 +193,7 @@ class StructureModel : Model {
                 }
             } else {
                 nameSpaceModel = NamespaceModel()
-                apiName = nameSpaceModel.fullNamespace + ".type.Outsider"
+                apiName = Configuration.BASE_NAME_SPACE_DOT + "type.Outsider"
             }
         }
     }

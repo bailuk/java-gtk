@@ -9,6 +9,7 @@ It uses [Java Native Access (JNA)](https://github.com/java-native-access/jna) to
 [![POC screenshot](screenshot.png)](examples/src/main/java/examples/ImageBridge.java)
 
 ## Example
+
 ```java
 package examples;
 
@@ -26,10 +27,10 @@ public class HelloWorld {
 
     public HelloWorld(String[] args) {
         var app = new Application(new Str("com.example.GtkApplication"),
-            ApplicationFlags.FLAGS_NONE);
+                ApplicationFlags.FLAGS_NONE);
 
         app.onActivate(() -> {
-            
+
             // Create a new window
             var window = new ApplicationWindow(app);
 

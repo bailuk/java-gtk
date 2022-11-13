@@ -1,6 +1,6 @@
 package examples.gtk4_demo;
 
-import ch.bailu.gtk.exception.AllocationError;
+import ch.bailu.gtk.type.exception.AllocationError;
 import ch.bailu.gtk.gio.AppInfo;
 import ch.bailu.gtk.gio.Gio;
 import ch.bailu.gtk.gio.ListModel;

@@ -2,11 +2,11 @@ package examples.gtk4_tutorial;
 
 import java.io.IOException;
 
-import ch.bailu.gtk.exception.AllocationError;
+import ch.bailu.gtk.type.exception.AllocationError;
 import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.Button;
 import ch.bailu.gtk.gtk.Window;
-import ch.bailu.gtk.helper.BuilderHelper;
+import ch.bailu.gtk.lib.bridge.helper.BuilderHelper;
 import ch.bailu.gtk.type.Str;
 import examples.DemoInterface;
 

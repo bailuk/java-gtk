@@ -1,6 +1,6 @@
 package examples;
 
-import ch.bailu.gtk.bridge.ListIndex;
+import ch.bailu.gtk.lib.bridge.ListIndex;
 import ch.bailu.gtk.gtk.*;
 import ch.bailu.gtk.type.Str;
 

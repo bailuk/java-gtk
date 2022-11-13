@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import ch.bailu.gtk.bridge.ListIndex;
+import ch.bailu.gtk.lib.bridge.ListIndex;
 import ch.bailu.gtk.gio.ListModel;
 import ch.bailu.gtk.gtk.SelectionModel;
 import ch.bailu.gtk.gtk.SingleSelection;

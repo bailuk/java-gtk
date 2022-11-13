@@ -1,4 +1,4 @@
-package ch.bailu.gtk.bridge;
+package ch.bailu.gtk.lib.bridge;
 
 import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Int64;

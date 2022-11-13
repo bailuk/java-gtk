@@ -14,7 +14,7 @@ import ch.bailu.gtk.gtk.PopoverMenu;
 import ch.bailu.gtk.gtk.Switch;
 import ch.bailu.gtk.gtk.TextView;
 import ch.bailu.gtk.gtk.Window;
-import ch.bailu.gtk.helper.ActionHelper;
+import ch.bailu.gtk.lib.bridge.helper.ActionHelper;
 import ch.bailu.gtk.type.Str;
 import examples.DemoInterface;
 

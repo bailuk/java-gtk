@@ -1,4 +1,4 @@
-package ch.bailu.gtk.bridge;
+package ch.bailu.gtk.lib.bridge;
 
 import java.awt.geom.AffineTransform;
 

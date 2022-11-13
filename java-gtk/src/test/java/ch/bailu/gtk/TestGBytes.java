@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import ch.bailu.gtk.bridge.Bytes;
+import ch.bailu.gtk.lib.bridge.Bytes;
 
 public class TestGBytes {
 

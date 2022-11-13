@@ -6,8 +6,6 @@ import ch.bailu.gtk.type.Int;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.IOException;
-
 public class TestInt {
 
 

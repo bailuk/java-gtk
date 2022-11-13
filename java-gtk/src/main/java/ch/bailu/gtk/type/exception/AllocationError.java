@@ -1,4 +1,4 @@
-package ch.bailu.gtk.exception;
+package ch.bailu.gtk.type.exception;
 
 public class AllocationError extends Exception {
 
