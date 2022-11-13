@@ -28,4 +28,4 @@ jobs:
         run: ./gradlew generate
 
       - name: Build library
-        run: ./gradlew build
+        run: ./gradlew build -xtest

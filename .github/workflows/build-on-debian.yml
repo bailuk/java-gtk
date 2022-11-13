@@ -20,6 +20,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Version
+        run: ./gradlew cV
+
+      - name: Version quiet
+        run: ./gradlew cV -q -Prelease.quiet
+
       - name: Generate source code
         run: make gen
 
