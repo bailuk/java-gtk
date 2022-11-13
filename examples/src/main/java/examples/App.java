@@ -14,6 +14,7 @@ import ch.bailu.gtk.gtk.Window;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 import examples.gtk4_demo.AppLauncher;
+import examples.gtk4_demo.Accordion;
 import examples.gtk4_demo.HeaderBarSample;
 import examples.gtk4_demo.HelloWorldBoxed;
 import examples.gtk4_demo.LinksSample;
@@ -60,6 +61,7 @@ public class App {
             addSample(demoList, window, new ExampleApplication(app));
             addSample(demoList, window, new GlibSettings());
             addSample(demoList, window, new MultiThreadingCallbacks());
+            addSample(demoList, window, new Accordion());
 
             window.show();
         });

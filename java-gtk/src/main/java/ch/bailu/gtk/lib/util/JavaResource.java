@@ -15,7 +15,7 @@ public class JavaResource {
     /**
      * Creates a JavaResource object holding a relative path
      * to a file in "resources/" or the root directory of the jar archive
-     * @param path like "css/app.css"
+     * @param path absolute path to css resource: "/css/app.css"
      */
     public JavaResource(String path) {
         this.resourcePath = path;
