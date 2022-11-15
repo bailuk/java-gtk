@@ -12,8 +12,7 @@ import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.Switch;
 import ch.bailu.gtk.gtk.TextView;
 import ch.bailu.gtk.gtk.Window;
-import ch.bailu.gtk.lib.bridge.menu.Actions;
-import ch.bailu.gtk.lib.bridge.menu.MenuModelBuilder;
+import ch.bailu.gtk.lib.handler.action.ActionHandler;
 import ch.bailu.gtk.type.Str;
 import examples.DemoInterface;
 
@@ -39,11 +38,6 @@ public class HeaderBarSample implements DemoInterface {
         var button = new MenuButton();
         button.setMenuModel(createMenuModel(app));
         header.packEnd(button);
-
-        var menuButton = new MenuButton();
-        menuButton.setMenuModel(createMenuModelWithBuilder(app));
-
-        header.packStart(menuButton);
 
         var box = new Box(Orientation.HORIZONTAL, 0);
         box.getStyleContext().addClass(new Str("linked"));
@@ -72,8 +66,6 @@ public class HeaderBarSample implements DemoInterface {
         var serverMenu = new Menu();
         var radioMenu = new Menu();
 
-        var actions = new Actions(app);
-
         result.appendSubmenu(new Str("Network"), networkMenu);
         result.appendSubmenu(new Str("Server"), serverMenu);
 
@@ -88,39 +80,13 @@ public class HeaderBarSample implements DemoInterface {
 
         networkMenu.appendSection(new Str("Select device"), radioMenu);
 
-
-        actions.add("connect", parameter -> System.out.println("Connect selected"));
-        actions.add("disconnect", parameter -> System.out.println("Disconnect selected"));
-        actions.add("toggle", true, parameter -> System.out.println("Toggle"));
-
-        actions.add("select", 0, parameter -> System.out.println("selected " + parameter.getInt32()));
+        ActionHandler.get(app, "connect").onActivate(()-> System.out.println("Connect selected"));
+        ActionHandler.get(app, "disconnect").onActivate(()-> System.out.println("Disconnect selected"));
+        ActionHandler.get(app,"toggle", true).onToggle((boolean value) -> System.out.println("Enabled: " + value));
+        ActionHandler.get(app,"select", 0).onChange((int value) -> System.out.println("Selected: " + value));
 
         return result;
     }
-
-    private Menu createMenuModelWithBuilder(Application app) {
-        var menu = new MenuModelBuilder();
-        var radioMenu = new MenuModelBuilder();
-        var serverMenu = new MenuModelBuilder();
-        var networkMenu = new MenuModelBuilder();
-
-        radioMenu.radioGroup((idx)->{}, 0);
-        for (int i = 0; i< 5; i++) {
-            radioMenu.radio("eth"+i);
-        }
-
-        serverMenu.label("Connect", () -> System.out.println("Connect selected"));
-        serverMenu.label("Disconnect", () -> System.out.println("Disconnect selected"));
-
-        networkMenu.check("Enable",true, (enabled) -> System.out.println("Toggle"));
-        networkMenu.separator("Select device", radioMenu);
-
-        menu.submenu("Network", networkMenu);
-        menu.submenu("Server", serverMenu);
-
-        return menu.create(app);
-    }
-
 
     @Override
     public Str getTitle() {

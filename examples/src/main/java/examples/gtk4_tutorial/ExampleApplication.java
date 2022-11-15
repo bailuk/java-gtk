@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Set;
 
-import ch.bailu.gtk.lib.bridge.menu.Actions;
+import ch.bailu.gtk.lib.handler.action.ActionHandler;
 import ch.bailu.gtk.type.exception.AllocationError;
 import ch.bailu.gtk.gio.MenuModel;
 import ch.bailu.gtk.gtk.Application;
@@ -40,12 +40,10 @@ public class ExampleApplication implements DemoInterface {
     private final static Str TITLE = new Str("Example application (.ui resources)");
     private final static String BASE_PATH = App.path("examples/src/main/java/examples/gtk4_tutorial").toString();
 
-    private final Actions actions;
     private final Application application;
 
     public ExampleApplication(Application app) {
         application = app;
-        actions = new Actions(app);
     }
 
     @Override
@@ -66,18 +64,18 @@ public class ExampleApplication implements DemoInterface {
             var window = new Window(appBuilder.getObject("window"));
             window.setApplication(application);
 
-            actions.add("quit", (parameter) -> window.close());
-            actions.setAccels("quit", new String[]{"<Ctrl>Q", null});
+            ActionHandler.get(application, "quit").onActivate(window::close);
+            ActionHandler.setAccels(application, "app.quit", "<Ctrl>Q");
 
-            actions.add("preferences", (parameter) -> {
+            ActionHandler.get(application, "preferences").onActivate(()-> {
                 var dialog = new Dialog(dlgBuilder.getObject("preferences"));
                 dialog.setTransientFor(window);
                 dialog.present();
             });
 
-            actions.add("show-words", false, (parameter) -> {
+            ActionHandler.get(application, "show-words", false).onToggle((value) -> {
                 var revealer = new Revealer(appBuilder.getObject("sidebar"));
-                revealer.setRevealChild(actions.getBooleanState("show-words"));
+                revealer.setRevealChild(value);
             });
 
             var stack = new Stack(appBuilder.getObject("stack"));

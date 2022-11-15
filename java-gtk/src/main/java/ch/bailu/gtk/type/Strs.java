@@ -39,6 +39,21 @@ public class Strs extends Pointer {
         return result;
     }
 
+    public static Strs nullTerminated(String[] strs) {
+        Str[] result = new Str[strs.length+1];
+
+        int i=0;
+        for (; i< strs.length; i++) {
+            if (strs[i] == null) {
+                result[i] = Str.NULL;
+            } else {
+                result[i] = new Str(strs[i]);
+            }
+        }
+        result[i] = Str.NULL;
+        return new Strs(result);
+    }
+
 
     public int getLength() {
         return strs.length;
