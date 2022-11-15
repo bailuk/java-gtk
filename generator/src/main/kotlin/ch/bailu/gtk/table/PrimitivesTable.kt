@@ -37,6 +37,7 @@ object PrimitivesTable {
         add("double", "double")
         add("float", "float")
         add("const char*", "String")
+        add("const gchar*", "String")
         add("...", "Object...")
     }
 

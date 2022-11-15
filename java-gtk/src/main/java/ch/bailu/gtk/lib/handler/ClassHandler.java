@@ -1,5 +1,6 @@
 package ch.bailu.gtk.lib.handler;
 
+import java.io.PrintStream;
 import java.util.HashMap;
 
 import ch.bailu.gtk.lib.util.SizeLog;
@@ -35,4 +36,18 @@ public class ClassHandler {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return Long.toHexString(instance.getCPointer()) + " "  + instance + " " + name;
+    }
+
+    public static void dump(PrintStream out) {
+        out.println("_");
+        out.println(ClassHandler.class.getSimpleName());
+        out.println("=".repeat(ClassHandler.class.getSimpleName().length()));
+        out.println(map.size());
+        map.keySet().forEach((key)-> out.println(map.get(key)));
+    }
+
 }

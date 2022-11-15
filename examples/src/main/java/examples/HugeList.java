@@ -2,6 +2,10 @@ package examples;
 
 import ch.bailu.gtk.lib.bridge.ListIndex;
 import ch.bailu.gtk.gtk.*;
+import ch.bailu.gtk.lib.handler.CallbackHandler;
+import ch.bailu.gtk.lib.handler.ClassHandler;
+import ch.bailu.gtk.lib.handler.SignalHandler;
+import ch.bailu.gtk.lib.handler.action.ActionHandler;
 import ch.bailu.gtk.type.Str;
 
 import java.io.*;
@@ -65,11 +69,20 @@ public class HugeList implements DemoInterface {
             var key = keyList.get(idx);
             var cnt = wordList.get(key);
 
-            button.setLabel(String.valueOf(idx));
-
             // Reconnect "clicked" signal
             button.disconnectSignals(Button.SIGNAL_ON_CLICKED);
-            button.onClicked(() -> System.out.println(idx));
+            if (idx == 0) {
+                button.setLabel("Dump resources");
+                button.onClicked(() -> {
+                    ActionHandler.dump(System.out);
+                    ClassHandler.dump(System.out);
+                    CallbackHandler.dump(System.out);
+                    SignalHandler.dump((System.out));
+                });
+            } else {
+                button.setLabel(String.valueOf(idx));
+                button.onClicked(() -> System.out.println(idx));
+            }
 
             setLabel(word, key);
             setLabel(count, String.valueOf(cnt));

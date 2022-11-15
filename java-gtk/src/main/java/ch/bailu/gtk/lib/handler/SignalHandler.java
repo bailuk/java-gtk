@@ -2,10 +2,11 @@ package ch.bailu.gtk.lib.handler;
 
 import com.sun.jna.Callback;
 
+import java.io.PrintStream;
 import java.util.Objects;
 
-import ch.bailu.gtk.lib.util.MMap;
 import ch.bailu.gtk.lib.GObject;
+import ch.bailu.gtk.lib.util.MMap;
 import ch.bailu.gtk.lib.util.SizeLog;
 import ch.bailu.gtk.type.Pointer;
 
@@ -56,4 +57,31 @@ public class SignalHandler {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return handlerId + " " + detailedSignal;
+    }
+
+    public static void dump(PrintStream out) {
+        out.println("_");
+        out.println(SignalHandler.class.getSimpleName());
+        out.println("=".repeat(SignalHandler.class.getSimpleName().length()));
+        out.print(mmap.size());
+
+        var keySet = mmap.keySet();
+        out.print(" in ");
+        out.println(keySet.size());
+
+        keySet.forEach((Long key)->{
+            out.println();
+            out.print(Long.toHexString(key));
+            out.print(" has ");
+
+            var values = mmap.getValues(key);
+            out.println(values.size());
+            values.forEach(out::println);
+        });
+    }
+
 }

@@ -1,5 +1,6 @@
 package ch.bailu.gtk.lib.handler;
 
+import java.io.PrintStream;
 import java.util.Objects;
 
 import ch.bailu.gtk.lib.util.IDGen;
@@ -60,4 +61,26 @@ public class CallbackHandler {
             }
         }
     }
+
+    public static void dump(PrintStream out) {
+        out.println("_");
+        out.println(CallbackHandler.class.getSimpleName());
+        out.println("=".repeat(CallbackHandler.class.getSimpleName().length()));
+        out.print(mmap.size());
+
+        var keySet = mmap.keySet();
+        out.print(" in ");
+        out.println(keySet.size());
+
+        keySet.forEach((Long key)->{
+            out.println();
+            out.print(Long.toHexString(key));
+            out.print(" has ");
+
+            var values = mmap.getValues(key);
+            out.println(values.size());
+            values.forEach(out::println);
+        });
+    }
+
 }

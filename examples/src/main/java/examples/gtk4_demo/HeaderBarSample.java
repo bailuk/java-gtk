@@ -12,6 +12,9 @@ import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.Switch;
 import ch.bailu.gtk.gtk.TextView;
 import ch.bailu.gtk.gtk.Window;
+import ch.bailu.gtk.lib.handler.CallbackHandler;
+import ch.bailu.gtk.lib.handler.ClassHandler;
+import ch.bailu.gtk.lib.handler.SignalHandler;
 import ch.bailu.gtk.lib.handler.action.ActionHandler;
 import ch.bailu.gtk.type.Str;
 import examples.DemoInterface;
@@ -66,8 +69,9 @@ public class HeaderBarSample implements DemoInterface {
         var serverMenu = new Menu();
         var radioMenu = new Menu();
 
-        result.appendSubmenu(new Str("Network"), networkMenu);
-        result.appendSubmenu(new Str("Server"), serverMenu);
+        result.appendSubmenu("Network", networkMenu);
+        result.appendSubmenu("Server", serverMenu);
+        result.appendItem(new MenuItem("Dump resources", "app.dump"));
 
         serverMenu.appendItem(new MenuItem(new Str("Connect"), new Str("app.connect")));
         serverMenu.appendItem(new MenuItem(new Str("Disconnect"), new Str("app.disconnect")));
@@ -84,6 +88,12 @@ public class HeaderBarSample implements DemoInterface {
         ActionHandler.get(app, "disconnect").onActivate(()-> System.out.println("Disconnect selected"));
         ActionHandler.get(app,"toggle", true).onToggle((boolean value) -> System.out.println("Enabled: " + value));
         ActionHandler.get(app,"select", 0).onChange((int value) -> System.out.println("Selected: " + value));
+        ActionHandler.get(app, "dump").onActivate(()->{
+            ActionHandler.dump(System.out);
+            SignalHandler.dump(System.out);
+            CallbackHandler.dump(System.out);
+            ClassHandler.dump(System.out);
+        });
 
         return result;
     }

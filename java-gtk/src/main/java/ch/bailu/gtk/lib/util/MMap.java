@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class MMap <K1, K2, V> {
     private Map <K1, Map<K2, V>> map = new HashMap<>();
@@ -53,5 +54,9 @@ public class MMap <K1, K2, V> {
 
     public synchronized long size() {
         return map.values().stream().mapToLong(Map::size).sum();
+    }
+
+    public Set<K1> keySet() {
+        return map.keySet();
     }
 }

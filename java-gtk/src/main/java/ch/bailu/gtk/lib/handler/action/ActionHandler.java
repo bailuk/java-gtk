@@ -1,5 +1,9 @@
 package ch.bailu.gtk.lib.handler.action;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import ch.bailu.gtk.gio.Action;
 import ch.bailu.gtk.gio.ActionMap;
 import ch.bailu.gtk.gtk.Application;
@@ -137,5 +141,11 @@ public class ActionHandler {
             actionHandlerMap = new ActionHandlerMap(new ActionMap(app.cast()));
         }
         return actionHandlerMap;
+    }
+
+    public static void dump(PrintStream out) {
+        if (actionHandlerMap != null) {
+            actionHandlerMap.dump(out);
+        }
     }
 }

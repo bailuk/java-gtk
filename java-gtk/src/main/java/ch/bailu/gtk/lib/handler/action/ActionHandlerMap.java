@@ -1,5 +1,6 @@
 package ch.bailu.gtk.lib.handler.action;
 
+import java.io.PrintStream;
 import java.util.HashMap;
 
 import ch.bailu.gtk.gio.Action;
@@ -80,6 +81,14 @@ public class ActionHandlerMap {
             sizeLog.log(handlerMap.size());
         }
         return handlerMap.get(name);
+    }
+
+    public void dump(PrintStream out) {
+        out.println("_");
+        out.println(ActionHandler.class.getSimpleName());
+        out.println("=".repeat(ActionHandler.class.getSimpleName().length()));
+        out.println(handlerMap.size());
+        handlerMap.keySet().forEach(out::println);
     }
 
 }
