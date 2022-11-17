@@ -2,6 +2,7 @@ package examples;
 
 import java.io.File;
 
+import ch.bailu.gtk.adw.HeaderBar;
 import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.ApplicationWindow;
@@ -11,6 +12,10 @@ import ch.bailu.gtk.gtk.Label;
 import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.ScrolledWindow;
 import ch.bailu.gtk.gtk.Window;
+import ch.bailu.gtk.lib.handler.CallbackHandler;
+import ch.bailu.gtk.lib.handler.ClassHandler;
+import ch.bailu.gtk.lib.handler.SignalHandler;
+import ch.bailu.gtk.lib.handler.action.ActionHandler;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 import examples.gtk4_demo.AppLauncher;
@@ -29,9 +34,8 @@ import examples.test.MultiThreadingCallbacks;
 public class App {
 
     public final static Str ID = new Str("org.gtk.example");
-    private final static Str TITLE = new Str("java-gtk demo");
-    public final static int WIDTH = 720 / 2;
-    public final static int HEIGHT = 1440 / 2;
+    public final static int WIDTH = 400;
+    public final static int HEIGHT = 900;
 
     public static void main (String[] args)  {
 
@@ -43,7 +47,17 @@ public class App {
             scrolled.setChild(demoList);
 
             var window = new ApplicationWindow(app);
-            window.setTitle(TITLE);
+            window.setTitle("java-gtk demo");
+            var headerBar = new HeaderBar();
+            var dumpResources = Button.newWithLabelButton("Dump resources");
+            dumpResources.onClicked(() -> {
+                ActionHandler.dump(System.out);
+                ClassHandler.dump(System.out);
+                CallbackHandler.dump(System.out);
+                SignalHandler.dump((System.out));
+            });
+            headerBar.packStart(dumpResources);
+            window.setTitlebar(headerBar);
             window.setDefaultSize(WIDTH, HEIGHT);
             window.setChild(scrolled);
 
@@ -57,7 +71,7 @@ public class App {
             addSample(demoList, window, new HelloWorldBoxed());
             addSample(demoList, window, new CustomDrawing());
             addSample(demoList, window, new UiBuilderExample(app));
-            addSample(demoList, window, new HugeList());
+            addSample(demoList, window, new HugeList(app));
             addSample(demoList, window, new ExampleApplication(app));
             addSample(demoList, window, new GlibSettings());
             addSample(demoList, window, new MultiThreadingCallbacks());

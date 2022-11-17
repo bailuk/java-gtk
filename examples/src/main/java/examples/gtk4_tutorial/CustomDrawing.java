@@ -47,7 +47,11 @@ public class CustomDrawing implements DemoInterface {
         drawingArea.setDrawFunc((cb, self, cr, width, height, userData) -> {
             cr.setSourceSurface(surface, 0, 0);
             cr.paint();
-        }, null, (cb, data) -> System.out.println("onDestroyNotify()"));
+        }, null, (cb, data) -> {
+            System.out.println("onDestroyNotify()");
+            drawingArea.unregisterCallbacks();
+
+        });
 
         drawingArea.onResize((width, height) -> {
             if (surface != null) {

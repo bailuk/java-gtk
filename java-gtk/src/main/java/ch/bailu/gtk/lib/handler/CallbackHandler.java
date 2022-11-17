@@ -8,11 +8,18 @@ import ch.bailu.gtk.lib.util.MMap;
 import ch.bailu.gtk.lib.util.SizeLog;
 import ch.bailu.gtk.type.Pointer;
 
+/**
+ * Handler to callback resource.
+ * Stores java reference to callback in a hash map
+ * Provides function to free reference to callback
+ */
 public class CallbackHandler {
     private static final IDGen idGen = new IDGen();
+
+    private com.sun.jna.Callback callback;
+
     private final Pointer instance;
     private final String methodName;
-    private com.sun.jna.Callback callback;
     private final long callbackId = idGen.gen();
 
     private static final MMap<Long, Long, CallbackHandler> mmap = new MMap<>();
@@ -23,6 +30,10 @@ public class CallbackHandler {
         this.methodName = methodName;
     }
 
+    /**
+     * For internal use (gets called after callback was passed to a C function)
+     * @param callback (lambda)
+     */
     public synchronized void register(com.sun.jna.Callback callback)  {
         if (this.callback == null) {
             this.callback = callback;
@@ -31,6 +42,11 @@ public class CallbackHandler {
         }
     }
 
+    /**
+     * Unregister this callback
+     * Removes java reference to callback
+     * Only call this if this callbacks will never called again
+     */
     public synchronized void unregister() {
         if (this.callback != null) {
             mmap.remove(instance.getCPointer(), callbackId);
@@ -38,6 +54,12 @@ public class CallbackHandler {
         }
     }
 
+    /**
+     * Unregister all callbacks of this instance
+     * Removes java reference to callback
+     * Only call this if this callbacks will never called again
+     * @param instance
+     */
     public static void unregister(Pointer instance) {
         synchronized (mmap) {
             var values = mmap.getValues(instance.getCPointer());
@@ -47,21 +69,49 @@ public class CallbackHandler {
         }
     }
 
-    public synchronized void unregister(String detailedCallback) {
-        if (Objects.equals(detailedCallback, this.methodName)) {
+    /**
+     * Unregister this callback if its methodName equals methodName
+     * Removes java reference to callback
+     * Only call this if this callbacks will never called again
+     * @param methodName string identifier (name)
+     */
+    public synchronized void unregister(String methodName) {
+        if (Objects.equals(methodName, this.methodName)) {
             unregister();
         }
     }
 
-    public static void unregister(Pointer instance, String detailedCallback) {
+    public static void unregister(Pointer instance, String methodName) {
         synchronized (mmap) {
             var values = mmap.getValues(instance.getCPointer());
             for (CallbackHandler callback: values.toArray(new CallbackHandler[0])) {
-                callback.unregister(detailedCallback);
+                callback.unregister(methodName);
             }
         }
     }
 
+    /**
+     * Get instance this callback ist registered to
+     * Only call this if this callbacks will never called again
+     * @return instance this callback belongs to
+     */
+    public Pointer getInstance() {
+        return instance;
+    }
+
+    /**
+     * Name of method this callback was registered with
+     * @return methodName
+     */
+    public String getMethodName() {
+        return  methodName;
+    }
+
+
+    /**
+     * Dump resources (contents of internal map as text) to stream
+     * @param out stream
+     */
     public static void dump(PrintStream out) {
         out.println("_");
         out.println(CallbackHandler.class.getSimpleName());
@@ -83,4 +133,9 @@ public class CallbackHandler {
         });
     }
 
+
+    @Override
+    public String toString() {
+        return callbackId + " " + methodName;
+    }
 }

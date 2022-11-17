@@ -11,6 +11,8 @@ import ch.bailu.gtk.gdkpixbuf.Pixbuf;
 import ch.bailu.gtk.gdkpixbuf.PixbufFormat;
 import ch.bailu.gtk.gtk.DrawingArea;
 import ch.bailu.gtk.gtk.Window;
+import ch.bailu.gtk.lib.handler.CallbackHandler;
+import ch.bailu.gtk.lib.handler.SignalHandler;
 import ch.bailu.gtk.lib.util.JavaResource;
 import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Str;
@@ -28,12 +30,17 @@ public class ImageBridge implements DemoInterface {
 
         var demoWindow = new Window();
         demoWindow.setResizable(true);
-        demoWindow.setSizeRequest(App.WIDTH, App.HEIGHT);
+        demoWindow.setSizeRequest(300, 300);
 
         DrawingArea drawingArea = new DrawingArea();
         demoWindow.setChild(drawingArea);
         drawingArea.onResize(this::setPixbuf);
-        drawingArea.setDrawFunc((cb, drawing_area, cr, width, height, user_data) -> drawLogo(cr), null, (cb, data) -> {});
+        drawingArea.setDrawFunc((cb, drawing_area, cr, width, height, user_data) -> drawLogo(cr), null, (cb, data)->{});
+
+        demoWindow.onDestroy(() -> {
+            CallbackHandler.unregister(drawingArea);
+            SignalHandler.disconnect(demoWindow);
+        });
         return demoWindow;
     }
 

@@ -1,5 +1,6 @@
 package examples;
 
+import ch.bailu.gtk.gio.Menu;
 import ch.bailu.gtk.lib.bridge.ListIndex;
 import ch.bailu.gtk.gtk.*;
 import ch.bailu.gtk.lib.handler.CallbackHandler;
@@ -23,24 +24,48 @@ public class HugeList implements DemoInterface {
     private final static File GIR_PATH = App.path("generator/src/main/resources/gir/");
     private final HashMap<String, Integer> wordList = new HashMap<>();
 
+    long start = System.currentTimeMillis();
+    long last  = System.currentTimeMillis();
+
+    private final Application app;
+
+    public HugeList(Application app) {
+        this.app = app;
+    }
+
+    private int contextMenuIndex = 0;
+
     @Override
     public Window runDemo() {
         var window = new Window();
+        window.setApplication(app); // For app.* actions
         window.setDefaultSize(640, 320);
+        window.onShow(() -> log("window is about to show"));
 
+        last = start = System.currentTimeMillis();
+        log("start");
         var listIndex = new ListIndex();
+        log("list index created");
 
         for (String name : GIR_PATH.list()) {
             File file = new File(GIR_PATH, name);
             readFileIntoList(file);
         }
+        log("file read into list");
 
         List<String> keyList = new ArrayList<>(wordList.keySet());
-
         keyList.sort(Comparator.comparingInt(wordList::get).reversed());
+        log("keys sorted");
+
         listIndex.setSize(wordList.size());
+        log("listIndex has size");
 
         var factory = new SignalListItemFactory();
+
+        var actionHandler = ActionHandler.get(app, "menu_selected");
+        actionHandler.onActivate(() -> System.out.println("Menu of item " + contextMenuIndex + " selected"));
+
+        window.onDestroy(actionHandler::disconnectSignals);
 
         factory.onSetup(item -> {
             var box = new Box(Orientation.HORIZONTAL, 5);
@@ -53,9 +78,16 @@ public class HugeList implements DemoInterface {
 
             var button = new Button();
             button.onDestroy(button::disconnectSignals); // Make sure all resources are getting released on tear down
-
             box.append(button);
 
+            var menuButton = new MenuButton();
+            var menu = new Menu();
+            menu.append("Action", "app.menu_selected");
+            menuButton.setMenuModel(menu);
+            box.append(menuButton);
+
+            var popover = menuButton.getPopover();
+            popover.onDestroy(popover::disconnectSignals);
             new ListItem(item.cast()).setChild(box);
         });
 
@@ -64,6 +96,7 @@ public class HugeList implements DemoInterface {
             var count = new Label(index.getNextSibling().cast());
             var word = new Label(count.getNextSibling().cast());
             var button = new Button(word.getNextSibling().cast());
+            var menuPopover = new MenuButton(button.getNextSibling().cast()).getPopover();
 
             var idx = ListIndex.toIndex(new ListItem(item.cast()));
             var key = keyList.get(idx);
@@ -81,8 +114,12 @@ public class HugeList implements DemoInterface {
                 });
             } else {
                 button.setLabel(String.valueOf(idx));
-                button.onClicked(() -> System.out.println(idx));
+                button.onClicked(() -> System.out.println("Button of item " + idx + " clicked"));
             }
+
+            // Reconnect "show" signal
+            menuPopover.disconnectSignals(Popover.SIGNAL_ON_SHOW);
+            menuPopover.onShow(()-> contextMenuIndex = idx);
 
             setLabel(word, key);
             setLabel(count, String.valueOf(cnt));
@@ -90,10 +127,12 @@ public class HugeList implements DemoInterface {
         });
 
         var list = new ListView(listIndex.inSelectionModel(), factory);
+        log("list created");
 
         var scrolled = new ScrolledWindow();
         window.setChild(scrolled);
         scrolled.setChild(list);
+        log("return window");
         return window;
     }
 
@@ -104,21 +143,15 @@ public class HugeList implements DemoInterface {
     }
 
     public void readFileIntoList(File file) {
-        InputStream input = null;
-        try {
-            input = new FileInputStream(file);
-            readFromInputStream(input);
+        try (var reader = new BufferedReader(new FileReader(file))) {
+            readFromInputStream(reader);
         } catch (Exception e) {
             System.err.println(e.getMessage());
-        } finally {
-            closeStream(input);
         }
     }
 
-    private void readFromInputStream(InputStream inputStream) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String line;
-        while ((line = reader.readLine()) != null) {
+    private void readFromInputStream(BufferedReader reader) throws IOException {
+        for (String line; (line = reader.readLine()) != null;) {
             for (String word : line.split("[\"=/<>\\s]+")) {
                 String w = word.strip();
                 if (w.length() > 0) {
@@ -131,16 +164,6 @@ public class HugeList implements DemoInterface {
     private int getWordCount(String word) {
         Integer count = wordList.get(word);
         return (count == null) ? 0 : count;
-    }
-
-    private void closeStream(InputStream input) {
-        if (input != null) {
-            try {
-                input.close();
-            } catch (IOException e) {
-                System.err.println(e.getMessage());
-            }
-        }
     }
 
     private Label createLabel() {
@@ -159,5 +182,12 @@ public class HugeList implements DemoInterface {
     @Override
     public Str getDescription() {
         return TITLE;
+    }
+
+    public void log(String out) {
+        var deltaStart = System.currentTimeMillis() - start;
+        var deltaLast = System.currentTimeMillis() - last;
+        System.out.println(deltaStart + " - " + deltaLast + ":> " + out);
+        last = System.currentTimeMillis();
     }
 }
