@@ -3,10 +3,12 @@ package examples.test;
 import ch.bailu.gtk.glib.Glib;
 import ch.bailu.gtk.gtk.Box;
 import ch.bailu.gtk.gtk.Button;
-import ch.bailu.gtk.gtk.Button.OnClicked;
 import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.Window;
+import ch.bailu.gtk.lib.handler.CallbackHandler;
+import ch.bailu.gtk.lib.handler.ClassHandler;
 import ch.bailu.gtk.lib.handler.SignalHandler;
+import ch.bailu.gtk.lib.handler.action.ActionHandler;
 import ch.bailu.gtk.type.Str;
 import examples.DemoInterface;
 
@@ -14,6 +16,7 @@ public class MultiThreadingCallbacks implements DemoInterface {
 
     private int threadId = 1;
     private Button buttonTest;
+    private boolean running = false;
 
     @Override
     public Window runDemo() {
@@ -21,8 +24,11 @@ public class MultiThreadingCallbacks implements DemoInterface {
 
         var box = new Box(Orientation.VERTICAL, 0);
 
+        buttonTest = new Button();
+        buttonTest.onDestroy(buttonTest::disconnectSignals);
+        box.append(buttonTest);
         var buttonRun = new Button();
-        buttonRun.setLabel(new Str("RUN"));
+        buttonRun.setLabel("RUN");
         buttonRun.onClicked( ()-> {
                 var thread = new Thread(() -> {
                     try {
@@ -35,33 +41,36 @@ public class MultiThreadingCallbacks implements DemoInterface {
                 thread.start();
                 threadId ++;
         } );
+        buttonRun.onDestroy(buttonRun::disconnectSignals);
         box.append(buttonRun);
 
         var buttonClose = new Button();
-        buttonClose.setLabel(new Str("Close"));
+        buttonClose.setLabel("Close");
         buttonClose.onClicked(window::close);
+        buttonClose.onDestroy(buttonClose::disconnectSignals);
         box.append(buttonClose);
 
-        buttonTest = new Button();
-        buttonTest.setLabel(new Str("Test"));
-        box.append(buttonTest);
+        var buttonDump = new Button();
+        buttonDump.setLabel("Dump resources");
+        buttonDump.onClicked(() -> {
+            ActionHandler.dump(System.out);
+            ClassHandler.dump(System.out);
+            CallbackHandler.dump(System.out);
+            SignalHandler.dump((System.out));
+        });
+        buttonDump.onDestroy(buttonDump::disconnectSignals);
+        box.append(buttonDump);
 
-        final var buttonOnClickedTest = new Button();
-        buttonOnClickedTest.setLabel(new Str("Click me"));
+        var buttonDisconnect = new Button();
+        buttonDisconnect.setLabel("Disconnect signals");
+        buttonDisconnect.onClicked(() -> buttonTest.disconnectSignals());
+        buttonDisconnect.onDestroy(buttonDisconnect::disconnectSignals);
+        box.append(buttonDisconnect);
 
-        final Button.OnClicked onClicked = () -> System.out.println("onClicked");
-        buttonOnClickedTest.onClicked(onClicked);
-
-        box.append(buttonOnClickedTest);
-
-        final var buttonAddCallback = new Button();
-        buttonAddCallback.setLabel(new Str("Add Click handler"));
-        buttonAddCallback.onClicked(()->buttonOnClickedTest.onClicked(onClicked));
-
-        box.append(buttonAddCallback);
         window.setChild(box);
 
-        buttonAddCallback.disconnectSignals();
+        window.onDestroy(() -> running = false);
+        running = true;
         return window;
     }
 
@@ -77,39 +86,24 @@ public class MultiThreadingCallbacks implements DemoInterface {
 
 
     public void toMainThread() throws InterruptedException {
-        for(int i=0; i <10000; i++) {
+        for(int i=0; i  < 100; i++) {
             Thread.sleep(20);
-            Glib.idleAdd(onSourceFunc, new Str("[" + i + "]: " + Thread.currentThread().getName()));
+            // Outside of main thread
+
+            Glib.idleAdd((cb, user_data) -> {
+                // Inside of main thread
+                Str data = new Str(user_data.cast());
+
+                if (running) {
+                    String string = data.toString();
+                    buttonTest.setLabel(data);
+                    buttonTest.onClicked(() -> System.out.println(string));
+                }
+
+                data.destroy();
+                cb.unregister();
+                return false;
+            }, new Str("[" + i + "]: " + Thread.currentThread().getName()));
         }
     }
-
-    private class MyOnClicked implements OnClicked {
-        private final String label;
-
-        public MyOnClicked(String label) {
-            this.label = label;
-        }
-
-        @Override
-        public void onClicked() {
-            System.out.println(label);
-        }
-    }
-
-    private SignalHandler onClickedSignal = null;
-
-
-    private Glib.OnSourceFunc onSourceFunc = (cb, user_data) -> {
-        Str data = new Str(user_data.cast());
-        buttonTest.setLabel(data);
-
-        var onClickedOld = onClickedSignal;
-        onClickedSignal = buttonTest.onClicked(new MyOnClicked(data.toString()));
-
-        if (onClickedOld != null) {
-            onClickedOld.disconnect();
-        }
-        data.destroy();
-        return false;
-    };
 }
