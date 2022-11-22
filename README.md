@@ -3,7 +3,7 @@
 [![JitPack](https://jitpack.io/v/bailuk/java-gtk.svg)](https://jitpack.io/#bailuk/java-gtk)
 
 # Java-GTK
-Experimental GTK 4 bindings for Java.
+GTK 4 bindings for Java.
 It uses [Java Native Access (JNA)](https://github.com/java-native-access/jna) to access GTK libraries. 
 
 [![POC screenshot](screenshot.png)](examples/src/main/java/examples/ImageBridge.java)
@@ -17,33 +17,35 @@ import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.Button;
-import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
 public class HelloWorld {
     public static void main(String[] args) {
-        new HelloWorld(args);
-    }
-
-    public HelloWorld(String[] args) {
-        var app = new Application(new Str("com.example.GtkApplication"),
+        var app = new Application("com.example.hello",
                 ApplicationFlags.FLAGS_NONE);
 
         app.onActivate(() -> {
-
             // Create a new window
             var window = new ApplicationWindow(app);
 
             // Create a new button
-            var button = Button.newWithLabelButton(new Str("Hello, World!"));
+            var button = new Button();
+
+            // Set button label
+            button.setLabel("Hello, World!");
 
             // When the button is clicked, close the window
-            button.onClicked(() -> window.close());
+            button.onClicked(window::close);
+
             window.setChild(button);
             window.show();
         });
 
-        app.run(args.length, new Strs(args));
+        // Start application main loop
+        var result = app.run(args.length, new Strs(args));
+
+        // Terminate with exit code
+        System.exit(result);
     }
 }
 ```
@@ -61,13 +63,13 @@ Creates library, javadoc and run tests
 
 `make run`  
 Run the default demo application.
-The default demo application can be selected in [examples/src/main/java/examples/App.java](examples/src/main/java/examples/App.java)
+There are more demo applications in [examples/src/main/java/examples](examples/src/main/java/examples) including GeoClue2 and Adwaita samples.
 
 `make install`  
 Compile Java library, generate JAR archive and copy JAR archive as artifact to local Maven repository (`~/.m2/repository`).
 
 ## Integration
-Library and [Javadoc](https://javadoc.jitpack.io/com/github/bailuk/java-gtk/0.2/javadoc/) is available via [JitPack](https://jitpack.io).
+Library and [Javadoc](https://javadoc.jitpack.io/com/github/bailuk/java-gtk/0.3.0/javadoc/) is available via [JitPack](https://jitpack.io).
 
 ```kotlin
 // build.gradle.kts
@@ -80,7 +82,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.bailuk:java-gtk:0.2")
+    implementation("com.github.bailuk:java-gtk:0.3.0")
 }
 
 application {
