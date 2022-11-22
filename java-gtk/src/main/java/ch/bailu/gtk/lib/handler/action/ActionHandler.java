@@ -1,14 +1,12 @@
 package ch.bailu.gtk.lib.handler.action;
 
 import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 import ch.bailu.gtk.gio.Action;
 import ch.bailu.gtk.gio.ActionMap;
-import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gio.SimpleAction;
 import ch.bailu.gtk.glib.Variant;
+import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.lib.handler.SignalHandler;
 import ch.bailu.gtk.type.Strs;
 
@@ -46,11 +44,9 @@ public class ActionHandler {
         void onActivate(boolean value);
     }
 
-
     public interface OnChange {
         void onActivate(int state);
     }
-
 
     ActionHandler(String name, SimpleAction simpleAction) {
         this.name = name;
@@ -134,6 +130,10 @@ public class ActionHandler {
 
     public void remove(Application app, String name) {
         map(app).remove(name);
+    }
+
+    public void setEnabled(boolean enabled) {
+        simpleAction.setEnabled(enabled);
     }
 
     private static ActionHandlerMap map(Application app) {
