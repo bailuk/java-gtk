@@ -10,7 +10,7 @@ public class GObject {
 
     public static Instance INST() {
         if (_INST == null) {
-            _INST = Native.load("gobject-2.0", Instance.class);
+            _INST = Native.load("libgobject-2.0-0", Instance.class);
         }
         return _INST;
     }

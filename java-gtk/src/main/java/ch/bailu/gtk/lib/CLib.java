@@ -10,7 +10,7 @@ public class CLib {
 
     public static Instance INST() {
         if (_INST == null) {
-            _INST = Native.load("c", Instance.class);
+            _INST = Native.load("msvcrt", Instance.class);
         }
         return _INST;
     }

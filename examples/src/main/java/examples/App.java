@@ -2,7 +2,7 @@ package examples;
 
 import java.io.File;
 
-import ch.bailu.gtk.adw.HeaderBar;
+import ch.bailu.gtk.gtk.HeaderBar;
 import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.ApplicationWindow;
@@ -33,11 +33,16 @@ import examples.test.MultiThreadingCallbacks;
 
 public class App {
 
-    public final static Str ID = new Str("org.gtk.example");
+    public final static String ID = "org.gtk.example";
     public final static int WIDTH = 400;
     public final static int HEIGHT = 900;
 
     public static void main (String[] args)  {
+
+        System.setProperty("jna.debug_load", "true");
+
+        printProperty("java.library.path");
+        printProperty("jna.library.path");
 
         var app = new Application(ID, ApplicationFlags.FLAGS_NONE);
         app.onActivate(()->{
@@ -81,6 +86,13 @@ public class App {
         });
 
         System.exit(app.run(args.length, new Strs(args)));
+    }
+
+
+    private static void printProperty(String property) {
+        System.out.print(property);
+        System.out.print(": ");
+        System.out.println(System.getProperty(property));
     }
 
     private static void addSample(Box demoList, Window window, DemoInterface demo) {
