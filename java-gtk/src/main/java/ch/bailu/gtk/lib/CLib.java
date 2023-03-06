@@ -10,7 +10,9 @@ public class CLib {
 
     public static Instance INST() {
         if (_INST == null) {
-            _INST = Native.load("msvcrt", Instance.class);
+            _INST = System.getProperty("os.name").toLowerCase().indexOf("win") > 0 ?
+                    Native.load("msvcrt", Instance.class) :
+                    Native.load("c", Instance.class);
         }
         return _INST;
     }

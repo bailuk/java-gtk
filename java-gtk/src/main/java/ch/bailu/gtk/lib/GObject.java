@@ -10,7 +10,9 @@ public class GObject {
 
     public static Instance INST() {
         if (_INST == null) {
-            _INST = Native.load("libgobject-2.0-0", Instance.class);
+            _INST = System.getProperty("os.name").toLowerCase().indexOf("win") > 0 ?
+                    Native.load("libgobject-2.0-0", Instance.class) :
+                    Native.load("gobject-2.0", Instance.class);
         }
         return _INST;
     }
