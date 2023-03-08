@@ -36,7 +36,6 @@ object Configuration  {
 
     fun createJavaDocConfig(out: Writer): JavaDoc {
         return JavaDocHtml(out)
-
     }
 }
 
