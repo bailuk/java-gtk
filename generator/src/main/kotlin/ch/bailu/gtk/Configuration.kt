@@ -21,7 +21,7 @@ object Configuration  {
     const val LOG_CALLBACK_TABLE_FILE  = "build/callback_table.out"
     const val LOG_ENUM_TABLE_FILE      = "build/enum_table.out"
 
-    val NAMESPACES = if (System.getProperty("os.name").lowercase().indexOf("win") >= 0) arrayOf(
+    val NAMESPACES = if (System.getProperty("os.name").lowercase().contains("win")) arrayOf(
             NamespaceConfig("GObject-2.0.gir",    "libgobject-2.0-0",  GtkDocUrl("gobject")),
             NamespaceConfig("Gtk-4.0.gir",        "libgtk-4-1",        GtkDocUrl("gtk4")),
             NamespaceConfig("Gio-2.0.gir",        "libgio-2.0-0",      GtkDocUrl("gio")),

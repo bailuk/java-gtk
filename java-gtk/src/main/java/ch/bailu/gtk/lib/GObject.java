@@ -10,7 +10,7 @@ public class GObject {
 
     public static Instance INST() {
         if (_INST == null) {
-            _INST = System.getProperty("os.name").toLowerCase().indexOf("win") > 0 ?
+            _INST = System.getProperty("os.name").toLowerCase().contains("win") ?
                     Native.load("libgobject-2.0-0", Instance.class) :
                     Native.load("gobject-2.0", Instance.class);
         }
