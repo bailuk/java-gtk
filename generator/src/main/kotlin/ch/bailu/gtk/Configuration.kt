@@ -5,6 +5,7 @@ import ch.bailu.gtk.config.GtkDocUrl
 import ch.bailu.gtk.config.StaticUrl
 import ch.bailu.gtk.writer.java_doc.JavaDoc
 import ch.bailu.gtk.writer.java_doc.JavaDocHtml
+import java.io.StringReader
 import java.io.Writer
 
 object Configuration  {
@@ -20,8 +21,7 @@ object Configuration  {
     const val LOG_CALLBACK_TABLE_FILE  = "build/callback_table.out"
     const val LOG_ENUM_TABLE_FILE      = "build/enum_table.out"
 
-
-    val NAMESPACES = if (System.getProperty("os.name").lowercase().indexOf("win") > 0) arrayOf(
+    val NAMESPACES = if (System.getProperty("os.name").lowercase().indexOf("win") >= 0) arrayOf(
             NamespaceConfig("GObject-2.0.gir",    "libgobject-2.0-0",  GtkDocUrl("gobject")),
             NamespaceConfig("Gtk-4.0.gir",        "libgtk-4-1",        GtkDocUrl("gtk4")),
             NamespaceConfig("Gio-2.0.gir",        "libgio-2.0-0",      GtkDocUrl("gio")),
