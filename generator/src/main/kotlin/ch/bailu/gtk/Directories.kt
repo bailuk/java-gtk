@@ -6,41 +6,39 @@ import java.io.*
 
 class Directories(args: Array<String>) {
     private val javaBaseDir: File
-    private val girBaseDir: File
 
+    private val girDirs = ArrayList<GirDirectory>()
 
     init {
+        addGirDirectoryIfExists(GirDirectory(File(Configuration.GIR_DIR_CUSTOM), "custom"))
+        addGirDirectoryIfExists(GirDirectory(File(Configuration.GIR_DIR_LOCAL), "local"))
+
         var i = 0
         var jdir: File? = null
-        var gdir: File? = null
         while (i < args.size - 1) {
             if ("-j" == args[i]) {
-                jdir = getDirectory(args[++i], true)
+                jdir = File(args[++i])
+                jdir.mkdirs()
             } else if ("-i" == args[i]) {
-                gdir = getDirectory(args[++i], false)
+                addGirDirectoryIfExists(GirDirectory(File(args[++i]), "external"))
             }
             i++
         }
-        if (jdir != null && gdir != null) {
+        if (jdir is File) {
             javaBaseDir = jdir
-            girBaseDir = gdir
         } else {
-            println("Usage: call -i <introspective directory> -j <java sources output directory>\n")
+            println("Usage: call -j <java sources output directory> [-i <introspective directory>]\n")
             throw RuntimeException("Missing parameter")
         }
     }
 
-    private fun getDirectory(dir: String, create: Boolean): File {
-        val result = File(dir)
-        if (create) {
-            result.mkdirs()
-            if (!result.exists()) {
-                throw RuntimeException("$dir does not exist.")
-            }
+    private fun addGirDirectoryIfExists(directory: GirDirectory) {
+        if (directory.path.isDirectory) {
+            girDirs.add(directory)
+        } else {
+            println("WARNING: Directory '${directory.path}' of type '${directory.type} 'does not exist\n")
         }
-        return result
     }
-
 
     @Throws(IOException::class)
     fun getJavaWriter(className: String, nameSpaceModel: NamespaceModel): Writer {
@@ -77,20 +75,15 @@ class Directories(args: Array<String>) {
     }
 
     private fun getGirFile(girFileName: String): File {
-        var result = File(Configuration.GIR_DIR_CUSTOM, girFileName)
-        var type = "custom"
-        if (!result.exists()) {
-            result = File(girBaseDir, girFileName)
-            type = "system"
-            if (!result.exists()) {
-                result = File(Configuration.GIR_DIR_LOCAL, girFileName)
-                type = "local"
-                if (!result.exists()) {
-                    throw IOException("File does not exist $result")
-                }
+        girDirs.forEach {
+            val girFile = File(it.path, girFileName)
+            if (girFile.exists()) {
+                println("  --> ${it.type}: $girFile")
+                return girFile
             }
         }
-        println("  --> ${type}: $result")
-        return result
+        throw IOException("GIR file '$girFileName' not found")
     }
 }
+
+private data class GirDirectory(val path: File, val type: String)

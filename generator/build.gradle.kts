@@ -38,9 +38,7 @@ tasks.register("generate", JavaExec::class) {
     classpath = sourceSets["main"].runtimeClasspath
     mainClass.set("ch.bailu.gtk.AppKt")
 
-    args(setOf(
-            "-i", "/usr/share/gir-1.0",
-            "-j", "${project.getRootDir()}/java-gtk/build/generated/src/main/java/ch/bailu/gtk/"))
+    args(setOf("-j", "${project.rootDir}/java-gtk/build/generated/src/main/java/ch/bailu/gtk/"))
 }
 
 tasks.compileJava {
