@@ -1,7 +1,6 @@
-package ch.bailu.gtk.lib;
+package ch.bailu.gtk.lib.jna;
 
 import com.sun.jna.Library;
-import com.sun.jna.Native;
 
 
 public class CLib {
@@ -10,7 +9,7 @@ public class CLib {
 
     public static Instance INST() {
         if (_INST == null) {
-            _INST = Native.load("c", Instance.class);
+            _INST =Loader.load("c", Instance.class);
         }
         return _INST;
     }

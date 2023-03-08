@@ -10,8 +10,8 @@ import ch.bailu.gtk.gtk.SelectionModel;
 import ch.bailu.gtk.gtk.SingleSelection;
 import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Sizes;
-import ch.bailu.gtk.lib.GIO;
-import ch.bailu.gtk.lib.GObject;
+import ch.bailu.gtk.lib.jna.GIO;
+import ch.bailu.gtk.lib.jna.GObject;
 
 /**
  * A ListModel that provides indices for n items.

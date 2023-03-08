@@ -1,8 +1,7 @@
-package ch.bailu.gtk.lib;
+package ch.bailu.gtk.lib.jna;
 
 import com.sun.jna.Callback;
 import com.sun.jna.Library;
-import com.sun.jna.Native;
 import com.sun.jna.Structure;
 
 public class GObject {
@@ -10,7 +9,7 @@ public class GObject {
 
     public static Instance INST() {
         if (_INST == null) {
-            _INST = Native.load("gobject-2.0", Instance.class);
+            _INST = Loader.load("gobject-2.0", Instance.class);
         }
         return _INST;
     }
