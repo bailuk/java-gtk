@@ -5,7 +5,7 @@ import com.sun.jna.Callback;
 import java.io.PrintStream;
 import java.util.Objects;
 
-import ch.bailu.gtk.lib.GObject;
+import ch.bailu.gtk.lib.jna.GObject;
 import ch.bailu.gtk.lib.util.MMap;
 import ch.bailu.gtk.lib.util.SizeLog;
 import ch.bailu.gtk.type.Pointer;
@@ -71,7 +71,7 @@ public class SignalHandler {
     /**
      * Disconnect all signals of instance with detailedSignal (signal name)
      * and free java references of callbacks
-     * @param instance
+     * @param instance disconnect all signals of this instance
      * @param detailedSignal the signal name, for example "clicked"
      */
     public static void disconnect(Pointer instance, String detailedSignal) {

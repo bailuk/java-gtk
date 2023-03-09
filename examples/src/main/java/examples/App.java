@@ -2,7 +2,7 @@ package examples;
 
 import java.io.File;
 
-import ch.bailu.gtk.adw.HeaderBar;
+import ch.bailu.gtk.gtk.HeaderBar;
 import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.ApplicationWindow;

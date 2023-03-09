@@ -99,7 +99,7 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
                     _size = new Fields().size();
                     System.out.println("${structureModel.apiName} size: " + _size + " bytes");
                 }
-                return ch.bailu.gtk.lib.CLib.allocate(_size);
+                return ch.bailu.gtk.lib.jna.CLib.allocate(_size);
             }
 
             @com.sun.jna.Structure.FieldOrder({${getFields(fields)}})
@@ -144,7 +144,7 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
 
             static Instance INST() {
                 if (INSTANCE == null) {
-                    INSTANCE = com.sun.jna.Native.load("${namespaceModel.namespaceConfig.library}", Instance.class);
+                    INSTANCE = ch.bailu.gtk.lib.jna.Loader.load("${namespaceModel.namespaceConfig.library}", Instance.class);
                 }
                 return INSTANCE;
             }

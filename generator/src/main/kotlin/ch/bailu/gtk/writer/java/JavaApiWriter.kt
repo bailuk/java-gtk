@@ -136,7 +136,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
                 }
                 
                 public void destroy() {
-                     ch.bailu.gtk.lib.CLib.INST().free(getCPointer());
+                     ch.bailu.gtk.lib.jna.CLib.INST().free(getCPointer());
                 }
             """, 4)
             out.end(1)

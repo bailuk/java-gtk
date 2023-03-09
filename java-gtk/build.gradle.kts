@@ -82,5 +82,4 @@ tasks.javadoc {
     options.overview("java-gtk")
     (options as StandardJavadocDocletOptions).addStringOption("Xdoclint:none", "-quiet")
     (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
-    (options as StandardJavadocDocletOptions).footer = "Test"
 }
