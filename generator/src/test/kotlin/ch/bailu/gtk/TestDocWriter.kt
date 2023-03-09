@@ -1,6 +1,6 @@
 package ch.bailu.gtk
 
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class TestDocWriter {
@@ -15,7 +15,7 @@ class TestDocWriter {
                 "]|"
 
 
-     assertEquals(false, isEvenPre(doc))
+        Assertions.assertEquals(false, isEvenPre(doc))
     }
 
     private fun isEvenPre(doc: String): Boolean {
