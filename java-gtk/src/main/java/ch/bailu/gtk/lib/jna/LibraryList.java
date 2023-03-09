@@ -38,4 +38,11 @@ public class LibraryList {
             libraries.get(libraryName).add(lib);
         }
     }
+
+    public int size(String libraryName) {
+        if (libraries.containsKey(libraryName)) {
+            return libraries.get(libraryName).size();
+        }
+        return 0;
+    }
 }

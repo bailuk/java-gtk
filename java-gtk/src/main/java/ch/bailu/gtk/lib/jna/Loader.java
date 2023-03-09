@@ -62,9 +62,9 @@ public class Loader {
         libraries.addInitial(libraryName);
 
         for (var lib: libraries.get(libraryName)) {
-            var result = _loadInterface(lib, interfaceClass);
+            final var result = tryLoadInterface(lib, interfaceClass);
             if (result != null) {
-                libraries.addSingle(libraryName, lib);
+                libraryLoaded(libraryName, lib);
                 return result;
             }
         }
@@ -73,11 +73,18 @@ public class Loader {
         throw new UnsatisfiedLinkError("Failed to load'" + libraryName + "'");
     }
 
-    private <T extends Library> T _loadInterface(@Nonnull String libraryName, @Nonnull Class<T> interfaceClass) {
+    private void libraryLoaded(String libraryName, String lib) {
+        if (libraries.size(libraryName) != 1) {
+            System.out.println("Loaded '" + lib + "' for '" + libraryName + "'");
+            libraries.addSingle(libraryName, lib);
+        }
+    }
+
+    private <T extends Library> T tryLoadInterface(@Nonnull String libraryName, @Nonnull Class<T> interfaceClass) {
         try {
             return com.sun.jna.Native.load(libraryName, interfaceClass);
         } catch (UnsatisfiedLinkError exception) {
-            System.err.println("Failed to load " + libraryName + ": " + exception.getMessage());
+            System.err.println("Failed to load '" + libraryName + '"');
             return null;
         }
     }
