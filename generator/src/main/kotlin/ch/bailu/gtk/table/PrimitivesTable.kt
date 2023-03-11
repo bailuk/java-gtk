@@ -38,7 +38,7 @@ object PrimitivesTable {
         add("float", "float")
         add("const char*", "String")
         add("const gchar*", "String")
-        add("...", "Object...")
+        add("...", "java.lang.Object...")
     }
 
     private fun add(cType: String, jType: String) {

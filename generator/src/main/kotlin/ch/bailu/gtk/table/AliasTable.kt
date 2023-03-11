@@ -8,10 +8,13 @@ object AliasTable : Logable {
     val table: MutableMap<NamespaceType, NamespaceType> = HashMap()
 
     init {
-        val from = NamespaceType("glib", "String")
-        val to = NamespaceType("glib", "GString")
-        add(from, to)
+        add(NamespaceType("glib", "String"),
+            NamespaceType("glib", "GString"))
+
+        // add(NamespaceType("gobject", "Object"),
+        //    NamespaceType("gobject", "GObject"))
     }
+
 
 
     fun add(from: NamespaceType, to: NamespaceType) {
