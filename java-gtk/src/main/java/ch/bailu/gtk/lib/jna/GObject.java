@@ -15,20 +15,6 @@ public class GObject {
     }
 
     public interface Instance extends Library {
-        long g_object_new(long type, String property_name, long property, long terminate);
-        void g_object_class_install_property(long oclass, int property_id, long pspec);
-        long g_type_register_static_simple(long parent_type,
-                                         String type_name,
-                                         int class_size,
-                                         Callback class_init,
-                                         int instance_size,
-                                         Callback instance_init,
-                                         int flags);
-        long g_type_class_peek_parent(long type);
-        long g_type_check_class_cast(long g_class, long is_a_type);
-        void g_type_add_interface_static(long instance_type, long interface_type, InterfaceInfo info);
-        long g_param_spec_gtype(String name, String nick, String blurb, long is_a_type, long flags);
-        void g_value_set_gtype(long value, long v_gtype);
         long g_signal_connect_data(long instance, String detailed_signal, Callback cb, long data, long destroy_data, int flag);
         void g_signal_handler_disconnect (long instance, long handler_id);
     }
