@@ -54,10 +54,4 @@ public class GObject {
     public interface DisposeCallback extends Callback {
         void invoke(long pointer);
     }
-    @Structure.FieldOrder({"interface_init", "interface_finalize", "interface_data"})
-    public static class InterfaceInfo extends Structure {
-        public Callback interface_init;
-        public long interface_finalize;
-        public long interface_data;
-    }
 }

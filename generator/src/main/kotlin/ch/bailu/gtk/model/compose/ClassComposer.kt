@@ -17,11 +17,11 @@ class ClassComposer : CodeComposer() {
 
         writer.writeInternalConstructor(structureModel)
 
-        if (structureModel.isRecord && filterCreateMallocConstructor(structureModel)) {
-            writer.writeMallocConstructor(structureModel)
-        }
-
         if (structureModel.isRecord && models.fields.isNotEmpty()) {
+            if (filterCreateMallocConstructor(models.methods)) {
+                writer.writeMallocConstructor(structureModel)
+            }
+
             writer.writeBeginStruct(structureModel, models.fields)
             models.fields.forEach { writer.writeField(structureModel, it) }
             writer.writeEndStruct()
@@ -33,7 +33,7 @@ class ClassComposer : CodeComposer() {
         models.constructors.forEach     { writer.writeConstructor(structureModel, it) }
         models.methods.forEach          { writer.writeMethod(structureModel, it) }
         models.signals.forEach          { writer.writeSignal(structureModel, it) }
-        models.functions.forEach       { writer.writeFunction(structureModel, it) }
+        models.functions.forEach        { writer.writeFunction(structureModel, it) }
         if (structureModel.hasGetTypeFunction) {
             writer.writeGetTypeFunction(structureModel)
         }

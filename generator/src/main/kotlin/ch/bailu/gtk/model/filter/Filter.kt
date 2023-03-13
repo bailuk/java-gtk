@@ -52,26 +52,13 @@ fun filterField(structureModel: StructureModel): Boolean {
     return "PixbufModulePattern" != structureModel.apiName
 }
 
-/**
- * List of records that support malloc constructor
- */
-private val MALLOC = arrayOf(
-        "RGBA",
-        "Rectangle",
-        "Matrix",
-        "TreeIter",
-        "TextIter",
-        "Value"
-)
-
-
-fun filterCreateMallocConstructor(structureModel: StructureModel): Boolean {
-    for (s in MALLOC) {
-        if (s == structureModel.apiName) {
-            return true
+fun filterCreateMallocConstructor(methodModel: ModelList<MethodModel>): Boolean {
+    methodModel.forEach {
+        if (it.isSupported && it.name == "destroy") {
+            return false
         }
     }
-    return false
+    return true
 }
 
 fun filterFieldDirectAccess(structureModel: StructureModel): Boolean {

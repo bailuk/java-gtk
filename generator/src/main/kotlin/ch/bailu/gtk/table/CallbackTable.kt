@@ -20,10 +20,6 @@ object CallbackTable : Logable {
         return result
     }
 
-    fun contains(namespace: String, name: String): Boolean {
-        return getTable(namespace)[name] != null
-    }
-
     operator fun get(namespace: String, name: String): CallbackTag? {
         return getTable(namespace)[name]
     }

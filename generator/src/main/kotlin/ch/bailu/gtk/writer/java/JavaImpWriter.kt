@@ -73,6 +73,7 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
         out.start(1)
 
         out.a("""
+            @FunctionalInterface
             public interface ${Names.getJavaCallbackInterfaceName(methodModel.name)} extends com.sun.jna.Callback {
                 ${methodModel.returnType.impType} invoke(${getSignature(methodModel, "", isSignal)});
             }
@@ -102,7 +103,7 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
                 return ch.bailu.gtk.lib.jna.CLib.allocate(_size);
             }
 
-            @com.sun.jna.Structure.FieldOrder({${getFields(fields)}})
+            @com.sun.jna.Structure.FieldOrder({${getFields(structureModel, fields)}})
             public static class Fields extends com.sun.jna.Structure {
                 public Fields() {
                     super(); 
@@ -115,12 +116,12 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
         out.end(1)
     }
 
-    private fun getFields(fields: ModelList<ParameterModel>): String {
+    private fun getFields(structureModel: StructureModel, fields: ModelList<ParameterModel>): String {
         val result = StringBuilder()
         var del = ""
 
         fields.forEach {
-            result.append(del).append('"').append(it.name).append('"')
+            result.append(del).append(structureModel.apiName).append(".").append(Names.getJavaConstantName(it.name))
             del = ", "
         }
         return result.toString()
@@ -128,7 +129,12 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
 
     override fun writeField(structureModel: StructureModel, parameterModel: ParameterModel) {
         out.start(0)
-        out.a("        public ${parameterModel.impType} ${parameterModel.name};\n")
+
+        if (parameterModel.isCallback && parameterModel.callbackModel != null) {
+            out.a("        public ${Names.getJavaCallbackInterfaceName(parameterModel.callbackModel.name)} ${parameterModel.name};\n")
+        } else {
+            out.a("        public ${parameterModel.impType} ${parameterModel.name};\n")
+        }
         out.end(0)
     }
 

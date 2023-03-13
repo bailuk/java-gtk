@@ -6,6 +6,7 @@ import ch.bailu.gtk.model.compose.CodeComposer
 import ch.bailu.gtk.model.filter.*
 import ch.bailu.gtk.model.list.ModelLists
 import ch.bailu.gtk.model.type.StructureType
+import ch.bailu.gtk.model.validator.Validator
 import ch.bailu.gtk.parser.tag.EnumerationTag
 import ch.bailu.gtk.parser.tag.MethodTag
 import ch.bailu.gtk.parser.tag.ParameterTag
@@ -43,8 +44,9 @@ class StructureModel : Model {
         apiName = convert(nameSpace.namespace, structure.getName())
         parent = StructureModel(nameSpace.namespace, structure.parent, structureType)
         doc = structure.getDoc()
-        for (methodTag in structure.constructors) {
-            generateAndAddMethodModel(nameSpace, models.privateFactories, methodTag)
+
+        structure.constructors.forEach {
+            generateAndAddMethodModel(nameSpace, models.privateFactories, it)
         }
 
         models.privateFactories.forEach {
@@ -55,26 +57,38 @@ class StructureModel : Model {
             }
         }
 
-        for (methodTag in structure.methods) {
-            generateAndAddMethodModel(nameSpace, models.methods, methodTag)
+        structure.methods.forEach {
+            generateAndAddMethodModel(nameSpace, models.methods, it)
         }
 
-        for (signal in structure.signals) {
-            models.signals.addIfSupported(MethodModel(nameSpace.namespace,nameSpace.namespace, signal, preferNative = false))
+        structure.signals.forEach {
+            models.signals.addIfSupported(MethodModel(nameSpace.namespace,nameSpace.namespace, it, preferNative = false))
         }
-        for (field in structure.fields) {
-            val fieldModel = ParameterModel(
-                nameSpace.namespace,
-                field, isConstant = false,
-                supportsDirectAccess = filterFieldDirectAccess(this),
-                preferNative = false)
-            models.fields.addIfSupported(filterField(fieldModel))
+
+        structure.fields.forEach {
+            generateAndAddFieldModel(nameSpace, it)
         }
-        for (m in structure.functions) {
-            models.addIfSupportedWithCallbacks(models.functions, filter(MethodModel(nameSpace.namespace, nameSpace.namespace,m, preferNative = false)))
+
+        structure.functions.forEach {
+            models.addIfSupportedWithCallbacks(models.functions, filter(MethodModel(nameSpace.namespace, nameSpace.namespace, it, preferNative = false)))
         }
 
         setSupported("name-is-empty", apiName != "")
+    }
+
+    private fun generateAndAddFieldModel(namespace: NamespaceModel, parameterTag: ParameterTag) {
+        val fieldModel = filterField(ParameterModel(
+            namespace.namespace,
+            parameterTag, isConstant = false,
+            supportsDirectAccess = filterFieldDirectAccess(this),
+            preferNative = false))
+
+        if (fieldModel.isSupported) {
+            models.fields.addIfSupported(filterField(fieldModel))
+            if (fieldModel.isCallback && fieldModel.callbackModel != null) {
+                models.callbacks.addIfSupported(fieldModel.callbackModel)
+            }
+        }
     }
 
     private fun generateAndAddMethodModel(namespace: NamespaceModel, models: ModelList<MethodModel>, methodTag: MethodTag) {
@@ -93,7 +107,6 @@ class StructureModel : Model {
     }
 
     private fun filterField(parameterModel: ParameterModel): ParameterModel {
-        parameterModel.setSupported("cb-field", !parameterModel.isCallback)
         parameterModel.setSupported("filter-field", filterField(this))
         return parameterModel
     }
@@ -200,7 +213,7 @@ class StructureModel : Model {
 
     fun hasNativeCalls(): Boolean {
         if (isSupported) {
-            if (structureType.isRecord && filterCreateMallocConstructor(this)) {
+            if (structureType.isRecord && filterCreateMallocConstructor(this.models.methods)) {
                 return true
             } else if (structureType.isPackage || structureType.isClassType) {
                 return models.hasNativeCalls() || hasGetTypeFunction

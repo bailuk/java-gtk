@@ -75,7 +75,7 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
 
 
     override fun writeField(structureModel: StructureModel, parameterModel: ParameterModel) {
-        //writeConstant(structureModel, parameterModel)
+        writeConstant(structureModel, parameterModel)
     }
 
     override fun writeFunction(structureModel: StructureModel, methodModel: MethodModel) {

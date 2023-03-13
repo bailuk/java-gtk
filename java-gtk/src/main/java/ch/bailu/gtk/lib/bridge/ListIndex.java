@@ -99,15 +99,9 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
     private static synchronized void registerInterface(long type) {
         System.out.println("ListIndex::registerInterface");
 
-        // TODO Support callbacks in records
-        GObject.InterfaceInfo info = new GObject.InterfaceInfo();
-        info.read();
-        info.interface_init = interfaceInit;
-        info.interface_data = 0;
-        info.interface_finalize = 0;
-        info.write();
-
-        Gobject.typeAddInterfaceStatic(type, ListModel.getTypeID(), new InterfaceInfo(Pointer.toCPointer(info.getPointer())));
+        InterfaceInfo info = new InterfaceInfo();
+        info.setFieldInterfaceInit(interfaceInit);
+        Gobject.typeAddInterfaceStatic(type, ListModel.getTypeID(), info);
   }
 
     private static ObjectClass parentClass = null;
@@ -120,10 +114,9 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
             parentClass = new ObjectClass(typeClass.peekParent().cast());
 
             // TODO Support callbacks in records (?)
-
             var objectClass = new ObjectClass(Gobject.typeCheckClassCast(typeClass, PARENT_TYPE).cast());
 
-            GObject.ObjectClass objectClassInstance = new GObject.ObjectClass(objectClass.getCPointer());
+            var objectClassInstance = new GObject.ObjectClass(objectClass.getCPointer());
 
             objectClassInstance.dispose = instanceDispose;
             objectClassInstance.getProperty = getProperty;
@@ -144,10 +137,12 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
         }
     };
 
-    private static Callback interfaceInit = new Callback() {
-        public void invoke(long inst) {
+    private static InterfaceInfo.OnInterfaceInitFunc interfaceInit = new InterfaceInfo.OnInterfaceInitFunc() {
+        @Override
+        public void onInterfaceInitFunc(CallbackHandler __self, @Nonnull Pointer g_iface, @Nullable Pointer iface_data) {
+
             System.out.println("ListIndex::interfaceInit");
-            GIO.GListModelInterface iface = new GIO.GListModelInterface(inst);
+            GIO.GListModelInterface iface = new GIO.GListModelInterface(g_iface.getCPointer());
 
             iface.read();
             iface.get_item      = getItem;
@@ -249,7 +244,6 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
             }
         }
     };
-
 
     public ListModel asListModel() {
         return new ListModel(cast());

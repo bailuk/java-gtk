@@ -5,6 +5,7 @@ import ch.bailu.gtk.model.filter.filterValues
 import ch.bailu.gtk.model.type.CType
 import ch.bailu.gtk.model.type.ClassType
 import ch.bailu.gtk.model.type.JavaType
+import ch.bailu.gtk.model.validator.Validator
 import ch.bailu.gtk.parser.tag.ParameterTag
 import ch.bailu.gtk.table.EnumTable
 import ch.bailu.gtk.writer.Names
@@ -69,9 +70,7 @@ class ParameterModel(namespace: String,
     }
 
     private fun createCallbackModel(classType: ClassType, namespace: String): MethodModel? {
-        val parameterNamespace = if (classType.namespace.isNotEmpty()) {
-            classType.namespace
-        } else {
+        val parameterNamespace = classType.namespace.ifEmpty {
             namespace
         }
 
@@ -87,7 +86,7 @@ class ParameterModel(namespace: String,
     private fun setCallbackSupported() {
         if (isCallback) {
             if (callbackModel == null) {
-                setSupported("no-cb-model", false)
+                Validator.giveUp("no-cb-model")
             } else if (!callbackModel.isSupported) {
                 setSupported("cb-not-supported", false)
             } else if (callbackModel.hasCallback()) {
@@ -126,7 +125,7 @@ class ParameterModel(namespace: String,
             return !classType.isClass() || isNativeVariant
         }
 
-    val gtkType: String
+    private val gtkType: String
         get() {
             return cType.type
         }
