@@ -6,12 +6,12 @@ import ch.bailu.gtk.model.compose.CodeComposer
 import ch.bailu.gtk.model.filter.*
 import ch.bailu.gtk.model.list.ModelLists
 import ch.bailu.gtk.model.type.StructureType
-import ch.bailu.gtk.model.validator.Validator
 import ch.bailu.gtk.parser.tag.EnumerationTag
 import ch.bailu.gtk.parser.tag.MethodTag
 import ch.bailu.gtk.parser.tag.ParameterTag
 import ch.bailu.gtk.parser.tag.StructureTag
-import ch.bailu.gtk.table.AliasTable.convert
+import ch.bailu.gtk.table.AliasTable
+import ch.bailu.gtk.validator.Validator
 import ch.bailu.gtk.writer.CodeWriter
 import ch.bailu.gtk.writer.Names
 import java.io.IOException
@@ -41,7 +41,7 @@ class StructureModel : Model {
         cType = structure.type
         nameSpaceModel = nameSpace
         structureType = StructureType(structure.structureType)
-        apiName = convert(nameSpace.namespace, structure.getName())
+        apiName = AliasTable.convert(nameSpace.namespace, structure.getName()).name
         parent = StructureModel(nameSpace.namespace, structure.parent, structureType)
         doc = structure.getDoc()
 
@@ -99,11 +99,6 @@ class StructureModel : Model {
             val methodModelNativeOverload = MethodModel(namespace.namespace,namespace.namespace, methodTag, preferNative = true)
             this.models.addIfSupportedWithCallbacks(models, filterConstructor(methodModelNativeOverload))
         }
-    }
-
-    private fun convert(namespace: String, name: String): String {
-        val from = NamespaceType(namespace, name)
-        return convert(from).name
     }
 
     private fun filterField(parameterModel: ParameterModel): ParameterModel {
@@ -195,7 +190,7 @@ class StructureModel : Model {
             apiName = structType.apiParentClassName
 
         } else {
-            val type = NamespaceType(defaultNamespace, className)
+            val type = AliasTable.convert(NamespaceType(defaultNamespace, className))
             val typeNamespaceModel = NamespaceModel(type)
             if (typeNamespaceModel.isSupported) {
                 nameSpaceModel = typeNamespaceModel
@@ -209,6 +204,8 @@ class StructureModel : Model {
                 apiName = Configuration.BASE_NAME_SPACE_DOT + "type.Outsider"
             }
         }
+
+        Validator.giveUp("Type not aliased $apiName", apiName == "Object" || apiName == "String")
     }
 
     fun hasNativeCalls(): Boolean {

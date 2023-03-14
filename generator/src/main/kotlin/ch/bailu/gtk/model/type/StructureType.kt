@@ -32,7 +32,7 @@ class StructureType(value: String) {
     val isClassType: Boolean
         get() = compare(Types.CLASS) || compare(Types.RECORD) || compare(Types.INTERFACE) || compare(Types.UNION)
 
-    val isCallback: Boolean
+    private val isCallback: Boolean
         get() = compare(Types.CALLBACK)
 
     val isPackage: Boolean

@@ -5,7 +5,7 @@ import ch.bailu.gtk.model.filter.filterValues
 import ch.bailu.gtk.model.type.CType
 import ch.bailu.gtk.model.type.ClassType
 import ch.bailu.gtk.model.type.JavaType
-import ch.bailu.gtk.model.validator.Validator
+import ch.bailu.gtk.validator.Validator
 import ch.bailu.gtk.parser.tag.ParameterTag
 import ch.bailu.gtk.table.EnumTable
 import ch.bailu.gtk.writer.Names

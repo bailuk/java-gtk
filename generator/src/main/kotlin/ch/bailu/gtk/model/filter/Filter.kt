@@ -14,42 +14,18 @@ fun filterValues(value: String): Boolean {
 }
 
 fun filterMethod(structureModel: StructureModel, methodModel: MethodModel): Boolean {
-    if ("MenuItem" == structureModel.apiName && "activate" == methodModel.apiName) {
+    if ("PrintUnixDialog" == structureModel.apiName && "getSettings" == methodModel.apiName) {
         return false
     }
     if ("ActionRow" == structureModel.apiName && "activate" == methodModel.apiName) {
         return false
     }
-    if ("ToolPalette" == structureModel.apiName && "getStyle" == methodModel.apiName) {
-        return false
-    }
-    if ("Toolbar" == structureModel.apiName && "getStyle" == methodModel.apiName) {
-        return false
-    }
-    if ("Coverage" == structureModel.apiName && "ref" == methodModel.apiName) {
-        return false
-    }
-    if ("PrintUnixDialog" == structureModel.apiName && "getSettings" == methodModel.apiName) {
-        return false
-    }
-    return !("PrintSettings" == structureModel.apiName && "get" == methodModel.apiName)
+    return true
 }
 
 
 fun filterField(structureModel: StructureModel): Boolean {
-    if ("PixbufAnimationIterClass" == structureModel.apiName) {
-        return false
-    }
-    if ("SettingsBackendClass" == structureModel.apiName) {
-        return false
-    }
-    if ("PixbufFormat" == structureModel.apiName) {
-        return false
-    }
-    if ("PixbufModule" == structureModel.apiName) {
-        return false
-    }
-    return "PixbufModulePattern" != structureModel.apiName
+    return true
 }
 
 fun filterCreateMallocConstructor(methodModel: ModelList<MethodModel>): Boolean {
@@ -62,5 +38,5 @@ fun filterCreateMallocConstructor(methodModel: ModelList<MethodModel>): Boolean 
 }
 
 fun filterFieldDirectAccess(structureModel: StructureModel): Boolean {
-    return "AttrShape" == structureModel.apiName || "Event" == structureModel.apiName
+    return true
 }

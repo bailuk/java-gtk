@@ -2,6 +2,7 @@ package ch.bailu.gtk.writer.java
 
 import ch.bailu.gtk.model.*
 import ch.bailu.gtk.model.filter.ModelList
+import ch.bailu.gtk.validator.Validator
 import ch.bailu.gtk.writer.*
 import ch.bailu.gtk.writer.java_doc.JavaDoc
 import ch.bailu.gtk.writer.java_doc.JavaDocWriter
@@ -31,6 +32,9 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
     override fun writeClass(structureModel : StructureModel) {
         out.start(3)
         javaDoc.writeClass(structureModel)
+
+        Validator.giveUp("Type not aliased ${structureModel.apiParentName}", structureModel.apiParentName.endsWith(".Object") || structureModel.apiParentName.endsWith(".String"))
+
         out.a("public class ${structureModel.apiName} extends ${structureModel.apiParentName} {\n")
         out.a("    public static ch.bailu.gtk.lib.handler.ClassHandler getClassHandler() {\n")
         out.a("        return ch.bailu.gtk.lib.handler.ClassHandler.get(${structureModel.apiName}.class.getCanonicalName());\n")
@@ -318,6 +322,10 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         methodModel.parameters.forEach {
             result.append("${del}_${it.name}")
             del = ", "
+        }
+
+        if (methodModel.throwsError) {
+            result.append("${del}_error")
         }
 
         if (postfix.isNotEmpty()) {

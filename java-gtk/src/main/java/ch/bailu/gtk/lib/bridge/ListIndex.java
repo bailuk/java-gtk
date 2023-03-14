@@ -9,7 +9,6 @@ import javax.annotation.Nullable;
 import ch.bailu.gtk.gio.ListModel;
 import ch.bailu.gtk.gobject.Gobject;
 import ch.bailu.gtk.gobject.InterfaceInfo;
-import ch.bailu.gtk.gobject.Object;
 import ch.bailu.gtk.gobject.ObjectClass;
 import ch.bailu.gtk.gobject.ParamFlags;
 import ch.bailu.gtk.gobject.TypeClass;
@@ -35,15 +34,15 @@ import ch.bailu.gtk.type.Str;
  * ListIndex subclasses GObject and implements ListModel.
  * This class provides a proof of concept for implementing and
  * subclassing GObject structures with java-gtk.
- * @see ch.bailu.gtk.gobject.Object (parent class)
+ * @see ch.bailu.gtk.gobject.GObject (parent class)
  * @see ch.bailu.gtk.gio.ListModel (interface)
  */
-public class ListIndex extends ch.bailu.gtk.gobject.Object {
+public class ListIndex extends ch.bailu.gtk.gobject.GObject {
 
     private static final int PROP_ITEM_TYPE = 1;
     private static final Str      PROP_NAME = new Str("item-type");
     private static final Str      TYPE_NAME = new Str("ListIndex");
-    private static final long   PARENT_TYPE = ch.bailu.gtk.gobject.Object.getTypeID();
+    private static final long   PARENT_TYPE = ch.bailu.gtk.gobject.GObject.getTypeID();
     private static final int     CLASS_SIZE = Sizes.GOBJECT_CLASS;
     private static final int  INSTANCE_SIZE = Sizes.GOBJECT + 8;
     private static final Str          EMPTY = new Str("");
@@ -72,7 +71,7 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
     }
 
     private static CPointer create(long type, Str propertyName, long propertyValue) {
-        return new Object(type, propertyName, propertyValue, 0).cast();
+        return new ch.bailu.gtk.gobject.GObject(type, propertyName, propertyValue, 0).cast();
     }
 
     private static long type = 0;
@@ -113,9 +112,7 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
             var typeClass = new TypeClass(g_class.cast());
             parentClass = new ObjectClass(typeClass.peekParent().cast());
 
-            // TODO Support callbacks in records (?)
             var objectClass = new ObjectClass(Gobject.typeCheckClassCast(typeClass, PARENT_TYPE).cast());
-
             var objectClassInstance = new GObject.ObjectClass(objectClass.getCPointer());
 
             objectClassInstance.dispose = instanceDispose;

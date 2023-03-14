@@ -43,6 +43,11 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
     override fun writeConstant(structureModel: StructureModel, parameterModel: ParameterModel) {
         doc.writeStart(4)
         doc.writeBlock(parameterModel.doc)
+
+        if (parameterModel.isCallback && parameterModel.callbackModel != null) {
+            val name = parameterModel.callbackModel.name
+            doc.writeBlockPlain("<br>See {@link ${Names.getJavaCallbackInterfaceName(name)}#${Names.getJavaCallbackMethodName(name)}}")
+        }
         doc.writeDocEnd()
     }
 

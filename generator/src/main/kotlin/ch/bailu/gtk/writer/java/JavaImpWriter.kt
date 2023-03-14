@@ -2,6 +2,7 @@ package ch.bailu.gtk.writer.java
 
 import ch.bailu.gtk.model.*
 import ch.bailu.gtk.model.filter.ModelList
+import ch.bailu.gtk.validator.Validator
 import ch.bailu.gtk.writer.CodeWriter
 import ch.bailu.gtk.writer.Names
 import ch.bailu.gtk.writer.TextWriter
@@ -72,6 +73,7 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
     override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel, isSignal: Boolean) {
         out.start(1)
 
+        Validator.giveUp("Wrong argument count for ${methodModel}", methodModel.name == "PixbufModuleStopLoadFunc" && methodModel.parameters.size > 1)
         out.a("""
             @FunctionalInterface
             public interface ${Names.getJavaCallbackInterfaceName(methodModel.name)} extends com.sun.jna.Callback {
