@@ -54,6 +54,9 @@ public class AdwDemoWindow extends ApplicationWindow {
         TypeSystem.ensure(AdwDemoPageLeaflet.getTypeID());
         TypeSystem.ensure(AdwDemoPageClamp.getTypeID());
         TypeSystem.ensure(AdwDemoPageLists.getTypeID());
+        TypeSystem.ensure(AdwDemoPageViewSwitcher.getTypeID());
+        TypeSystem.ensure(AdwDemoPageCarousel.getTypeID());
+        TypeSystem.ensure(AdwDemoPageAvatar.getTypeID());
 
         initTemplate();
         this.instance = new Instance(getCPointer());
