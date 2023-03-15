@@ -44,7 +44,7 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
 
         methodModel.parameters.forEach {
             if (it.isCallback && it.callbackModel != null) {
-                result.append("${del}${Names.getJavaCallbackInterfaceName(it.callbackModel.name)} ${it.name}")
+                result.append("${del}com.sun.jna.Callback ${it.name}")
             } else {
                 result.append("${del}${it.impType} ${it.name}")
             }

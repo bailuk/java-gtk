@@ -71,7 +71,7 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
             <br>Field {@link #${methodModel.signalNameVariable}} contains original signal name and can be used as resource reference.
             <br>
             @param signal callback function (lambda).
-            @returns {@link ch.bailu.gtk.lib.handler.SignalHandler}. Can be used to disconnect signal and to release callback function.
+            @return {@link ch.bailu.gtk.lib.handler.SignalHandler}. Can be used to disconnect signal and to release callback function.
         """.trimIndent()
 
         doc.writeBlockPlain(block)

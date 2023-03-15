@@ -217,7 +217,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         javaDoc.writeSignal(structureModel, methodModel)
         out.a("""
             public ch.bailu.gtk.lib.handler.SignalHandler ${Names.getJavaCallbackMethodName(methodModel.name)}(${Names.getJavaCallbackInterfaceName(methodModel.name)} signal) {
-                return new ch.bailu.gtk.lib.handler.SignalHandler(this, ${methodModel.signalNameVariable}, to${Names.getJavaCallbackInterfaceName(methodModel.name)}(signal));
+                return connectSignal(${methodModel.signalNameVariable}, to${Names.getJavaCallbackInterfaceName(methodModel.name)}(signal));
             }
         """, 4)
         out.end(1)
@@ -246,12 +246,8 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
                 ${methodModel.returnType.getApiTypeName(structureModel.nameSpaceModel.namespace)} ${mName}(${getSignature(structureModel, methodModel.parameters)});
             }
             
-            private static ${structureModel.jnaName}.${iName} to${iName}(${iName} in) {
-                ${structureModel.jnaName}.${iName} out = null;
-                if (in != null) {
-                    out = (${getCallbackOutSignature(methodModel, "__self", "__data")}) -> in.${mName}${getCallbackInSignature(structureModel, methodModel)};
-                }
-                return out;
+            private static com.sun.jna.Callback to${iName}(${iName} in) {
+                return (in == null) ? null: (${structureModel.jnaName}.${iName}) (${getCallbackOutSignature(methodModel, "__self", "__data")}) -> in.${mName}${getCallbackInSignature(structureModel, methodModel)};
             }
         """, 4)
 

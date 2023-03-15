@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="AdwDemoPageClamp" parent="AdwBin">
+    <property name="child">
+      <object class="AdwStatusPage">
+        <property name="icon-name">widget-clamp-symbolic</property>
+        <property name="title" translatable="yes">Clamp</property>
+        <property name="description" translatable="yes">This page is clamped to smoothly grow up to a maximum width.</property>
+        <property name="child">
+          <object class="AdwClamp">
+            <property name="maximum-size" bind-source="maximum_size_adjustment" bind-property="value" bind-flags="sync-create"/>
+            <property name="tightening-threshold" bind-source="tightening_threshold_adjustment" bind-property="value" bind-flags="sync-create"/>
+            <property name="child">
+              <object class="AdwPreferencesGroup">
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title" translatable="yes">Maximum Width</property>
+                    <child>
+                      <object class="GtkSpinButton">
+                        <property name="valign">center</property>
+                        <property name="adjustment">
+                          <object class="GtkAdjustment" id="maximum_size_adjustment">
+                            <property name="lower">0</property>
+                            <property name="upper">10000</property>
+                            <property name="value">600</property>
+                            <property name="page-increment">100</property>
+                            <property name="step-increment">10</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title" translatable="yes">Tightening Threshold</property>
+                    <child>
+                      <object class="GtkSpinButton">
+                        <property name="valign">center</property>
+                        <property name="adjustment">
+                          <object class="GtkAdjustment" id="tightening_threshold_adjustment">
+                            <property name="lower">0</property>
+                            <property name="upper">10000</property>
+                            <property name="value">500</property>
+                            <property name="page-increment">100</property>
+                            <property name="step-increment">10</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </property>
+          </object>
+        </property>
+      </object>
+    </property>
+  </template>
+</interface>

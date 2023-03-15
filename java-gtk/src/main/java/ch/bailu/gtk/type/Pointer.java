@@ -1,6 +1,8 @@
 package ch.bailu.gtk.type;
 
 
+import com.sun.jna.Callback;
+
 import java.util.Objects;
 
 import ch.bailu.gtk.lib.handler.CallbackHandler;
@@ -29,15 +31,19 @@ public class Pointer extends Type implements CPointerInterface {
     }
 
     public static com.sun.jna.Pointer toJnaPointer(Pointer p) {
-        return toJnaPointer(p);
+        return toJnaPointer(p.getCPointer());
     }
 
     public static com.sun.jna.Pointer toJnaPointer(long p) {
         return new com.sun.jna.Pointer(p);
     }
 
-    public static Pointer toPointer(com.sun.jna.Pointer p) {
-        return new Pointer(toCPointer(p));
+    public static Pointer toPointer(com.sun.jna.Pointer jnaPointer) {
+        return new Pointer(toCPointer(jnaPointer));
+    }
+
+    public static Pointer toPointer(long nativePointer) {
+        return new Pointer(toCPointer(nativePointer));
     }
 
     public static CPointer toCPointer(long p) {
@@ -107,6 +113,17 @@ public class Pointer extends Type implements CPointerInterface {
     @Override
     public final boolean isNull() {
         return pointer.isNull();
+    }
+
+    /**
+     * Connect GTK signal to JNA callback.
+     *
+     * @param detailedSignal GTK signal name
+     * @param callback JNA callback function (lambda).
+     * @return {@link ch.bailu.gtk.lib.handler.SignalHandler}. Can be used to disconnect signal and to release callback function.
+     */
+    public SignalHandler connectSignal(String detailedSignal, Callback callback) {
+        return new ch.bailu.gtk.lib.handler.SignalHandler(this, detailedSignal, callback);
     }
 
     public final void disconnectSignals() {

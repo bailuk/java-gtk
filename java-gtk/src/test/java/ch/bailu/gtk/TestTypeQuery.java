@@ -7,9 +7,12 @@ import org.junit.jupiter.api.Test;
 import ch.bailu.gtk.gobject.GObject;
 import ch.bailu.gtk.gobject.Gobject;
 import ch.bailu.gtk.gobject.TypeQuery;
-import ch.bailu.gtk.type.Sizes;
+import ch.bailu.gtk.type.gobject.TypeSystem;
 
 public class TestTypeQuery {
+
+    public static final int GOBJECT_INSTANCE_SIZE = 24;
+    public static final int GOBJECT_CLASS_SIZE = 136;
 
     @Test
     public void test() {
@@ -20,7 +23,9 @@ public class TestTypeQuery {
         assertEquals(type, typeQuery.getFieldType());
         assertEquals((20) << (2), typeQuery.getFieldType());
 
-        assertEquals(Sizes.GOBJECT_CLASS, typeQuery.getFieldClassSize());
-        assertEquals(Sizes.GOBJECT, typeQuery.getFieldInstanceSize());
+        assertEquals(GOBJECT_CLASS_SIZE, typeQuery.getFieldClassSize());
+        assertEquals(GOBJECT_INSTANCE_SIZE, typeQuery.getFieldInstanceSize());
+
+        assertEquals(TypeSystem.getTypeSize(GObject.getTypeID()).classSize, typeQuery.getFieldClassSize());
     }
 }

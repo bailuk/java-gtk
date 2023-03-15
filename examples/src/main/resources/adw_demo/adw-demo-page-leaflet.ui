@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="AdwDemoPageLeaflet" parent="AdwBin">
+    <property name="child">
+      <object class="AdwStatusPage">
+        <property name="icon-name">widget-leaflet-symbolic</property>
+        <property name="title" translatable="yes">Leaflet</property>
+        <property name="description" translatable="yes">A widget showing either all its children or only one, depending on the available space. This window is using a leaflet, you can control it with the settings below.</property>
+        <property name="child">
+          <object class="AdwClamp">
+            <property name="child">
+              <object class="AdwPreferencesGroup">
+                <child>
+                  <object class="AdwComboRow" id="transition_row">
+                    <property name="subtitle" translatable="yes">The type of transition to use when the leaflet adapts its size or when changing the visible child</property>
+                    <property name="title" translatable="yes">Transition Type</property>
+                    <property name="selected" bind-source="AdwDemoPageLeaflet" bind-property="transition-type" bind-flags="bidirectional|sync-create"/>
+                    <property name="model">
+                      <object class="AdwEnumListModel">
+                        <property name="enum-type">AdwLeafletTransitionType</property>
+                      </object>
+                    </property>
+                    <property name="expression">
+                      <closure type="gchararray" function="get_transition_name"/>
+                    </property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title" translatable="yes">Go to the next page of the leaflet</property>
+                    <property name="use_underline">True</property>
+                    <property name="activatable">True</property>
+                    <signal name="activated" handler="next_row_activated_cb" swapped="yes"/>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="icon_name">go-next-symbolic</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </property>
+          </object>
+        </property>
+      </object>
+    </property>
+  </template>
+</interface>

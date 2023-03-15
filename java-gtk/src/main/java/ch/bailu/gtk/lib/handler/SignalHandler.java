@@ -5,7 +5,7 @@ import com.sun.jna.Callback;
 import java.io.PrintStream;
 import java.util.Objects;
 
-import ch.bailu.gtk.lib.jna.GObject;
+import ch.bailu.gtk.lib.jna.GObjectLib;
 import ch.bailu.gtk.lib.util.MMap;
 import ch.bailu.gtk.lib.util.SizeLog;
 import ch.bailu.gtk.type.Pointer;
@@ -30,7 +30,7 @@ public class SignalHandler {
         this.callback = callback;
         this.instance = instance;
         this.detailedSignal = detailedSignal;
-        this.handlerId = GObject.INST().g_signal_connect_data(instance.getCPointer(), detailedSignal, this.callback, 0, 0, 0);
+        this.handlerId = GObjectLib.INST().g_signal_connect_data(instance.getCPointer(), detailedSignal, this.callback, 0, 0, 0);
 
         mmap.put(instance.getCPointer(), handlerId, this);
         sizeLog.log(mmap.size());
@@ -51,7 +51,7 @@ public class SignalHandler {
      * Disconnect signal and free java reference to callback
      */
     public synchronized void disconnect() {
-        GObject.INST().g_signal_handler_disconnect(instance.getCPointer(), handlerId);
+        GObjectLib.INST().g_signal_handler_disconnect(instance.getCPointer(), handlerId);
         mmap.remove(instance.getCPointer(), handlerId);
     }
 
@@ -132,4 +132,12 @@ public class SignalHandler {
         });
     }
 
+
+    /**
+     * Default signal callback
+     */
+    @FunctionalInterface
+    public interface SignalCallback extends Callback {
+        void invoke(long self);
+    }
 }
