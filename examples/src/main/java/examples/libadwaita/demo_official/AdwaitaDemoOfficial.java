@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import ch.bailu.gtk.adw.AboutWindow;
 import ch.bailu.gtk.adw.Application;
-import ch.bailu.gtk.gio.ActionMap;
-import ch.bailu.gtk.gio.ActionMapInterface;
 import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gio.Resource;
 import ch.bailu.gtk.gtk.License;
