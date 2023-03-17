@@ -1,7 +1,6 @@
 package examples.libadwaita.demo_official;
 
 import ch.bailu.gtk.adw.Window;
-import ch.bailu.gtk.gtk.Root;
 import ch.bailu.gtk.gtk.WidgetClassExtended;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;

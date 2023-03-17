@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="AdwTabViewDemoWindow" parent="AdwWindow">
+    <property name="title" translatable="yes">Tab View Demo</property>
+    <property name="default-width">800</property>
+    <property name="default-height">600</property>
+    <property name="width-request">360</property>
+    <property name="content">
+      <object class="AdwTabOverview" id="tab_overview">
+        <property name="view">view</property>
+        <property name="enable-new-tab">True</property>
+        <signal name="extra-drag-drop" handler="extra_drag_drop_cb" swapped="true"/>
+        <signal name="create-tab" handler="create_tab_cb" swapped="true"/>
+        <property name="child">
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkHeaderBar">
+                <child type="start">
+                  <object class="GtkButton">
+                    <property name="action-name">win.window-new</property>
+                    <property name="icon-name">window-new-symbolic</property>
+                  </object>
+                </child>
+                <child type="end">
+                  <object class="AdwTabButton">
+                    <property name="visible" bind-source="AdwTabViewDemoWindow" bind-property="narrow" bind-flags="sync-create"/>
+                    <property name="view">view</property>
+                    <property name="action-name">overview.open</property>
+                  </object>
+                </child>
+                <child type="end">
+                  <object class="GtkButton">
+                    <property name="visible" bind-source="AdwTabViewDemoWindow" bind-property="narrow" bind-flags="invert-boolean"/>
+                    <property name="icon-name">view-grid-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">View Open Tabs</property>
+                    <property name="action-name">overview.open</property>
+                  </object>
+                </child>
+                <child type="end">
+                  <object class="GtkButton">
+                    <property name="visible" bind-source="AdwTabViewDemoWindow" bind-property="narrow" bind-flags="invert-boolean"/>
+                    <property name="action-name">win.tab-new</property>
+                    <property name="icon-name">tab-new-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="AdwTabBar" id="tab_bar">
+                <property name="visible" bind-source="AdwTabViewDemoWindow" bind-property="narrow" bind-flags="invert-boolean"/>
+                <property name="view">view</property>
+                <signal name="extra-drag-drop" handler="extra_drag_drop_cb" swapped="true"/>
+              </object>
+            </child>
+            <child>
+              <object class="AdwTabView" id="view">
+                <property name="vexpand">True</property>
+                <property name="menu-model">tab_menu</property>
+                <signal name="page-detached" handler="page_detached_cb" swapped="true"/>
+                <signal name="setup-menu" handler="setup_menu_cb" swapped="true"/>
+                <signal name="create-window" handler="create_window_cb" swapped="true"/>
+                <signal name="indicator-activated" handler="indicator_activated_cb" swapped="true"/>
+              </object>
+            </child>
+          </object>
+        </property>
+      </object>
+    </property>
+  </template>
+  <menu id="tab_menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Move to New Window</attribute>
+        <attribute name="action">tab.move-to-new-window</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">D_uplicate</attribute>
+        <attribute name="action">tab.duplicate</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">P_in Tab</attribute>
+        <attribute name="action">tab.pin</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Unp_in Tab</attribute>
+        <attribute name="action">tab.unpin</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Icon</attribute>
+        <attribute name="action">tab.icon</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">R_efresh Icon</attribute>
+        <attribute name="action">tab.refresh-icon</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Loa_ding</attribute>
+        <attribute name="action">tab.loading</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Needs _Attention</attribute>
+        <attribute name="action">tab.needs-attention</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Indicator</attribute>
+        <attribute name="action">tab.indicator</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Close _Other Tabs</attribute>
+        <attribute name="action">tab.close-other</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes" comments="Translators: “Close Tabs to the _Right” if you’re translating for a language that reads from right to left">Close Tabs to the _Left</attribute>
+        <attribute name="action">tab.close-before</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes" comments="Translators: “Close Tabs to the _Left” if you’re translating for a language that reads from right to left">Close Tabs to the _Right</attribute>
+        <attribute name="action">tab.close-after</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Close</attribute>
+        <attribute name="action">tab.close</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

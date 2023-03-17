@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <menu id="sample_menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Item 1</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Item 2</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Item 3</attribute>
+      </item>
+    </section>
+  </menu>
+  <template class="AdwDemoPageButtons" parent="AdwBin">
+    <property name="child">
+      <object class="AdwStatusPage">
+        <property name="title" translatable="yes">Buttons</property>
+        <property name="description" translatable="yes">Button helper widgets.</property>
+        <property name="child">
+          <object class="AdwClamp">
+            <property name="maximum-size">400</property>
+            <property name="tightening-threshold">300</property>
+            <property name="child">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkGrid">
+                    <property name="halign">center</property>
+                    <property name="column-spacing">12</property>
+                    <property name="row-spacing">12</property>
+                    <child>
+                      <object class="AdwSplitButton">
+                        <property name="icon-name">document-open-symbolic</property>
+                        <property name="menu-model">sample_menu</property>
+                        <property name="tooltip-text" translatable="yes">Open</property>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="row">0</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwSplitButton">
+                        <property name="icon-name">document-open-symbolic</property>
+                        <property name="menu-model">sample_menu</property>
+                        <property name="tooltip-text" translatable="yes">Open</property>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="row">1</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwSplitButton">
+                        <property name="label" translatable="yes">_Open</property>
+                        <property name="use-underline">True</property>
+                        <property name="menu-model">sample_menu</property>
+                        <layout>
+                          <property name="column">1</property>
+                          <property name="row">0</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwSplitButton">
+                        <property name="label" translatable="yes">_Open</property>
+                        <property name="use-underline">True</property>
+                        <property name="menu-model">sample_menu</property>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                        <layout>
+                          <property name="column">1</property>
+                          <property name="row">1</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwSplitButton">
+                        <property name="child">
+                          <object class="AdwButtonContent">
+                            <property name="icon-name">document-open-symbolic</property>
+                            <property name="label" translatable="yes">_Open</property>
+                            <property name="use-underline">True</property>
+                          </object>
+                        </property>
+                        <property name="menu-model">sample_menu</property>
+                        <layout>
+                          <property name="column">2</property>
+                          <property name="row">0</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwSplitButton">
+                        <property name="child">
+                          <object class="AdwButtonContent">
+                            <property name="icon-name">document-open-symbolic</property>
+                            <property name="label" translatable="yes">_Open</property>
+                            <property name="use-underline">True</property>
+                          </object>
+                        </property>
+                        <property name="menu-model">sample_menu</property>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                        <layout>
+                          <property name="column">2</property>
+                          <property name="row">1</property>
+                        </layout>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </property>
+          </object>
+        </property>
+      </object>
+    </property>
+  </template>
+</interface>

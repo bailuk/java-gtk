@@ -21,14 +21,14 @@ import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
 
 public class AdwDemoPageLeaflet extends Bin {
-    private final static int PROP_0 = 0;
     private final static int PROP_TRANSITION_TYPE = 1;
-    private final static int LAST_PROP = 2;
 
     private final static Str TYPE_NAME = new Str(AdwDemoPageLeaflet.class.getSimpleName());
     private static final Str PROP_NAME_TRANSITION_TYPE = new Str("transition-type");
-    private static final long   PARENT_TYPE = Bin.getTypeID();
+    private static final long PARENT_TYPE = Bin.getTypeID();
+    private static final int PARENT_INSTANCE_SIZE = TypeSystem.getTypeSize(PARENT_TYPE).instanceSize;
 
+    private static final Str SIGNAL_NEXT_PAGE = new Str("next-page");
 
     @Structure.FieldOrder({"parent", "transition_type"})
     public static class Instance extends Structure {
@@ -37,11 +37,11 @@ public class AdwDemoPageLeaflet extends Bin {
             read();
         }
 
-        public byte[] parent = new byte[TypeSystem.getTypeSize(PARENT_TYPE).instanceSize];
+        public byte[] parent = new byte[PARENT_INSTANCE_SIZE];
         public int transition_type;
     }
 
-    private final AdwDemoPageLeaflet.Instance instance;
+    private final Instance instance;
 
     public AdwDemoPageLeaflet(long self) {
         super(toCPointer(self));
@@ -53,53 +53,36 @@ public class AdwDemoPageLeaflet extends Bin {
     public synchronized static long getTypeID() {
         if (type == 0) {
             type = TypeSystem.registerClass(PARENT_TYPE, TYPE_NAME, 4, (__self, g_class, class_data) -> {
-                try {
-                    var widgetClass = new WidgetClassExtended(g_class.cast());
-                    var objectClass = new ObjectClassExtended(g_class.cast());
+                var widgetClass = new WidgetClassExtended(g_class.cast());
+                var objectClass = new ObjectClassExtended(g_class.cast());
 
-                    var prop = Gobject.paramSpecEnum(
-                            PROP_NAME_TRANSITION_TYPE,
-                            Str.NULL, Str.NULL,
-                            AdwLib.INST().adw_leaflet_transition_type_get_type(),
-                            LeafletTransitionType.OVER,
-                            ParamFlags.READWRITE | GobjectConstants.PARAM_STATIC_STRINGS);
+                var prop = Gobject.paramSpecEnum(
+                        PROP_NAME_TRANSITION_TYPE,
+                        Str.NULL, Str.NULL,
+                        AdwLib.INST().adw_leaflet_transition_type_get_type(),
+                        LeafletTransitionType.OVER,
+                        ParamFlags.READWRITE | GobjectConstants.PARAM_STATIC_STRINGS);
 
-                    objectClass.overridePropertyAccess(
-                            (object, property_id, value, pspec) -> new AdwDemoPageLeaflet(object).getProperty(property_id, value),
-                            (object, property_id, value, pspec) -> new AdwDemoPageLeaflet(object).setProperty(property_id, value));
-                    objectClass.installProperty(LAST_PROP, prop);
+                objectClass.overridePropertyAccess(
+                        (object, property_id, value, pspec) -> new AdwDemoPageLeaflet(object).getProperty(property_id, value),
+                        (object, property_id, value, pspec) -> new AdwDemoPageLeaflet(object).setProperty(property_id, value));
+                objectClass.installProperty(PROP_TRANSITION_TYPE, prop);
 
+                signal = objectClass.signalNew(SIGNAL_NEXT_PAGE, TypeSystem.GTYPE_NONE);
 
-                    signal = GObjectLib.INST().g_signal_new(
-                            new Str("next-page").getCPointer(),
-                            new TypeClass(g_class.cast()).getFieldGType(),
-                            SignalFlags.RUN_FIRST,
-                            0,
-                            0,
-                            0,
-                            0,
-                            1 << GobjectConstants.TYPE_FUNDAMENTAL_SHIFT,
-                            0);
-
-
-                    widgetClass.setTemplate(new JavaResource("/adw_demo/adw-demo-page-leaflet.ui").asBytes());
-                    widgetClass.bindTemplateCallback("get_transition_name", new Callback() {
+                widgetClass.setTemplateOrExit("/adw_demo/adw-demo-page-leaflet.ui");
+                widgetClass.bindTemplateCallback("get_transition_name", new Callback() {
                         public long invoke(long self, long user_data) {
-                            return getTransitionName(new EnumListItem(toCPointer(self))).getCPointer();
-                        }
-                    });
+                        return getTransitionName(new EnumListItem(toCPointer(self))).getCPointer();
+                    }
+                });
 
+                widgetClass.bindTemplateCallback("next_row_activated_cb", new Callback() {
+                    public void invoke(long self) {
+                        Gobject.signalEmit(toPointer(self), signal, 0);
+                    }
+                });
 
-                    widgetClass.bindTemplateCallback("next_row_activated_cb", new Callback() {
-                        public void invoke(long self) {
-                            System.out.println("next_row_activated_cb");
-                            Gobject.signalEmit(toPointer(self), signal, 0);
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    System.exit(1);
-                }
             }, (__self, instance, g_class) -> new Bin(instance.cast()).initTemplate());
 
         }
@@ -121,7 +104,7 @@ public class AdwDemoPageLeaflet extends Bin {
 
     private void setProperty(int property_id, long value) {
         if (property_id == PROP_TRANSITION_TYPE) {
-            System.out.println("set ransition type");
+            System.out.println("set transition type");
             instance.transition_type = new Value(toCPointer(value)).getEnum();
             instance.writeField("transition_type");
         }

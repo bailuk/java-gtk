@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="AdwDemoPageAbout" parent="AdwBin">
+    <property name="child">
+      <object class="AdwStatusPage">
+        <property name="icon-name">widget-about-symbolic</property>
+        <property name="title" translatable="yes">About Window</property>
+        <property name="description" translatable="yes">An about window.</property>
+        <property name="child">
+          <object class="GtkButton">
+            <property name="label" translatable="yes">Run Demo</property>
+            <property name="halign">center</property>
+            <property name="action-name">demo.run</property>
+            <style>
+              <class name="pill"/>
+            </style>
+          </object>
+        </property>
+      </object>
+    </property>
+  </template>
+</interface>

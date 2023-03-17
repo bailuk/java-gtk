@@ -28,7 +28,6 @@ public class AdwDemoPageCarousel extends Bin {
         instance = new Instance(self);
     }
 
-
     @Structure.FieldOrder({"parent", "box", "carousel", "indicators_stack", "orientation_row", "indicators_row"})
     public static class Instance extends Structure {
         public Instance(long _self) {

@@ -70,6 +70,8 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
     }
 
     private fun writeFunctionCall(structureModel : StructureModel, methodModel : MethodModel, self: String, prefix: String, staticToken: String = "") {
+        Validator.validMethodName(methodModel)
+
         out.a("""
             public ${staticToken}${methodModel.returnType.getApiTypeName(structureModel.nameSpaceModel.namespace)} ${methodModel.apiName}(${getSignature(structureModel, methodModel.parameters)}) ${getThrowsExtension(methodModel)} {
                 ${getFunctionCall(structureModel, methodModel, prefix, self)};

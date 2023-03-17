@@ -2,6 +2,7 @@ package ch.bailu.gtk.gobject;
 
 import ch.bailu.gtk.lib.jna.GObjectLib;
 import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.Str;
 
 public class ObjectClassExtended extends ObjectClass {
 
@@ -30,5 +31,19 @@ public class ObjectClassExtended extends ObjectClass {
         objectClassInstance.setProperty = set;
         objectClassInstance.writeField("getProperty");
         objectClassInstance.writeField("setProperty");
+    }
+
+    public int signalNew(Str name, long returnType, Long... types) {
+        return GObjectLib.INST().g_signal_new(
+                name.getCPointer(),
+                new TypeClass(cast()).getFieldGType(),
+                SignalFlags.RUN_FIRST,
+                0,
+                0,
+                0,
+                0,
+                returnType,
+                types.length,
+                (Object[]) types);
     }
 }

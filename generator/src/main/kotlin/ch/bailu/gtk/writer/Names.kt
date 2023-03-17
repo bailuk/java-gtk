@@ -15,7 +15,8 @@ object Names {
             return name
         }
         val result = StringBuilder()
-        val names = name.split("_".toRegex()).toTypedArray()
+        val names = name.split("_".toRegex()).filter { it.isNotEmpty() }
+
         result.append(names[0])
         for (i in 1 until names.size) {
             firstUpper(result, names[i])

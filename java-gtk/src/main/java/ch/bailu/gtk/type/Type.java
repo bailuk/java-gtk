@@ -9,7 +9,7 @@ public abstract class Type {
     }
 
     public static long toCPointerNotNull(Pointer pointer) {
-        throwIfNull(pointer);
+        // TODO throwIfNull(pointer);
         return pointer.getCPointer();
     }
 

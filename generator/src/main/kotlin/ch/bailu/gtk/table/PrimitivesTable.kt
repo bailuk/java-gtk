@@ -10,6 +10,7 @@ object PrimitivesTable {
         add("none", "void")
         add("void", "void")
         add("gboolean", "boolean")
+        add("_Bool", "boolean")
         add("gint", "int")
         add("glong", "long")
         add("guint", "int")

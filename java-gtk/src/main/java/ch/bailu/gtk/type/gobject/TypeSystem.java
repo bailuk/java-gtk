@@ -2,12 +2,16 @@ package ch.bailu.gtk.type.gobject;
 
 import ch.bailu.gtk.gobject.GObject;
 import ch.bailu.gtk.gobject.Gobject;
+import ch.bailu.gtk.gobject.GobjectConstants;
 import ch.bailu.gtk.gobject.TypeQuery;
 import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
 
 public class TypeSystem {
+
+    // TODO obtain this from api
+    public static final long GTYPE_NONE = 1 << GobjectConstants.TYPE_FUNDAMENTAL_SHIFT;
 
     public static long registerClass(long parentType, Str typeName, int instanceSize, Gobject.OnClassInitFunc classInit, Gobject.OnInstanceInitFunc instanceInit) {
         final var parentSize = getTypeSize(parentType);

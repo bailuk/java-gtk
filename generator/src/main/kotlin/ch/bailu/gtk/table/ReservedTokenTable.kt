@@ -16,9 +16,6 @@ object ReservedTokenTable {
         add("...", "xelipse")
         add("notify", "xnotify")
         add("interface", "xinterface")
-        add("2BUTTON_PRESS", "TWO_BUTTON_PRESS")
-        add("3BUTTON_PRESS", "TREE_BUTTON_PRESS")
-        add("2BIG", "_2_BIG")
         add("false", "FALSE")
         add("true", "TRUE")
         add("ch", "CH")
@@ -30,6 +27,13 @@ object ReservedTokenTable {
     }
 
     fun convert(token: String): String {
-        return table[token] ?: token
+        return table[token] ?: convertNumber(token)
+    }
+
+    private fun convertNumber(token: String): String {
+        if (token.isNotEmpty() && token[0].isDigit()) {
+            return "_$token"
+        }
+        return token
     }
 }

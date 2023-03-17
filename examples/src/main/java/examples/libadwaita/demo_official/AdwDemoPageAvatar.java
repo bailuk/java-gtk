@@ -27,7 +27,7 @@ public class AdwDemoPageAvatar extends Bin {
 
 
     private final static String[] firstNames = {
-        "Adam",
+                "Adam",
                 "Adrian",
                 "Anna",
                 "Charlotte",
@@ -51,7 +51,7 @@ public class AdwDemoPageAvatar extends Bin {
                 "Wolfgang",
     };
     private final static String[] lastNames = {
-        "Bailey",
+                "Bailey",
                 "Berat",
                 "Chen",
                 "Farquharson",
@@ -147,7 +147,7 @@ public class AdwDemoPageAvatar extends Bin {
     }
 
     void avatarOpenDialog(FileChooserDialog dialog, AsyncResult asyncResult) {
-        // GTK FileDialog is in 4.10
+        // TODO GTK FileDialog is in 4.10
     }
 
     void open() {
@@ -165,6 +165,4 @@ public class AdwDemoPageAvatar extends Bin {
     void save() {
         System.out.println("Avatar Save");
     }
-
-
 }

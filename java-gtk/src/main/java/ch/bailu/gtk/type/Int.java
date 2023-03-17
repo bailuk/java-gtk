@@ -2,6 +2,8 @@ package ch.bailu.gtk.type;
 
 public class Int extends Wrapper {
 
+    public final static Int NULL = new Int(new CPointer(0));
+
     private boolean created;
 
     public Int() {

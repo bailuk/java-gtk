@@ -2,7 +2,7 @@ package ch.bailu.gtk.type;
 
 import ch.bailu.gtk.lib.jna.CLib;
 
-public class ImpDbls {
+public class ImpDbl {
 
     public static long createDoubleArray(double[] doubles) {
         long result = CLib.INST().malloc((long) doubles.length * Double.BYTES);
@@ -30,7 +30,22 @@ public class ImpDbls {
         return result;
     }
 
+    public static long createFlt(float value) {
+        long result = CLib.INST().malloc(Float.BYTES);
+        Pointer.toJnaPointer(result).setFloat(0, value);
+        return result;
+    }
+
     public static double getAt(long cPointer, int index) {
         return Pointer.toJnaPointer(cPointer).getDouble((long) index * Double.BYTES);
+    }
+
+    public static long createFloatArrayFromFloats(float[] floats) {
+        long result = CLib.INST().malloc((long) floats.length * Float.BYTES);
+        com.sun.jna.Pointer p = Pointer.toJnaPointer(result);
+        for (int i = 0; i< floats.length; i++) {
+            p.setDouble((long) i * Float.BYTES, floats[i]);
+        }
+        return result;
     }
 }

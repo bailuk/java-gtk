@@ -1,0 +1,1374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="AdwStyleDemoWindow" parent="AdwWindow">
+    <property name="modal">True</property>
+    <property name="title" translatable="yes">Style Classes</property>
+    <property name="default-width">800</property>
+    <property name="default-height">640</property>
+    <property name="content">
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkHeaderBar"/>
+        </child>
+        <child>
+          <object class="GtkOverlay">
+            <child type="overlay">
+              <object class="GtkProgressBar">
+                <property name="valign">start</property>
+                <property name="fraction">0.5</property>
+                <property name="tooltip-text">osd</property>
+                <binding name="visible">
+                  <lookup name="progress">AdwStyleDemoWindow</lookup>
+                </binding>
+                <style>
+                  <class name="osd"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="AdwPreferencesPage">
+                <property name="vexpand">True</property>
+                <property name="width-request">360</property>
+                <child>
+                  <object class="AdwPreferencesGroup">
+                    <property name="description" translatable="yes">Hover over widgets to see their exact style class names.</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwPreferencesGroup">
+                    <property name="title" translatable="yes">Buttons</property>
+                    <property name="description" translatable="yes">The "flat", "suggested-action" and "destructive" style classes action can be used together with "pill" or "circular".
+
+The "opaque" style class allows to create buttons with custom colors that look similar to "suggested-action".</property>
+                    <child>
+                      <object class="GtkFlowBox">
+                        <property name="min-children-per-line">1</property>
+                        <property name="max-children-per-line">6</property>
+                        <property name="column-spacing">6</property>
+                        <property name="row-spacing">6</property>
+                        <property name="selection-mode">none</property>
+                        <property name="homogeneous">True</property>
+                        <style>
+                          <class name="inline"/>
+                        </style>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="focusable">False</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="spacing">6</property>
+                                <property name="homogeneous">True</property>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="label" translatable="yes">Regular</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="label" translatable="yes">Flat</property>
+                                    <property name="tooltip-text">flat</property>
+                                    <style>
+                                      <class name="flat"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="focusable">False</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="spacing">6</property>
+                                <property name="homogeneous">True</property>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="label" translatable="yes">Suggested</property>
+                                    <property name="tooltip-text">suggested-action</property>
+                                    <style>
+                                      <class name="suggested-action"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="label" translatable="yes">Destructive</property>
+                                    <property name="tooltip-text">destructive-action</property>
+                                    <style>
+                                      <class name="destructive-action"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="focusable">False</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="spacing">6</property>
+                                <property name="homogeneous">True</property>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="label" translatable="yes">Custom</property>
+                                    <property name="name">custom-button-1</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="label" translatable="yes">Custom</property>
+                                    <property name="name">custom-button-2</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="focusable">False</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="spacing">6</property>
+                                <property name="homogeneous">True</property>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="label" translatable="yes">Custom</property>
+                                    <property name="name">custom-button-3</property>
+                                    <property name="tooltip-text">opaque</property>
+                                    <style>
+                                      <class name="opaque"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="label" translatable="yes">Custom</property>
+                                    <property name="name">custom-button-4</property>
+                                    <property name="tooltip-text">opaque</property>
+                                    <style>
+                                      <class name="opaque"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFlowBox">
+                        <property name="min-children-per-line">1</property>
+                        <property name="max-children-per-line">3</property>
+                        <property name="column-spacing">6</property>
+                        <property name="row-spacing">6</property>
+                        <property name="selection-mode">none</property>
+                        <property name="margin-top">12</property>
+                        <style>
+                          <class name="inline"/>
+                        </style>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="focusable">False</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="spacing">6</property>
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
+                                <property name="tooltip-text">circular</property>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="icon-name">list-add-symbolic</property>
+                                    <style>
+                                      <class name="circular"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="label">A</property>
+                                    <property name="tooltip-text">circular</property>
+                                    <style>
+                                      <class name="circular"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="focusable">False</property>
+                            <child>
+                              <object class="GtkButton">
+                                <property name="label" translatable="yes">Pill Button</property>
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
+                                <property name="tooltip-text">pill</property>
+                                <style>
+                                  <class name="pill"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="focusable">False</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="spacing">6</property>
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="icon-name">go-previous-symbolic</property>
+                                    <property name="tooltip-text">osd</property>
+                                    <style>
+                                      <class name="osd"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton">
+                                    <property name="icon-name">go-next-symbolic</property>
+                                    <property name="tooltip-text">osd</property>
+                                    <style>
+                                      <class name="osd"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwPreferencesGroup">
+                    <property name="title" translatable="yes">Entries</property>
+                    <child>
+                      <object class="GtkFlowBox">
+                        <property name="min-children-per-line">1</property>
+                        <property name="max-children-per-line">3</property>
+                        <property name="column-spacing">6</property>
+                        <property name="row-spacing">6</property>
+                        <property name="selection-mode">none</property>
+                        <style>
+                          <class name="inline"/>
+                        </style>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="focusable">False</property>
+                            <child>
+                              <object class="GtkEntry">
+                                <property name="placeholder-text" translatable="yes">Regular</property>
+                                <property name="text" translatable="yes">Regular</property>
+                                <property name="secondary-icon-name">edit-copy-symbolic</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="focusable">False</property>
+                            <child>
+                              <object class="GtkEntry">
+                                <property name="placeholder-text" translatable="yes">Success</property>
+                                <property name="text" translatable="yes">Success</property>
+                                <property name="tooltip-text">success</property>
+                                <property name="secondary-icon-name">edit-copy-symbolic</property>
+                                <style>
+                                  <class name="success"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="focusable">False</property>
+                            <child>
+                              <object class="GtkEntry">
+                                <property name="placeholder-text" translatable="yes">Warning</property>
+                                <property name="text" translatable="yes">Warning</property>
+                                <property name="tooltip-text">warning</property>
+                                <property name="secondary-icon-name">edit-copy-symbolic</property>
+                                <style>
+                                  <class name="warning"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="focusable">False</property>
+                            <child>
+                              <object class="GtkEntry">
+                                <property name="placeholder-text" translatable="yes">Error</property>
+                                <property name="text" translatable="yes">Error</property>
+                                <property name="tooltip-text">error</property>
+                                <property name="secondary-icon-name">edit-copy-symbolic</property>
+                                <style>
+                                  <class name="error"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwPreferencesGroup">
+                    <property name="title" translatable="yes">Linked Controls</property>
+                    <property name="description" translatable="yes">The "linked" style on GtkBox and similar containers allows to visually join related button-like and entry-like widgets.</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="spacing">6</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="tooltip-text">linked</property>
+                            <style>
+                              <class name="linked"/>
+                            </style>
+                            <child>
+                              <object class="GtkToggleButton" id="toggle">
+                                <property name="icon-name">view-grid-symbolic</property>
+                                <property name="active">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkToggleButton">
+                                <property name="icon-name">view-list-symbolic</property>
+                                <property name="group">toggle</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="tooltip-text">linked</property>
+                            <style>
+                              <class name="linked"/>
+                            </style>
+                            <child>
+                              <object class="GtkEntry">
+                                <property name="placeholder-text" translatable="yes">Entry</property>
+                                <property name="hexpand">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkEntry">
+                                <property name="placeholder-text" translatable="yes">Entry</property>
+                                <property name="hexpand">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton">
+                                <property name="label" translatable="yes">Button</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="spacing">6</property>
+                        <property name="margin-top">6</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="tooltip-text">linked</property>
+                            <style>
+                              <class name="linked"/>
+                            </style>
+                            <child>
+                              <object class="GtkButton">
+                                <property name="icon-name">edit-cut-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton">
+                                <property name="icon-name">edit-copy-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton">
+                                <property name="icon-name">edit-paste-symbolic</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="hexpand">True</property>
+                            <property name="tooltip-text">linked</property>
+                            <style>
+                              <class name="linked"/>
+                            </style>
+                            <child>
+                              <object class="GtkEntry">
+                                <property name="placeholder-text" translatable="yes">Street</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkEntry">
+                                <property name="placeholder-text" translatable="yes">City</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkEntry">
+                                <property name="placeholder-text" translatable="yes">Province</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwPreferencesGroup">
+                    <property name="title" translatable="yes">Labels</property>
+                    <child>
+                      <object class="GtkFlowBox">
+                        <property name="min-children-per-line">1</property>
+                        <property name="max-children-per-line">2</property>
+                        <property name="column-spacing">12</property>
+                        <property name="row-spacing">18</property>
+                        <property name="selection-mode">none</property>
+                        <style>
+                          <class name="inline"/>
+                        </style>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="focusable">False</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">12</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">Title 1</property>
+                                    <property name="xalign">0</property>
+                                    <property name="ellipsize">end</property>
+                                    <property name="tooltip-text">title-1</property>
+                                    <style>
+                                      <class name="title-1"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">Title 2</property>
+                                    <property name="xalign">0</property>
+                                    <property name="ellipsize">end</property>
+                                    <property name="tooltip-text">title-2</property>
+                                    <style>
+                                      <class name="title-2"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">Title 3</property>
+                                    <property name="xalign">0</property>
+                                    <property name="ellipsize">end</property>
+                                    <property name="tooltip-text">title-3</property>
+                                    <style>
+                                      <class name="title-3"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">Title 4</property>
+                                    <property name="xalign">0</property>
+                                    <property name="ellipsize">end</property>
+                                    <property name="tooltip-text">title-4</property>
+                                    <style>
+                                      <class name="title-4"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">Monospace</property>
+                                    <property name="xalign">0</property>
+                                    <property name="ellipsize">end</property>
+                                    <property name="tooltip-text">monospace</property>
+                                    <style>
+                                      <class name="monospace"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">Numeric (1234567890)</property>
+                                    <property name="xalign">0</property>
+                                    <property name="ellipsize">end</property>
+                                    <property name="tooltip-text">numeric</property>
+                                    <style>
+                                      <class name="numeric"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">Accent</property>
+                                    <property name="xalign">0</property>
+                                    <property name="ellipsize">end</property>
+                                    <property name="tooltip-text">accent</property>
+                                    <style>
+                                      <class name="accent"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">Success</property>
+                                    <property name="xalign">0</property>
+                                    <property name="ellipsize">end</property>
+                                    <property name="tooltip-text">success</property>
+                                    <style>
+                                      <class name="success"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">Warning</property>
+                                    <property name="xalign">0</property>
+                                    <property name="ellipsize">end</property>
+                                    <property name="tooltip-text">warning</property>
+                                    <style>
+                                      <class name="warning"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">Error</property>
+                                    <property name="xalign">0</property>
+                                    <property name="ellipsize">end</property>
+                                    <property name="tooltip-text">error</property>
+                                    <style>
+                                      <class name="error"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="focusable">False</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">12</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">Heading</property>
+                                    <property name="xalign">0</property>
+                                    <property name="ellipsize">end</property>
+                                    <property name="tooltip-text">heading</property>
+                                    <style>
+                                      <class name="heading"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">This is a paragraph of a body copy. You would use this style for most text in interfaces. It can also include &lt;b&gt;styling&lt;/b&gt; or &lt;a href="https://os.gnome.org/">links&lt;/a&gt;.</property>
+                                    <property name="use-markup">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="wrap">True</property>
+                                    <property name="wrap-mode">word-char</property>
+                                    <property name="max-width-chars">25</property>
+                                    <property name="tooltip-text">body</property>
+                                    <style>
+                                      <class name="body"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">Caption Heading</property>
+                                    <property name="xalign">0</property>
+                                    <property name="ellipsize">end</property>
+                                    <property name="tooltip-text">caption-heading</property>
+                                    <style>
+                                      <class name="caption-heading"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">Caption body text, to be used for body copy on image captions and the like.</property>
+                                    <property name="xalign">0</property>
+                                    <property name="wrap">True</property>
+                                    <property name="wrap-mode">word-char</property>
+                                    <property name="max-width-chars">25</property>
+                                    <property name="tooltip-text">caption</property>
+                                    <style>
+                                      <class name="caption"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwPreferencesGroup">
+                    <property name="title" translatable="yes">Cards and Boxed Lists</property>
+                    <property name="description" translatable="yes">The "boxed-list" style class can be used with GtkListBox to create boxed lists.
+
+The "card" style class can be used to achieve the same style with GtkBox or similar containers, and with GtkButton. If used together with "activatable" style class, or on a GtkButton, the card will also have hover and press styles.
+                    </property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="homogeneous">True</property>
+                        <property name="height-request">100</property>
+                        <property name="margin-bottom">12</property>
+                        <property name="spacing">12</property>
+                        <child>
+                          <object class="AdwBin">
+                            <property name="tooltip-text">card</property>
+                            <style>
+                              <class name="card"/>
+                            </style>
+                            <property name="child">
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">Card</property>
+                                <property name="wrap">True</property>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="AdwBin">
+                            <property name="tooltip-text">card, activatable</property>
+                            <property name="focusable">True</property>
+                            <style>
+                              <class name="card"/>
+                              <class name="activatable"/>
+                            </style>
+                            <property name="child">
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">Card (activatable)</property>
+                                <property name="wrap">True</property>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton">
+                            <property name="tooltip-text">card</property>
+                            <style>
+                              <class name="card"/>
+                            </style>
+                            <property name="child">
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">Card (button)</property>
+                                <property name="wrap">True</property>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkListBox">
+                        <property name="selection-mode">none</property>
+                        <property name="tooltip-text">boxed-list</property>
+                        <style>
+                          <class name="boxed-list"/>
+                        </style>
+                        <child>
+                          <object class="AdwActionRow">
+                            <property name="title" translatable="yes">Row</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="AdwActionRow">
+                            <property name="title" translatable="yes">Row (activatable)</property>
+                            <property name="activatable">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwPreferencesGroup">
+                    <property name="title" translatable="yes">App Icons</property>
+                    <property name="description" translatable="yes">The "icon-dropshadow" style class ensures legibility when displaying app icons. For 32x32 and smaller app icons, "lowres-icon" should be used instead.</property>
+                    <child>
+                      <object class="GtkGrid">
+                        <property name="row-spacing">6</property>
+                        <property name="column-spacing">12</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">org.gnome.Boxes</property>
+                            <property name="pixel-size">128</property>
+                            <property name="valign">end</property>
+                            <property name="tooltip-text">icon-dropshadow</property>
+                            <style>
+                              <class name="icon-dropshadow"/>
+                            </style>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="row">0</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label">128</property>
+                            <property name="xalign">0.5</property>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="row">1</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">org.gnome.Boxes</property>
+                            <property name="pixel-size">64</property>
+                            <property name="valign">end</property>
+                            <property name="tooltip-text">icon-dropshadow</property>
+                            <style>
+                              <class name="icon-dropshadow"/>
+                            </style>
+                            <layout>
+                              <property name="column">1</property>
+                              <property name="row">0</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label">64</property>
+                            <property name="xalign">0.5</property>
+                            <layout>
+                              <property name="column">1</property>
+                              <property name="row">1</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">org.gnome.Boxes</property>
+                            <property name="pixel-size">32</property>
+                            <property name="valign">end</property>
+                            <property name="tooltip-text">lowres-icon</property>
+                            <style>
+                              <class name="lowres-icon"/>
+                            </style>
+                            <layout>
+                              <property name="column">2</property>
+                              <property name="row">0</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label">32</property>
+                            <property name="xalign">0.5</property>
+                            <layout>
+                              <property name="column">2</property>
+                              <property name="row">1</property>
+                            </layout>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwPreferencesGroup">
+                    <property name="title" translatable="yes">Check Buttons</property>
+                    <property name="description" translatable="yes">The "selection-mode" style class makes can be used with GtkCheckButton to make them large and round.</property>
+                    <child>
+                      <object class="GtkGrid">
+                        <property name="row-spacing">6</property>
+                        <property name="column-spacing">12</property>
+                        <property name="halign">start</property>
+                        <child>
+                          <object class="GtkCheckButton">
+                            <property name="halign">end</property>
+                            <property name="valign">end</property>
+                            <property name="active">True</property>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="row">0</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton">
+                            <property name="halign">start</property>
+                            <property name="valign">end</property>
+                            <layout>
+                              <property name="column">1</property>
+                              <property name="row">0</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label">Regular</property>
+                            <property name="xalign">0.5</property>
+                            <property name="margin-start">12</property>
+                            <property name="margin-end">12</property>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="row">1</property>
+                              <property name="column-span">2</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton">
+                            <property name="halign">end</property>
+                            <property name="valign">end</property>
+                            <property name="active">True</property>
+                            <property name="tooltip-text">selection-mode</property>
+                            <style>
+                              <class name="selection-mode"/>
+                            </style>
+                            <layout>
+                              <property name="column">2</property>
+                              <property name="row">0</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton">
+                            <property name="halign">start</property>
+                            <property name="valign">end</property>
+                            <property name="tooltip-text">selection-mode</property>
+                            <style>
+                              <class name="selection-mode"/>
+                            </style>
+                            <layout>
+                              <property name="column">3</property>
+                              <property name="row">0</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label">Selection Mode</property>
+                            <property name="xalign">0.5</property>
+                            <property name="margin-start">12</property>
+                            <property name="margin-end">12</property>
+                            <layout>
+                              <property name="column">2</property>
+                              <property name="row">1</property>
+                              <property name="column-span">2</property>
+                            </layout>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwPreferencesGroup">
+                    <property name="title" translatable="yes">Toolbars</property>
+                    <property name="description" translatable="yes">The "toolbar" style class on GtkBox and similar containers gives the same padding, spacing and button appearance as GtkHeaderBar and GtkActionBar have. A toolbar can additionally have the "osd" style class, useful for floating media controls.
+
+The "raised" style class can be used to make a button inside a toolbar use default appearance instead.</property>
+                    <child>
+                      <object class="GtkFrame">
+                        <property name="margin-bottom">12</property>
+                        <property name="child">
+                          <object class="GtkBox">
+                            <property name="tooltip-text">toolbar</property>
+                            <style>
+                              <class name="toolbar"/>
+                            </style>
+                            <child>
+                              <object class="GtkMenuButton">
+                                <property name="label" translatable="yes">Open</property>
+                                <property name="menu-model">demo_menu</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton">
+                                <property name="icon-name">tab-new-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkSeparator">
+                                <property name="hexpand">True</property>
+                                <style>
+                                  <class name="spacer"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton">
+                                <property name="icon-name">edit-undo-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton">
+                                <property name="icon-name">edit-redo-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkSeparator">
+                                <style>
+                                  <class name="spacer"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuButton">
+                                <property name="icon-name">view-more-symbolic</property>
+                                <property name="menu-model">demo_menu</property>
+                              </object>
+                            </child>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                            <property name="tooltip-text">toolbar, osd</property>
+                        <style>
+                          <class name="toolbar"/>
+                          <class name="osd"/>
+                        </style>
+                        <child>
+                          <object class="GtkButton">
+                            <property name="icon-name">media-skip-backward-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton">
+                            <property name="icon-name">media-playback-pause-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton">
+                            <property name="icon-name">media-skip-forward-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkScale">
+                            <property name="hexpand">True</property>
+                            <property name="adjustment">
+                              <object class="GtkAdjustment">
+                                <property name="lower">0</property>
+                                <property name="upper">100</property>
+                                <property name="value">50</property>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkScaleButton">
+                            <property name="icons">audio-volume-muted
+audio-volume-high
+audio-volume-low
+audio-volume-medium</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwPreferencesGroup">
+                    <property name="title" translatable="yes">Backgrounds</property>
+                    <property name="description" translatable="yes">These style classes can be applied to any widgets that need the specific background and text color.</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="homogeneous">True</property>
+                        <property name="height-request">100</property>
+                        <child>
+                          <object class="AdwBin">
+                            <property name="tooltip-text">background</property>
+                            <style>
+                              <class name="background"/>
+                            </style>
+                            <property name="child">
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">Background</property>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="AdwBin">
+                            <property name="tooltip-text">view</property>
+                            <style>
+                              <class name="view"/>
+                            </style>
+                            <property name="child">
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">View</property>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="AdwBin">
+                            <property name="tooltip-text">osd</property>
+                            <style>
+                              <class name="osd"/>
+                            </style>
+                            <property name="child">
+                              <object class="GtkLabel">
+                                <property name="label" translatable="yes">OSD</property>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwPreferencesGroup">
+                    <property name="title" translatable="yes">Misc</property>
+                    <child>
+                      <object class="AdwActionRow">
+                        <property name="title" translatable="yes">Flat Header Bar</property>
+                        <property name="activatable">True</property>
+                        <property name="action-name">style.header-bar</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">go-next-symbolic</property>
+                            <style>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwActionRow">
+                        <property name="title" translatable="yes">Status Pages</property>
+                        <property name="activatable">True</property>
+                        <property name="action-name">style.status-page</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">go-next-symbolic</property>
+                            <style>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwActionRow">
+                        <property name="title" translatable="yes">Sidebar</property>
+                        <property name="activatable">True</property>
+                        <property name="action-name">style.sidebar</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">go-next-symbolic</property>
+                            <style>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwActionRow">
+                        <property name="title" translatable="yes">Development Window</property>
+                        <property name="subtitle" translatable="yes">"devel" style class on GtkWindow</property>
+                        <property name="activatable-widget">devel_switch</property>
+                        <child>
+                          <object class="GtkSwitch" id="devel_switch">
+                            <property name="action-name">style.devel</property>
+                            <property name="valign">center</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwActionRow">
+                        <property name="title" translatable="yes">OSD Progress Bar</property>
+                        <property name="subtitle" translatable="yes">"osd" style class on GtkProgressBar</property>
+                        <property name="activatable-widget">progress_switch</property>
+                        <child>
+                          <object class="GtkSwitch" id="progress_switch">
+                            <property name="action-name">style.progress</property>
+                            <property name="valign">center</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </property>
+  </template>
+  <object class="GtkWindow" id="header_bar_window">
+    <property name="modal">True</property>
+    <property name="transient-for">AdwStyleDemoWindow</property>
+    <property name="title" translatable="yes">Flat Header Bar</property>
+    <property name="hide-on-close">True</property>
+    <property name="titlebar">
+      <object class="AdwHeaderBar">
+        <property name="tooltip-text">flat</property>
+        <property name="show-title">False</property>
+        <style>
+          <class name="flat"/>
+        </style>
+      </object>
+    </property>
+    <property name="child">
+      <object class="GtkLabel">
+        <property name="use-markup">True</property>
+        <property name="label" translatable="yes">The header bar in this window has the "flat" style class.</property>
+        <property name="wrap">True</property>
+        <property name="margin-start">48</property>
+        <property name="margin-end">48</property>
+        <property name="margin-bottom">48</property>
+      </object>
+    </property>
+  </object>
+  <object class="GtkWindow" id="status_page_window">
+    <property name="modal">True</property>
+    <property name="transient-for">AdwStyleDemoWindow</property>
+    <property name="title" translatable="yes">Status Pages</property>
+    <property name="hide-on-close">True</property>
+    <property name="default-width">640</property>
+    <property name="default-height">480</property>
+    <property name="titlebar">
+      <object class="GtkHeaderBar">
+        <child>
+          <object class="GtkRevealer">
+            <property name="transition-type">crossfade</property>
+            <property name="reveal-child" bind-source="status_page_flap" bind-property="folded" bind-flags="sync-create"/>
+            <property name="child">
+              <object class="GtkToggleButton">
+                <property name="icon-name">view-sidebar-start</property>
+                <property name="active" bind-source="status_page_flap" bind-property="reveal-flap" bind-flags="sync-create|bidirectional"/>
+              </object>
+            </property>
+          </object>
+        </child>
+      </object>
+    </property>
+    <property name="child">
+      <object class="AdwFlap" id="status_page_flap">
+        <property name="width-request">360</property>
+        <property name="flap">
+          <object class="AdwStatusPage">
+            <property name="width-request">250</property>
+            <property name="icon-name">org.gnome.Adwaita1.Demo-symbolic</property>
+            <property name="title" translatable="yes">Compact</property>
+            <property name="description" translatable="yes">This status page has the "compact" style class.</property>
+            <property name="tooltip-text">compact</property>
+            <style>
+              <class name="compact"/>
+              <class name="background"/>
+            </style>
+            <property name="child">
+              <object class="GtkButton">
+                <property name="label" translatable="yes">Button</property>
+                <property name="halign">center</property>
+                <style>
+                  <class name="pill"/>
+                </style>
+              </object>
+            </property>
+          </object>
+        </property>
+        <property name="separator">
+          <object class="GtkSeparator"/>
+        </property>
+        <property name="content">
+          <object class="AdwStatusPage">
+            <property name="hexpand">True</property>
+            <property name="icon-name">org.gnome.Adwaita1.Demo-symbolic</property>
+            <property name="title" translatable="yes">Regular</property>
+            <property name="description" translatable="yes">This is a regular status page.</property>
+            <property name="child">
+              <object class="GtkButton">
+                <property name="label" translatable="yes">Button</property>
+                <property name="halign">center</property>
+                <style>
+                  <class name="pill"/>
+                </style>
+              </object>
+            </property>
+          </object>
+        </property>
+      </object>
+    </property>
+  </object>
+  <object class="AdwWindow" id="sidebar_window">
+    <property name="modal">True</property>
+    <property name="transient-for">AdwStyleDemoWindow</property>
+    <property name="title" translatable="yes">Sidebar</property>
+    <property name="hide-on-close">True</property>
+    <property name="default-width">720</property>
+    <property name="default-height">480</property>
+    <property name="content">
+      <object class="AdwLeaflet" id="sidebar_leaflet">
+        <property name="can-navigate-back">True</property>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="width-request">200</property>
+            <child>
+              <object class="AdwHeaderBar">
+                <binding name="show-end-title-buttons">
+                  <lookup name="folded">sidebar_leaflet</lookup>
+                </binding>
+                <property name="show-title">False</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="hscrollbar-policy">never</property>
+                <property name="vexpand">True</property>
+                <property name="child">
+                  <object class="GtkListBox">
+                    <property name="tooltip-text">navigation-sidebar</property>
+                    <binding name="selection-mode">
+                      <closure type="GtkSelectionMode" function="selection_mode_for_folded">
+                        <lookup name="folded">sidebar_leaflet</lookup>
+                      </closure>
+                    </binding>
+                    <signal name="row-activated" handler="sidebar_forward_cb" swapped="yes"/>
+                    <style>
+                      <class name="navigation-sidebar"/>
+                    </style>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Item 1</property>
+                        <property name="ellipsize">end</property>
+                        <property name="xalign">0</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Item 2</property>
+                        <property name="ellipsize">end</property>
+                        <property name="xalign">0</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Item 3</property>
+                        <property name="ellipsize">end</property>
+                        <property name="xalign">0</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Item 4</property>
+                        <property name="ellipsize">end</property>
+                        <property name="xalign">0</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Item 5</property>
+                        <property name="ellipsize">end</property>
+                        <property name="xalign">0</property>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwLeafletPage">
+            <property name="navigatable">False</property>
+            <property name="child">
+              <object class="GtkSeparator"/>
+            </property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="hexpand">True</property>
+            <property name="width-request">360</property>
+            <child>
+              <object class="AdwHeaderBar">
+                <binding name="show-start-title-buttons">
+                  <lookup name="folded">sidebar_leaflet</lookup>
+                </binding>
+                <child>
+                  <object class="GtkButton">
+                    <property name="icon-name">go-previous-symbolic</property>
+                    <signal name="clicked" handler="sidebar_back_cb" swapped="yes"/>
+                    <binding name="visible">
+                      <lookup name="folded">sidebar_leaflet</lookup>
+                    </binding>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="AdwStatusPage">
+                <property name="vexpand">True</property>
+                <property name="title" translatable="yes">Sidebar</property>
+                <property name="description" translatable="yes">"navigation-sidebar" style class on GtkListBox or GtkListView</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </property>
+  </object>
+  <menu id="demo_menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Item 1</attribute>
+        <attribute name="action">style.dummy</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Item 2</attribute>
+        <attribute name="action">style.dummy</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Item 3</attribute>
+        <attribute name="action">style.dummy</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

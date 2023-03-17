@@ -5,6 +5,7 @@ import com.sun.jna.Structure;
 
 import ch.bailu.gtk.adw.Application;
 import ch.bailu.gtk.adw.ApplicationWindow;
+import ch.bailu.gtk.adw.ColorScheme;
 import ch.bailu.gtk.adw.Leaflet;
 import ch.bailu.gtk.adw.NavigationDirection;
 import ch.bailu.gtk.adw.StyleManager;
@@ -57,6 +58,14 @@ public class AdwDemoWindow extends ApplicationWindow {
         TypeSystem.ensure(AdwDemoPageViewSwitcher.getTypeID());
         TypeSystem.ensure(AdwDemoPageCarousel.getTypeID());
         TypeSystem.ensure(AdwDemoPageAvatar.getTypeID());
+        TypeSystem.ensure(AdwDemoPageFlap.getTypeID());
+        TypeSystem.ensure(AdwDemoPageTabView.getTypeID());
+        TypeSystem.ensure(AdwDemoPageToasts.getTypeID());
+        TypeSystem.ensure(AdwDemoPageAbout.getTypeID());
+        TypeSystem.ensure(AdwDemoPageStyles.getTypeID());
+        TypeSystem.ensure(AdwDemoPageDialogs.getTypeID());
+        TypeSystem.ensure(AdwDemoPageButtons.getTypeID());
+        TypeSystem.ensure(AdwDemoPageAnimations.getTypeID());
 
         initTemplate();
         this.instance = new Instance(getCPointer());
@@ -95,11 +104,11 @@ public class AdwDemoWindow extends ApplicationWindow {
         widgetClass.bindTemplateChildFull(new Str("subpage_leaflet"), true, PARENT_SIZE.instanceSize + 16);
         //widgetClass.bindTemplateChildFull(new Str("toasts_page"), true, PARENT_SIZE.instanceSize + 24);
         widgetClass.bindTemplateCallback("get_color_scheme_icon_name", (SignalCallbackSB) (self, dark) -> new AdwDemoWindow(self).getColorSchemeIconName(dark));
-        widgetClass.bindTemplateCallback("color_scheme_button_clicked_cb", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(self).colorSchemeButtonClicked());
+        widgetClass.bindTemplateCallback("color_scheme_button_clicked_cb", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(self).onColorSchemeButtonClicked());
         widgetClass.bindTemplateCallback("notify_visible_child_cb", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(self).notifyVisibleChild());
         widgetClass.bindTemplateCallback("back_clicked_cb", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(self).backClicked());
-        widgetClass.bindTemplateCallback("leaflet_back_clicked_cb", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(self).leafletBackClicked());
-        widgetClass.bindTemplateCallback("leaflet_next_page_cb", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(self).leafletNextPage());
+        widgetClass.bindTemplateCallback("leaflet_back_clicked_cb", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(self).onLeafletBackClicked());
+        widgetClass.bindTemplateCallback("leaflet_next_page_cb", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(self).onLeafletNextPage());
         widgetClass.installAction(new Str("toast.undo"), Str.NULL, (__self1, widget, action_name, parameter) -> new AdwDemoWindow(widget.cast()).toastUndo());
 
         __self.unregister();
@@ -110,13 +119,16 @@ public class AdwDemoWindow extends ApplicationWindow {
     private void toastUndo() {
     }
 
-    private void leafletNextPage() {
+    private void onLeafletNextPage() {
+        new Leaflet(toCPointer(instance.subpage_leaflet)).navigate(NavigationDirection.FORWARD);
     }
 
-    private void leafletBackClicked() {
+    private void onLeafletBackClicked() {
+        new Leaflet(toCPointer(instance.subpage_leaflet)).navigate(NavigationDirection.BACK);
     }
 
     private void backClicked() {
+        new Leaflet(toCPointer(instance.main_leaflet)).navigate(NavigationDirection.BACK);
     }
 
     private void notifyVisibleChild() {
@@ -126,7 +138,13 @@ public class AdwDemoWindow extends ApplicationWindow {
         System.out.println("onNotifySystemSupportsColorSchemes");
     }
 
-    private void colorSchemeButtonClicked() {
+    private void onColorSchemeButtonClicked() {
+        var styleManager = StyleManager.getDefault();
+        if (styleManager.getDark()) {
+            styleManager.setColorScheme(ColorScheme.FORCE_LIGHT);
+        } else {
+            styleManager.setColorScheme(ColorScheme.FORCE_DARK);
+        }
     }
 
     private long getColorSchemeIconName(boolean dark) {

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="AdwDemoPageToasts" parent="AdwBin">
+    <property name="child">
+      <object class="AdwStatusPage">
+        <property name="icon-name">widget-toast-symbolic</property>
+        <property name="title" translatable="yes">Toasts</property>
+        <property name="description" translatable="yes">Transient in-app notifications.</property>
+        <property name="child">
+          <object class="AdwClamp">
+            <property name="maximum-size">400</property>
+            <property name="tightening-threshold">300</property>
+            <property name="child">
+              <object class="AdwPreferencesGroup">
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title" translatable="yes">Simple Toast</property>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="valign">center</property>
+                        <property name="label" translatable="yes">Show</property>
+                        <property name="action-name">toast.add</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title" translatable="yes">Toast With an Action</property>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="valign">center</property>
+                        <property name="icon-name">user-trash-symbolic</property>
+                        <property name="action-name">toast.dismiss</property>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="valign">center</property>
+                        <property name="label" translatable="yes">Show</property>
+                        <property name="action-name">toast.add-with-button</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwActionRow">
+                    <property name="title" translatable="yes">Toast With a Long Title</property>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="valign">center</property>
+                        <property name="label" translatable="yes">Show</property>
+                        <property name="action-name">toast.add-with-long-title</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </property>
+          </object>
+        </property>
+      </object>
+    </property>
+  </template>
+</interface>
