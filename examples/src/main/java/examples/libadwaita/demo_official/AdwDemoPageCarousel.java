@@ -17,9 +17,9 @@ import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
 
 public class AdwDemoPageCarousel extends Bin {
-    private final static Str TYPE_NAME = new Str(AdwDemoPageCarousel.class.getSimpleName());
-    private final static long PARENT_TYPE = Bin.getTypeID();
-    private final static int PARENT_OFFSET = TypeSystem.getTypeSize(PARENT_TYPE).instanceSize;
+    private final static Str  TYPE_NAME     = new Str(AdwDemoPageCarousel.class.getSimpleName());
+    private final static long PARENT_TYPE   = Bin.getTypeID();
+    private final static int  PARENT_OFFSET = TypeSystem.getTypeSize(PARENT_TYPE).instanceSize;
 
     private static long type = 0;
 
@@ -60,7 +60,7 @@ public class AdwDemoPageCarousel extends Bin {
                 widgetClass.bindTemplateChildFull("indicators_row", true,PARENT_OFFSET + 32);
 
                 widgetClass.bindTemplateCallback("get_orientation_name", new Callback() {
-                    public long invoke(long item, long data) { return getOrientationName(item);}
+                    public long invoke(long item, long data) { return getOrientationName(new EnumListItem(Pointer.toCPointer(item))).getCPointer();}
                 });
                 widgetClass.bindTemplateCallback("notify_orientation_cb", new Callback() {
                     public void invoke(long self) {
@@ -84,16 +84,11 @@ public class AdwDemoPageCarousel extends Bin {
         return type;
     }
 
-    public static long getOrientationName(long item) {
-        var enumListItem = new EnumListItem(Pointer.toCPointer(item));
-        var value = enumListItem.getValue();
-
-        if (value == Orientation.HORIZONTAL) {
-            return new Str("Horizontal").getCPointer();
-        } else if (value == Orientation.VERTICAL) {
-            return new Str("Vertical").getCPointer();
+    private static Str getOrientationName(EnumListItem item) {
+        if (item.getValue() == Orientation.HORIZONTAL) {
+            return new Str("Horizontal");
         }
-        return 0L;
+        return new Str("Vertical");
     }
 
     public void notifyOrientation() {

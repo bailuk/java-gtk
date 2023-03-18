@@ -23,12 +23,12 @@ import ch.bailu.gtk.type.gobject.TypeSystem;
 public class AdwDemoPageLeaflet extends Bin {
     private final static int PROP_TRANSITION_TYPE = 1;
 
-    private final static Str TYPE_NAME = new Str(AdwDemoPageLeaflet.class.getSimpleName());
-    private static final Str PROP_NAME_TRANSITION_TYPE = new Str("transition-type");
+    private final static Str  TYPE_NAME = new Str(AdwDemoPageLeaflet.class.getSimpleName());
+    private static final Str  PROP_NAME_TRANSITION_TYPE = new Str("transition-type");
     private static final long PARENT_TYPE = Bin.getTypeID();
-    private static final int PARENT_INSTANCE_SIZE = TypeSystem.getTypeSize(PARENT_TYPE).instanceSize;
+    private static final int  PARENT_INSTANCE_SIZE = TypeSystem.getTypeSize(PARENT_TYPE).instanceSize;
 
-    private static final Str SIGNAL_NEXT_PAGE = new Str("next-page");
+    private static final Str  SIGNAL_NEXT_PAGE = new Str("next-page");
 
     @Structure.FieldOrder({"parent", "transition_type"})
     public static class Instance extends Structure {
@@ -49,7 +49,6 @@ public class AdwDemoPageLeaflet extends Bin {
     }
 
     private static long type = 0;
-    private static int signal = 0;
     public synchronized static long getTypeID() {
         if (type == 0) {
             type = TypeSystem.registerClass(PARENT_TYPE, TYPE_NAME, 4, (__self, g_class, class_data) -> {
@@ -64,11 +63,11 @@ public class AdwDemoPageLeaflet extends Bin {
                         ParamFlags.READWRITE | GobjectConstants.PARAM_STATIC_STRINGS);
 
                 objectClass.overridePropertyAccess(
-                        (object, property_id, value, pspec) -> new AdwDemoPageLeaflet(object).getProperty(property_id, value),
-                        (object, property_id, value, pspec) -> new AdwDemoPageLeaflet(object).setProperty(property_id, value));
+                        (self, property_id, value, pspec) -> new AdwDemoPageLeaflet(self).getProperty(property_id, value),
+                        (self, property_id, value, pspec) -> new AdwDemoPageLeaflet(self).setProperty(property_id, value));
                 objectClass.installProperty(PROP_TRANSITION_TYPE, prop);
 
-                signal = objectClass.signalNew(SIGNAL_NEXT_PAGE, TypeSystem.GTYPE_NONE);
+                final var signal = objectClass.signalNew(SIGNAL_NEXT_PAGE, TypeSystem.GTYPE_NONE);
 
                 widgetClass.setTemplateOrExit("/adw_demo/adw-demo-page-leaflet.ui");
                 widgetClass.bindTemplateCallback("get_transition_name", new Callback() {
@@ -83,7 +82,7 @@ public class AdwDemoPageLeaflet extends Bin {
                     }
                 });
 
-            }, (__self, instance, g_class) -> new Bin(instance.cast()).initTemplate());
+            }, (__self, self, g_class) -> new Bin(self.cast()).initTemplate());
 
         }
         return type;

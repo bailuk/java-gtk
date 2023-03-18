@@ -41,7 +41,7 @@ public class AdwaitaDemoOfficial {
     public static void main(String[] args) {
         loadAndRegisterGResource("/adw_demo/adwaita-demo.gresources.gresource");
 
-        var app = new Application("org.gnome.Adwaita1.Demo", ApplicationFlags.NON_UNIQUE);
+        final var app = new Application("org.gnome.Adwaita1.Demo", ApplicationFlags.NON_UNIQUE);
 
         ActionHandler.get(app, "about").onActivate(() -> showAbout(app));
         ActionHandler.get(app, "preferences").onActivate(() -> showPreferences(app));
@@ -58,18 +58,17 @@ public class AdwaitaDemoOfficial {
     private static void loadAndRegisterGResource(String path) {
         // TODO wouldn't it be nice if resource could be loaded directly from java resources instead of .gresource?
         try (var stream = (new JavaResource(path).asStream())) {
-            var gresource = new Bytes(stream.readAllBytes());
-            var resource = Resource.newFromDataResource(ch.bailu.gtk.glib.Bytes.newStaticBytes(gresource, gresource.getLength()));
+            var bytes = new Bytes(stream.readAllBytes());
+            var resource = Resource.newFromDataResource(ch.bailu.gtk.glib.Bytes.newStaticBytes(bytes, bytes.getLength()));
             resource.register();
         } catch (IOException | AllocationError e) {
-            e.printStackTrace();
+            System.err.println("Load gresource failed for '"  + path + "'");
         }
     }
 
     private static void showAbout(Application app) {
-        var window = app.getActiveWindow();
-        var about = new AboutWindow();
-        about.setTransientFor(window);
+        final var about = new AboutWindow();
+        about.setTransientFor(app.getActiveWindow());
         about.setApplicationIcon("org.gnome.Adwaita1.Demo");
         about.setApplicationName("Adwaita Demo");
         about.setDeveloperName("The GNOME Project");
