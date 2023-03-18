@@ -9,7 +9,6 @@ object AliasTable : Logable {
 
     init {
         add("glib", "String", "GString")
-        add("gobject", "Object", "GObject")
     }
 
 

@@ -33,7 +33,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         out.start(3)
         javaDoc.writeClass(structureModel)
 
-        Validator.giveUp("Type not aliased ${structureModel.apiParentName}", structureModel.apiParentName.endsWith(".Object") || structureModel.apiParentName.endsWith(".String"))
+        Validator.validateAlias(structureModel.apiParentName)
 
         out.a("public class ${structureModel.apiName} extends ${structureModel.apiParentName} {\n")
         out.a("    public static ch.bailu.gtk.lib.handler.ClassHandler getClassHandler() {\n")

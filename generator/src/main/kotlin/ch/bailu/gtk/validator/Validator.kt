@@ -17,4 +17,8 @@ object Validator {
         giveUp("Invalid method name ${methodModel.apiName}", methodModel.apiName == "Register")
 
     }
+
+    fun validateAlias(apiName: String) {
+        giveUp("Type not aliased ${apiName}", apiName.endsWith(".String"))
+    }
 }

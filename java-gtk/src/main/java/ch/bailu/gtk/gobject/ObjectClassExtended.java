@@ -44,6 +44,6 @@ public class ObjectClassExtended extends ObjectClass {
                 0,
                 returnType,
                 types.length,
-                (Object[]) types);
+                (java.lang.Object[]) types);
     }
 }

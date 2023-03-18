@@ -1,6 +1,5 @@
 package ch.bailu.gtk.type.gobject;
 
-import ch.bailu.gtk.gobject.GObject;
 import ch.bailu.gtk.gobject.Gobject;
 import ch.bailu.gtk.gobject.GobjectConstants;
 import ch.bailu.gtk.gobject.TypeQuery;
@@ -70,7 +69,7 @@ public class TypeSystem {
     }
 
     public static CPointer newInstance(long type, Property... properties) {
-        return new GObject(type, Property.getFirstArgument(properties), Property.getRemainingArguments(properties)).cast();
+        return new ch.bailu.gtk.gobject.Object(type, Property.getFirstArgument(properties), Property.getRemainingArguments(properties)).cast();
     }
 
     public static class TypeSize {

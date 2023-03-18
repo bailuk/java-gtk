@@ -205,7 +205,7 @@ class StructureModel : Model {
             }
         }
 
-        Validator.giveUp("Type not aliased $apiName", apiName == "Object" || apiName == "String")
+        Validator.validateAlias(apiName)
     }
 
     fun hasNativeCalls(): Boolean {
