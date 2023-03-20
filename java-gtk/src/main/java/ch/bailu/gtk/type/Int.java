@@ -32,6 +32,7 @@ public class Int extends Wrapper {
         return ImpInt.get(getCPointer());
     }
 
+    @Override
     public void destroy() {
         if (created) {
             ImpUtil.destroy(getCPointer());

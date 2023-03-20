@@ -62,9 +62,8 @@ public class AdwDemoPageLeaflet extends Bin {
                         LeafletTransitionType.OVER,
                         ParamFlags.READWRITE | GobjectConstants.PARAM_STATIC_STRINGS);
 
-                objectClass.overridePropertyAccess(
-                        (self, property_id, value, pspec) -> new AdwDemoPageLeaflet(self).getProperty(property_id, value),
-                        (self, property_id, value, pspec) -> new AdwDemoPageLeaflet(self).setProperty(property_id, value));
+                objectClass.overrideSetProperty((self, property_id, value, pspec) -> new AdwDemoPageLeaflet(self).setProperty(property_id, value));
+                objectClass.overrideGetProperty((self, property_id, value, pspec) -> new AdwDemoPageLeaflet(self).getProperty(property_id, value));
                 objectClass.installProperty(PROP_TRANSITION_TYPE, prop);
 
                 final var signal = objectClass.signalNew(SIGNAL_NEXT_PAGE, TypeSystem.GTYPE_NONE);

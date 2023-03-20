@@ -32,6 +32,7 @@ public class Int64 extends Wrapper {
         return ImpInt.getLong(getCPointer());
     }
 
+    @Override
     public void destroy() {
         if (created) {
             ImpUtil.destroy(getCPointer());

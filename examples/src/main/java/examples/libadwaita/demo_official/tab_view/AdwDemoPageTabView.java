@@ -1,4 +1,4 @@
-package examples.libadwaita.demo_official;
+package examples.libadwaita.demo_official.tab_view;
 
 import ch.bailu.gtk.adw.Bin;
 import ch.bailu.gtk.gtk.WidgetClassExtended;
@@ -15,11 +15,12 @@ public class AdwDemoPageTabView extends Bin {
         if (type == 0) {
             type = TypeSystem.registerClass(Bin.getTypeID(), TYPE_NAME, 0, (__self, g_class, class_data) -> {
                 var widgetClass = new WidgetClassExtended(g_class.cast());
+                System.err.println("Adw.TabOverview since: 1.3");
                 widgetClass.setTemplateOrExit("/adw_demo/adw-demo-page-tab-view.ui");
 
                 widgetClass.installAction("demo.run", null, (__self1, widget, action_name, parameter) -> {
-                    var window = new AdwFlapDemoWindow();
-                    window.setTransientFor(new Window(window.getRoot().cast()));
+                    var window = new AdwTabViewDemoWindow();
+                    window.setTransientFor(new Window(widget.getRoot().cast()));
                     window.present();
                 });
             }, (__self, instance, g_class) -> new Bin(instance.cast()).initTemplate());

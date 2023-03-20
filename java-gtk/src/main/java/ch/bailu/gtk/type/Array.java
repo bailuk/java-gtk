@@ -17,6 +17,7 @@ public abstract class Array extends Wrapper {
         }
     }
 
+    @Override
     public void destroy() {
         if (length != 0) {
             ImpUtil.destroy(getCPointer());

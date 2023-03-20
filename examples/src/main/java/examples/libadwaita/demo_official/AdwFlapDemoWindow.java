@@ -17,7 +17,7 @@ import ch.bailu.gtk.type.gobject.TypeSystem;
 
 public class AdwFlapDemoWindow extends Window {
     private final static Str TYPE_NAME = new Str(AdwFlapDemoWindow.class.getSimpleName());
-    private final static int PARENT_OFFSET = TypeSystem.getTypeSize(Window.getTypeID()).instanceSize;
+    private final static int OFFSET = TypeSystem.getTypeSize(Window.getTypeID()).instanceSize;
     private static long type = 0;
 
     @Structure.FieldOrder({"parent", "flap", "reveal_btn_start", "reveal_btn_end"})
@@ -27,7 +27,7 @@ public class AdwFlapDemoWindow extends Window {
             read();
         }
 
-        public byte[] parent = new byte[PARENT_OFFSET];
+        public byte[] parent = new byte[OFFSET];
         public long flap;
         public long reveal_btn_start;
         public long reveal_btn_end;
@@ -98,9 +98,9 @@ public class AdwFlapDemoWindow extends Window {
                 var widgetClass = new WidgetClassExtended(g_class.cast());
                 widgetClass.setTemplateOrExit("/adw_demo/adw-flap-demo-window.ui");
 
-                widgetClass.bindTemplateChildFull("flap", true, PARENT_OFFSET);
-                widgetClass.bindTemplateChildFull("reveal_btn_start", true, PARENT_OFFSET + 8);
-                widgetClass.bindTemplateChildFull("reveal_btn_end", true, PARENT_OFFSET + 16);
+                widgetClass.bindTemplateChildFull("flap", true, OFFSET);
+                widgetClass.bindTemplateChildFull("reveal_btn_start", true, OFFSET + 8);
+                widgetClass.bindTemplateChildFull("reveal_btn_end", true, OFFSET + 16);
 
                 widgetClass.bindTemplateCallback("start_toggle_button_toggled_cb", new Callback() {
                     public void invoke(long button, long self) {

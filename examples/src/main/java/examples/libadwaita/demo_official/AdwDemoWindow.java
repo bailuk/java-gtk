@@ -18,6 +18,8 @@ import ch.bailu.gtk.lib.handler.SignalHandler;
 import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
+import examples.libadwaita.demo_official.styles.AdwDemoPageStyles;
+import examples.libadwaita.demo_official.tab_view.AdwDemoPageTabView;
 
 public class AdwDemoWindow extends ApplicationWindow {
 

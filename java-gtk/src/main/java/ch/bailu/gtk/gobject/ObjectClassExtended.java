@@ -10,6 +10,13 @@ public class ObjectClassExtended extends ObjectClass {
         super(g_class);
     }
 
+    public void onDispose(Object instance) {
+        GObjectLib.ObjectClass pClass = new GObjectLib.ObjectClass(getCPointer());
+        pClass.readField("dispose");
+        pClass.dispose.invoke(instance.getCPointer());
+    }
+
+
     @FunctionalInterface
     public interface PropertyCallback extends com.sun.jna.Callback {
         void invoke(long object, int property_id, long value, long pspec);
@@ -25,12 +32,22 @@ public class ObjectClassExtended extends ObjectClass {
         objectClassInstance.writeField("dispose");
     }
 
-    public void overridePropertyAccess(PropertyCallback get, PropertyCallback set) {
+    public void overrideFinalize(DisposeCallback callback) {
         var objectClassInstance = new GObjectLib.ObjectClass(getCPointer());
-        objectClassInstance.getProperty = get;
-        objectClassInstance.setProperty = set;
-        objectClassInstance.writeField("getProperty");
+        objectClassInstance.finalize = callback;
+        objectClassInstance.writeField("finalize");
+    }
+
+    public void overrideSetProperty(PropertyCallback cb) {
+        var objectClassInstance = new GObjectLib.ObjectClass(getCPointer());
+        objectClassInstance.setProperty = cb;
         objectClassInstance.writeField("setProperty");
+    }
+
+    public void overrideGetProperty(PropertyCallback cb) {
+        var objectClassInstance = new GObjectLib.ObjectClass(getCPointer());
+        objectClassInstance.getProperty = cb;
+        objectClassInstance.writeField("getProperty");
     }
 
     public int signalNew(Str name, long returnType, Long... types) {
@@ -45,5 +62,11 @@ public class ObjectClassExtended extends ObjectClass {
                 returnType,
                 types.length,
                 (java.lang.Object[]) types);
+    }
+
+
+    public ObjectClassExtended getParentClass() {
+        final var typeClass = new TypeClass(cast());
+        return new ObjectClassExtended(typeClass.peekParent().cast());
     }
 }

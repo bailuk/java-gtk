@@ -1,8 +1,18 @@
 package ch.bailu.gtk.lib.bridge;
 
+import com.sun.jna.Callback;
+import com.sun.jna.Structure;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import ch.bailu.gtk.gio.ListModel;
-import ch.bailu.gtk.gobject.*;
+import ch.bailu.gtk.gobject.Gobject;
+import ch.bailu.gtk.gobject.InterfaceInfo;
 import ch.bailu.gtk.gobject.Object;
+import ch.bailu.gtk.gobject.ObjectClassExtended;
+import ch.bailu.gtk.gobject.ParamFlags;
+import ch.bailu.gtk.gobject.Value;
 import ch.bailu.gtk.gtk.ListItem;
 import ch.bailu.gtk.gtk.SelectionModel;
 import ch.bailu.gtk.gtk.SingleSelection;
@@ -12,11 +22,6 @@ import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
-import com.sun.jna.Callback;
-import com.sun.jna.Structure;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * A ListModel that provides indices for n items.
@@ -91,18 +96,18 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
         Gobject.typeAddInterfaceStatic(type, ListModel.getTypeID(), info);
   }
 
-    private static ObjectClass parentClass = null;
+    private static ObjectClassExtended parentClass = null;
     private static final Gobject.OnClassInitFunc classInit = new Gobject.OnClassInitFunc() {
         @Override
         public void onClassInitFunc(CallbackHandler __self, @Nonnull Pointer g_class, @Nullable Pointer class_data) {
 
             System.out.println("ListIndex::classInit");
-            var typeClass = new TypeClass(g_class.cast());
-            parentClass = new ObjectClass(typeClass.peekParent().cast());
 
-            var objectClass = new ObjectClassExtended(Gobject.typeCheckClassCast(typeClass, PARENT_TYPE).cast());
+            var objectClass = new ObjectClassExtended(g_class.cast());
+            parentClass = objectClass.getParentClass();
             objectClass.overrideDispose(instanceDispose);
-            objectClass.overridePropertyAccess(getProperty, setProperty);
+            objectClass.overrideGetProperty(getProperty);
+            objectClass.overrideSetProperty(setProperty);
 
             var flags =
                     ParamFlags.CONSTRUCT |
@@ -199,9 +204,7 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
         if (parentClass.isNull()) {
             System.out.println("ListIndex::instanceDispose (no parent)");
         } else {
-            GObjectLib.ObjectClass pClass = new GObjectLib.ObjectClass(parentClass.getCPointer());
-            pClass.readField("dispose");
-            pClass.dispose.invoke(instance);
+            parentClass.onDispose(new ListIndex(toCPointer(instance)));
         }
     };
 

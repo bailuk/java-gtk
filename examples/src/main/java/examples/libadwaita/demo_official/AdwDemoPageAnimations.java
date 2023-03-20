@@ -169,10 +169,8 @@ public class AdwDemoPageAnimations extends Bin {
                 var widgetClass = new WidgetClassExtended(g_class.cast());
                 var objectClass = new ObjectClassExtended(g_class.cast());
 
-                objectClass.overridePropertyAccess(
-                        (object, property_id, value, pspec) -> new AdwDemoPageAnimations(toCPointer(object)).getProperty(property_id, new Value(toCPointer(value))),
-                        (object, property_id, value, pspec) -> new AdwDemoPageAnimations(toCPointer(object)).setProperty(property_id, new Value(toCPointer(value)))
-                );
+                objectClass.overrideGetProperty((object, property_id, value, pspec) -> new AdwDemoPageAnimations(toCPointer(object)).getProperty(property_id, new Value(toCPointer(value))));
+                objectClass.overrideSetProperty((object, property_id, value, pspec) -> new AdwDemoPageAnimations(toCPointer(object)).setProperty(property_id, new Value(toCPointer(value))));
 
                 objectClass.overrideDispose(pointer -> new AdwDemoPageAnimations(toCPointer(pointer)).dispose());
 

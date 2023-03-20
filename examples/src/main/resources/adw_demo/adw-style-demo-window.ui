@@ -1147,7 +1147,6 @@ audio-volume-medium</property>
     <property name="titlebar">
       <object class="AdwHeaderBar">
         <property name="tooltip-text">flat</property>
-        <property name="show-title">False</property>
         <style>
           <class name="flat"/>
         </style>
@@ -1254,7 +1253,6 @@ audio-volume-medium</property>
                 <binding name="show-end-title-buttons">
                   <lookup name="folded">sidebar_leaflet</lookup>
                 </binding>
-                <property name="show-title">False</property>
               </object>
             </child>
             <child>

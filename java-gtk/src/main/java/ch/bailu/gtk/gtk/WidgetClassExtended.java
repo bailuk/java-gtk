@@ -26,4 +26,14 @@ public class WidgetClassExtended extends WidgetClass {
             System.exit(1);
         }
     }
+
+    @FunctionalInterface
+    public interface SizeAllocateCallback extends com.sun.jna.Callback {
+        void invoke(long widget, int widht, int height, int baseline);
+    }
+
+    public void overrideSizeAllocate(SizeAllocateCallback cp) {
+        System.out.println("TODO implement overrideSizeAllocate");
+    }
+
 }
