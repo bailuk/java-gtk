@@ -72,6 +72,7 @@ public class AdwaitaDemoOfficial {
         about.setApplicationIcon("org.gnome.Adwaita1.Demo");
         about.setApplicationName("Adwaita Demo");
         about.setDeveloperName("The GNOME Project");
+        about.setVersion("Java-GTK");
         about.setWebsite("https://gitlab.gnome.org/GNOME/libadwaita");
         about.setCopyright("© 2017–2022 Purism SPC");
         about.setLicenseType(License.LGPL_2_1);

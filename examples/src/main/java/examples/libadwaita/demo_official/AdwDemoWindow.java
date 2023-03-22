@@ -18,14 +18,14 @@ import ch.bailu.gtk.lib.handler.SignalHandler;
 import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
+import examples.libadwaita.demo_official.animations.AdwDemoPageAnimations;
 import examples.libadwaita.demo_official.styles.AdwDemoPageStyles;
-import examples.libadwaita.demo_official.tab_view.AdwDemoPageTabView;
 
 public class AdwDemoWindow extends ApplicationWindow {
 
     private static final Str                 TYPE_NAME         = new Str(AdwDemoWindow.class.getSimpleName());
     private static final long                PARENT_TYPE       = ApplicationWindow.getTypeID();
-    private static final TypeSystem.TypeSize PARENT_SIZE       = TypeSystem.getTypeSize(PARENT_TYPE);
+    private static final int                 OFFSET            = TypeSystem.getTypeSize(PARENT_TYPE).instanceSize;
     private static final Str                 APP_PROPERTY_NAME = new Str("application");
 
     private static final Str                 ICON_LIGHT        = new Str("light-mode-symbolic");
@@ -41,7 +41,7 @@ public class AdwDemoWindow extends ApplicationWindow {
             read();
         }
 
-        public byte[] parent = new byte[PARENT_SIZE.instanceSize];
+        public byte[] parent = new byte[OFFSET];
         public long color_scheme_button;
         public long main_leaflet;
         public long subpage_leaflet;
@@ -61,7 +61,6 @@ public class AdwDemoWindow extends ApplicationWindow {
         TypeSystem.ensure(AdwDemoPageCarousel.getTypeID());
         TypeSystem.ensure(AdwDemoPageAvatar.getTypeID());
         TypeSystem.ensure(AdwDemoPageFlap.getTypeID());
-        TypeSystem.ensure(AdwDemoPageTabView.getTypeID());
         TypeSystem.ensure(AdwDemoPageToasts.getTypeID());
         TypeSystem.ensure(AdwDemoPageAbout.getTypeID());
         TypeSystem.ensure(AdwDemoPageStyles.getTypeID());
@@ -101,10 +100,10 @@ public class AdwDemoWindow extends ApplicationWindow {
         var widgetClass = new WidgetClassExtended(g_class.cast());
         widgetClass.addBindingAction(GdkConstants.KEY_q, ModifierType.CONTROL_MASK, new Str("window.close"), Str.NULL);
         widgetClass.setTemplateOrExit("/adw_demo/adw-demo-window.ui");
-        widgetClass.bindTemplateChildFull(new Str("color_scheme_button"), true, PARENT_SIZE.instanceSize);
-        widgetClass.bindTemplateChildFull(new Str("main_leaflet"), true, PARENT_SIZE.instanceSize + 8);
-        widgetClass.bindTemplateChildFull(new Str("subpage_leaflet"), true, PARENT_SIZE.instanceSize + 16);
-        //widgetClass.bindTemplateChildFull(new Str("toasts_page"), true, PARENT_SIZE.instanceSize + 24);
+        widgetClass.bindTemplateChildFull(new Str("color_scheme_button"), true, OFFSET);
+        widgetClass.bindTemplateChildFull(new Str("main_leaflet"), true, OFFSET + 8);
+        widgetClass.bindTemplateChildFull(new Str("subpage_leaflet"), true, OFFSET + 16);
+        widgetClass.bindTemplateChildFull(new Str("toasts_page"), true, OFFSET + 24);
         widgetClass.bindTemplateCallback("get_color_scheme_icon_name", (SignalCallbackSB) (self, dark) -> new AdwDemoWindow(self).getColorSchemeIconName(dark));
         widgetClass.bindTemplateCallback("color_scheme_button_clicked_cb", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(self).onColorSchemeButtonClicked());
         widgetClass.bindTemplateCallback("notify_visible_child_cb", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(self).notifyVisibleChild());
