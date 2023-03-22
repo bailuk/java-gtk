@@ -1,95 +1,95 @@
 package examples.libadwaita.demo;
 
-import ch.bailu.gtk.adw.ActionRow;
+import java.io.IOException;
+
+import ch.bailu.gtk.adw.AboutWindow;
 import ch.bailu.gtk.adw.Application;
-import ch.bailu.gtk.adw.ApplicationWindow;
-import ch.bailu.gtk.adw.ColorScheme;
-import ch.bailu.gtk.adw.HeaderBar;
-import ch.bailu.gtk.adw.StyleManager;
-import ch.bailu.gtk.adw.WindowTitle;
 import ch.bailu.gtk.gio.ApplicationFlags;
-import ch.bailu.gtk.gtk.Align;
-import ch.bailu.gtk.gtk.Box;
-import ch.bailu.gtk.gtk.Label;
-import ch.bailu.gtk.gtk.ListBox;
-import ch.bailu.gtk.gtk.Orientation;
-import ch.bailu.gtk.gtk.Switch;
+import ch.bailu.gtk.gio.Resource;
+import ch.bailu.gtk.gtk.License;
+import ch.bailu.gtk.gtk.Window;
+import ch.bailu.gtk.lib.handler.action.ActionHandler;
+import ch.bailu.gtk.lib.util.JavaResource;
+import ch.bailu.gtk.type.Bytes;
 import ch.bailu.gtk.type.Strs;
+import ch.bailu.gtk.type.exception.AllocationError;
 
 /**
- *
- * 1:1 port (Rust to Java) of libadwaita-demo
- * <a href="https://github.com/Northshore-Hero/libadwaita-demo">GitHub: libadwaita-demo</a>
- * <a href="https://github.com/Northshore-Hero/libadwaita-demo/blob/main/src/main.rs">GitHub: main.rs</a>
+ * Almost complete port of the official demo from C to Java
+ * https://gitlab.gnome.org/GNOME/libadwaita/-/blob/main/demo
  *
  */
 public class AdwaitaDemo {
-    public static void main(String[] args) {
-        var app = new Application("com.Libadwaita-Example", ApplicationFlags.FLAGS_NONE);
+    private static Strs developers = new Strs(new String[] {
+                "Adrien Plazas",
+                "Alexander Mikhaylenko",
+                "Andrei Lișiță",
+                "Guido Günther",
+                "Jamie Murphy",
+                "Julian Sparber",
+                "Lukas Bai",
+                "Manuel Genovés",
+                "Zander Brown",
+                null
+    });
 
-        app.onStartup(() -> StyleManager.getDefault().setColorScheme(ColorScheme.PREFER_DARK));
-        app.onActivate(() -> buildUI(app));
+    private static Strs designers = new Strs(new String[] {
+            "GNOME Design Team",
+            null
+    });
+
+    public static void main(String[] args) {
+        loadAndRegisterGResource("/adw_demo/adwaita-demo.gresources.gresource");
+
+        final var app = new Application("org.gnome.Adwaita1.Demo", ApplicationFlags.NON_UNIQUE);
+
+        ActionHandler.get(app, "about").onActivate(() -> showAbout(app));
+        ActionHandler.get(app, "preferences").onActivate(() -> showPreferences(app));
+        ActionHandler.get(app, "inspector").onActivate(AdwaitaDemo::showInspector);
+
+        app.onActivate(() -> {
+            var window = new AdwDemoWindow(app);
+            window.present();
+        });
         app.run(args.length, new Strs(args));
         app.unref();
     }
 
-    public static void buildUI(Application app) {
-        var row = new ActionRow();
-        row.setTitle("Click me");
-        row.setActivatable(true);
-        row.setSelectable(false);
-        row.onActivated(() -> System.out.println("Clicked!"));
+    private static void loadAndRegisterGResource(String path) {
+        // TODO wouldn't it be nice if resource could be loaded directly from java resources instead of .gresource?
+        try (var stream = (new JavaResource(path).asStream())) {
+            var bytes = new Bytes(stream.readAllBytes());
+            var resource = Resource.newFromDataResource(ch.bailu.gtk.glib.Bytes.newStaticBytes(bytes, bytes.getLength()));
+            resource.register();
+        } catch (IOException | AllocationError e) {
+            System.err.println("Load gresource failed for '"  + path + "'");
+        }
+    }
 
-        var row2 = new ActionRow();
-        row2.setTitle("Enable Dark Mode");
-        row2.setSubtitle("This row shows a switch");
+    private static void showAbout(Application app) {
+        final var about = new AboutWindow();
+        about.setTransientFor(app.getActiveWindow());
+        about.setApplicationIcon("org.gnome.Adwaita1.Demo");
+        about.setApplicationName("Adwaita Demo");
+        about.setDeveloperName("The GNOME Project");
+        about.setVersion("Java-GTK");
+        about.setWebsite("https://gitlab.gnome.org/GNOME/libadwaita");
+        about.setCopyright("© 2017–2022 Purism SPC");
+        about.setLicenseType(License.LGPL_2_1);
+        about.setDevelopers(developers);
+        about.setDesigners(designers);
+        about.setArtists(designers);
+        about.addLink("Documentation",  "https://gnome.pages.gitlab.gnome.org/libadwaita/doc/main/");
+        about.present();
+    }
 
-        var status = StyleManager.getDefault().getDark();
+    private static void showPreferences(Application app) {
+        var preferences = new AdwDemoPreferencesWindow();
+        preferences.setTransientFor(app.getActiveWindow());
+        preferences.present();
+    }
 
-        var myswitch = new Switch();
-        myswitch.setValign(Align.CENTER);
-        myswitch.setState(status);
-
-        myswitch.onStateSet((boolean preferDark) -> {
-           if (preferDark) {
-               StyleManager.getDefault().setColorScheme(ColorScheme.PREFER_DARK);
-           } else {
-               StyleManager.getDefault().setColorScheme(ColorScheme.PREFER_LIGHT);
-           }
-           return false;
-        });
-
-        row2.addSuffix(myswitch);
-
-        var list = new ListBox();
-        list.setMarginTop(32);
-        list.setMarginEnd(32);
-        list.setMarginBottom(32);
-        list.setMarginStart(32);
-        list.addCssClass("boxed-list");
-
-        list.append(row);
-        list.append(row2);
-
-        var mylabel = new Label("Capitalize String");
-        mylabel.setMarginEnd(32);
-        mylabel.setMarginTop(32);
-        mylabel.setMarginStart(32);
-        list.addCssClass("accent");
-
-        // Combine the content in a box
-        var content = new Box(Orientation.VERTICAL, 0);
-
-        // Adwaitas' ApplicationWindow does not include a HeaderBar
-        var headerBar = new HeaderBar();
-        headerBar.setTitleWidget(new WindowTitle("First App", ""));
-        content.append(headerBar);
-        content.append(mylabel);
-        content.append(list);
-
-        var window = new ApplicationWindow(app);
-        window.setDefaultSize(400, 400);
-        window.setContent(content);
-        window.present();
+    private static void showInspector() {
+        Window.setInteractiveDebugging(true);
     }
 }

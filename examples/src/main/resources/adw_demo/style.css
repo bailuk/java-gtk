@@ -1,0 +1,82 @@
+stacksidebar {
+  border-left-width: 0px;
+  border-right-width: 0px;
+}
+
+/* Mimic the status page. */
+.avatar-page,
+.timed-animation-page {
+  margin: 36px 12px;
+}
+
+.avatar-page > box > label.title,
+.timed-animation-page > box > label.title {
+  margin-bottom: 12px;
+}
+
+.avatar-page > box > label.description {
+  margin-bottom: 36px;
+}
+
+flowbox.inline flowboxchild {
+  padding: 0;
+  background: none;
+  color: inherit;
+}
+
+#custom-button-1 {
+  color: @red_3;
+}
+
+#custom-button-2 {
+  color: @purple_3;
+}
+
+#custom-button-3 {
+  color: white;
+  background-color: @green_5;
+}
+
+#custom-button-4 {
+  color: white;
+  background-color: @orange_4;
+}
+
+#animation-sample {
+  min-width: 30px;
+  min-height: 30px;
+  border-radius: 24px;
+  background: linear-gradient(to bottom, @green_2, @green_5);
+}
+
+.tab-page-color-1 {
+  background: shade(@blue_1, 1.2);
+}
+
+.tab-page-color-2 {
+  background: shade(@green_1, 1.2);
+}
+
+.tab-page-color-3 {
+  background: shade(@yellow_1, 1.2);
+}
+
+.tab-page-color-4 {
+  background: shade(@orange_1, 1.2);
+}
+
+.tab-page-color-5 {
+  background: shade(@red_1, 1.4);
+}
+
+.tab-page-color-6 {
+  background: shade(@purple_1, 1.3);
+}
+
+.tab-page-color-7 {
+  background: shade(@brown_1, 1.3);
+}
+
+.tab-page-color-8 {
+  background: white;
+}

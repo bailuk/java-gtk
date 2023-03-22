@@ -1,0 +1,39 @@
+#custom-button-1 {
+  color: @red_1;
+}
+
+#custom-button-2 {
+  color: @purple_1;
+}
+
+.tab-page-color-1 {
+  background: shade(@blue_5, 0.7);
+}
+
+.tab-page-color-2 {
+  background: shade(@green_5, 0.6);
+}
+
+.tab-page-color-3 {
+  background: shade(@yellow_5, 0.5);
+}
+
+.tab-page-color-4 {
+  background: shade(@orange_5, 0.6);
+}
+
+.tab-page-color-5 {
+  background: shade(@red_5, 0.7);
+}
+
+.tab-page-color-6 {
+  background: shade(@purple_5, 0.7);
+}
+
+.tab-page-color-7 {
+  background: shade(@brown_5, 0.7);
+}
+
+.tab-page-color-8 {
+  background: #363636;
+}

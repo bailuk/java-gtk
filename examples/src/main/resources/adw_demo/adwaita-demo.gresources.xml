@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+    <gresource prefix="/org/gnome/Adwaita1/Demo">
+        <file preprocess="xml-stripblanks" alias="icons/scalable/apps/org.gnome.Adwaita1.Demo.svg">data/org.gnome.Adwaita1.Demo.svg</file>
+        <file preprocess="xml-stripblanks" alias="icons/symbolic/apps/org.gnome.Adwaita1.Demo-symbolic.svg">data/org.gnome.Adwaita1.Demo-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/avatar-delete-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/avatar-save-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/clock-alarm-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/clock-stopwatch-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/clock-timer-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/clock-world-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/gesture-touchpad-swipe-back-symbolic-rtl.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/gesture-touchpad-swipe-back-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/gesture-touchscreen-swipe-back-symbolic-rtl.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/gesture-touchscreen-swipe-back-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/preferences-window-layout-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/preferences-window-search-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/row-copy-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/row-forbidden-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/row-preferences-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/row-shutdown-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/style-classes-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/tab-new-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/view-sidebar-start-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/view-sidebar-start-symbolic-rtl.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/view-sidebar-end-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/view-sidebar-end-symbolic-rtl.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/widget-about-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/widget-banner-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/widget-carousel-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/widget-clamp-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/widget-dialog-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/widget-flap-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/widget-leaflet-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/widget-list-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/widget-tab-view-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/widget-toast-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/actions/widget-view-switcher-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/apps/org.gnome.Boxes.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/apps/org.example.Typeset.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/status/dark-mode-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/status/light-mode-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/status/tab-audio-playing-symbolic.svg</file>
+        <file preprocess="xml-stripblanks">icons/scalable/status/tab-audio-muted-symbolic.svg</file>
+        <file compressed="true">style.css</file>
+        <file compressed="true">style-dark.css</file>
+    </gresource>
+</gresources>
