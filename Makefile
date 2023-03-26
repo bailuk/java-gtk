@@ -98,8 +98,8 @@ jdoc: $(gen_source_marker)
 	./gradlew -q java-gtk:javadocJar
 
 jdoc-install: $(jdoc) javadoc
-	rm -rf javadoc/*
-	unzip -q java-gtk/build/libs/java-gtk-$(VERSION)-javadoc.jar -d javadoc
+	if [ -d javadoc/$(VERSION) ]; then rm -r javadoc/$(VERSION); fi
+	unzip -q java-gtk/build/libs/java-gtk-javadoc.jar -d javadoc/$(VERSION)
 
 javadoc:
 	mkdir javadoc
