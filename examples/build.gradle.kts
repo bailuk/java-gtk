@@ -13,4 +13,3 @@ application {
     val example = "examples.App"
     mainClass.set(example)
 }
-

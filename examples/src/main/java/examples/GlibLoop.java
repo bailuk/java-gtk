@@ -8,6 +8,11 @@ public class GlibLoop {
     private final MainLoop loop;
     static int timers = 0;
 
+    public static void main(String[] args) {
+        new GlibLoop();
+    }
+
+
     public GlibLoop() {
         loop = new MainLoop(Glib.mainContextDefault(), false);
         new Timer("Timer one", 777);

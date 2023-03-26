@@ -2,12 +2,12 @@ package examples;
 
 import java.io.File;
 
-import ch.bailu.gtk.gtk.HeaderBar;
 import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.gtk.Application;
 import ch.bailu.gtk.gtk.ApplicationWindow;
 import ch.bailu.gtk.gtk.Box;
 import ch.bailu.gtk.gtk.Button;
+import ch.bailu.gtk.gtk.HeaderBar;
 import ch.bailu.gtk.gtk.Label;
 import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.ScrolledWindow;
@@ -18,18 +18,17 @@ import ch.bailu.gtk.lib.handler.SignalHandler;
 import ch.bailu.gtk.lib.handler.action.ActionHandler;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
-import examples.gtk4_demo.AppLauncher;
 import examples.gtk4_demo.Accordion;
+import examples.gtk4_demo.AppLauncher;
 import examples.gtk4_demo.HeaderBarSample;
 import examples.gtk4_demo.HelloWorldBoxed;
 import examples.gtk4_demo.LinksSample;
 import examples.gtk4_demo.PangoTextMask;
 import examples.gtk4_demo.Picker;
 import examples.gtk4_demo.Pixbufs;
-import examples.gtk4_tutorial.UiBuilderExample;
 import examples.gtk4_tutorial.CustomDrawing;
 import examples.gtk4_tutorial.ExampleApplication;
-import examples.test.MultiThreadingCallbacks;
+import examples.gtk4_tutorial.UiBuilderExample;
 
 public class App {
 
@@ -74,7 +73,6 @@ public class App {
             addSample(demoList, window, new HugeList(app));
             addSample(demoList, window, new ExampleApplication(app));
             addSample(demoList, window, new GlibSettings());
-            addSample(demoList, window, new MultiThreadingCallbacks());
             addSample(demoList, window, new Accordion());
 
             window.show();
