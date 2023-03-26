@@ -28,7 +28,7 @@ object Configuration  {
                 NamespaceConfig("Gio-2.0.gir",        "gio-2.0",        GtkDocUrl(DOCS_GTK_ORG, "gio")),
                 NamespaceConfig("Gdk-4.0.gir",        "gtk-4",          GtkDocUrl(DOCS_GTK_ORG, "gdk4")),
                 NamespaceConfig("Gsk-4.0.gir",        "gtk-4",          GtkDocUrl(DOCS_GTK_ORG, "gsk4")),
-                NamespaceConfig("Graphene-1.0.gir",   "graphene-1.0",   GtkDocUrl(DOCS_GTK_ORG, "graphene")),
+                NamespaceConfig("Graphene-1.0.gir",   "graphene-1.0",   StaticUrl("https://ebassi.github.io/graphene/docs/")),
                 NamespaceConfig("PangoCairo-1.0.gir", "pangocairo-1.0", GtkDocUrl(DOCS_GTK_ORG, "PangoCairo")),
                 NamespaceConfig("cairo-custom.gir",   "cairo",          StaticUrl("https://www.cairographics.org/manual/")),
                 NamespaceConfig("GLib-2.0.gir",       "glib-2.0",       GtkDocUrl(DOCS_GTK_ORG, "glib")),

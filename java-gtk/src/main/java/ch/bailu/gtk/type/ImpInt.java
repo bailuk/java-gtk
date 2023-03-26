@@ -2,7 +2,7 @@ package ch.bailu.gtk.type;
 
 import ch.bailu.gtk.lib.jna.CLib;
 
-public class ImpInt {
+class ImpInt {
 
     public static long createInt(int value) {
         long result = CLib.INST().malloc(Integer.BYTES);

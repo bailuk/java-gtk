@@ -2,7 +2,7 @@ package ch.bailu.gtk.type;
 
 import ch.bailu.gtk.lib.jna.CLib;
 
-public class ImpFlt {
+class ImpFlt {
     public static void setAt(long cPointer, int index, float value) {
         Pointer.toJnaPointer(cPointer).setFloat((long) index * Float.BYTES, value);
     }

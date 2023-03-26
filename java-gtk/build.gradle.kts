@@ -79,7 +79,7 @@ tasks.javadoc {
         https://docs.gradle.org/current/javadoc/org/gradle/external/javadoc/StandardJavadocDocletOptions.html
     */
     options.windowTitle("java-gtk")
-    options.overview("java-gtk")
+    options.overview("../doc/overview.html")
     (options as StandardJavadocDocletOptions).addStringOption("Xdoclint:none", "-quiet")
     (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
 }

@@ -2,7 +2,7 @@ package ch.bailu.gtk.type;
 
 import ch.bailu.gtk.lib.jna.CLib;
 
-public class ImpBytes {
+class ImpBytes {
     public static long createBytes(byte[] bytes) {
         long result = CLib.INST().malloc(bytes.length);
 

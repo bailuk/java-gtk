@@ -2,7 +2,7 @@ package ch.bailu.gtk.type;
 
 import ch.bailu.gtk.lib.jna.CLib;
 
-public class ImpDbl {
+class ImpDbl {
 
     public static long createDoubleArray(double[] doubles) {
         long result = CLib.INST().malloc((long) doubles.length * Double.BYTES);
