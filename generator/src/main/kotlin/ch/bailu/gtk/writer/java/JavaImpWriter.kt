@@ -152,7 +152,7 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
 
             static Instance INST() {
                 if (INSTANCE == null) {
-                    INSTANCE = ch.bailu.gtk.lib.jna.Loader.load("${namespaceModel.namespaceConfig.library}", Instance.class);
+                    INSTANCE = ch.bailu.gtk.lib.jna.Loader.load("${namespaceModel.library}", Instance.class);
                 }
                 return INSTANCE;
             }

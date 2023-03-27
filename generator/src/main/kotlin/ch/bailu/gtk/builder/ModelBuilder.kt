@@ -9,6 +9,7 @@ import ch.bailu.gtk.parser.tag.*
 import ch.bailu.gtk.writer.*
 import ch.bailu.gtk.writer.java.JavaApiWriter
 import ch.bailu.gtk.writer.java.JavaImpWriter
+import ch.bailu.gtk.writer.java.PackageWriter
 import java.io.IOException
 
 class ModelBuilder(val directories: Directories) : BuilderInterface {
@@ -26,26 +27,36 @@ class ModelBuilder(val directories: Directories) : BuilderInterface {
         }
     }
 
-
     override fun buildNamespaceStart(namespace: NamespaceTag, namespaceConfig: NamespaceConfig) {
         this.namespace = NamespaceModel(namespace, namespaceConfig)
     }
 
     @Throws(IOException::class)
     override fun buildNamespaceEnd() {
-        // functions
-        var model = StructureModel(namespace)
+        writeFunctions()
+        writeConstants()
+        writePackage()
+    }
+
+    private fun writeConstants() {
+        val model = StructureModel(this.namespace, namespace.constants)
+        writeJavaFile(model)
+
+    }
+
+    private fun writeFunctions() {
+        val model = StructureModel(namespace)
         writeJavaFile(model)
         if (model.hasNativeCalls()) {
             writeJavaJnaFile(model)
         }
-
-
-        // constants
-        model = StructureModel(this.namespace, namespace.constants)
-        writeJavaFile(model)
     }
 
+    private fun writePackage() {
+        directories.getPackageWriter(namespace).use {
+            PackageWriter(TextWriter(it), Configuration.createJavaDocConfig(it)).write(namespace)
+        }
+    }
 
     override fun buildAlias(aliasTag: AliasTag) {}
 

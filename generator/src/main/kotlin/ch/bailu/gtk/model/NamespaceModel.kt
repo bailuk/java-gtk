@@ -10,19 +10,29 @@ import ch.bailu.gtk.table.NamespaceTable
 
 class NamespaceModel(
     val namespace: String = "",
-    val namespaceConfig: NamespaceConfig = Configuration.NAMESPACES[0],
+    val library: String = "",
     val functions: List<MethodTag> = ArrayList(),
-    val constants: List<ParameterTag> = ArrayList()
+    val constants: List<ParameterTag> = ArrayList(),
+    val infoDocUrl: String = "",
+    val infoGirFile: String = "",
+    val infoNamespace: String = "",
+    val infoVersion: String = "",
+    val infoSharedLibrary: String = ""
 ) : Model() {
 
-    val includes: MutableList<String> = ArrayList()
 
     constructor(tag: NamespaceTag, config: NamespaceConfig) :
-            this(tag.getName().lowercase(), config, tag.getFunctions(), tag.getConstants()) {
-
-        for (i in tag.getIncludes()) {
-            includes.add(i.getName())
-        }
+            this(
+                namespace = tag.getName().lowercase(),
+                library = config.library,
+                functions = tag.getFunctions(),
+                constants = tag.getConstants(),
+                infoDocUrl = config.docUrl.getBaseUrl(),
+                infoVersion = tag.version,
+                infoNamespace = tag.getName(),
+                infoGirFile = config.girFile,
+                infoSharedLibrary = tag.sharedLibrary
+            ) {
         setSupported("unknown-namespace", NamespaceTable.contains(namespace))
     }
 

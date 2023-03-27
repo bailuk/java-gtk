@@ -46,6 +46,16 @@ class Directories(args: Array<String>) {
     }
 
     @Throws(IOException::class)
+    fun getPackageWriter(nameSpaceModel: NamespaceModel): Writer {
+        return BufferedWriter(FileWriter(getPackageFile(nameSpaceModel)))
+    }
+
+    private fun getPackageFile(nameSpaceModel: NamespaceModel): File {
+        val directory = File(javaBaseDir, nameSpaceModel.namespace)
+        return File(createDirectory(directory), "package-info.java")
+    }
+
+    @Throws(IOException::class)
     private fun getJavaFile(nameSpaceModel: NamespaceModel, className: String): File {
         val directory = File(javaBaseDir, nameSpaceModel.namespace)
         return File(createDirectory(directory), "$className.java")

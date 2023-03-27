@@ -13,7 +13,7 @@ class JavaDocPlain(writer: Writer): JavaDoc(writer) {
 
     override fun writeBlock(doc: String) {
         doc.lines().forEach {
-            writeLine(it, "")
+            writeLine(it)
         }
     }
 

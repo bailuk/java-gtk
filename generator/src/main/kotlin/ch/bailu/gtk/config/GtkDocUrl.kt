@@ -15,6 +15,10 @@ class GtkDocUrl(private val baseUrl: String, private val section: String): DocUr
         }
     }
 
+    override fun getBaseUrl(): String {
+        return baseUrl
+    }
+
     private fun getType(structureType: StructureType): String {
         return when {
             structureType.compare(StructureType.Types.RECORD) -> {

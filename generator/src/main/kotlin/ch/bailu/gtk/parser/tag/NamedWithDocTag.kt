@@ -2,11 +2,11 @@ package ch.bailu.gtk.parser.tag
 
 open class NamedWithDocTag(parent: TagWithParent) : TagWithParent(parent){
     private var name: String = ""
-    private val doc =  DocTag(this)
+    private val docTag =  DocTag(this)
 
     override fun getChild(name: String): TagWithParent {
         if ("doc" == name) {
-            return doc
+            return docTag
         }
         return ignore()
     }
@@ -22,6 +22,6 @@ open class NamedWithDocTag(parent: TagWithParent) : TagWithParent(parent){
     }
 
     fun getDoc(): String {
-        return doc.getText()
+        return docTag.getText()
     }
 }
