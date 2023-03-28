@@ -55,6 +55,22 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         out.end(0)
     }
 
+    override fun writeImplements(implementsModel: ImplementsModel) {
+        Validator.validateNotEmpty(implementsModel.apiTypeName)
+        Validator.validateNotEmpty(implementsModel.name)
+        Validator.validateSupported(implementsModel)
+
+        val type = implementsModel.apiTypeName
+        val name = implementsModel.name
+
+        out.start(1)
+        javaDoc.writeImplements(implementsModel)
+        out.a("    public $type as${name}() {\n")
+        out.a("        return new ${type}(cast());\n")
+        out.a("    }\n")
+        out.end(1)
+    }
+
     override fun writeMethod(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(1)
         javaDoc.writeMethod(structureModel, methodModel)
@@ -139,10 +155,6 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
             out.a("""
                 public ${structureModel.apiName}() {
                     super(toCPointer(${structureModel.jnaName}.allocateStructure()));
-                }
-                
-                public void destroy() {
-                     ch.bailu.gtk.lib.jna.CLib.INST().free(getCPointer());
                 }
             """, 4)
             out.end(1)

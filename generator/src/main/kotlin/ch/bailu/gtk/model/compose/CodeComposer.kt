@@ -27,7 +27,7 @@ abstract class CodeComposer {
         writeEnd(writer, models)
     }
 
-    fun writeStart(writer: CodeWriter, structureModel: StructureModel) {
+    private fun writeStart(writer: CodeWriter, structureModel: StructureModel) {
         writer.writeStart(structureModel, structureModel.nameSpaceModel)
     }
 

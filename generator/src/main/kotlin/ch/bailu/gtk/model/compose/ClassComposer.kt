@@ -34,6 +34,7 @@ class ClassComposer : CodeComposer() {
         models.methods.forEach          { writer.writeMethod(structureModel, it) }
         models.signals.forEach          { writer.writeSignal(structureModel, it) }
         models.functions.forEach        { writer.writeFunction(structureModel, it) }
+        models.implements.forEach       { writer.writeImplements(it)}
         if (structureModel.hasGetTypeFunction) {
             writer.writeGetTypeFunction(structureModel)
         }

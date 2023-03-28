@@ -24,6 +24,8 @@ interface CodeWriter  {
     fun writeFunction(structureModel : StructureModel, methodModel : MethodModel)
     fun writeUnsupported(model : Model)
 
+    fun writeImplements(implementsModel: ImplementsModel)
+
     fun writeMallocConstructor(structureModel : StructureModel)
     fun writeCallback(structureModel: StructureModel, methodModel: MethodModel, isSignal: Boolean = false)
 

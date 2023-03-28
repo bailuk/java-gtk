@@ -1,5 +1,6 @@
 package ch.bailu.gtk.model.list
 
+import ch.bailu.gtk.model.ImplementsModel
 import ch.bailu.gtk.model.MethodModel
 import ch.bailu.gtk.model.Model
 import ch.bailu.gtk.model.ParameterModel
@@ -17,7 +18,7 @@ class ModelLists {
     val functions = ModelList<MethodModel>(unsupported)
     val fields = ModelList<ParameterModel>(unsupported)
     val constants = ModelList<ParameterModel>(unsupported)
-
+    val implements = ModelList<ImplementsModel>(unsupported)
 
     fun addIfSupportedWithCallbacks(models: ModelList<MethodModel>, methodModel: MethodModel) {
         models.addIfSupported(methodModel)

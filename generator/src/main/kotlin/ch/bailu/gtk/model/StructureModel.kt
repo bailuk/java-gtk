@@ -73,6 +73,10 @@ class StructureModel : Model {
             models.addIfSupportedWithCallbacks(models.functions, filter(MethodModel(nameSpace.namespace, nameSpace.namespace, it, preferNative = false)))
         }
 
+        structure.implements.forEach {
+            models.implements.addIfSupported(ImplementsModel(nameSpace.namespace, it))
+        }
+
         setSupported("name-is-empty", apiName != "")
     }
 

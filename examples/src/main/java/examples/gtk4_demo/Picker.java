@@ -68,7 +68,7 @@ public class Picker implements DemoInterface {
         table.attach(fontPicker,1,1,1,1);
 
         fontPicker = new FontButton();
-        var fontChooser = new FontChooser(fontPicker.cast());
+        var fontChooser = fontPicker.asFontChooser();
         fontChooser.setLevel(FontChooserLevel.FAMILY | FontChooserLevel.SIZE);
 
         fontChooser.setFilterFunc((cb, family, face, data) -> {

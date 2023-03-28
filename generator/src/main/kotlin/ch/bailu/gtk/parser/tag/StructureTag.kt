@@ -16,7 +16,7 @@ class StructureTag(parent: TagWithParent, val structureType: String): NamedWithD
     var getType = ""
         private set
 
-    private val implementsList = TagList<NamedWithDocTag>()
+    val implements = TagList<NamedWithDocTag>()
     val constructors = TagList<MethodTag>()
     val functions = TagList<MethodTag>()
 
@@ -32,7 +32,7 @@ class StructureTag(parent: TagWithParent, val structureType: String): NamedWithD
             return fields.addTag(ParameterTag(this))
         }
         if ("implements" == name) {
-            return implementsList.addTag(NamedWithDocTag(this))
+            return implements.addTag(NamedWithDocTag(this))
         }
         if ("constructor" == name) {
             return constructors.addTag(MethodTag(this))
@@ -60,7 +60,6 @@ class StructureTag(parent: TagWithParent, val structureType: String): NamedWithD
             getBuilder().buildStructure(this)
         }
     }
-
 
     override fun setAttribute(name: String, value: String) {
         if ("parent" == name) {

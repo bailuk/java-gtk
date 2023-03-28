@@ -86,7 +86,11 @@ class ClassType {
     }
 
 
-    fun getApiTypeName(namespace: String): String {
+    /**
+     * Return API type name relative to namespace
+     * example "Widget" or "ch.bailu.java-gtk.gtk.Widget"
+     */
+    fun getApiTypeName(namespace: String = ""): String {
         return if (isClass() && !type.isCurrentNameSpace(namespace)) {
             Names.getJavaClassNameWithNamespacePrefix(this.namespace, this.name)
         } else name

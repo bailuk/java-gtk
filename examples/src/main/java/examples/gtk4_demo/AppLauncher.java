@@ -110,6 +110,6 @@ public class AppLauncher implements DemoInterface {
         for (; apps.isNotNull(); apps = apps.getFieldNext()) {
             store.append(apps.getFieldData());
         }
-        return new ListModel(store.cast());
+        return store.asListModel();
     }
 }

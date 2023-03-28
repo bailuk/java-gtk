@@ -63,8 +63,6 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
 
 
     override fun writeSignal(structureModel: StructureModel, methodModel: MethodModel) {
-        doc.writeStart(4)
-
         val block = """
             Connect to signal "${methodModel.name}".
             <br>See {@link ${Names.getJavaCallbackInterfaceName(methodModel.name)}#${Names.getJavaCallbackMethodName(methodModel.name)}} for signal description.
@@ -74,6 +72,7 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
             @return {@link ch.bailu.gtk.lib.handler.SignalHandler}. Can be used to disconnect signal and to release callback function.
         """.trimIndent()
 
+        doc.writeStart(4)
         doc.writeBlockPlain(block)
         doc.writeDocEnd()
     }
@@ -98,6 +97,20 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
     }
 
     override fun writeUnsupported(model: Model) {}
+    override fun writeImplements(implementsModel: ImplementsModel) {
+
+        val name = implementsModel.apiTypeName
+
+        val block = """
+            Implements interface {@link $name}. Call this to get access to interface functions.
+            @return {@link $name}
+        """.trimIndent()
+
+        doc.writeStart(4)
+        doc.writeBlockPlain(block)
+        doc.writeDocEnd()
+    }
+
     override fun writeEnd() {}
     override fun writeGetTypeFunction(structureModel: StructureModel) {}
     override fun writeMallocConstructor(structureModel: StructureModel) {}

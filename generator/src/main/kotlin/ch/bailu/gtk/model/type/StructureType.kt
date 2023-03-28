@@ -21,6 +21,9 @@ class StructureType(value: String) {
                 isCallback -> {
                     Configuration.BASE_NAME_SPACE_DOT + "type.Callback"
                 }
+                isInterface -> {
+                    Configuration.BASE_NAME_SPACE_DOT + "type.Interface"
+                }
                 else -> {
                     Configuration.BASE_NAME_SPACE_DOT + "type.Pointer"
                 }
@@ -41,6 +44,8 @@ class StructureType(value: String) {
     val isRecord: Boolean
         get() = compare(Types.RECORD) || compare(Types.UNION)
 
+    val isInterface: Boolean
+        get() = compare(Types.INTERFACE)
 
     fun compare(type: Types): Boolean {
         return value == type.toString()

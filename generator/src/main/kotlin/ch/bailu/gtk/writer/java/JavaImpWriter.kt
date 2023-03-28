@@ -171,4 +171,5 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
     override fun writeConstructor(structureModel: StructureModel, methodModel: MethodModel) {}
     override fun writeFactory(structureModel: StructureModel, methodModel: MethodModel) {}
     override fun writeUnsupported(model: Model) {}
+    override fun writeImplements(implementsModel: ImplementsModel) {}
 }
