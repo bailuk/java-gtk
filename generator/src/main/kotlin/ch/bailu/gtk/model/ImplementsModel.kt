@@ -10,7 +10,7 @@ import ch.bailu.gtk.parser.tag.NamedWithDocTag
  */
 class ImplementsModel(private val currentNamespace: String, private val tag: NamedWithDocTag): Model() {
     private val classType: ClassType =
-        ClassType(currentNamespace, tag.getName(), tag.getName(), true)
+        ClassType(currentNamespace, tag.getName(), tag.getName(), supportsDirectType = true)
 
     /**
      * API Type name including namespace if not current namespace

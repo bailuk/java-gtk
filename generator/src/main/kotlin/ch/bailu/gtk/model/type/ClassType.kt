@@ -15,13 +15,18 @@ class ClassType {
     private var type: NamespaceType
 
     // Non-pointer access needed to access records inside records as fields
-    private var directType = false
+    val directType : Boolean
 
     private var valid = false
     private var wrapper = false
 
-    private var callbackTag: CallbackTag? = null
+    val namespace: String
+        get() = type.namespace
 
+    val name : String
+        get() =  type.name
+
+    private var callbackTag: CallbackTag? = null
 
     constructor(namespace: String, parameter: ParameterTag, supportsDirectType: Boolean) : this(namespace,
                 parameter.getTypeName(),
@@ -58,7 +63,7 @@ class ClassType {
     }
 
     private fun isPointerSupported(ctype: CType, supportsDirectType: Boolean): Boolean {
-        return ctype.isSinglePointer || supportsDirectType && ctype.isDirectType
+        return ctype.isSinglePointer || (supportsDirectType && ctype.isDirectType)
     }
 
     private fun convert(namespace: String, typeName: String): NamespaceType {
@@ -99,17 +104,5 @@ class ClassType {
         return if (isClassOrCallback() && !type.isCurrentNameSpace(namespace)) {
             Names.getJavaClassNameWithNamespacePrefix(this.namespace, this.name)
         } else name
-
-    }
-
-    val namespace: String
-        get() = type.namespace
-
-    val name : String
-        get() =  type.name
-
-    fun isDirectType(): Boolean {
-        Validator.giveUp("Direct Type failure", directType != (directType && isClassOrCallback()))
-        return isClassOrCallback() && directType
     }
 }

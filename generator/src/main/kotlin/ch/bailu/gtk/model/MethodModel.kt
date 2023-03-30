@@ -14,8 +14,7 @@ class MethodModel(namespace: String, parameterNamespace: String, method: MethodT
         namespace,
         method.getReturnValue(),
         preferNative = false,
-        isConstant = false,
-        supportsDirectAccess = false
+        isConstant = false
     )
 
     var hasNativeVariant = false
@@ -40,7 +39,6 @@ class MethodModel(namespace: String, parameterNamespace: String, method: MethodT
                 parameterNamespace, t,
                 preferNative = preferNative,
                 isConstant = false,
-                supportsDirectAccess = false
             )
             hasNativeVariant = hasNativeVariant || parameterModel.hasNativeVariant
             isNativeVariant = isNativeVariant || parameterModel.isNativeVariant

@@ -13,11 +13,10 @@ import ch.bailu.gtk.writer.Names
 class ParameterModel(namespace: String,
                      private val parameterTag: ParameterTag,
                      isConstant: Boolean,
-                     supportsDirectAccess: Boolean,
                      preferNative: Boolean) : Model() {
 
     private val cType: CType
-    private val classType: ClassType = ClassType(namespace, parameterTag, supportsDirectAccess)
+    private val classType: ClassType = ClassType(namespace, parameterTag, supportsDirectType = false)
     private val jType: JavaType
     val hasNativeVariant: Boolean
     val isNativeVariant: Boolean
