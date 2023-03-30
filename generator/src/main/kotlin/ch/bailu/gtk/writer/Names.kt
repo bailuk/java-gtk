@@ -1,6 +1,7 @@
 package ch.bailu.gtk.writer
 
 import ch.bailu.gtk.Configuration
+import ch.bailu.gtk.converter.NamespaceType
 import ch.bailu.gtk.table.ReservedTokenTable.convert
 
 object Names {
@@ -148,6 +149,16 @@ object Names {
      */
     fun getSignalNameConstantName(name: String): String {
         return "SIGNAL_ON_${name.uppercase().replace('-', '_')}"
+    }
+
+    /**
+     * Return API type name relative to namespace
+     * example "Widget" or "ch.bailu.java-gtk.gtk.Widget"
+     */
+    fun getApiTypeName(type: NamespaceType, namespace: String = ""): String {
+        return if (!type.isCurrentNameSpace(namespace)) {
+            getJavaClassNameWithNamespacePrefix(type.namespace, type.name)
+        } else type.name
     }
 
 

@@ -10,7 +10,7 @@ object EnumTable: Logable {
     private val table: MutableMap<String, MutableMap<String, String>> = HashMap()
 
     fun add(type: NamespaceType) {
-        if (type.isValid()) {
+        if (type.valid) {
             getTable(type.namespace)[type.name] = type.name
         }
     }
@@ -25,7 +25,7 @@ object EnumTable: Logable {
     }
 
     operator fun contains(type: NamespaceType): Boolean {
-        return type.isValid() && getTable(type.namespace).containsKey(type.name)
+        return type.valid && getTable(type.namespace).containsKey(type.name)
     }
 
     fun isEnum(namespace: String, parameter: ParameterTag): Boolean {

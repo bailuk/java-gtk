@@ -39,4 +39,11 @@ object StructureTable : Logable {
 
         }
     }
+
+    /**
+     * To clean up after unit test
+     */
+    fun clear() {
+        table.clear()
+    }
 }

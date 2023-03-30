@@ -1,24 +1,26 @@
 package ch.bailu.gtk.model.type
 
 import ch.bailu.gtk.converter.NamespaceType
-import ch.bailu.gtk.parser.tag.CallbackTag
 import ch.bailu.gtk.parser.tag.ParameterTag
 import ch.bailu.gtk.table.AliasTable
-import ch.bailu.gtk.table.CallbackTable
 import ch.bailu.gtk.table.EnumTable
 import ch.bailu.gtk.table.StructureTable.contains
 import ch.bailu.gtk.table.WrapperTable
-import ch.bailu.gtk.validator.Validator
 import ch.bailu.gtk.writer.Names
 
 class ClassType {
     private var type: NamespaceType
 
-    // Non-pointer access needed to access records inside records as fields
+    /**
+     * Non-pointer access needed to access records inside records as fields
+     * direct as opposite to reference
+     */
     val directType : Boolean
+    val referenceType: Boolean
+        get() = !directType
 
-    private var valid = false
-    private var wrapper = false
+    val valid: Boolean
+    val wrapper: Boolean
 
     val namespace: String
         get() = type.namespace
@@ -26,83 +28,48 @@ class ClassType {
     val name : String
         get() =  type.name
 
-    private var callbackTag: CallbackTag? = null
 
-    constructor(namespace: String, parameter: ParameterTag, supportsDirectType: Boolean) : this(namespace,
-                parameter.getTypeName(),
-                CType(parameter.getType()),
-                isOutEnum = !parameter.inDirection && EnumTable.isEnum(namespace, parameter),
-                supportsDirectType = supportsDirectType)
+    constructor(namespace: String, parameter: ParameterTag)
+            : this(namespace, parameter.getTypeName(), parameter.getType(),
+                isOutEnum = !parameter.inDirection && EnumTable.isEnum(namespace, parameter))
 
-    constructor(namespace: String, typeName: String, ctype: String, supportsDirectType: Boolean) : this(namespace, typeName, CType(ctype), false, supportsDirectType)
+    constructor(namespace: String, typeName: String, cTypeName: String, isOutEnum: Boolean = false) {
+        var classOrWrapperTypeName = typeName
+        val cType = CType(if (isOutEnum) "gint*" else cTypeName)
 
-    constructor(namespace: String, typeName: String, ctype: CType, isOutEnum: Boolean, supportsDirectType: Boolean) {
-        var t = typeName
-
-        if (WrapperTable.contains(ctype.type)) {
-            t = WrapperTable.convert(ctype.type)
-            wrapper = true
-
-        } else if (isOutEnum) {
-            t = WrapperTable.convert("gint*")
-            wrapper = true
+        wrapper = if (WrapperTable.contains(cType.type)) {
+            classOrWrapperTypeName = WrapperTable.convert(cType.type)
+            true
+        } else {
+            false
         }
 
-        type = convert(namespace, t)
-        callbackTag = getCallbackTagFromTable(type)
-        valid = wrapperOrCallback() || supportedClass(type, ctype, supportsDirectType)
-        directType = supportsDirectType && !wrapperOrCallback() && supportedClass(type, ctype, supportsDirectType) && ctype.isDirectType
+        type = convert(namespace, classOrWrapperTypeName)
+        valid = wrapper || supportedClass(type, cType)
+        directType = wrapper || (supportedClass(type, cType) && cType.isDirectType)
     }
 
-    private fun wrapperOrCallback(): Boolean {
-        return wrapper || isCallback()
+    private fun supportedClass(type: NamespaceType, ctype: CType): Boolean {
+        return (isInStructureTable(type) && isPointerSupported(ctype))
     }
 
-    private fun supportedClass(type: NamespaceType, ctype: CType, supportsDirectType: Boolean): Boolean {
-        return isInStructureTable(type) && isPointerSupported(ctype, supportsDirectType)
-    }
-
-    private fun isPointerSupported(ctype: CType, supportsDirectType: Boolean): Boolean {
-        return ctype.isSinglePointer || (supportsDirectType && ctype.isDirectType)
+    private fun isPointerSupported(ctype: CType): Boolean {
+        return ctype.isSinglePointer || ctype.isDirectType
     }
 
     private fun convert(namespace: String, typeName: String): NamespaceType {
         return AliasTable.convert(NamespaceType(namespace, typeName))
     }
 
-    fun getCallbackTag(): CallbackTag? {
-        return callbackTag
-    }
-
-    private fun getCallbackTagFromTable(n: NamespaceType): CallbackTag? {
-        return CallbackTable[n.namespace, n.name]
-    }
-
     private fun isInStructureTable(n: NamespaceType): Boolean {
         return contains(n.namespace, n.name)
     }
-
-
-    fun isClassOrCallback(): Boolean {
-        return valid
-    }
-
-    fun isClass(): Boolean {
-        return valid && !isCallback()
-    }
-
-    fun isCallback(): Boolean {
-        return callbackTag != null
-    }
-
 
     /**
      * Return API type name relative to namespace
      * example "Widget" or "ch.bailu.java-gtk.gtk.Widget"
      */
     fun getApiTypeName(namespace: String = ""): String {
-        return if (isClassOrCallback() && !type.isCurrentNameSpace(namespace)) {
-            Names.getJavaClassNameWithNamespacePrefix(this.namespace, this.name)
-        } else name
+        return Names.getApiTypeName(type, namespace)
     }
 }

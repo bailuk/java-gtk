@@ -87,7 +87,7 @@ class StructureModel : Model {
     private fun generateAndAddFieldModel(namespace: NamespaceModel, fieldTag: FieldTag) {
         val fieldModel = filterField(FieldModel(
             namespace.namespace,
-            fieldTag, supportsDirectAccess = filterFieldDirectAccess()
+            fieldTag
         ))
 
         fieldModel.setSupported("previous-field-unsupported", allFieldsAreSupported)
@@ -182,7 +182,6 @@ class StructureModel : Model {
                 ParameterModel(namespace.namespace, parameterTag,
                     isConstant = toUpper,
                     preferNative = true,
-                    supportsDirectAccess = false
                 )
             )
         }

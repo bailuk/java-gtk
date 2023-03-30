@@ -3,6 +3,7 @@ package ch.bailu.gtk.model
 import ch.bailu.gtk.log.DebugPrint
 import ch.bailu.gtk.model.filter.filterValues
 import ch.bailu.gtk.model.type.CType
+import ch.bailu.gtk.model.type.CallbackType
 import ch.bailu.gtk.model.type.ClassType
 import ch.bailu.gtk.model.type.JavaType
 import ch.bailu.gtk.validator.Validator
@@ -16,7 +17,8 @@ class ParameterModel(namespace: String,
                      preferNative: Boolean) : Model() {
 
     private val cType: CType
-    private val classType: ClassType = ClassType(namespace, parameterTag, supportsDirectType = false)
+    private val classType = ClassType(namespace, parameterTag)
+    private val callbackType = CallbackType(namespace, parameterTag.getTypeName())
     private val jType: JavaType
     val hasNativeVariant: Boolean
     val isNativeVariant: Boolean
@@ -30,7 +32,7 @@ class ParameterModel(namespace: String,
     val callbackModel: MethodModel?
 
     init {
-        if (!classType.isClassOrCallback() && EnumTable.isEnum(namespace, parameterTag)) {
+        if (!classType.valid && EnumTable.isEnum(namespace, parameterTag)) {
             this.cType = CType("int")
             this.jType = JavaType("int")
             hasNativeVariant = false
@@ -38,13 +40,13 @@ class ParameterModel(namespace: String,
         } else {
             val cType = CType(parameterTag.getType())
             val jType = JavaType(parameterTag.getType())
-            hasNativeVariant = classType.isClassOrCallback() && jType.isValid()
+            hasNativeVariant = classType.valid && jType.valid
 
             if (hasNativeVariant && preferNative) {
                 this.cType = cType
                 this.jType = jType
 
-            } else if (classType.isClassOrCallback()) {
+            } else if (classType.valid) {
                 this.cType = CType("void*")
                 this.jType = JavaType("long")
 
@@ -62,7 +64,8 @@ class ParameterModel(namespace: String,
         callbackModel = createCallbackModel(classType, namespace)
 
         setSupported("value-not-supported", filterValues(parameterTag.value))
-        setSupported("jType-not-supported", jType.isValid())
+        setSupported("java-type-not-supported", jType.valid || isCallback)
+        setSupported("direct-type", classType.referenceType || classType.wrapper || isCallback)
         setCallbackSupported()
     }
 
@@ -71,10 +74,9 @@ class ParameterModel(namespace: String,
             namespace
         }
 
-        if (classType.isCallback()) {
-            val callbackTag = classType.getCallbackTag()
-            if (callbackTag != null) {
-                return MethodModel(namespace, parameterNamespace, callbackTag, preferNative = false)
+        if (callbackType.valid) {
+            if (callbackType.callbackTag != null) {
+                return MethodModel(namespace, parameterNamespace, callbackType.callbackTag, preferNative = false)
             }
         }
         return null
@@ -100,7 +102,7 @@ class ParameterModel(namespace: String,
     fun getApiTypeName(namespace: String): String {
         return if (isCallback && callbackModel != null) {
             Names.getJavaCallbackInterfaceName(callbackModel.name)
-        } else if (classType.isClassOrCallback() && !isNativeVariant) {
+        } else if (classType.valid && !isNativeVariant) {
             classType.getApiTypeName(namespace)
         } else {
             jType.getApiTypeName()
@@ -113,13 +115,11 @@ class ParameterModel(namespace: String,
         }
 
     val isVoid: Boolean
-        get() {
-            return jType.isVoid()
-        }
+        get() = jType.isVoid()
 
     val isJavaNative: Boolean
         get() {
-            return !classType.isClassOrCallback() || isNativeVariant
+            return !classType.valid || isNativeVariant
         }
 
     private val gtkType: String
@@ -143,20 +143,14 @@ class ParameterModel(namespace: String,
     }
 
     val isCallback: Boolean
-        get() {
-            return classType.isCallback()
-        }
+        get() = callbackType.valid
 
     val value: String
-        get() {
-            return parameterTag.value
-        }
+        get() = parameterTag.value
 
     val doc: String
         get() = parameterTag.getDoc()
 
     val nullable: Boolean
-        get() {
-            return parameterTag.nullable
-        }
+        get() = parameterTag.nullable
 }

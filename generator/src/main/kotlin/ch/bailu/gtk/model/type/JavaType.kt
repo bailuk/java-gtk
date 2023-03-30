@@ -2,12 +2,15 @@ package ch.bailu.gtk.model.type
 
 import ch.bailu.gtk.table.PrimitivesTable
 
-class JavaType(t: String) {
-    private var type = PrimitivesTable.convert(t)
+/**
+ * A Primitive java type.
+ * Is valid if name is configured in [PrimitivesTable]
+ */
+class JavaType(typeName: String) {
+    private var type = PrimitivesTable.convert(typeName)
 
-    fun isValid(): Boolean {
-        return "" != type
-    }
+    val valid: Boolean
+        get () = type.isNotEmpty()
 
     fun getApiTypeName(): String {
         return type

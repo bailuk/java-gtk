@@ -10,7 +10,7 @@ import ch.bailu.gtk.parser.tag.NamedWithDocTag
  */
 class ImplementsModel(private val currentNamespace: String, private val tag: NamedWithDocTag): Model() {
     private val classType: ClassType =
-        ClassType(currentNamespace, tag.getName(), tag.getName(), supportsDirectType = true)
+        ClassType(currentNamespace, tag.getName(), tag.getName())
 
     /**
      * API Type name including namespace if not current namespace
@@ -25,7 +25,7 @@ class ImplementsModel(private val currentNamespace: String, private val tag: Nam
         get() = classType.name
 
     init {
-        setSupported("type-not-supported", classType.isClassOrCallback())
+        setSupported("type-not-supported", classType.valid)
     }
 
     override fun toString(): String {

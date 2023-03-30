@@ -13,6 +13,9 @@ class NamespaceType(fallbackNamespace: String, typeName: String) {
     val namespace: String
     val name: String
 
+    val valid: Boolean
+        get() = name.isNotEmpty()
+
     init {
         var m = NAMESPACE.matcher(typeName)
         if (m.find()) {
@@ -32,10 +35,6 @@ class NamespaceType(fallbackNamespace: String, typeName: String) {
 
     override fun hashCode(): Int {
         return Objects.hash(namespace, name)
-    }
-
-    fun isValid(): Boolean {
-        return "" != name
     }
 
     override fun toString(): String {
