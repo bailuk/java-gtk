@@ -66,7 +66,7 @@ object Names {
     private fun getJavaSignalName(prefix: String, name: String): String {
         val result = StringBuilder()
         result.append(prefix)
-        val names = name.split("-".toRegex()).toTypedArray()
+        val names = name.split("[\\-_]".toRegex()).toTypedArray()
         for (i in names.indices) {
             firstUpper(result, names[i])
         }

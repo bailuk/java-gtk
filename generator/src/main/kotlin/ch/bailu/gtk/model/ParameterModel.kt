@@ -28,11 +28,10 @@ class ParameterModel(namespace: String,
         Names.getJavaVariableName(parameterTag.getName())
     }
 
-    val isWriteable: Boolean
     val callbackModel: MethodModel?
 
     init {
-        if (!classType.isClass() && EnumTable.isEnum(namespace, parameterTag)) {
+        if (!classType.isClassOrCallback() && EnumTable.isEnum(namespace, parameterTag)) {
             this.cType = CType("int")
             this.jType = JavaType("int")
             hasNativeVariant = false
@@ -40,13 +39,13 @@ class ParameterModel(namespace: String,
         } else {
             val cType = CType(parameterTag.getType())
             val jType = JavaType(parameterTag.getType())
-            hasNativeVariant = classType.isClass() && jType.isValid()
+            hasNativeVariant = classType.isClassOrCallback() && jType.isValid()
 
             if (hasNativeVariant && preferNative) {
                 this.cType = cType
                 this.jType = jType
 
-            } else if (classType.isClass()) {
+            } else if (classType.isClassOrCallback()) {
                 this.cType = CType("void*")
                 this.jType = JavaType("long")
 
@@ -66,7 +65,6 @@ class ParameterModel(namespace: String,
         setSupported("value-not-supported", filterValues(parameterTag.value))
         setSupported("jType-not-supported", jType.isValid())
         setCallbackSupported()
-        isWriteable = parameterTag.isWriteable
     }
 
     private fun createCallbackModel(classType: ClassType, namespace: String): MethodModel? {
@@ -103,7 +101,7 @@ class ParameterModel(namespace: String,
     fun getApiTypeName(namespace: String): String {
         return if (isCallback && callbackModel != null) {
             Names.getJavaCallbackInterfaceName(callbackModel.name)
-        } else if (classType.isClass() && !isNativeVariant) {
+        } else if (classType.isClassOrCallback() && !isNativeVariant) {
             classType.getApiTypeName(namespace)
         } else {
             jType.getApiTypeName()
@@ -122,7 +120,7 @@ class ParameterModel(namespace: String,
 
     val isJavaNative: Boolean
         get() {
-            return !classType.isClass() || isNativeVariant
+            return !classType.isClassOrCallback() || isNativeVariant
         }
 
     private val gtkType: String
@@ -148,11 +146,6 @@ class ParameterModel(namespace: String,
     val isCallback: Boolean
         get() {
             return classType.isCallback()
-        }
-
-    val isDirectType: Boolean
-        get() {
-            return classType.isDirectType()
         }
 
     val value: String

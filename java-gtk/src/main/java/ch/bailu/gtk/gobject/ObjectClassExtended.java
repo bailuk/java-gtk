@@ -11,43 +11,23 @@ public class ObjectClassExtended extends ObjectClass {
     }
 
     public void onDispose(Object instance) {
-        GObjectLib.ObjectClass pClass = new GObjectLib.ObjectClass(getCPointer());
-        pClass.readField("dispose");
-        pClass.dispose.invoke(instance.getCPointer());
+        getFieldDispose().invoke(instance.getCPointer());
     }
 
-
-    @FunctionalInterface
-    public interface PropertyCallback extends com.sun.jna.Callback {
-        void invoke(long object, int property_id, long value, long pspec);
-    }
-    @FunctionalInterface
-    public interface DisposeCallback extends com.sun.jna.Callback {
-        void invoke(long pointer);
+    public void overrideDispose(OnDispose dispose) {
+        setFieldDispose(dispose);
     }
 
-    public void overrideDispose(DisposeCallback callback) {
-        var objectClassInstance = new GObjectLib.ObjectClass(getCPointer());
-        objectClassInstance.dispose = callback;
-        objectClassInstance.writeField("dispose");
+    public void overrideFinalize(OnFinalize finalize) {
+        setFieldFinalize(finalize);
     }
 
-    public void overrideFinalize(DisposeCallback callback) {
-        var objectClassInstance = new GObjectLib.ObjectClass(getCPointer());
-        objectClassInstance.finalize = callback;
-        objectClassInstance.writeField("finalize");
+    public void overrideSetProperty(OnSetProperty onSetProperty) {
+        setFieldSetProperty(onSetProperty);
     }
 
-    public void overrideSetProperty(PropertyCallback cb) {
-        var objectClassInstance = new GObjectLib.ObjectClass(getCPointer());
-        objectClassInstance.setProperty = cb;
-        objectClassInstance.writeField("setProperty");
-    }
-
-    public void overrideGetProperty(PropertyCallback cb) {
-        var objectClassInstance = new GObjectLib.ObjectClass(getCPointer());
-        objectClassInstance.getProperty = cb;
-        objectClassInstance.writeField("getProperty");
+    public void overrideGetProperty(OnGetProperty onGetProperty) {
+        setFieldGetProperty(onGetProperty);
     }
 
     public int signalNew(Str name, long returnType, Long... types) {
@@ -63,7 +43,6 @@ public class ObjectClassExtended extends ObjectClass {
                 types.length,
                 (java.lang.Object[]) types);
     }
-
 
     public ObjectClassExtended getParentClass() {
         final var typeClass = new TypeClass(cast());

@@ -7,11 +7,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import ch.bailu.gtk.gio.ListModel;
+import ch.bailu.gtk.gio.ListModelInterface;
 import ch.bailu.gtk.gobject.Gobject;
 import ch.bailu.gtk.gobject.InterfaceInfo;
 import ch.bailu.gtk.gobject.Object;
+import ch.bailu.gtk.gobject.ObjectClass;
 import ch.bailu.gtk.gobject.ObjectClassExtended;
 import ch.bailu.gtk.gobject.ParamFlags;
+import ch.bailu.gtk.gobject.ParamSpec;
 import ch.bailu.gtk.gobject.Value;
 import ch.bailu.gtk.gtk.ListItem;
 import ch.bailu.gtk.gtk.SelectionModel;
@@ -123,38 +126,34 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
     private static final InterfaceInfo.OnInterfaceInitFunc interfaceInit = new InterfaceInfo.OnInterfaceInitFunc() {
         @Override
         public void onInterfaceInitFunc(CallbackHandler __self, @Nonnull Pointer g_iface, @Nullable Pointer iface_data) {
-
             System.out.println("ListIndex::interfaceInit");
-            GObjectLib.GListModelInterface iface = new GObjectLib.GListModelInterface(g_iface.getCPointer());
 
-            iface.read();
-            iface.get_item      = getItem;
-            iface.get_n_items   = getNItems;
-            iface.get_item_type = getItemType;
-            iface.write();
+            long pointer = g_iface.getCPointer();
+            pointer += 8; // TODO why is offset missing?
+
+            var listModelInterface = new ListModelInterface(Pointer.toCPointer(pointer));
+            listModelInterface.setFieldGetItem(getItem);
+            listModelInterface.setFieldGetNItems(getNItems);
+            listModelInterface.setFieldGetItemType(getItemType);
         }
     };
-    private static final Callback getItemType = new Callback() {
-        public long invoke(long inst) {
-            System.out.println("ListIndex::getItemType");
-            return getTypeID();
-        }
+
+    private static final ListModelInterface.OnGetItemType getItemType = (__self, list) -> {
+        System.out.println("ListIndex::getItemType");
+        return getTypeID();
     };
-    private static final Callback getNItems = new Callback() {
-        public int invoke(long inst) {
-            return new ListIndex(toCPointer(inst)).getSize();
+
+    private static final ListModelInterface.OnGetNItems getNItems = (__self, list) -> new ListIndex(list.cast()).getSize();
+
+    private static final ListModelInterface.OnGetItem getItem = (__self, list, position) -> {
+        Pointer result = Pointer.NULL;
+        ListIndex item = new ListIndex(list.cast()).getItem(position);
+        if (item != null) {
+            result = item;
         }
+        return result;
     };
-    private static final Callback getItem = new Callback() {
-        public long invoke(long inst, int position) {
-            long result = 0;
-            ListIndex item = new ListIndex(toCPointer(inst)).getItem(position);
-            if (item != null) {
-                result = item.cast().getCPointer();
-            }
-            return result;
-        }
-    };
+
 
     public ListIndex getItem(int position) {
         ListIndex result = null;
@@ -200,23 +199,23 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
         instance.writeField("size");
     }
 
-    private static final ObjectClassExtended.DisposeCallback instanceDispose = instance -> {
+    private static final ObjectClass.OnDispose instanceDispose = (__self, object) -> {
         if (parentClass.isNull()) {
             System.out.println("ListIndex::instanceDispose (no parent)");
         } else {
-            parentClass.onDispose(new ListIndex(toCPointer(instance)));
+            parentClass.onDispose(new ListIndex(object.cast()));
         }
     };
 
-    private static final ObjectClassExtended.PropertyCallback setProperty = (object, property_id, value, pspec) -> {
+    private static final ObjectClass.OnSetProperty setProperty = (__self, object, property_id, value, pspec) -> {
         if (property_id != PROP_ITEM_TYPE) {
             System.out.println("ListIndex::setProperty (unknown property");
         }
     };
 
-    private static final ObjectClassExtended.PropertyCallback getProperty = (object, property_id, value, pspec) -> {
+    private static final ObjectClass.OnGetProperty getProperty = (__self, object, property_id, value, pspec) -> {
         if (property_id == PROP_ITEM_TYPE) {
-            new Value(new CPointer(value)).setGtype(getTypeID());
+            value.setGtype(getTypeID());
         } else {
             System.out.println("ListIndex::getProperty (unknown property");
         }

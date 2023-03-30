@@ -3,17 +3,23 @@ package examples.libadwaita.demo.styles;
 import com.sun.jna.Callback;
 import com.sun.jna.Structure;
 
+import javax.annotation.Nonnull;
+
 import ch.bailu.gtk.adw.Leaflet;
 import ch.bailu.gtk.adw.NavigationDirection;
 import ch.bailu.gtk.adw.Window;
 import ch.bailu.gtk.gobject.Gobject;
 import ch.bailu.gtk.gobject.GobjectConstants;
+import ch.bailu.gtk.gobject.Object;
+import ch.bailu.gtk.gobject.ObjectClass;
 import ch.bailu.gtk.gobject.ObjectClassExtended;
 import ch.bailu.gtk.gobject.ParamFlags;
+import ch.bailu.gtk.gobject.ParamSpec;
 import ch.bailu.gtk.gobject.Value;
 import ch.bailu.gtk.gtk.SelectionMode;
 import ch.bailu.gtk.gtk.Widget;
 import ch.bailu.gtk.gtk.WidgetClassExtended;
+import ch.bailu.gtk.lib.handler.CallbackHandler;
 import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
@@ -77,10 +83,10 @@ public class AdwStyleDemoWindow extends Window {
                 var objectClass = new ObjectClassExtended(g_class.cast());
 
 
-                objectClass.overrideSetProperty((object, property_id, value, pspec) -> new AdwStyleDemoWindow(object).setProperty(property_id, new Value(toCPointer(value))));
-                objectClass.overrideGetProperty((object, property_id, value, pspec) -> new AdwStyleDemoWindow(object).getProperty(property_id, new Value(toCPointer(value))));
+                objectClass.overrideSetProperty((__self16, object, property_id, value, pspec) -> new AdwStyleDemoWindow(object.cast()).setProperty(property_id, value));
+                objectClass.overrideGetProperty((__self17, object, property_id, value, pspec) -> new AdwStyleDemoWindow(object.cast()).getProperty(property_id, value));
 
-                objectClass.overrideDispose(pointer -> new AdwStyleDemoWindow(pointer).onDispose(objectClass.getParentClass()));
+                objectClass.overrideDispose((__self15, object) -> new AdwStyleDemoWindow(object.cast()).onDispose(objectClass.getParentClass()));
 
                 var propDevel = Gobject.paramSpecBoolean(PROP_DEVEL_NAME, null, null, false, ParamFlags.READWRITE | GobjectConstants.PARAM_STATIC_STRINGS);
                 objectClass.installProperty(PROP_DEVEL, propDevel);

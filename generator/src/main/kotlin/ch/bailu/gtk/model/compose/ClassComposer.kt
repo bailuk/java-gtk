@@ -18,7 +18,7 @@ class ClassComposer : CodeComposer() {
         writer.writeInternalConstructor(structureModel)
 
         if (structureModel.isRecord && models.fields.isNotEmpty()) {
-            if (filterCreateMallocConstructor(models.methods)) {
+            if (filterCreateMallocConstructor(structureModel)) {
                 writer.writeMallocConstructor(structureModel)
             }
 

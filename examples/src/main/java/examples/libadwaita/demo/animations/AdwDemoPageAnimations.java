@@ -3,6 +3,8 @@ package examples.libadwaita.demo.animations;
 import com.sun.jna.Callback;
 import com.sun.jna.Structure;
 
+import javax.annotation.Nonnull;
+
 import ch.bailu.gtk.adw.Animation;
 import ch.bailu.gtk.adw.AnimationState;
 import ch.bailu.gtk.adw.Bin;
@@ -14,6 +16,8 @@ import ch.bailu.gtk.adw.SpringParams;
 import ch.bailu.gtk.adw.TimedAnimation;
 import ch.bailu.gtk.gobject.Gobject;
 import ch.bailu.gtk.gobject.GobjectConstants;
+import ch.bailu.gtk.gobject.Object;
+import ch.bailu.gtk.gobject.ObjectClass;
 import ch.bailu.gtk.gobject.ObjectClassExtended;
 import ch.bailu.gtk.gobject.ParamFlags;
 import ch.bailu.gtk.gobject.ParamSpec;
@@ -25,6 +29,7 @@ import ch.bailu.gtk.gtk.Stack;
 import ch.bailu.gtk.gtk.TextDirection;
 import ch.bailu.gtk.gtk.Widget;
 import ch.bailu.gtk.gtk.WidgetClassExtended;
+import ch.bailu.gtk.lib.handler.CallbackHandler;
 import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
@@ -161,10 +166,9 @@ public class AdwDemoPageAnimations extends Bin {
                 var widgetClass = new WidgetClassExtended(g_class.cast());
                 var objectClass = new ObjectClassExtended(g_class.cast());
 
-                objectClass.overrideGetProperty((object, property_id, value, pspec) -> new AdwDemoPageAnimations(toCPointer(object)).getProperty(property_id, new Value(toCPointer(value))));
-                objectClass.overrideSetProperty((object, property_id, value, pspec) -> new AdwDemoPageAnimations(toCPointer(object)).setProperty(property_id, new Value(toCPointer(value))));
-                objectClass.overrideDispose(pointer -> new AdwDemoPageAnimations(toCPointer(pointer)).onDispose(objectClass.getParentClass()));
-
+                objectClass.overrideGetProperty((__self12, object, property_id, value, pspec) -> new AdwDemoPageAnimations(object.cast()).getProperty(property_id, value));
+                objectClass.overrideSetProperty((__self13, object, property_id, value, pspec) -> new AdwDemoPageAnimations(object.cast()).setProperty(property_id, value));
+                objectClass.overrideDispose((__self1, object) -> new AdwDemoPageAnimations(object.cast()).onDispose(objectClass.getParentClass()));
                 specTimedAnimation  = Gobject.paramSpecObject(PROP_TIMED_ANIMATION_NAME , Str.NULL, Str.NULL, Animation.getTypeID(), ParamFlags.READWRITE | GobjectConstants.PARAM_STATIC_STRINGS);
                 specSpringAnimation = Gobject.paramSpecObject(PROP_SPRING_ANIMATION_NAME, Str.NULL, Str.NULL, Animation.getTypeID(), ParamFlags.READWRITE | GobjectConstants.PARAM_STATIC_STRINGS);
                 objectClass.installProperty(PROP_TIMED_ANIMATION,  specTimedAnimation);

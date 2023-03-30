@@ -31,9 +31,9 @@ class MethodModel(namespace: String, parameterNamespace: String, method: MethodT
     val doc : String = method.getDoc()
 
     init {
-        setSupported("deprecated", !method.isDeprecated())
-        setSupported("return-value-not-supported", returnType.isSupported)
-        setSupported("returns-callback", !returnType.isCallback)
+        setSupported("cb-deprecated", !method.isDeprecated())
+        setSupported("cb-return-value-not-supported", returnType.isSupported)
+        setSupported("cb-returns-callback", !returnType.isCallback)
 
         for (t in method.getParameters()) {
             val parameterModel = ParameterModel(

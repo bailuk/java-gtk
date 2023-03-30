@@ -3,16 +3,23 @@ package examples.libadwaita.demo;
 import com.sun.jna.Callback;
 import com.sun.jna.Structure;
 
+import javax.annotation.Nonnull;
+
 import ch.bailu.gtk.adw.Bin;
 import ch.bailu.gtk.adw.EnumListItem;
 import ch.bailu.gtk.adw.LeafletTransitionType;
 import ch.bailu.gtk.gobject.Gobject;
 import ch.bailu.gtk.gobject.GobjectConstants;
+import ch.bailu.gtk.gobject.Object;
+import ch.bailu.gtk.gobject.ObjectClass;
 import ch.bailu.gtk.gobject.ObjectClassExtended;
 import ch.bailu.gtk.gobject.ParamFlags;
+import ch.bailu.gtk.gobject.ParamSpec;
 import ch.bailu.gtk.gobject.Value;
 import ch.bailu.gtk.gtk.WidgetClassExtended;
+import ch.bailu.gtk.lib.handler.CallbackHandler;
 import ch.bailu.gtk.lib.jna.AdwLib;
+import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
 
@@ -39,9 +46,9 @@ public class AdwDemoPageLeaflet extends Bin {
 
     private final Instance instance;
 
-    public AdwDemoPageLeaflet(long self) {
-        super(toCPointer(self));
-        instance = new Instance(self);
+    public AdwDemoPageLeaflet(CPointer self) {
+        super(self);
+        instance = new Instance(getCPointer());
     }
 
     private static long type = 0;
@@ -58,8 +65,8 @@ public class AdwDemoPageLeaflet extends Bin {
                         LeafletTransitionType.OVER,
                         ParamFlags.READWRITE | GobjectConstants.PARAM_STATIC_STRINGS);
 
-                objectClass.overrideSetProperty((self, property_id, value, pspec) -> new AdwDemoPageLeaflet(self).setProperty(property_id, value));
-                objectClass.overrideGetProperty((self, property_id, value, pspec) -> new AdwDemoPageLeaflet(self).getProperty(property_id, value));
+                objectClass.overrideSetProperty((__self1, object, property_id, value, pspec) -> new AdwDemoPageLeaflet(object.cast()).setProperty(property_id, value));
+                objectClass.overrideGetProperty((__self12, object, property_id, value, pspec) -> new AdwDemoPageLeaflet(object.cast()).getProperty(property_id, value));
                 objectClass.installProperty(PROP_TRANSITION_TYPE, prop);
 
                 final var signal = objectClass.signalNew(SIGNAL_NEXT_PAGE, TypeSystem.GTYPE_NONE);
@@ -96,18 +103,18 @@ public class AdwDemoPageLeaflet extends Bin {
         return Str.NULL;
     }
 
-    private void setProperty(int property_id, long value) {
+    private void setProperty(int property_id, Value value) {
         if (property_id == PROP_TRANSITION_TYPE) {
             System.out.println("set transition type");
-            instance.transition_type = new Value(toCPointer(value)).getEnum();
+            instance.transition_type = value.getEnum();
             instance.writeField("transition_type");
         }
     }
 
-    private void getProperty(int property_id, long value) {
+    private void getProperty(int property_id, Value value) {
         if (property_id == PROP_TRANSITION_TYPE) {
             System.out.println("get transition type");
-            new Value(toCPointer(value)).setEnum(instance.transition_type);
+            value.setEnum(instance.transition_type);
         }
     }
 }

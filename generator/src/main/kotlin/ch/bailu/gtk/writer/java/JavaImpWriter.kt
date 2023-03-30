@@ -93,7 +93,7 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
         out.end(0)
     }
 
-    override fun writeBeginStruct(structureModel : StructureModel, fields: ModelList<ParameterModel>) {
+    override fun writeBeginStruct(structureModel : StructureModel, fields: ModelList<FieldModel>) {
         out.start(0)
         out.a("""
             private static long _size = -1;
@@ -118,7 +118,7 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
         out.end(1)
     }
 
-    private fun getFields(structureModel: StructureModel, fields: ModelList<ParameterModel>): String {
+    private fun getFields(structureModel: StructureModel, fields: ModelList<FieldModel>): String {
         val result = StringBuilder()
         var del = ""
 
@@ -129,13 +129,13 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
         return result.toString()
     }
 
-    override fun writeField(structureModel: StructureModel, parameterModel: ParameterModel) {
+    override fun writeField(structureModel: StructureModel, fieldModel: FieldModel) {
         out.start(0)
 
-        if (parameterModel.isCallback && parameterModel.callbackModel != null) {
-            out.a("        public ${Names.getJavaCallbackInterfaceName(parameterModel.callbackModel.name)} ${parameterModel.name};\n")
+        if (fieldModel.isMethod) {
+            out.a("        public ${fieldModel.getApiTypeName(structureModel.nameSpaceModel.namespace)} ${fieldModel.name};\n")
         } else {
-            out.a("        public ${parameterModel.impType} ${parameterModel.name};\n")
+            out.a("        public ${fieldModel.impType} ${fieldModel.name};\n")
         }
         out.end(0)
     }

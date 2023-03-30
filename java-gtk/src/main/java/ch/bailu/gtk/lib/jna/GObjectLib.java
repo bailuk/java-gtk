@@ -12,7 +12,7 @@ public class GObjectLib {
     public static final int GTYPE_INTERFACE_SIZE = 16;
 
     @Structure.FieldOrder({"g_iface", "get_item_type", "get_n_items", "get_item"})
-    public static class GListModelInterface extends Structure {
+    private static class GListModelInterface extends Structure {
 
         public GListModelInterface(long _self) {
             super(ch.bailu.gtk.type.Pointer.toJnaPointer(_self));
@@ -36,39 +36,4 @@ public class GObjectLib {
         void g_signal_handler_disconnect (long instance, long handler_id);
         int g_signal_new(long signal_name, long itype, int singal_flags, int class_offset, long accumulator, long accu_data, long c_marshaller, long return_type, int n_params, Object ... objects);
     }
-
-
-    @Structure.FieldOrder({
-            "gtype",
-            "construct_properties",
-            "constructor",
-            "setProperty",
-            "getProperty",
-            "dispose",
-            "finalize",
-            "dispatchPropertiesChanged",
-            "notify",
-            "constructed",
-            "flags"})
-    public static class ObjectClass extends Structure {
-
-        public ObjectClass(long _self) {
-            super(ch.bailu.gtk.type.Pointer.toJnaPointer(_self));
-        }
-
-        public long gtype;
-        public long construct_properties;
-        public Callback constructor;
-        public ObjectClassExtended.PropertyCallback setProperty;
-        public ObjectClassExtended.PropertyCallback getProperty;
-        public ObjectClassExtended.DisposeCallback dispose;
-        public Callback finalize;
-        public Callback dispatchPropertiesChanged;
-        public Callback notify;
-        public Callback constructed;
-        public long flags;
-    }
-
-
-
 }

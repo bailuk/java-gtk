@@ -4,18 +4,24 @@ import com.sun.jna.Structure;
 
 import java.util.Random;
 
+import javax.annotation.Nonnull;
+
 import ch.bailu.gtk.adw.Bin;
 import ch.bailu.gtk.gdk.Display;
 import ch.bailu.gtk.gio.Icon;
 import ch.bailu.gtk.gio.ThemedIcon;
 import ch.bailu.gtk.gobject.Gobject;
 import ch.bailu.gtk.gobject.GobjectConstants;
+import ch.bailu.gtk.gobject.Object;
+import ch.bailu.gtk.gobject.ObjectClass;
 import ch.bailu.gtk.gobject.ObjectClassExtended;
 import ch.bailu.gtk.gobject.ParamFlags;
+import ch.bailu.gtk.gobject.ParamSpec;
 import ch.bailu.gtk.gobject.TypeInstance;
 import ch.bailu.gtk.gobject.Value;
 import ch.bailu.gtk.gtk.IconTheme;
 import ch.bailu.gtk.gtk.WidgetClassExtended;
+import ch.bailu.gtk.lib.handler.CallbackHandler;
 import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
@@ -94,9 +100,9 @@ public class AdwTabViewDemoPage extends Bin {
                 var widgetClass = new WidgetClassExtended(g_class.cast());
                 var objectClass = new ObjectClassExtended(g_class.cast());
 
-                objectClass.overrideFinalize((self) -> new AdwTabViewDemoPage(self).finalizeInstance());
-                objectClass.overrideGetProperty((self, id, value, spec)-> new AdwTabViewDemoPage(self).getProperty(id, new Value(toCPointer(value))));
-                objectClass.overrideSetProperty((self, id, value, spec)-> new AdwTabViewDemoPage(self).setProperty(id, new Value(toCPointer(value))));
+                objectClass.overrideFinalize((__self1, object) -> new AdwTabViewDemoPage(object.cast()).finalizeInstance());
+                objectClass.overrideGetProperty((__self12, object, property_id, value, pspec) -> new AdwTabViewDemoPage(object.cast()).getProperty(property_id, value));
+                objectClass.overrideSetProperty((__self13, object, property_id, value, pspec) -> new AdwTabViewDemoPage(object.cast()).setProperty(property_id, value));
 
 
                 var propTitle = Gobject.paramSpecString(PROP_TITLE_NAME, null, null, null, ParamFlags.READWRITE | GobjectConstants.PARAM_STATIC_STRINGS);

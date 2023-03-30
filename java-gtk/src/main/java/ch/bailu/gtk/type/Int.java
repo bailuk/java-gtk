@@ -24,12 +24,20 @@ public class Int extends Wrapper {
         return new Int(createInt(value));
     }
 
+    public void set(boolean b) {
+        set( (b) ? 1 : 0);
+    }
+
     public void set(int i) {
         ImpInt.set(getCPointer(), i);
     }
 
     public int get() {
         return ImpInt.get(getCPointer());
+    }
+
+    public boolean is() {
+        return get() != 0;
     }
 
     @Override

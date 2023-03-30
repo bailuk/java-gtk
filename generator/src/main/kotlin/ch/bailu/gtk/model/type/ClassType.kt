@@ -8,6 +8,7 @@ import ch.bailu.gtk.table.CallbackTable
 import ch.bailu.gtk.table.EnumTable
 import ch.bailu.gtk.table.StructureTable.contains
 import ch.bailu.gtk.table.WrapperTable
+import ch.bailu.gtk.validator.Validator
 import ch.bailu.gtk.writer.Names
 
 class ClassType {
@@ -77,8 +78,12 @@ class ClassType {
     }
 
 
-    fun isClass(): Boolean {
+    fun isClassOrCallback(): Boolean {
         return valid
+    }
+
+    fun isClass(): Boolean {
+        return valid && !isCallback()
     }
 
     fun isCallback(): Boolean {
@@ -91,7 +96,7 @@ class ClassType {
      * example "Widget" or "ch.bailu.java-gtk.gtk.Widget"
      */
     fun getApiTypeName(namespace: String = ""): String {
-        return if (isClass() && !type.isCurrentNameSpace(namespace)) {
+        return if (isClassOrCallback() && !type.isCurrentNameSpace(namespace)) {
             Names.getJavaClassNameWithNamespacePrefix(this.namespace, this.name)
         } else name
 
@@ -104,6 +109,7 @@ class ClassType {
         get() =  type.name
 
     fun isDirectType(): Boolean {
-        return isClass() && directType
+        Validator.giveUp("Direct Type failure", directType != (directType && isClassOrCallback()))
+        return isClassOrCallback() && directType
     }
 }

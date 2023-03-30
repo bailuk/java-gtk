@@ -15,6 +15,9 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
     private fun writeClassOrInterface(structureModel: StructureModel) {
         doc.writeStart(0)
         doc.writeBlock(structureModel.doc)
+        if (structureModel.disguised) {
+            doc.writeLine("<br>disguised")
+        }
         doc.writeClassUrl(structureModel)
         doc.writeDocEnd()
     }
@@ -78,9 +81,25 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
     }
 
 
-    override fun writeField(structureModel: StructureModel, parameterModel: ParameterModel) {
-        writeConstant(structureModel, parameterModel)
-    }
+    override fun writeField(structureModel: StructureModel, fieldModel: FieldModel) {
+        doc.writeStart(4)
+        doc.writeBlock(fieldModel.doc)
+
+        if (fieldModel.isPublic) {
+            if (fieldModel.isMethod) {
+                val name = fieldModel.methodModel.name
+                doc.writeBlockPlain(
+                    "<br>See {@link ${Names.getJavaCallbackInterfaceName(name)}#${
+                        Names.getJavaCallbackMethodName(
+                            name
+                        )
+                    }}"
+                )
+            }
+        } else {
+            doc.writeBlockPlain("<br>Private field: ${fieldModel.visibleState}")
+        }
+        doc.writeDocEnd()    }
 
     override fun writeFunction(structureModel: StructureModel, methodModel: MethodModel) {
         writeMethod(structureModel, methodModel)
@@ -116,7 +135,7 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
     override fun writeMallocConstructor(structureModel: StructureModel) {}
     override fun writeStart(structureModel: StructureModel, namespaceModel: NamespaceModel) {}
     override fun writeInternalConstructor(structureModel: StructureModel) {}
-    override fun writeBeginStruct(structureModel : StructureModel, fields: ModelList<ParameterModel>) {}
+    override fun writeBeginStruct(structureModel : StructureModel, fields: ModelList<FieldModel>) {}
     override fun writeEndStruct() {}
     override fun writeBeginInstace(namespaceModel: NamespaceModel) {}
     override fun writeEndInstance() {}

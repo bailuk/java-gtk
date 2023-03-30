@@ -7,6 +7,12 @@ abstract class Model {
     var supportedState = "Supported"
         private set
 
+    var isPublic = true
+        private set
+
+    var visibleState = "Public"
+        private set
+
     fun setSupported(reason: String, supported: Boolean) {
         if (!supported) {
             if (isSupported) {
@@ -17,4 +23,20 @@ abstract class Model {
             }
         }
     }
+
+    fun setPrivate(reason: String, private: Boolean) {
+        if (private) {
+            if (isPublic) {
+                isPublic = false
+                this.visibleState = reason
+            } else {
+                this.visibleState += ":${reason}"
+            }
+        }
+    }
+
+    fun setPublic(reason: String, public: Boolean) {
+        setPrivate(reason, !public)
+    }
+
 }

@@ -3,6 +3,8 @@ package examples.libadwaita.demo.tab_view;
 import com.sun.jna.Callback;
 import com.sun.jna.Structure;
 
+import javax.annotation.Nonnull;
+
 import ch.bailu.gtk.adw.TabPage;
 import ch.bailu.gtk.adw.TabView;
 import ch.bailu.gtk.adw.Window;
@@ -16,11 +18,16 @@ import ch.bailu.gtk.glib.Variant;
 import ch.bailu.gtk.gobject.BindingFlags;
 import ch.bailu.gtk.gobject.Gobject;
 import ch.bailu.gtk.gobject.GobjectConstants;
+import ch.bailu.gtk.gobject.Object;
+import ch.bailu.gtk.gobject.ObjectClass;
 import ch.bailu.gtk.gobject.ObjectClassExtended;
 import ch.bailu.gtk.gobject.ParamFlags;
+import ch.bailu.gtk.gobject.ParamSpec;
 import ch.bailu.gtk.gobject.TypeInstance;
 import ch.bailu.gtk.gobject.Value;
 import ch.bailu.gtk.gtk.WidgetClassExtended;
+import ch.bailu.gtk.lib.handler.CallbackHandler;
+import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
@@ -32,6 +39,11 @@ public class AdwTabViewDemoWindow extends Window {
     private static long type = 0;
 
     private static Str PROP_TOOLTIP_NAME = new Str("tooltip");
+
+    public AdwTabViewDemoWindow(CPointer cast) {
+        super(cast);
+        instance = new Instance(getCPointer());
+    }
 
 
     @Structure.FieldOrder({"parent", "view", "tab_bar", "tab_overview", "tab_action_group", "menu_page", "narrow", "in_dispose"})
@@ -307,8 +319,8 @@ public class AdwTabViewDemoWindow extends Window {
                 var widgetClass = new WidgetClassExtended(g_class.cast());
                 var objectClass = new ObjectClassExtended(g_class.cast());
 
-                objectClass.overrideDispose(self -> new AdwTabViewDemoWindow(self).dispose());
-                objectClass.overrideGetProperty((object, property_id, value, pspec) -> new AdwTabViewDemoWindow(object).getProperty(property_id, new Value(toCPointer(value))));
+                objectClass.overrideDispose((__self1, object) -> new AdwTabViewDemoWindow(object.cast()).dispose());
+                objectClass.overrideGetProperty((__self12, object, property_id, value, pspec) -> new AdwTabViewDemoWindow(object.cast()).getProperty(property_id, value));
                 widgetClass.overrideSizeAllocate((self, width, height, baseline) -> new AdwTabViewDemoWindow(self).sizeAllocate(width, height, baseline));
 
 

@@ -239,10 +239,12 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
 
 
     override fun writeCallback(structureModel: StructureModel, methodModel: MethodModel, isSignal: Boolean) {
-        if (isSignal) {
-            writeSignalInterface(structureModel, methodModel)
-        } else {
-            writeCallbackInterface(structureModel, methodModel)
+        if (methodModel.isPublic) {
+            if (isSignal) {
+                writeSignalInterface(structureModel, methodModel)
+            } else {
+                writeCallbackInterface(structureModel, methodModel)
+            }
         }
     }
 
@@ -345,6 +347,10 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         return result.toString()
     }
 
+    private fun getSignature(structureModel: StructureModel, fieldModel: FieldModel) : String{
+        return "${fieldModel.getApiTypeName(structureModel.nameSpaceModel.namespace)} ${fieldModel.name}"
+    }
+
     private fun getSignature(structureModel: StructureModel, parameters : List<ParameterModel>, prefix: String = "") : String{
         val result = StringBuilder(prefix)
         var del = if (prefix.isEmpty()) "" else ", "
@@ -391,7 +397,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         return result.toString()
     }
 
-    override fun writeBeginStruct(structureModel: StructureModel, fields: ModelList<ParameterModel>) {
+    override fun writeBeginStruct(structureModel: StructureModel, fields: ModelList<FieldModel>) {
         out.start(0)
         out.a("""
             private ${structureModel.jnaName}.Fields _fields;
@@ -409,85 +415,85 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
     override fun writeEndStruct() {}
     override fun writeBeginInstace(namespaceModel: NamespaceModel) {}
     override fun writeEndInstance() {}
-    override fun writeField(structureModel : StructureModel, parameterModel : ParameterModel) {
-        val parameters : MutableList<ParameterModel> = ArrayList()
+    override fun writeField(structureModel : StructureModel, fieldModel : FieldModel) {
+        Validator.validateSupported(fieldModel)
+        Validator.validateSupported(structureModel)
+        if (fieldModel.isMethod && fieldModel.isPublic) {
+            Validator.validateSupported(fieldModel.methodModel)
+        }
 
-        val getter = Names.getJavaFieldGetterName(parameterModel.name)
-        val setter = Names.getJavaFieldSetterName(parameterModel.name)
-
-        val fieldName = parameterModel.name
+        val fieldName = fieldModel.name
         val fieldNameConst = Names.getJavaConstantName(fieldName)
 
+        writeFieldName(structureModel, fieldModel, fieldName, fieldNameConst)
+
+        if (fieldModel.isPublic) {
+            if (fieldModel.isWriteable && !fieldModel.isDirectType) {
+                writeFieldWrite(structureModel, fieldModel, fieldName, fieldNameConst)
+            }
+
+           writeFieldRead(structureModel, fieldModel, fieldName, fieldNameConst)
+        }
+    }
+
+    private fun writeFieldWrite(structureModel: StructureModel, fieldModel: FieldModel, fieldName: String, fieldNameConst: String) {
+        val value = if (fieldModel.isMethod) {
+            val iName = fieldModel.getApiTypeName(structureModel.nameSpaceModel.namespace)
+            "to$iName(this, $fieldNameConst, $fieldName)"
+        } else if (fieldModel.isJavaNative) {
+            fieldName
+        } else {
+            "$fieldName.getCPointer()"
+        }
+        val setter = Names.getJavaFieldSetterName(fieldModel.name)
+
         out.start(1)
+        javaDoc.writeField(structureModel, fieldModel)
+        out.a(
+            """
+                public void ${setter}(${getSignature(structureModel, fieldModel)}) {
+                    toFields().$fieldName = $value;
+                    toFields().writeField($fieldNameConst);
+                }
+                """, 4
+        )
+        out.end(1)
+    }
+
+    private fun writeFieldRead(structureModel: StructureModel, fieldModel: FieldModel, fieldName: String, fieldNameConst: String) {
+        val jnaPrefix = if (fieldModel.isMethod) {
+            "${structureModel.jnaName}."
+        } else {
+            ""
+        }
+
+        val result = if (fieldModel.isMethod || fieldModel.isJavaNative) {
+            "toFields().$fieldName"
+        } else {
+            "new ${fieldModel.getApiTypeName(structureModel.nameSpaceModel.namespace)}(new CPointer(toFields().$fieldName))"
+        }
+
+        val getter = Names.getJavaFieldGetterName(fieldModel.name)
+
+        out.start(1)
+        javaDoc.writeField(structureModel, fieldModel)
+        out.a(
+            """
+                 public ${jnaPrefix}${fieldModel.getApiTypeName(structureModel.nameSpaceModel.namespace)} ${getter}() {
+                    toFields().readField($fieldNameConst);
+                    return $result;
+                 } 
+                 """, 4
+        )
+        out.end(1)
+    }
+
+    private fun writeFieldName(structureModel: StructureModel, fieldModel: FieldModel, fieldName: String, fieldNameConst: String) {
+        out.start(1)
+        javaDoc.writeField(structureModel, fieldModel)
         out.a("""
             public static final String $fieldNameConst = "$fieldName";
         """, 4)
-        out.end(1)
-
-        out.start(1)
-        if (parameterModel.isWriteable && !parameterModel.isDirectType) {
-            parameters.add(parameterModel)
-
-            if (parameterModel.isCallback && parameterModel.callbackModel != null) {
-                val iName = Names.getJavaCallbackInterfaceName(parameterModel.callbackModel.name)
-
-                javaDoc.writeField(structureModel, parameterModel)
-                out.a("""
-                    public void ${setter}(${getSignature(structureModel, parameters)}) {
-                        toFields().$fieldName = to$iName(this, $fieldNameConst, $fieldName);
-                        toFields().writeField($fieldNameConst);
-                    }
-                """, 4)
-
-            } else if (parameterModel.isJavaNative) {
-                javaDoc.writeField(structureModel, parameterModel)
-                out.a("""
-                    public void ${setter}(${getSignature(structureModel, parameters)}) {
-                        toFields().$fieldName = $fieldName;
-                        toFields().writeField($fieldNameConst);
-                    }
-                """, 4)
-            } else {
-                javaDoc.writeField(structureModel, parameterModel)
-                out.a("""
-                    public void ${setter}(${getSignature(structureModel, parameters)}) {
-                        toFields().$fieldName = $fieldName.getCPointer();
-                        toFields().writeField($fieldNameConst);
-                    }
-                """, 4)
-            }
-        }
-        out.end(1)
-
-        out.start(1)
-        if (parameterModel.isCallback && parameterModel.callbackModel != null) {
-
-            javaDoc.writeField(structureModel, parameterModel)
-            out.a("""
-                public ${structureModel.jnaName}.${parameterModel.getApiTypeName(structureModel.nameSpaceModel.namespace)} ${getter}() {
-                    toFields().readField($fieldNameConst);
-                    return toFields().$fieldName;
-                } 
-                """, 4)
-
-        } else if (parameterModel.isJavaNative) {
-            javaDoc.writeField(structureModel, parameterModel)
-            out.a("""
-                public ${parameterModel.getApiTypeName(structureModel.nameSpaceModel.namespace)} ${getter}() {
-                    toFields().readField($fieldNameConst);
-                    return toFields().$fieldName;
-                } 
-                """, 4)
-
-        } else {
-            javaDoc.writeField(structureModel, parameterModel)
-            out.a("""
-                public ${parameterModel.getApiTypeName(structureModel.nameSpaceModel.namespace)} ${getter}() {
-                    toFields().readField($fieldNameConst);
-                    return new ${parameterModel.getApiTypeName(structureModel.nameSpaceModel.namespace)}(new CPointer(toFields().$fieldName));
-                }
-                """, 4)
-        }
         out.end(1)
     }
 }

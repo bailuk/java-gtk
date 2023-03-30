@@ -25,11 +25,11 @@ class StructureTag(parent: TagWithParent, val structureType: String): NamedWithD
     val methods = TagList<MethodTag>()
 
     val signals = TagList<MethodTag>()
-    val fields = TagList<ParameterTag>()
+    val fields = TagList<FieldTag>()
 
     override fun getChild(name: String): TagWithParent {
         if ("field" == name) {
-            return fields.addTag(ParameterTag(this))
+            return fields.addTag(FieldTag(this))
         }
         if ("implements" == name) {
             return implements.addTag(NamedWithDocTag(this))
@@ -56,9 +56,7 @@ class StructureTag(parent: TagWithParent, val structureType: String): NamedWithD
 
     @Throws(IOException::class)
     override fun end() {
-        if (!disguised) {
-            getBuilder().buildStructure(this)
-        }
+        getBuilder().buildStructure(this)
     }
 
     override fun setAttribute(name: String, value: String) {

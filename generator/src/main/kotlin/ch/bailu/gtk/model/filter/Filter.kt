@@ -24,19 +24,14 @@ fun filterMethod(structureModel: StructureModel, methodModel: MethodModel): Bool
 }
 
 
-fun filterField(structureModel: StructureModel): Boolean {
+fun filterField(): Boolean {
     return true
 }
 
-fun filterCreateMallocConstructor(methodModel: ModelList<MethodModel>): Boolean {
-    methodModel.forEach {
-        if (it.isSupported && it.name == "destroy") {
-            return false
-        }
-    }
-    return true
+fun filterCreateMallocConstructor(structureModel: StructureModel): Boolean {
+    return structureModel.allFieldsAreSupported && !structureModel.disguised
 }
 
-fun filterFieldDirectAccess(structureModel: StructureModel): Boolean {
+fun filterFieldDirectAccess(): Boolean {
     return true
 }

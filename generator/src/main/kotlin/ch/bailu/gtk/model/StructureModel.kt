@@ -6,10 +6,7 @@ import ch.bailu.gtk.model.compose.CodeComposer
 import ch.bailu.gtk.model.filter.*
 import ch.bailu.gtk.model.list.ModelLists
 import ch.bailu.gtk.model.type.StructureType
-import ch.bailu.gtk.parser.tag.EnumerationTag
-import ch.bailu.gtk.parser.tag.MethodTag
-import ch.bailu.gtk.parser.tag.ParameterTag
-import ch.bailu.gtk.parser.tag.StructureTag
+import ch.bailu.gtk.parser.tag.*
 import ch.bailu.gtk.table.AliasTable
 import ch.bailu.gtk.validator.Validator
 import ch.bailu.gtk.writer.CodeWriter
@@ -30,14 +27,21 @@ class StructureModel : Model {
     val cType: String
     val doc: String
 
+    val disguised: Boolean
+
     val hasGetTypeFunction: Boolean
         get() = "" != typeFunction
 
-
+    /**
+     * Offset and field order must be identical with c structure
+     */
+    var allFieldsAreSupported = true
+        private set
 
     constructor(structure: StructureTag, nameSpace: NamespaceModel) {
         typeFunction = structure.getType
 
+        disguised = structure.disguised
         cType = structure.type
         nameSpaceModel = nameSpace
         structureType = StructureType(structure.structureType)
@@ -80,19 +84,20 @@ class StructureModel : Model {
         setSupported("name-is-empty", apiName != "")
     }
 
-    private fun generateAndAddFieldModel(namespace: NamespaceModel, parameterTag: ParameterTag) {
-        val fieldModel = filterField(ParameterModel(
+    private fun generateAndAddFieldModel(namespace: NamespaceModel, fieldTag: FieldTag) {
+        val fieldModel = filterField(FieldModel(
             namespace.namespace,
-            parameterTag, isConstant = false,
-            supportsDirectAccess = filterFieldDirectAccess(this),
-            preferNative = false))
+            fieldTag, supportsDirectAccess = filterFieldDirectAccess()
+        ))
 
-        if (fieldModel.isSupported) {
-            models.fields.addIfSupported(filterField(fieldModel))
-            if (fieldModel.isCallback && fieldModel.callbackModel != null) {
-                models.callbacks.addIfSupported(fieldModel.callbackModel)
-            }
+        fieldModel.setSupported("previous-field-unsupported", allFieldsAreSupported)
+
+        models.fields.addIfSupported(fieldModel)
+        if (fieldModel.isMethod) {
+            models.callbacks.addIfSupported(fieldModel.methodModel, fieldModel.isSupported)
         }
+
+        allFieldsAreSupported = allFieldsAreSupported && fieldModel.isSupported
     }
 
     private fun generateAndAddMethodModel(namespace: NamespaceModel, models: ModelList<MethodModel>, methodTag: MethodTag) {
@@ -105,9 +110,9 @@ class StructureModel : Model {
         }
     }
 
-    private fun filterField(parameterModel: ParameterModel): ParameterModel {
-        parameterModel.setSupported("filter-field", filterField(this))
-        return parameterModel
+    private fun filterField(fieldModel: FieldModel): FieldModel {
+        fieldModel.setSupported("filter-field", filterField())
+        return fieldModel
     }
 
     private fun filterConstructor(methodModel: MethodModel): MethodModel {
@@ -125,6 +130,7 @@ class StructureModel : Model {
      * @param namespace
      */
     constructor(namespace: NamespaceModel) {
+        disguised = false
         typeFunction = ""
         doc=""
         cType = ""
@@ -168,6 +174,7 @@ class StructureModel : Model {
         apiName = name
         doc = ""
         cType = ""
+        disguised = false
         parent = this
 
         for (parameterTag in members) {
@@ -187,6 +194,7 @@ class StructureModel : Model {
         doc = ""
         cType = ""
         structureType = structType
+        disguised = false
         parent = this
 
         if (className == "") {
@@ -214,7 +222,7 @@ class StructureModel : Model {
 
     fun hasNativeCalls(): Boolean {
         if (isSupported) {
-            if (structureType.isRecord && filterCreateMallocConstructor(this.models.methods)) {
+            if (structureType.isRecord && filterCreateMallocConstructor(this)) {
                 return true
             } else if (structureType.isPackage || structureType.isClassType) {
                 return models.hasNativeCalls() || hasGetTypeFunction

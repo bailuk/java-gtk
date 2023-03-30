@@ -25,7 +25,7 @@ class ImplementsModel(private val currentNamespace: String, private val tag: Nam
         get() = classType.name
 
     init {
-        setSupported("type-not-supported", classType.isClass())
+        setSupported("type-not-supported", classType.isClassOrCallback())
     }
 
     override fun toString(): String {

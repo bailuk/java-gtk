@@ -1,9 +1,6 @@
 package ch.bailu.gtk.model.list
 
-import ch.bailu.gtk.model.ImplementsModel
-import ch.bailu.gtk.model.MethodModel
-import ch.bailu.gtk.model.Model
-import ch.bailu.gtk.model.ParameterModel
+import ch.bailu.gtk.model.*
 import ch.bailu.gtk.model.filter.ModelList
 
 class ModelLists {
@@ -16,7 +13,7 @@ class ModelLists {
     val signals = ModelList<MethodModel>(unsupported)
     val callbacks = ModelList<MethodModel>(unsupported)
     val functions = ModelList<MethodModel>(unsupported)
-    val fields = ModelList<ParameterModel>(unsupported)
+    val fields = ModelList<FieldModel>(unsupported)
     val constants = ModelList<ParameterModel>(unsupported)
     val implements = ModelList<ImplementsModel>(unsupported)
 

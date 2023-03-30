@@ -20,7 +20,7 @@ interface CodeWriter  {
     fun writeMethod(structureModel : StructureModel, methodModel : MethodModel)
 
     fun writeSignal(structureModel : StructureModel, methodModel : MethodModel)
-    fun writeField(structureModel : StructureModel, parameterModel : ParameterModel)
+    fun writeField(structureModel : StructureModel, fieldModel : FieldModel)
     fun writeFunction(structureModel : StructureModel, methodModel : MethodModel)
     fun writeUnsupported(model : Model)
 
@@ -31,7 +31,7 @@ interface CodeWriter  {
 
     fun writeEnd()
     fun writeGetTypeFunction(structureModel: StructureModel)
-    fun writeBeginStruct(structureModel : StructureModel, fields: ModelList<ParameterModel>)
+    fun writeBeginStruct(structureModel : StructureModel, fields: ModelList<FieldModel>)
     fun writeEndStruct()
     fun writeBeginInstace(namespaceModel: NamespaceModel)
     fun writeEndInstance()

@@ -25,6 +25,7 @@ object WrapperTable {
         add("const char* const*", "Strs")  // TODO probably wrong type
         add("int*", "Int")
         add("gint*", "Int")
+        add("gboolean*", "Int")
         add("guint32*", "Int")
         add("gsize*", "Int64")
         add("GType*", "Int64")
