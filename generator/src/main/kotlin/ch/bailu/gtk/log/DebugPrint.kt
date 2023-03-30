@@ -1,24 +1,30 @@
 package ch.bailu.gtk.log
 
+import ch.bailu.gtk.model.Model
+import ch.bailu.gtk.model.type.Type
+import ch.bailu.gtk.parser.tag.TagWithParent
+
 object DebugPrint {
 
-    fun colon(vararg strings: String): String {
-        return colonList(strings.toList())
+    fun colon(tag: TagWithParent, vararg strings: String): String {
+        return colonList(tag::class.simpleName?: "", strings.toList(), "(", ")")
     }
 
-    private fun colonList(strings: Array<String>): String {
-        return colonList(strings.toList())
+    fun colon(model: Model, vararg strings: String): String {
+        return colonList(model::class.simpleName?: "", strings.toList())
     }
 
-    private fun colonList(strings: List<String>): String {
-        var del = ""
+    fun colon(type: Type, vararg strings: String): String {
+        return colonList(type.getDebugIdentifier(), strings.toList(), "{", "}")
+    }
+
+    private fun colonList(model: String, strings: List<String>, open: String = "[", close : String = "]"): String {
         val builder = StringBuilder()
-        builder.append("[")
+        builder.append(open).append(model)
         for (s in strings) {
-            builder.append(del)
+            builder.append(':')
             builder.append(s)
-            del = ":"
         }
-        return builder.append("]").toString()
+        return builder.append(close).toString()
     }
 }

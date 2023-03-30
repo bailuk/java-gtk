@@ -78,27 +78,20 @@ class TestTypeModel {
 
     @Test
     fun testClassTypeNotInTable() {
-        var classType = ClassType("namespace", "Application", "GtkApplication", false)
+        val classType = ClassType("namespace", "Application", "GtkApplication")
         assertFalse(classType.valid)
         assertFalse(classType.directType)
-        classType = ClassType("namespace", "Application", "GtkApplication", true)
-        assertTrue(classType.valid) // Wrapper is a valid type
-        assertTrue(classType.wrapper)
     }
 
     @Test
     fun testClassTypeInTable() {
         StructureTable.add("namespace", "Application")
 
-        var classType = ClassType("namespace", "Application", "GtkApplication", false)
+        val classType = ClassType("namespace", "Application", "GtkApplication")
         assertTrue(classType.valid)
         assertFalse(classType.wrapper)
         assertTrue(classType.directType)
 
-        classType = ClassType("namespace", "Application", "GtkApplication", true)
-        assertTrue(classType.valid)
-        assertTrue(classType.wrapper)
-        assertTrue(classType.directType)
         StructureTable.clear()
     }
 
@@ -106,19 +99,11 @@ class TestTypeModel {
     fun testClassTypInTablePointer() {
         StructureTable.add("namespace", "Application")
 
-
-        var classType = ClassType("namespace", "Application", "GtkApplication*", true)
-        assertTrue(classType.valid)
-        assertTrue(classType.wrapper)
-        // is wrapper because is out enum
-        assertEquals("ch.bailu.gtk.type.Int", classType.getApiTypeName("namespace"))
-        assertTrue(classType.directType)
-
-        classType = ClassType("mynamespace", "Application", "GtkApplication*", false)
+        var classType = ClassType("mynamespace", "Application", "GtkApplication*")
         assertFalse(classType.valid)
         assertFalse(classType.directType)
 
-        classType = ClassType("mynamespace", "namespace.Application", "GtkApplication*", false)
+        classType = ClassType("mynamespace", "namespace.Application", "GtkApplication*")
         assertEquals("ch.bailu.gtk.namespace.Application", classType.getApiTypeName(""))
         assertTrue(classType.valid)
         assertFalse(classType.directType)

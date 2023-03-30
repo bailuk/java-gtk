@@ -57,7 +57,7 @@ class MethodModel(namespace: String, parameterNamespace: String, method: MethodT
     }
 
     override fun toString(): String {
-        val result = StringBuilder().append(DebugPrint.colon(supportedState,returnType.toString(),apiName))
+        val result = StringBuilder().append(DebugPrint.colon(this, supportedState, apiName, returnType.toString()))
         for (p in parameters) {
             result.append("\n        ").append(p.toString())
         }

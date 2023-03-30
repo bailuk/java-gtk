@@ -1,14 +1,14 @@
 package ch.bailu.gtk.model.type
 
 import ch.bailu.gtk.converter.NamespaceType
+import ch.bailu.gtk.log.DebugPrint
 import ch.bailu.gtk.parser.tag.ParameterTag
 import ch.bailu.gtk.table.AliasTable
-import ch.bailu.gtk.table.EnumTable
 import ch.bailu.gtk.table.StructureTable.contains
 import ch.bailu.gtk.table.WrapperTable
 import ch.bailu.gtk.writer.Names
 
-class ClassType {
+class ClassType : Type {
     private var type: NamespaceType
 
     /**
@@ -70,5 +70,13 @@ class ClassType {
      */
     fun getApiTypeName(namespace: String = ""): String {
         return Names.getApiTypeName(type, namespace)
+    }
+
+    override fun getDebugIdentifier(): String {
+        return "G"
+    }
+
+    override fun toString(): String {
+        return DebugPrint.colon(this, name, type.name)
     }
 }

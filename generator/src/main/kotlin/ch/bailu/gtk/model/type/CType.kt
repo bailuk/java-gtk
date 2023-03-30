@@ -1,8 +1,9 @@
 package ch.bailu.gtk.model.type
 
+import ch.bailu.gtk.log.DebugPrint
 import java.util.regex.Pattern
 
-class CType(type: String) {
+class CType(type: String) : Type() {
     companion object {
         private val P_CONST = Pattern.compile("^const [A-Za-z]+")
         private val P_POINTER = Pattern.compile(".*[A-Za-z]+\\*$")
@@ -17,5 +18,13 @@ class CType(type: String) {
 
     operator fun contains(type: String): Boolean {
         return this.type.contains(type)
+    }
+
+    override fun getDebugIdentifier(): String {
+        return "c"
+    }
+
+    override fun toString(): String {
+        return DebugPrint.colon(this, type)
     }
 }

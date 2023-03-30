@@ -76,7 +76,7 @@ open class MethodTag(parent: TagWithParent): NamedWithDocTag(parent) {
         getParameters().forEach{
             strings.add(it.toString())
         }
-        return DebugPrint.colon(*strings.toTypedArray())
+        return DebugPrint.colon(this, *strings.toTypedArray())
 
     }
 }

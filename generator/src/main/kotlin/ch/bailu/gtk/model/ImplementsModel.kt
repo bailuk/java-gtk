@@ -8,7 +8,7 @@ import ch.bailu.gtk.parser.tag.NamedWithDocTag
  * A class can implement interfaces:
  * <implements name="Gtk.Accessible"/>
  */
-class ImplementsModel(private val currentNamespace: String, private val tag: NamedWithDocTag): Model() {
+class ImplementsModel(private val currentNamespace: String, tag: NamedWithDocTag): Model() {
     private val classType: ClassType =
         ClassType(currentNamespace, tag.getName(), tag.getName())
 
@@ -29,6 +29,6 @@ class ImplementsModel(private val currentNamespace: String, private val tag: Nam
     }
 
     override fun toString(): String {
-        return DebugPrint.colon(supportedState, "implements", tag.getName())
+        return DebugPrint.colon(this, supportedState, classType.toString())
     }
 }

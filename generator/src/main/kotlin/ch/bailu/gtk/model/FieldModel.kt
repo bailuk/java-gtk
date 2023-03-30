@@ -89,6 +89,9 @@ class FieldModel(namespace: String, fieldTag: FieldTag) : Model() {
     }
 
     override fun toString(): String {
-        return DebugPrint.colon("Field", name, supportedState, methodModel.supportedState, methodModel.toString())
+        if (isMethod) {
+            return DebugPrint.colon(this, name, supportedState, methodModel.toString())
+        }
+        return DebugPrint.colon(this, name, supportedState, classType.toString(), jType.toString(), cType.toString())
     }
 }

@@ -129,15 +129,14 @@ class ParameterModel(namespace: String,
 
     override fun toString(): String {
         return if (isCallback) {
-            val cb = DebugPrint.colon(supportedState, callbackModel.toString())
-            "<cb>\n${" ".repeat(8)}${cb}\n${" ".repeat(8)}<cb>}"
+            DebugPrint.colon(this, supportedState, callbackModel.toString())
 
         } else {
-            DebugPrint.colon(
+            DebugPrint.colon(this,
                 supportedState,
-                parameterTag.toString(),
-                gtkType,
-                getApiTypeName("")
+                classType.toString(),
+                jType.toString(),
+                cType.toString()
             )
         }
     }

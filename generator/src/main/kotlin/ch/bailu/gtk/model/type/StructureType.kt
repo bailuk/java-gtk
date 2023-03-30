@@ -1,9 +1,10 @@
 package ch.bailu.gtk.model.type
 
 import ch.bailu.gtk.Configuration
+import ch.bailu.gtk.log.DebugPrint
 
 
-class StructureType(value: String) {
+class StructureType(value: String) : Type() {
 
     enum class Types {PACKAGE, UNION, RECORD, CLASS, INTERFACE, BITFIELD, CALLBACK, ENUMERATION }
 
@@ -49,5 +50,13 @@ class StructureType(value: String) {
 
     fun compare(type: Types): Boolean {
         return value == type.toString()
+    }
+
+    override fun getDebugIdentifier(): String {
+        return "S"
+    }
+
+    override fun toString(): String {
+        return DebugPrint.colon(this, value)
     }
 }
