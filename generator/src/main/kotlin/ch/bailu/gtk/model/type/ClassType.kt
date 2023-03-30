@@ -30,12 +30,11 @@ class ClassType {
 
 
     constructor(namespace: String, parameter: ParameterTag)
-            : this(namespace, parameter.getTypeName(), parameter.getType(),
-                isOutEnum = !parameter.inDirection && EnumTable.isEnum(namespace, parameter))
+            : this(namespace, parameter.getTypeName(), EnumType.toCTypeName(namespace, parameter))
 
-    constructor(namespace: String, typeName: String, cTypeName: String, isOutEnum: Boolean = false) {
+    constructor(namespace: String, typeName: String, cTypeName: String) {
         var classOrWrapperTypeName = typeName
-        val cType = CType(if (isOutEnum) "gint*" else cTypeName)
+        val cType = CType(cTypeName)
 
         wrapper = if (WrapperTable.contains(cType.type)) {
             classOrWrapperTypeName = WrapperTable.convert(cType.type)
