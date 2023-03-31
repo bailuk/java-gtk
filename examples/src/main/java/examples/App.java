@@ -21,7 +21,6 @@ import ch.bailu.gtk.type.Strs;
 import examples.gtk4_demo.Accordion;
 import examples.gtk4_demo.AppLauncher;
 import examples.gtk4_demo.HeaderBarSample;
-import examples.gtk4_demo.HelloWorldBoxed;
 import examples.gtk4_demo.LinksSample;
 import examples.gtk4_demo.PangoTextMask;
 import examples.gtk4_demo.Picker;
@@ -67,7 +66,6 @@ public class App {
             addSample(demoList, window, new HeaderBarSample(app));
             addSample(demoList, window, new LinksSample());
             addSample(demoList, window, new PangoTextMask());
-            addSample(demoList, window, new HelloWorldBoxed());
             addSample(demoList, window, new CustomDrawing());
             addSample(demoList, window, new UiBuilderExample(app));
             addSample(demoList, window, new HugeList(app));
