@@ -49,10 +49,24 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         out.end(1)
     }
 
-    override fun writeUnsupported(model: Model) {
-        out.start(0)
-        out.a("    /*${model}\n    */\n")
-        out.end(0)
+    override fun writeDebugBegin(structureModel: StructureModel) {
+        out.start(1)
+        out.a("/*").nl()
+        out.a("type-").a(structureModel.structureType.value).nl()
+        if (structureModel.disguised) out.a("flag-disguised").nl()
+        if (structureModel.allFieldsAreSupported && structureModel.isRecord) out.a("all-fields-supported").nl()
+        if (!structureModel.allFieldsAreSupported && structureModel.isRecord) out.a("some-fields-unsupported").nl()
+        out.end(1)
+    }
+
+    override fun writeDebugUnsupported(model: Model) {
+        out.start(1)
+        out.a(model.toString()).nl()
+        out.end(1)
+    }
+
+    override fun writeDebugEnd() {
+        out.a("*/\n")
     }
 
     override fun writeImplements(implementsModel: ImplementsModel) {
@@ -208,7 +222,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         out.end(1)
     }
 
-    override fun writeEnd() {
+    override fun writeClassEnd() {
         out.start(0)
         out.a("}\n")
         out.end(0)
@@ -413,7 +427,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
     }
 
     override fun writeEndStruct() {}
-    override fun writeBeginInstace(namespaceModel: NamespaceModel) {}
+    override fun writeBeginInstance(namespaceModel: NamespaceModel) {}
     override fun writeEndInstance() {}
     override fun writeField(structureModel : StructureModel, fieldModel : FieldModel) {
         Validator.validateSupported(fieldModel)

@@ -115,7 +115,7 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
         }
     }
 
-    override fun writeUnsupported(model: Model) {}
+    override fun writeDebugUnsupported(model: Model) {}
     override fun writeImplements(implementsModel: ImplementsModel) {
 
         val name = implementsModel.apiTypeName
@@ -130,13 +130,16 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
         doc.writeDocEnd()
     }
 
-    override fun writeEnd() {}
+    override fun writeClassEnd() {}
+    override fun writeDebugBegin(structureModel: StructureModel) {}
+    override fun writeDebugEnd() {}
+
     override fun writeGetTypeFunction(structureModel: StructureModel) {}
     override fun writeMallocConstructor(structureModel: StructureModel) {}
     override fun writeStart(structureModel: StructureModel, namespaceModel: NamespaceModel) {}
     override fun writeInternalConstructor(structureModel: StructureModel) {}
     override fun writeBeginStruct(structureModel : StructureModel, fields: ModelList<FieldModel>) {}
     override fun writeEndStruct() {}
-    override fun writeBeginInstace(namespaceModel: NamespaceModel) {}
+    override fun writeBeginInstance(namespaceModel: NamespaceModel) {}
     override fun writeEndInstance() {}
 }

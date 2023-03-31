@@ -27,7 +27,7 @@ class ClassComposer : CodeComposer() {
             writer.writeEndStruct()
         }
 
-        writer.writeBeginInstace(namespaceModel)
+        writer.writeBeginInstance(namespaceModel)
         models.privateFactories.forEach { writer.writePrivateFactory(structureModel, it) }
         models.factories.forEach        { writer.writeFactory(structureModel, it) }
         models.constructors.forEach     { writer.writeConstructor(structureModel, it) }

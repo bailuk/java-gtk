@@ -83,7 +83,7 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
         out.end(1)
     }
 
-    override fun writeEnd() {
+    override fun writeClassEnd() {
         out.l(0,"}", 1)
     }
 
@@ -145,7 +145,7 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
         out.l(0,"    }", 1)
     }
 
-    override fun writeBeginInstace(namespaceModel: NamespaceModel) {
+    override fun writeBeginInstance(namespaceModel: NamespaceModel) {
         out.start(3)
         out.a("""
             private static Instance INSTANCE;
@@ -170,6 +170,8 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
     override fun writeInternalConstructor(structureModel: StructureModel) {}
     override fun writeConstructor(structureModel: StructureModel, methodModel: MethodModel) {}
     override fun writeFactory(structureModel: StructureModel, methodModel: MethodModel) {}
-    override fun writeUnsupported(model: Model) {}
+    override fun writeDebugBegin(structureModel: StructureModel) {}
+    override fun writeDebugUnsupported(model: Model) {}
+    override fun writeDebugEnd() {}
     override fun writeImplements(implementsModel: ImplementsModel) {}
 }
