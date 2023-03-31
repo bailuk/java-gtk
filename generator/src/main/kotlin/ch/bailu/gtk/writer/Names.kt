@@ -3,8 +3,11 @@ package ch.bailu.gtk.writer
 import ch.bailu.gtk.Configuration
 import ch.bailu.gtk.converter.NamespaceType
 import ch.bailu.gtk.table.ReservedTokenTable.convert
+import ch.bailu.gtk.validator.Validator
 
 object Names {
+
+    private val splitRegex = "[\\-_]".toRegex()
 
     /**
      * Convert any name into a valid and conventional Java method name
@@ -12,19 +15,21 @@ object Names {
      * Example "get_file_manager" -> "getFileManager"
      */
     fun getJavaMethodName(name: String): String {
-        if (name.length < 3) {
-            return name
-        }
         val result = StringBuilder()
-        val names = name.split("_".toRegex()).filter { it.isNotEmpty() }
+        val names = split(name)
+
+        if (names.isEmpty()) return name
 
         result.append(names[0])
         for (i in 1 until names.size) {
-            firstUpper(result, names[i])
+            firstUpper(result, names[i].lowercase())
         }
         return fixToken(result.toString())
     }
 
+    private fun split(name: String): List <String> {
+        return name.split(splitRegex).filter { it.isNotEmpty() }
+    }
 
     /**
      * Convert any name into a valid and conventional Java class name
@@ -33,22 +38,18 @@ object Names {
      */
     fun getJavaClassName(name: String): String {
         val result = StringBuilder()
-        val names = name.split("_".toRegex()).toTypedArray()
+        val names = split(name)
         for (i in names.indices) {
             firstUpper(result, names[i])
         }
         return fixToken(result.toString())
     }
 
-
     private fun firstUpper(result: StringBuilder, s: String) {
-        if (s.isNotEmpty()) {
-            result.append(Character.toUpperCase(s[0]))
-            if (s.length > 1) {
-                result.append(s.substring(1))
-            }
-        } else {
-            result.append(s)
+        Validator.giveUp("empty-string", s.isEmpty())
+        result.append(Character.toUpperCase(s[0]))
+        if (s.length > 1) {
+            result.append(s.substring(1))
         }
     }
 
@@ -67,7 +68,7 @@ object Names {
     private fun getJavaSignalName(prefix: String, name: String): String {
         val result = StringBuilder()
         result.append(prefix)
-        val names = name.split("[\\-_]".toRegex()).toTypedArray()
+        val names = split(name)
         for (i in names.indices) {
             firstUpper(result, names[i])
         }
@@ -123,8 +124,8 @@ object Names {
     }
 
     /**
-     * Return name into valid and conventional java name
-     * Replaces reserved keywords
+     * Return valid variable name by replacing reserved keywords
+     * Keep original name if possible
      */
     fun getJavaVariableName(name: String): String {
         return fixToken(name)
@@ -160,6 +161,4 @@ object Names {
             getJavaClassNameWithNamespacePrefix(type.namespace, type.name)
         } else type.name
     }
-
-
 }

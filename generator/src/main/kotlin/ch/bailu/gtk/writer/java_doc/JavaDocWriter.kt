@@ -15,9 +15,6 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
     private fun writeClassOrInterface(structureModel: StructureModel) {
         doc.writeStart(0)
         doc.writeBlock(structureModel.doc)
-        if (structureModel.disguised) {
-            doc.writeLine("<br>disguised")
-        }
         doc.writeClassUrl(structureModel)
         doc.writeDocEnd()
     }
