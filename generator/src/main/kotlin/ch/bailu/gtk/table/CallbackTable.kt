@@ -32,7 +32,6 @@ object CallbackTable : Logable {
                 writer.write(String.format("    %-40s %-40s\n", it.key, it.value))
             }
             writer.write("}\n\n")
-
         }
     }
 }

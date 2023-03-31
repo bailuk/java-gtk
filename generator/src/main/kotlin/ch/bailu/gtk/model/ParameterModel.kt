@@ -16,7 +16,6 @@ class ParameterModel(namespace: String,
                      isConstant: Boolean,
                      preferNative: Boolean) : Model() {
 
-    private val cType: CType
     private val classType = ClassType(namespace, parameterTag)
     private val callbackType = CallbackType(namespace, parameterTag.getTypeName())
     private val jType: JavaType
@@ -33,28 +32,22 @@ class ParameterModel(namespace: String,
 
     init {
         if (!classType.valid && EnumTable.isEnum(namespace, parameterTag)) {
-            this.cType = CType("int")
             this.jType = JavaType("int")
             hasNativeVariant = false
 
         } else {
-            val cType = CType(parameterTag.getType())
             val jType = JavaType(parameterTag.getType())
             hasNativeVariant = classType.valid && jType.valid
 
             if (hasNativeVariant && preferNative) {
-                this.cType = cType
                 this.jType = jType
 
             } else if (classType.valid) {
-                this.cType = CType("void*")
                 this.jType = JavaType("long")
 
             } else if (parameterTag.isVarargs) {
-                this.cType = CType("Object...")
                 this.jType = JavaType("...")
             } else {
-                this.cType = cType
                 this.jType = jType
             }
         }
@@ -70,7 +63,7 @@ class ParameterModel(namespace: String,
     }
 
     private fun createCallbackModel(classType: ClassType, namespace: String): MethodModel? {
-        val parameterNamespace = classType.namespace.ifEmpty {
+        val parameterNamespace = classType.type.namespace.ifEmpty {
             namespace
         }
 
@@ -122,10 +115,6 @@ class ParameterModel(namespace: String,
             return !classType.valid || isNativeVariant
         }
 
-    private val gtkType: String
-        get() {
-            return cType.type
-        }
 
     override fun toString(): String {
         return if (isCallback) {
@@ -136,7 +125,6 @@ class ParameterModel(namespace: String,
                 supportedState,
                 classType.toString(),
                 jType.toString(),
-                cType.toString()
             )
         }
     }

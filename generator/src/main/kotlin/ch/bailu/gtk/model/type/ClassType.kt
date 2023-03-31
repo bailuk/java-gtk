@@ -9,7 +9,7 @@ import ch.bailu.gtk.table.WrapperTable
 import ch.bailu.gtk.writer.Names
 
 class ClassType : Type {
-    private var type: NamespaceType
+    val type: NamespaceType
 
     /**
      * Non-pointer access needed to access records inside records as fields
@@ -21,13 +21,6 @@ class ClassType : Type {
 
     val valid: Boolean
     val wrapper: Boolean
-
-    val namespace: String
-        get() = type.namespace
-
-    val name : String
-        get() =  type.name
-
 
     constructor(namespace: String, parameter: ParameterTag)
             : this(namespace, parameter.getTypeName(), EnumType.toCTypeName(namespace, parameter))
@@ -45,15 +38,15 @@ class ClassType : Type {
 
         type = convert(namespace, classOrWrapperTypeName)
         valid = wrapper || supportedClass(type, cType)
-        directType = wrapper || (supportedClass(type, cType) && cType.isDirectType)
+        directType = !wrapper && supportedClass(type, cType) && cType.isDirectType
     }
 
     private fun supportedClass(type: NamespaceType, ctype: CType): Boolean {
         return (isInStructureTable(type) && isPointerSupported(ctype))
     }
 
-    private fun isPointerSupported(ctype: CType): Boolean {
-        return ctype.isSinglePointer || ctype.isDirectType
+    private fun isPointerSupported(cType: CType): Boolean {
+        return cType.isSinglePointer || cType.isDirectType
     }
 
     private fun convert(namespace: String, typeName: String): NamespaceType {
@@ -77,6 +70,6 @@ class ClassType : Type {
     }
 
     override fun toString(): String {
-        return DebugPrint.colon(this, name, type.name)
+        return DebugPrint.colon(this, type.name)
     }
 }

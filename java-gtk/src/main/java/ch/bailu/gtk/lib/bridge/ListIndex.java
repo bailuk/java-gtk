@@ -128,10 +128,7 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
         public void onInterfaceInitFunc(CallbackHandler __self, @Nonnull Pointer g_iface, @Nullable Pointer iface_data) {
             System.out.println("ListIndex::interfaceInit");
 
-            long pointer = g_iface.getCPointer();
-            pointer += 8; // TODO why is offset missing?
-
-            var listModelInterface = new ListModelInterface(Pointer.toCPointer(pointer));
+            var listModelInterface = new ListModelInterface(Pointer.toCPointer(g_iface.getCPointer()));
             listModelInterface.setFieldGetItem(getItem);
             listModelInterface.setFieldGetNItems(getNItems);
             listModelInterface.setFieldGetItemType(getItemType);

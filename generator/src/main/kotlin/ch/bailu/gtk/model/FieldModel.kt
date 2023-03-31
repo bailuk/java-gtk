@@ -1,7 +1,7 @@
 package ch.bailu.gtk.model
 
 import ch.bailu.gtk.log.DebugPrint
-import ch.bailu.gtk.model.type.CType
+import ch.bailu.gtk.model.type.ArrayType
 import ch.bailu.gtk.model.type.CallbackType
 import ch.bailu.gtk.model.type.ClassType
 import ch.bailu.gtk.model.type.JavaType
@@ -9,12 +9,11 @@ import ch.bailu.gtk.parser.tag.CallbackTag
 import ch.bailu.gtk.parser.tag.FieldTag
 import ch.bailu.gtk.parser.tag.MethodTag
 import ch.bailu.gtk.table.EnumTable
-import ch.bailu.gtk.validator.Validator
 import ch.bailu.gtk.writer.Names
 
 class FieldModel(namespace: String, fieldTag: FieldTag) : Model() {
-    private val classType: ClassType = ClassType(namespace, fieldTag)
-    private val cType: CType
+    private val classType = ClassType(namespace, fieldTag)
+    private val arrayType = ArrayType(classType.type)
     private val jType: JavaType
     private val hasNativeVariant: Boolean
     val methodModel: MethodModel
@@ -28,25 +27,23 @@ class FieldModel(namespace: String, fieldTag: FieldTag) : Model() {
     val impType: String
     val isWriteable: Boolean
 
+    val size = arrayType.size
+
     init {
         val callbackType = CallbackType(namespace, fieldTag.getTypeName())
 
         if (!classType.valid && EnumTable.isEnum(namespace, fieldTag)) {
-            this.cType = CType("int")
             this.jType = JavaType("int")
             hasNativeVariant = false
 
         } else {
-            val cType = CType(fieldTag.getType())
             val jType = JavaType(fieldTag.getType())
             hasNativeVariant = classType.valid && jType.valid
 
             if (classType.valid) {
-                this.cType = CType("void*")
                 this.jType = JavaType("long")
 
             } else {
-                this.cType = cType
                 this.jType = jType
             }
         }
@@ -60,8 +57,9 @@ class FieldModel(namespace: String, fieldTag: FieldTag) : Model() {
             setPublic(methodModel.visibleState, methodModel.isPublic)
 
         } else {
-            setSupported("java-type-not-supported", jType.valid || isMethod)
-            setSupported("direct-type", classType.referenceType || isMethod || classType.wrapper)
+            setSupported("java-type-not-supported", jType.valid)
+            setSupported("direct-type", classType.referenceType || arrayType.valid)
+            setPrivate("direct-type", classType.directType)
         }
         isDirectType = classType.directType
         isWriteable = fieldTag.isWriteable || isMethod
@@ -74,7 +72,6 @@ class FieldModel(namespace: String, fieldTag: FieldTag) : Model() {
 
         } else {
             methodTag
-
         }
     }
 
@@ -92,6 +89,6 @@ class FieldModel(namespace: String, fieldTag: FieldTag) : Model() {
         if (isMethod) {
             return DebugPrint.colon(this, name, supportedState, methodModel.toString())
         }
-        return DebugPrint.colon(this, name, supportedState, classType.toString(), jType.toString(), cType.toString())
+        return DebugPrint.colon(this, name, supportedState, classType.toString(), jType.toString())
     }
 }

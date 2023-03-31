@@ -16,6 +16,9 @@ class StructureTag(parent: TagWithParent, val structureType: String): NamedWithD
     var getType = ""
         private set
 
+    var isTypeStructFor = ""
+        private set
+
     val implements = TagList<NamedWithDocTag>()
     val constructors = TagList<MethodTag>()
     val functions = TagList<MethodTag>()
@@ -68,9 +71,10 @@ class StructureTag(parent: TagWithParent, val structureType: String): NamedWithD
             type = value
         } else if ("glib:get-type" == name) {
             getType = value
+        } else if ("glib:is-gtype-struct-for" == name) {
+            isTypeStructFor = value
         } else {
             super.setAttribute(name, value)
         }
     }
-
 }

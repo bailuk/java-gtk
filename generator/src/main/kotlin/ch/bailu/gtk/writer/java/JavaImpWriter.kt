@@ -134,6 +134,9 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
 
         if (fieldModel.isMethod) {
             out.a("        public ${fieldModel.getApiTypeName(structureModel.nameSpaceModel.namespace)} ${fieldModel.name};\n")
+        } else if (fieldModel.isDirectType) {
+            Validator.giveUp("array size missing", fieldModel.size < 1)
+            out.a("        public byte[] ${fieldModel.name} = new byte[${fieldModel.size}];\n")
         } else {
             out.a("        public ${fieldModel.impType} ${fieldModel.name};\n")
         }

@@ -12,9 +12,9 @@ class CType(type: String) : Type() {
 
     val type = if ("" == type) "void*" else type
 
-    val isSinglePointer    = P_POINTER.matcher(this.type).find()
-    val isConst      = P_CONST.matcher(this.type).find()
-    val isDirectType = P_NOPOINTER.matcher(this.type).find()
+    val isSinglePointer = P_POINTER.matcher(this.type).find()
+    val isConst         = P_CONST.matcher(this.type).find()
+    val isDirectType    = P_NOPOINTER.matcher(this.type).find()
 
     operator fun contains(type: String): Boolean {
         return this.type.contains(type)

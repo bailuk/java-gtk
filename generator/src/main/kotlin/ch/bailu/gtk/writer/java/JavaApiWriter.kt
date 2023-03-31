@@ -3,7 +3,9 @@ package ch.bailu.gtk.writer.java
 import ch.bailu.gtk.model.*
 import ch.bailu.gtk.model.filter.ModelList
 import ch.bailu.gtk.validator.Validator
-import ch.bailu.gtk.writer.*
+import ch.bailu.gtk.writer.CodeWriter
+import ch.bailu.gtk.writer.Names
+import ch.bailu.gtk.writer.TextWriter
 import ch.bailu.gtk.writer.java_doc.JavaDoc
 import ch.bailu.gtk.writer.java_doc.JavaDocWriter
 
@@ -52,7 +54,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
     override fun writeDebugBegin(structureModel: StructureModel) {
         out.start(1)
         out.a("/*").nl()
-        out.a("type-").a(structureModel.structureType.value).nl()
+        out.a(structureModel.structureType.value.lowercase()).a("-type").nl()
         if (structureModel.disguised) out.a("flag-disguised").nl()
         if (structureModel.allFieldsAreSupported && structureModel.isRecord) out.a("all-fields-supported").nl()
         if (!structureModel.allFieldsAreSupported && structureModel.isRecord) out.a("some-fields-unsupported").nl()
@@ -230,8 +232,24 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
 
     override fun writeGetTypeFunction(structureModel: StructureModel) {
         out.start(1)
-        out.a("    public static long getTypeID() { return ${structureModel.jnaName}.INST().${structureModel.typeFunction}(); }\n" )
-        out.end(0)
+        out.a("""
+                public static long getTypeID() { 
+                    return ${structureModel.jnaName}.INST().${structureModel.typeFunction}(); 
+                }
+                
+                public static long getParentTypeID() {
+                    return ch.bailu.gtk.gobject.Gobject.typeParent(getTypeID());
+                }
+
+                public static ch.bailu.gtk.type.gobject.TypeSystem.TypeSize getTypeSize() {
+                    return ch.bailu.gtk.type.gobject.TypeSystem.getTypeSize(getTypeID());
+                }
+
+                public static ch.bailu.gtk.type.gobject.TypeSystem.TypeSize getParentTypeSize() {
+                    return ch.bailu.gtk.type.gobject.TypeSystem.getTypeSize(getParentTypeID());
+                }
+        """, 4)
+        out.end(1)
     }
 
     override fun writeSignal(structureModel : StructureModel, methodModel : MethodModel) {
@@ -442,11 +460,10 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         writeFieldName(structureModel, fieldModel, fieldName, fieldNameConst)
 
         if (fieldModel.isPublic) {
-            if (fieldModel.isWriteable && !fieldModel.isDirectType) {
+            if (fieldModel.isWriteable) {
                 writeFieldWrite(structureModel, fieldModel, fieldName, fieldNameConst)
             }
-
-           writeFieldRead(structureModel, fieldModel, fieldName, fieldNameConst)
+            writeFieldRead(structureModel, fieldModel, fieldName, fieldNameConst)
         }
     }
 

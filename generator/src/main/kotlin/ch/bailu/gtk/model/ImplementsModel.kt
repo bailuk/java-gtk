@@ -22,7 +22,7 @@ class ImplementsModel(private val currentNamespace: String, tag: NamedWithDocTag
      * API Type name without namespace
      */
     val name: String
-        get() = classType.name
+        get() = classType.type.name
 
     init {
         setSupported("type-not-supported", classType.valid)

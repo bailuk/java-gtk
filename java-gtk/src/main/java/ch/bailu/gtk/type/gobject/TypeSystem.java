@@ -73,12 +73,10 @@ public class TypeSystem {
     }
 
     public static class TypeSize {
-        public final long type;
         public final int instanceSize;
         public final int classSize;
 
-        public TypeSize(long type, int instanceSize, int classSize) {
-            this.type = type;
+        public TypeSize(int instanceSize, int classSize) {
             this.instanceSize = instanceSize;
             this.classSize = classSize;
         }
@@ -88,8 +86,7 @@ public class TypeSystem {
         final var typeQuery = new TypeQuery();
 
         Gobject.typeQuery(type, typeQuery);
-
-        final var result = new TypeSize(typeQuery.getFieldType(), typeQuery.getFieldInstanceSize(), typeQuery.getFieldClassSize());
+        final var result = new TypeSize(typeQuery.getFieldInstanceSize(), typeQuery.getFieldClassSize());
 
         typeQuery.destroy();
         return result;
