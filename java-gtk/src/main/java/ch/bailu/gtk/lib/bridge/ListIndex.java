@@ -53,7 +53,7 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
             super(toJnaPointer(_self));
         }
 
-        public byte[] parent = new byte[TypeSystem.getTypeSize(PARENT_TYPE).instanceSize];
+        public byte[] parent = new byte[Object.getTypeSize().instanceSize];
         public int index;
         public int size;
     }
