@@ -4,17 +4,16 @@ package examples;
 import java.io.IOException;
 import java.io.InputStream;
 
-import ch.bailu.gtk.lib.bridge.Image;
 import ch.bailu.gtk.cairo.Context;
 import ch.bailu.gtk.gdk.Gdk;
 import ch.bailu.gtk.gdkpixbuf.Pixbuf;
 import ch.bailu.gtk.gdkpixbuf.PixbufFormat;
 import ch.bailu.gtk.gtk.DrawingArea;
 import ch.bailu.gtk.gtk.Window;
+import ch.bailu.gtk.lib.bridge.Image;
 import ch.bailu.gtk.lib.handler.CallbackHandler;
 import ch.bailu.gtk.lib.handler.SignalHandler;
 import ch.bailu.gtk.lib.util.JavaResource;
-import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Str;
 
 public class ImageBridge implements DemoInterface {
@@ -49,7 +48,7 @@ public class ImageBridge implements DemoInterface {
 
         int count = 1;
         while(list.isNotNull() && list.getFieldData().isNotNull()) {
-            var format = new PixbufFormat(new PointerContainer(list.getFieldData().asCPointer()));
+            var format = new PixbufFormat(list.getFieldData().cast());
 
             System.out.println("__");
             System.out.println("Format " + count + ":");

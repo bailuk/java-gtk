@@ -110,7 +110,7 @@ public class Picker implements DemoInterface {
 
             dialog.onResponse(response_id -> {
                 if (response_id == ResponseType.OK) {
-                    var color = new ch.bailu.gtk.gtk.ColorChooser(new PointerContainer(dialog.asCPointer()));
+                    var color = dialog.asColorChooser();
                     color.getRgba(rgba);
                     da.queueDraw();
                 }

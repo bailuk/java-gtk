@@ -71,18 +71,15 @@ public class AdwDemoWindow extends ApplicationWindow {
         initTemplate();
         this.instance = new Instance(asCPointer());
         StyleManager manager = StyleManager.getDefault();
-        manager.connectSignal("notify::system-supports-color-schemes", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(self).notifySystemSupportsColorSchemes());
+        manager.connectSignal("notify::system-supports-color-schemes", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(cast(self)).notifySystemSupportsColorSchemes());
         notifySystemSupportsColorSchemes();
-        new Leaflet(new PointerContainer(this.instance.main_leaflet)).navigate(NavigationDirection.FORWARD);
+        new Leaflet(cast(this.instance.main_leaflet)).navigate(NavigationDirection.FORWARD);
     }
 
     public AdwDemoWindow(Application app) {
         this(TypeSystem.newInstance(getTypeID(), new TypeSystem.Property(APP_PROPERTY_NAME, app)));
     }
 
-    public AdwDemoWindow(long self) {
-        this(new PointerContainer(self));
-    }
 
     public AdwDemoWindow(PointerContainer self) {
         super(self);
@@ -104,12 +101,12 @@ public class AdwDemoWindow extends ApplicationWindow {
         widgetClass.bindTemplateChildFull(new Str("main_leaflet"), true, OFFSET + 8);
         widgetClass.bindTemplateChildFull(new Str("subpage_leaflet"), true, OFFSET + 16);
         widgetClass.bindTemplateChildFull(new Str("toasts_page"), true, OFFSET + 24);
-        widgetClass.bindTemplateCallback("get_color_scheme_icon_name", (SignalCallbackSB) (self, dark) -> new AdwDemoWindow(self).getColorSchemeIconName(dark));
-        widgetClass.bindTemplateCallback("color_scheme_button_clicked_cb", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(self).onColorSchemeButtonClicked());
-        widgetClass.bindTemplateCallback("notify_visible_child_cb", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(self).notifyVisibleChild());
-        widgetClass.bindTemplateCallback("back_clicked_cb", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(self).backClicked());
-        widgetClass.bindTemplateCallback("leaflet_back_clicked_cb", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(self).onLeafletBackClicked());
-        widgetClass.bindTemplateCallback("leaflet_next_page_cb", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(self).onLeafletNextPage());
+        widgetClass.bindTemplateCallback("get_color_scheme_icon_name", (SignalCallbackSB) (self, dark) -> new AdwDemoWindow(cast(self)).getColorSchemeIconName(dark));
+        widgetClass.bindTemplateCallback("color_scheme_button_clicked_cb", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(cast(self)).onColorSchemeButtonClicked());
+        widgetClass.bindTemplateCallback("notify_visible_child_cb", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(cast(self)).notifyVisibleChild());
+        widgetClass.bindTemplateCallback("back_clicked_cb", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(cast(self)).backClicked());
+        widgetClass.bindTemplateCallback("leaflet_back_clicked_cb", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(cast(self)).onLeafletBackClicked());
+        widgetClass.bindTemplateCallback("leaflet_next_page_cb", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(cast(self)).onLeafletNextPage());
         widgetClass.installAction(new Str("toast.undo"), Str.NULL, (__self1, widget, action_name, parameter) -> new AdwDemoWindow(widget.cast()).toastUndo());
 
         __self.unregister();
