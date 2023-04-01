@@ -23,7 +23,7 @@ public class AdwFlapDemoWindow extends Window {
     @Structure.FieldOrder({"parent", "flap", "reveal_btn_start", "reveal_btn_end"})
     public static class Instance extends Structure {
         public Instance(long _self) {
-            super(toJnaPointer(_self));
+            super(asJnaPointer(_self));
             read();
         }
 
@@ -36,13 +36,13 @@ public class AdwFlapDemoWindow extends Window {
     private final Instance instance;
 
     public AdwFlapDemoWindow(long self) {
-        super(toCPointer(self));
+        super(cast(self));
         instance = new Instance(self);
     }
 
     public AdwFlapDemoWindow() {
         super(TypeSystem.newInstance(getTypeID()));
-        instance = new Instance(getCPointer());
+        instance = new Instance(asCPointer());
     }
 
     public static Str foldPolicyName(EnumListItem item) {
@@ -70,9 +70,9 @@ public class AdwFlapDemoWindow extends Window {
     }
 
     public void onButtonToggled(ToggleButton button) {
-        var flap = new Flap(toCPointer(instance.flap));
-        var btnEnd = new Widget(toCPointer(instance.reveal_btn_end));
-        var btnStart = new Widget(toCPointer(instance.reveal_btn_start));
+        var flap = new Flap(cast(instance.flap));
+        var btnEnd = new Widget(cast(instance.reveal_btn_end));
+        var btnStart = new Widget(cast(instance.reveal_btn_start));
 
         if (button.getActive()) {
             flap.setFlapPosition(PackType.START);
@@ -86,7 +86,7 @@ public class AdwFlapDemoWindow extends Window {
     }
 
     public void onStackNotifyVisibleChild() {
-        var flap = new Flap(toCPointer(instance.flap));
+        var flap = new Flap(cast(instance.flap));
         if (flap.getFolded()&& !flap.getLocked()) {
             flap.setRevealFlap(false);
         }
@@ -104,7 +104,7 @@ public class AdwFlapDemoWindow extends Window {
 
                 widgetClass.bindTemplateCallback("start_toggle_button_toggled_cb", new Callback() {
                     public void invoke(long button, long self) {
-                        new AdwFlapDemoWindow(self).onButtonToggled(new ToggleButton(toCPointer(button)));
+                        new AdwFlapDemoWindow(self).onButtonToggled(new ToggleButton(cast(button)));
                     }
                 });
                 widgetClass.bindTemplateCallback("stack_notify_visible_child_cb", new Callback() {
@@ -114,12 +114,12 @@ public class AdwFlapDemoWindow extends Window {
                 });
                 widgetClass.bindTemplateCallback("fold_policy_name", new Callback() {
                     public long invoke(long item, long data) {
-                        return foldPolicyName(new EnumListItem(toCPointer(item))).getCPointer();
+                        return foldPolicyName(new EnumListItem(cast(item))).asCPointer();
                     }
                 });
                 widgetClass.bindTemplateCallback("transition_type_name", new Callback() {
                     public long invoke(long item, long data) {
-                        return transitionTypeName(new EnumListItem(toCPointer(item))).getCPointer();
+                        return transitionTypeName(new EnumListItem(cast(item))).asCPointer();
                     }
                 });
             }, (__self, instance, g_class) -> new Window(instance.cast()).initTemplate());

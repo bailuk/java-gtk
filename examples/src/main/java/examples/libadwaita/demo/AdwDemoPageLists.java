@@ -25,7 +25,7 @@ public class AdwDemoPageLists {
                 widgetClass.setTemplateOrExit("/adw_demo/adw-demo-page-list.ui");
                 widgetClass.bindTemplateCallback("entry_apply_cb", (SignalHandler.SignalCallback) self -> {
                     final var toast = new Toast("Changes applied");
-                    Gobject.signalEmit(Pointer.toPointer(self), signal, 0, toast.getCPointer());
+                    Gobject.signalEmit(Pointer.asPointer(self), signal, 0, toast.asCPointer());
                 });
             }, (__self, instance, g_class) -> new Bin(instance.cast()).initTemplate());
         }

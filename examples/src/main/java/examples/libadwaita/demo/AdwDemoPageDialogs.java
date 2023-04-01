@@ -8,7 +8,7 @@ import ch.bailu.gtk.gobject.Gobject;
 import ch.bailu.gtk.gobject.ObjectClassExtended;
 import ch.bailu.gtk.gtk.WidgetClassExtended;
 import ch.bailu.gtk.gtk.Window;
-import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
 
@@ -19,7 +19,7 @@ public class AdwDemoPageDialogs extends Bin {
     private static long type = 0;
     private static int signal;
 
-    public AdwDemoPageDialogs(CPointer self) {
+    public AdwDemoPageDialogs(PointerContainer self) {
         super(self);
     }
 
@@ -61,7 +61,7 @@ public class AdwDemoPageDialogs extends Bin {
 
          dialog.onResponse(response -> {
              var toast = new Toast("Dialog response: " + response);
-             Gobject.signalEmit(AdwDemoPageDialogs.this, signal, 0, toast.getCPointer());
+             Gobject.signalEmit(AdwDemoPageDialogs.this, signal, 0, toast.asCPointer());
              dialog.disconnectSignals();
          });
          dialog.present();

@@ -72,15 +72,15 @@ public class AdwDemoPageAvatar extends Bin {
     };
 
     public AdwDemoPageAvatar(Widget widget) {
-        this(widget.getCPointer());
+        this(widget.asCPointer());
     }
 
     public AdwDemoPageAvatar(TypeInstance self) {
         super(self.cast());
         initTemplate();
-        this.instance = new Instance(getCPointer());
+        this.instance = new Instance(asCPointer());
         var name = createRandomName();
-        var editable = new Editable(toCPointer(instance.text));
+        var editable = new Editable(cast(instance.text));
         editable.setText(name);
 
         populateContacts();
@@ -92,7 +92,7 @@ public class AdwDemoPageAvatar extends Bin {
     }
 
     public AdwDemoPageAvatar(long self) {
-        super(toCPointer(self));
+        super(cast(self));
         instance = new Instance(self);
     }
 
@@ -100,7 +100,7 @@ public class AdwDemoPageAvatar extends Bin {
     @Structure.FieldOrder({"parent", "avatar", "text", "file_chooser_label", "contacts"})
     public static class Instance extends Structure {
         public Instance(long _self) {
-            super(toJnaPointer(_self));
+            super(asJnaPointer(_self));
             read();
         }
 
@@ -146,7 +146,7 @@ public class AdwDemoPageAvatar extends Bin {
 
             new PreferencesRow(contact.cast()).setTitle(name);
             contact.addPrefix(avatar);
-            new ListBox(toCPointer(instance.contacts)).append(contact);
+            new ListBox(cast(instance.contacts)).append(contact);
         }
     }
 
@@ -161,13 +161,13 @@ public class AdwDemoPageAvatar extends Bin {
 
             if (response_id == 1) {
                 var path = dialog.getPath();
-                new Label(toCPointer(instance.file_chooser_label)).setLabel(path);
+                new Label(cast(instance.file_chooser_label)).setLabel(path);
 
                 actionSetEnabled("avatar.remove", true);
 
                 try {
                     var texture = Texture.newFromFilenameTexture(path);
-                    new Avatar(toCPointer(instance.avatar)).setCustomImage(new Paintable(texture.cast()));
+                    new Avatar(cast(instance.avatar)).setCustomImage(new Paintable(texture.cast()));
                     texture.unref();
                 } catch (Exception e) {
                     System.err.println("Failed to create texture from file: " + path);
@@ -180,9 +180,9 @@ public class AdwDemoPageAvatar extends Bin {
     }
 
     private void onAvatarRemove() {
-        new Label(toCPointer(instance.file_chooser_label)).setLabel("(None)");
+        new Label(cast(instance.file_chooser_label)).setLabel("(None)");
         actionSetEnabled("avatar.remove", false);
-        new Avatar(toCPointer(instance.avatar)).setCustomImage(null);
+        new Avatar(cast(instance.avatar)).setCustomImage(null);
     }
 
     private void onAvatarSave() {
@@ -196,7 +196,7 @@ public class AdwDemoPageAvatar extends Bin {
         dialog.onResponse(response_id -> {
             if (response_id == 1) {
                 var path = dialog.getPath();
-                var texture = new Avatar(toCPointer(instance.avatar)).drawToTexture(getScaleFactor());
+                var texture = new Avatar(cast(instance.avatar)).drawToTexture(getScaleFactor());
                 texture.saveToPng(path);
                 texture.unref();
             }

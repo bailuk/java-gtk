@@ -3,8 +3,6 @@ package examples.libadwaita.demo.styles;
 import com.sun.jna.Callback;
 import com.sun.jna.Structure;
 
-import javax.annotation.Nonnull;
-
 import ch.bailu.gtk.adw.Leaflet;
 import ch.bailu.gtk.adw.NavigationDirection;
 import ch.bailu.gtk.adw.Window;
@@ -19,8 +17,7 @@ import ch.bailu.gtk.gobject.Value;
 import ch.bailu.gtk.gtk.SelectionMode;
 import ch.bailu.gtk.gtk.Widget;
 import ch.bailu.gtk.gtk.WidgetClassExtended;
-import ch.bailu.gtk.lib.handler.CallbackHandler;
-import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
 
@@ -46,7 +43,7 @@ public class AdwStyleDemoWindow extends Window {
     @Structure.FieldOrder({"parent", "header_bar_window", "status_page_window", "sidebar_window", "sidebar_leaflet",  "progress"})
     public static class Instance extends Structure {
         public Instance(long _self) {
-            super(toJnaPointer(_self));
+            super(asJnaPointer(_self));
             read();
         }
 
@@ -67,12 +64,12 @@ public class AdwStyleDemoWindow extends Window {
     }
 
     public AdwStyleDemoWindow(long self) {
-        this(toCPointer(self));
+        this(cast(self));
     }
 
-    public AdwStyleDemoWindow(CPointer self) {
+    public AdwStyleDemoWindow(PointerContainer self) {
         super(self);
-        instance = new Instance(getCPointer());
+        instance = new Instance(asCPointer());
     }
 
 
@@ -129,29 +126,29 @@ public class AdwStyleDemoWindow extends Window {
     }
 
     private void onSidebar() {
-        new ch.bailu.gtk.gtk.Window(toCPointer(instance.sidebar_window)).present();
+        new ch.bailu.gtk.gtk.Window(cast(instance.sidebar_window)).present();
     }
 
     private void onStatusBar() {
-        new ch.bailu.gtk.gtk.Window(toCPointer(instance.status_page_window)).present();
+        new ch.bailu.gtk.gtk.Window(cast(instance.status_page_window)).present();
     }
 
     private void onHeaderBar() {
-        new ch.bailu.gtk.gtk.Window(toCPointer(instance.header_bar_window)).present();
+        new ch.bailu.gtk.gtk.Window(cast(instance.header_bar_window)).present();
     }
 
     private void onSidebarForward() {
-        new Leaflet(toCPointer(instance.sidebar_leaflet)).navigate(NavigationDirection.FORWARD);
+        new Leaflet(cast(instance.sidebar_leaflet)).navigate(NavigationDirection.FORWARD);
     }
 
     private void onSidebarBack() {
-        new Leaflet(toCPointer(instance.sidebar_leaflet)).navigate(NavigationDirection.BACK);
+        new Leaflet(cast(instance.sidebar_leaflet)).navigate(NavigationDirection.BACK);
     }
 
     private void onDispose(ObjectClassExtended parentClass) {
-        new Window(toCPointer(instance.header_bar_window)).destroy();
-        new Window(toCPointer(instance.status_page_window)).destroy();
-        new Window(toCPointer(instance.sidebar_window)).destroy();
+        new Window(cast(instance.header_bar_window)).destroy();
+        new Window(cast(instance.status_page_window)).destroy();
+        new Window(cast(instance.sidebar_window)).destroy();
 
         parentClass.onDispose(this);
     }
@@ -180,12 +177,12 @@ public class AdwStyleDemoWindow extends Window {
     private void setDevelStyle(boolean devel) {
         if (devel) {
             addCssClass(PROP_DEVEL_NAME);
-            new Widget(toCPointer(instance.header_bar_window)).addCssClass(PROP_DEVEL_NAME);
-            new Widget(toCPointer(instance.status_page_window)).addCssClass(PROP_DEVEL_NAME);
+            new Widget(cast(instance.header_bar_window)).addCssClass(PROP_DEVEL_NAME);
+            new Widget(cast(instance.status_page_window)).addCssClass(PROP_DEVEL_NAME);
         } else {
             removeCssClass(PROP_DEVEL_NAME);
-            new Widget(toCPointer(instance.header_bar_window)).removeCssClass(PROP_DEVEL_NAME);
-            new Widget(toCPointer(instance.status_page_window)).removeCssClass(PROP_DEVEL_NAME);
+            new Widget(cast(instance.header_bar_window)).removeCssClass(PROP_DEVEL_NAME);
+            new Widget(cast(instance.status_page_window)).removeCssClass(PROP_DEVEL_NAME);
         }
     }
 }

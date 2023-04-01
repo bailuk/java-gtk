@@ -1,7 +1,5 @@
 package ch.bailu.gtk.table
 
-import java.util.*
-
 object ReservedTokenTable {
     private val table: MutableMap<String, String> = HashMap()
 
@@ -14,11 +12,9 @@ object ReservedTokenTable {
         add("default", "_default")
         add("private", "_private")
         add("...", "_elipse")
-        //add("notify", "xnotify")
         add("interface", "_interface")
         add("false", "_false")
         add("true", "_true")
-        //add("ch", "CH")
         add("toString", "toStr")
     }
 

@@ -3,7 +3,7 @@ package examples.libadwaita.demo;
 import ch.bailu.gtk.adw.Bin;
 import ch.bailu.gtk.gtk.WidgetClassExtended;
 import ch.bailu.gtk.gtk.Window;
-import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
 
@@ -11,7 +11,7 @@ public class AdwDemoPageFlap extends Bin {
     private final static Str TYPE_NAME = new Str(AdwDemoPageFlap.class.getSimpleName());
     private static long type = 0;
 
-    private AdwDemoPageFlap(CPointer self) {
+    private AdwDemoPageFlap(PointerContainer self) {
         super(self);
     }
 

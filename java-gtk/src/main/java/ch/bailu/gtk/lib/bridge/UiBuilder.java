@@ -3,10 +3,10 @@ package ch.bailu.gtk.lib.bridge;
 import java.io.File;
 import java.io.IOException;
 
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.exception.AllocationError;
 import ch.bailu.gtk.gtk.Builder;
 import ch.bailu.gtk.lib.util.JavaResource;
-import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Str;
 
 /**
@@ -26,7 +26,7 @@ public class UiBuilder {
         path.destroy();
     }
 
-    public CPointer getObject(String name) {
+    public PointerContainer getObject(String name) {
         var strName = new Str(name);
         var result = builder.getObject(name).cast();
         strName.destroy();

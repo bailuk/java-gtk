@@ -11,7 +11,7 @@ import ch.bailu.gtk.gio.ApplicationFlags;
 import ch.bailu.gtk.glib.Glib;
 import ch.bailu.gtk.glib.MainContext;
 import ch.bailu.gtk.glib.MainLoop;
-import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
@@ -43,7 +43,7 @@ public class TestCCall {
 
         final long timeExpectMin = 100*10;
         final long start = System.currentTimeMillis();
-        final var loop = new MainLoop(new MainContext(CPointer.NULL), true);
+        final var loop = new MainLoop(new MainContext(PointerContainer.NULL), true);
         Glib.timeoutAdd(100, (self, user_data) -> {
             System.out.println(i);
             i++;

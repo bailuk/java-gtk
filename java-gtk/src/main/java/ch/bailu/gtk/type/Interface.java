@@ -7,7 +7,7 @@ import ch.bailu.gtk.gobject.Object;
  */
 public class Interface extends Object {
 
-    public Interface(CPointer pointer) {
+    public Interface(PointerContainer pointer) {
         super(pointer);
     }
 }

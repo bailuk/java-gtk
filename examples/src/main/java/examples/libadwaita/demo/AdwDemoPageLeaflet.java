@@ -3,8 +3,6 @@ package examples.libadwaita.demo;
 import com.sun.jna.Callback;
 import com.sun.jna.Structure;
 
-import javax.annotation.Nonnull;
-
 import ch.bailu.gtk.adw.Bin;
 import ch.bailu.gtk.adw.EnumListItem;
 import ch.bailu.gtk.adw.LeafletTransitionType;
@@ -17,9 +15,8 @@ import ch.bailu.gtk.gobject.ParamFlags;
 import ch.bailu.gtk.gobject.ParamSpec;
 import ch.bailu.gtk.gobject.Value;
 import ch.bailu.gtk.gtk.WidgetClassExtended;
-import ch.bailu.gtk.lib.handler.CallbackHandler;
 import ch.bailu.gtk.lib.jna.AdwLib;
-import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
 
@@ -36,7 +33,7 @@ public class AdwDemoPageLeaflet extends Bin {
     @Structure.FieldOrder({"parent", "transition_type"})
     public static class Instance extends Structure {
         public Instance(long _self) {
-            super(toJnaPointer(_self));
+            super(asJnaPointer(_self));
             read();
         }
 
@@ -46,9 +43,9 @@ public class AdwDemoPageLeaflet extends Bin {
 
     private final Instance instance;
 
-    public AdwDemoPageLeaflet(CPointer self) {
+    public AdwDemoPageLeaflet(PointerContainer self) {
         super(self);
-        instance = new Instance(getCPointer());
+        instance = new Instance(asCPointer());
     }
 
     private static long type = 0;
@@ -74,13 +71,13 @@ public class AdwDemoPageLeaflet extends Bin {
                 widgetClass.setTemplateOrExit("/adw_demo/adw-demo-page-leaflet.ui");
                 widgetClass.bindTemplateCallback("get_transition_name", new Callback() {
                         public long invoke(long self, long user_data) {
-                        return getTransitionName(new EnumListItem(toCPointer(self))).getCPointer();
+                        return getTransitionName(new EnumListItem(cast(self))).asCPointer();
                     }
                 });
 
                 widgetClass.bindTemplateCallback("next_row_activated_cb", new Callback() {
                     public void invoke(long self) {
-                        Gobject.signalEmit(toPointer(self), signal, 0);
+                        Gobject.signalEmit(asPointer(self), signal, 0);
                     }
                 });
 

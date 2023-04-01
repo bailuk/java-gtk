@@ -26,7 +26,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         out.a("import javax.annotation.Nullable;\n")
         out.a("import javax.annotation.Nonnull;\n")
         out.a("import ch.bailu.gtk.type.Str;\n")
-        out.a("import ch.bailu.gtk.type.CPointer;")
+        out.a("import ch.bailu.gtk.type.PointerContainer;")
 
         out.end(3)
     }
@@ -90,7 +90,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
     override fun writeMethod(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(1)
         javaDoc.writeMethod(structureModel, methodModel)
-        writeFunctionCall(structureModel, methodModel, "this", "getCPointer()")
+        writeFunctionCall(structureModel, methodModel, "this", "asCPointer()")
         out.end(1)
     }
 
@@ -122,7 +122,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
             result.append("return ${getFullCall(c, m, signature)}")
 
         } else {
-            result.append("return new ${m.returnType.getApiTypeName(c.nameSpaceModel.namespace)}(new CPointer(${getFullCall(c, m, signature)}))")
+            result.append("return new ${m.returnType.getApiTypeName(c.nameSpaceModel.namespace)}(new PointerContainer(${getFullCall(c, m, signature)}))")
         }
         return result.toString()
     }
@@ -156,7 +156,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         out.start(1)
         javaDoc.writeInternalConstructor(structureModel)
         out.a("""
-            public ${structureModel.apiName}(CPointer pointer) {
+            public ${structureModel.apiName}(PointerContainer pointer) {
                 super(pointer);
             }
         """,4)
@@ -170,7 +170,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
             javaDoc.writeMallocConstructor(structureModel)
             out.a("""
                 public ${structureModel.apiName}() {
-                    super(toCPointer(${structureModel.jnaName}.allocateStructure()));
+                    super(cast(${structureModel.jnaName}.allocateStructure()));
                 }
             """, 4)
             out.end(1)
@@ -182,7 +182,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         javaDoc.writeConstructor(structureModel, methodModel)
         out.a("""
             public ${structureModel.apiName}(${getSignature(structureModel, methodModel.parameters)}) {
-                super(new CPointer(${structureModel.jnaName}.INST().${methodModel.gtkName}(${getCallSignature(methodModel, "", "getClassHandler().getInstance()")})));
+                super(cast(${structureModel.jnaName}.INST().${methodModel.gtkName}(${getCallSignature(methodModel, "", "getClassHandler().getInstance()")})));
             }
         """, 4)
         out.end(1)
@@ -193,7 +193,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         javaDoc.writeFactory(structureModel, methodModel)
         out.a("""
             public static ${structureModel.apiName} ${methodModel.apiName}${structureModel.apiName}(${getSignature(structureModel, methodModel.parameters)}) ${getThrowsExtension(methodModel)} {
-                CPointer __self = new CPointer(${structureModel.jnaName}.INST().${methodModel.gtkName}(${getCallSignature(methodModel, "", "getClassHandler().getInstance()")}));
+                PointerContainer __self = cast(${structureModel.jnaName}.INST().${methodModel.gtkName}(${getCallSignature(methodModel, "", "getClassHandler().getInstance()")}));
                 if (__self.isNull()) {
                     ${getThrowsOnNullStatement(structureModel, methodModel)};
                 }
@@ -337,7 +337,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         result.append("(${getSignalInterfaceCallSignature(structureModel, methodModel, prefix)})")
 
         if (!methodModel.returnType.isVoid && !methodModel.returnType.isJavaNative) {
-            result.append(".getCPointer()")
+            result.append(".asCPointer()")
         }
         return result.toString()
     }
@@ -351,7 +351,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
             if (p.isJavaNative) {
                 result.append("_").append(p.name)
             } else {
-                result.append("new ${p.getApiTypeName(structureModel.nameSpaceModel.namespace)}(new CPointer(_${p.name}))")
+                result.append("new ${p.getApiTypeName(structureModel.nameSpaceModel.namespace)}(new PointerContainer(_${p.name}))")
             }
             del = ", "
         }
@@ -416,9 +416,9 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
             } else if  (p.isJavaNative) {
                 result.append("${del}${p.name}")
             } else if (p.nullable) {
-                    result.append("${del}toCPointer(${p.name})")
+                    result.append("${del}asCPointer(${p.name})")
             } else {
-                result.append("${del}toCPointerNotNull(${p.name})")
+                result.append("${del}asCPointerNotNull(${p.name})")
             }
             del = ", "
         }
@@ -436,7 +436,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
 
             ${structureModel.jnaName}.Fields toFields() {
                 if (_fields == null) {
-                    _fields = new ${structureModel.jnaName}.Fields(getCPointer());
+                    _fields = new ${structureModel.jnaName}.Fields(asCPointer());
                 }
                 return _fields;
             }
@@ -474,7 +474,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         } else if (fieldModel.isJavaNative) {
             fieldName
         } else {
-            "$fieldName.getCPointer()"
+            "$fieldName.asCPointer()"
         }
         val setter = Names.getJavaFieldSetterName(fieldModel.name)
 
@@ -501,7 +501,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         val result = if (fieldModel.isMethod || fieldModel.isJavaNative) {
             "toFields().$fieldName"
         } else {
-            "new ${fieldModel.getApiTypeName(structureModel.nameSpaceModel.namespace)}(new CPointer(toFields().$fieldName))"
+            "new ${fieldModel.getApiTypeName(structureModel.nameSpaceModel.namespace)}(new PointerContainer(toFields().$fieldName))"
         }
 
         val getter = Names.getJavaFieldGetterName(fieldModel.name)

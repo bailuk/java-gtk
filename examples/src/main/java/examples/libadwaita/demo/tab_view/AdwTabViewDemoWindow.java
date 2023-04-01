@@ -3,8 +3,6 @@ package examples.libadwaita.demo.tab_view;
 import com.sun.jna.Callback;
 import com.sun.jna.Structure;
 
-import javax.annotation.Nonnull;
-
 import ch.bailu.gtk.adw.TabPage;
 import ch.bailu.gtk.adw.TabView;
 import ch.bailu.gtk.adw.Window;
@@ -26,8 +24,7 @@ import ch.bailu.gtk.gobject.ParamSpec;
 import ch.bailu.gtk.gobject.TypeInstance;
 import ch.bailu.gtk.gobject.Value;
 import ch.bailu.gtk.gtk.WidgetClassExtended;
-import ch.bailu.gtk.lib.handler.CallbackHandler;
-import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
@@ -40,16 +37,16 @@ public class AdwTabViewDemoWindow extends Window {
 
     private static Str PROP_TOOLTIP_NAME = new Str("tooltip");
 
-    public AdwTabViewDemoWindow(CPointer cast) {
+    public AdwTabViewDemoWindow(PointerContainer cast) {
         super(cast);
-        instance = new Instance(getCPointer());
+        instance = new Instance(asCPointer());
     }
 
 
     @Structure.FieldOrder({"parent", "view", "tab_bar", "tab_overview", "tab_action_group", "menu_page", "narrow", "in_dispose"})
     public static class Instance extends Structure {
         public Instance(long _self) {
-            super(toJnaPointer(_self));
+            super(asJnaPointer(_self));
             read();
         }
 
@@ -66,33 +63,33 @@ public class AdwTabViewDemoWindow extends Window {
     private final Instance instance;
 
     public AdwTabViewDemoWindow(long self) {
-        super(toCPointer(self));
-        instance = new Instance(getCPointer());
+        super(cast(self));
+        instance = new Instance(asCPointer());
     }
 
     private AdwTabViewDemoWindow(TypeInstance self) {
         super(self.cast());
         initTemplate();
-        instance = new Instance(getCPointer());
+        instance = new Instance(asCPointer());
     }
 
     public AdwTabViewDemoWindow() {
         super(TypeSystem.newInstance(getTypeID()));
-        instance = new Instance(getCPointer());
+        instance = new Instance(asCPointer());
     }
 
     private static final Str TOOLTIP_TEXT = new Str("Elaborate tooltip for <b>%s</b>");
 
     private boolean textToTooltip(Value input, Value output) {
         var title = input.getString();
-        var tooltip = Glib.markupPrintfEscaped(TOOLTIP_TEXT, title.getCPointer());
+        var tooltip = Glib.markupPrintfEscaped(TOOLTIP_TEXT, title.asCPointer());
         output.takeString(tooltip);
         return true;
     }
 
 
     private TabPage addPage(TabPage parent, AdwTabViewDemoPage content) {
-        var page = new TabView(toCPointer(instance.view)).addPage(content, parent);
+        var page = new TabView(cast(instance.view)).addPage(content, parent);
         content.bindProperty(AdwTabViewDemoPage.PROP_TITLE_NAME, page, AdwTabViewDemoPage.PROP_TITLE_NAME, BindingFlags.SYNC_CREATE);
         content.bindPropertyFull(
                 AdwTabViewDemoPage.PROP_TITLE_NAME,
@@ -240,12 +237,12 @@ public class AdwTabViewDemoWindow extends Window {
     }
 
     private void setTabActionEnabled(String name, boolean enabled) {
-        var action = new ActionMap(toCPointer(instance.tab_action_group)).lookupAction(name);
+        var action = new ActionMap(cast(instance.tab_action_group)).lookupAction(name);
         new SimpleAction(action.cast()).setEnabled(enabled);
     }
 
     private void setTabActionState(String name, boolean state) {
-        var action = new ActionMap(toCPointer(instance.tab_action_group)).lookupAction(name);
+        var action = new ActionMap(cast(instance.tab_action_group)).lookupAction(name);
         new SimpleAction(action.cast()).setState(Variant.newBooleanVariant(state));
     }
 
@@ -272,7 +269,7 @@ public class AdwTabViewDemoWindow extends Window {
         if (muted.isNotNull()) {
             page.setData("adw-tab-view-demo-muted", Pointer.NULL);
         } else {
-            page.setData("adw-tab-view-demo-muted", toPointer(1L));
+            page.setData("adw-tab-view-demo-muted", asPointer(1L));
         }
 
         // TODO Why??
@@ -305,12 +302,12 @@ public class AdwTabViewDemoWindow extends Window {
 
     // TODO move to instance as 'getter' (?)
     private TabView getTabView() {
-        return new TabView(toCPointer(instance.view));
+        return new TabView(cast(instance.view));
     }
 
     // TODO move to instance as 'getter' (?)
     private TabPage getMenuPage() {
-        return new TabPage(toCPointer(instance.menu_page));
+        return new TabPage(cast(instance.menu_page));
     }
 
     public synchronized static long getTypeID() {
@@ -334,7 +331,7 @@ public class AdwTabViewDemoWindow extends Window {
 
                 widgetClass.bindTemplateCallback("page_detached_cb", new Callback() {
                     public void invoke(long self, long page) {
-                        new AdwTabViewDemoWindow(self).onPageDetached(new TabPage(toCPointer(page)));
+                        new AdwTabViewDemoWindow(self).onPageDetached(new TabPage(cast(page)));
                     }
                 });
                 widgetClass.bindTemplateCallback("setup_menu_cb", new Callback() {
@@ -344,18 +341,18 @@ public class AdwTabViewDemoWindow extends Window {
                 });
                 widgetClass.bindTemplateCallback("create_tab_cb", new Callback() {
                     public long invoke(long self) {
-                        return new AdwTabViewDemoWindow(self).onCreateTab().getCPointer();
+                        return new AdwTabViewDemoWindow(self).onCreateTab().asCPointer();
                     }
                 });
                 widgetClass.bindTemplateCallback("create_window_cb", new Callback() {
                     public long invoke(long self) {
-                        return new AdwTabViewDemoWindow(self).onCreateWindow().getCPointer();
+                        return new AdwTabViewDemoWindow(self).onCreateWindow().asCPointer();
                     }
                 });
 
                 widgetClass.bindTemplateCallback("indicator_activated_cb", new Callback() {
                     public void invoke(long self, long page) {
-                        new AdwTabViewDemoWindow(self).onIndicatorActivated(new TabPage(toCPointer(page)));
+                        new AdwTabViewDemoWindow(self).onIndicatorActivated(new TabPage(cast(page)));
                     }
                 });
 

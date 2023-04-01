@@ -24,14 +24,14 @@ public class AdwDemoPageCarousel extends Bin {
     private static long type = 0;
 
     public AdwDemoPageCarousel(long self) {
-        super(toCPointer(self));
+        super(cast(self));
         instance = new Instance(self);
     }
 
     @Structure.FieldOrder({"parent", "box", "carousel", "indicators_stack", "orientation_row", "indicators_row"})
     public static class Instance extends Structure {
         public Instance(long _self) {
-            super(toJnaPointer(_self));
+            super(asJnaPointer(_self));
             read();
         }
 
@@ -60,7 +60,7 @@ public class AdwDemoPageCarousel extends Bin {
                 widgetClass.bindTemplateChildFull("indicators_row", true,PARENT_OFFSET + 32);
 
                 widgetClass.bindTemplateCallback("get_orientation_name", new Callback() {
-                    public long invoke(long item, long data) { return getOrientationName(new EnumListItem(Pointer.toCPointer(item))).getCPointer();}
+                    public long invoke(long item, long data) { return getOrientationName(new EnumListItem(cast(item))).asCPointer();}
                 });
                 widgetClass.bindTemplateCallback("notify_orientation_cb", new Callback() {
                     public void invoke(long self) {
@@ -69,7 +69,7 @@ public class AdwDemoPageCarousel extends Bin {
                 });
                 widgetClass.bindTemplateCallback("get_indicators_name", new Callback() {
                     public long invoke(long obj) {
-                        return getIndicatorsName(new StringObject(toCPointer(obj))).getCPointer();
+                        return getIndicatorsName(new StringObject(cast(obj))).asCPointer();
                     }
                 });
                 widgetClass.bindTemplateCallback("notify_indicators_cb", new Callback() {
@@ -78,7 +78,7 @@ public class AdwDemoPageCarousel extends Bin {
                     }
                 });
 
-                widgetClass.installAction("carousel.return", null, (__self1, widget, action_name, parameter) -> new AdwDemoPageCarousel(widget.getCPointer()).carouselReturn());
+                widgetClass.installAction("carousel.return", null, (__self1, widget, action_name, parameter) -> new AdwDemoPageCarousel(widget.asCPointer()).carouselReturn());
             }, (__self, instance, g_class) -> new Bin(instance.cast()).initTemplate());
         }
         return type;
@@ -92,9 +92,9 @@ public class AdwDemoPageCarousel extends Bin {
     }
 
     public void notifyOrientation() {
-        var box = new Orientable(toCPointer(instance.box));
-        var carousel = new Orientable(toCPointer(instance.carousel));
-        var orientation = new ComboRow(toCPointer(instance.orientation_row)).getSelected();
+        var box = new Orientable(cast(instance.box));
+        var carousel = new Orientable(cast(instance.carousel));
+        var orientation = new ComboRow(cast(instance.orientation_row)).getSelected();
 
         carousel.setOrientation(orientation);
         box.setOrientation(1- orientation);
@@ -108,15 +108,15 @@ public class AdwDemoPageCarousel extends Bin {
     }
 
     public void notifyIndicators() {
-        var stringObject = new StringObject(new ComboRow(toCPointer(instance.indicators_row)).getSelectedItem().cast());
-        var stack = new Stack(toCPointer(instance.indicators_stack));
+        var stringObject = new StringObject(new ComboRow(cast(instance.indicators_row)).getSelectedItem().cast());
+        var stack = new Stack(cast(instance.indicators_stack));
 
         System.out.println(stringObject.getString());
         stack.setVisibleChildName(stringObject.getString());
     }
 
     public void carouselReturn() {
-        var carousel = new Carousel(toCPointer(instance.carousel));
+        var carousel = new Carousel(cast(instance.carousel));
         carousel.scrollTo(carousel.getNthPage(0), true);
     }
 }

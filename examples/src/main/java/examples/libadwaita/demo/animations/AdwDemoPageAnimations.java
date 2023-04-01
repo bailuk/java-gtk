@@ -3,8 +3,6 @@ package examples.libadwaita.demo.animations;
 import com.sun.jna.Callback;
 import com.sun.jna.Structure;
 
-import javax.annotation.Nonnull;
-
 import ch.bailu.gtk.adw.Animation;
 import ch.bailu.gtk.adw.AnimationState;
 import ch.bailu.gtk.adw.Bin;
@@ -29,8 +27,7 @@ import ch.bailu.gtk.gtk.Stack;
 import ch.bailu.gtk.gtk.TextDirection;
 import ch.bailu.gtk.gtk.Widget;
 import ch.bailu.gtk.gtk.WidgetClassExtended;
-import ch.bailu.gtk.lib.handler.CallbackHandler;
-import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
 
@@ -45,29 +42,29 @@ public class AdwDemoPageAnimations extends Bin {
     private final static Str  PROP_TIMED_ANIMATION_NAME  = new Str("timed-animation");
     private final static Str  PROP_SPRING_ANIMATION_NAME = new Str("spring-animation");
 
-    public AdwDemoPageAnimations(CPointer self) {
+    public AdwDemoPageAnimations(PointerContainer self) {
         super(self);
-        instance = new Instance(self.getCPointer());
+        instance = new Instance(self.asCPointer());
     }
 
     public AdwDemoPageAnimations(TypeInstance self) {
         super(self.cast());
         initTemplate();
-        instance = new Instance(getCPointer());
-        var target = new CallbackAnimationTarget((__self, value, user_data) -> AnimationsUtil.onTimedAnimation(new Widget(user_data.cast())), toPointer(instance.timed_animation_sample), null);
+        instance = new Instance(asCPointer());
+        var target = new CallbackAnimationTarget((__self, value, user_data) -> AnimationsUtil.onTimedAnimation(new Widget(user_data.cast())), asPointer(instance.timed_animation_sample), null);
 
         var timedAnimation = new TimedAnimation(
-                new Widget(toCPointer(instance.timed_animation_sample)),
+                new Widget(cast(instance.timed_animation_sample)),
                 0, 1, 100, target
         );
-        instance.timed_animation = timedAnimation.getCPointer();
+        instance.timed_animation = timedAnimation.asCPointer();
         instance.writeField("timed_animation");
 
         instance.spring_animation = new SpringAnimation(
-                new Widget(toCPointer(instance.timed_animation_sample)),
+                new Widget(cast(instance.timed_animation_sample)),
                 0, 1,
                 SpringParams.newFullSpringParams(10,1,100), target
-        ).getCPointer();
+        ).asCPointer();
         instance.writeField("spring_animation");
 
         notifySpringParamsChange();
@@ -102,8 +99,8 @@ public class AdwDemoPageAnimations extends Bin {
                 (__self, widget, orientation, for_size, minimum, natural, minimum_baseline, natural_baseline) -> AnimationsUtil.timedAnimationMeasure(widget, orientation, for_size, minimum, natural, minimum_baseline, natural_baseline),
                 (__self, widget, width, height, baseline) -> new AdwDemoPageAnimations(widget.getAncestor(getTypeID()).cast()).getTimedAnimationAllocate(widget, width, height, baseline));
 
-        new Widget(toCPointer(instance.timed_animation_sample)).setLayoutManager(manager);
-        new Widget(toCPointer(instance.timed_animation_button_box)).setDirection(TextDirection.LTR);
+        new Widget(cast(instance.timed_animation_sample)).setLayoutManager(manager);
+        new Widget(cast(instance.timed_animation_button_box)).setDirection(TextDirection.LTR);
     }
 
 
@@ -127,7 +124,7 @@ public class AdwDemoPageAnimations extends Bin {
     })
     public static class Instance extends Structure {
         public Instance(long self) {
-            super(toJnaPointer(self));
+            super(asJnaPointer(self));
             read();
         }
 
@@ -193,27 +190,27 @@ public class AdwDemoPageAnimations extends Bin {
 
                 widgetClass.bindTemplateCallback("animations_easing_name", new Callback() {
                     public long invoke(long item, long user_data) {
-                        return AnimationsUtil.getEasingName(new EnumListItem(toCPointer(item))).getCPointer();
+                        return AnimationsUtil.getEasingName(new EnumListItem(cast(item))).asCPointer();
                     }
                 });
                 widgetClass.bindTemplateCallback("timed_animation_reset", new Callback() {
                     public void invoke(long self) {
-                        new AdwDemoPageAnimations(toCPointer(self)).timedAnimationReset();
+                        new AdwDemoPageAnimations(cast(self)).timedAnimationReset();
                     }
                 });
                 widgetClass.bindTemplateCallback("timed_animation_play_pause", new Callback() {
                     public void invoke(long self) {
-                        new AdwDemoPageAnimations(toCPointer(self)).timedAnimationPlayPause();
+                        new AdwDemoPageAnimations(cast(self)).timedAnimationPlayPause();
                     }
                 });
                 widgetClass.bindTemplateCallback("timed_animation_skip", new Callback() {
                     public void invoke(long self) {
-                        new AdwDemoPageAnimations(toCPointer(self)).timedAnimationSkip();
+                        new AdwDemoPageAnimations(cast(self)).timedAnimationSkip();
                     }
                 });
                 widgetClass.bindTemplateCallback("get_play_pause_icon_name", new Callback() {
                     public long invoke(long user_data, int timed_state, int spring_state) {
-                        return AnimationsUtil.getPlayPauseIconName(timed_state, spring_state).getCPointer();
+                        return AnimationsUtil.getPlayPauseIconName(timed_state, spring_state).asCPointer();
                     }
                 });
                 widgetClass.bindTemplateCallback("timed_animation_can_reset", new Callback() {
@@ -228,7 +225,7 @@ public class AdwDemoPageAnimations extends Bin {
                 });
                 widgetClass.bindTemplateCallback("notify_spring_params_change", new Callback() {
                     public void invoke(long self) {
-                        new AdwDemoPageAnimations(toCPointer(self)).notifySpringParamsChange();
+                        new AdwDemoPageAnimations(cast(self)).notifySpringParamsChange();
                     }
                 });
             }, (__self, self, g_class) -> new AdwDemoPageAnimations(self));
@@ -237,13 +234,13 @@ public class AdwDemoPageAnimations extends Bin {
     }
 
     private Animation getCurrentAnimation() {
-        var stack = new Stack(toCPointer(instance.animation_preferences_stack));
+        var stack = new Stack(cast(instance.animation_preferences_stack));
         var currentAnimation = stack.getVisibleChildName().toString();
 
         if (currentAnimation.equals("Timed")) {
-            return new Animation(toCPointer(instance.timed_animation));
+            return new Animation(cast(instance.timed_animation));
         }
-        return new Animation((toCPointer(instance.spring_animation)));
+        return new Animation((cast(instance.spring_animation)));
     }
 
     private void getTimedAnimationAllocate(Widget widget, int width, int height, int baseline) {
@@ -262,8 +259,8 @@ public class AdwDemoPageAnimations extends Bin {
     }
 
     private void timedAnimationReset() {
-        new Animation(toCPointer(instance.timed_animation)).reset();
-        new Animation(toCPointer(instance.spring_animation)).reset();
+        new Animation(cast(instance.timed_animation)).reset();
+        new Animation(cast(instance.spring_animation)).reset();
     }
 
     private void timedAnimationPlayPause() {
@@ -283,27 +280,27 @@ public class AdwDemoPageAnimations extends Bin {
     }
 
     private void timedAnimationSkip() {
-        new Animation(toCPointer(instance.timed_animation)).skip();
-        new Animation(toCPointer(instance.spring_animation)).skip();
+        new Animation(cast(instance.timed_animation)).skip();
+        new Animation(cast(instance.spring_animation)).skip();
     }
 
 
     private void notifySpringParamsChange() {
         var springParams = new SpringParams(
-                new SpinButton(toCPointer(instance.spring_animation_damping)).getValue(),
-                new SpinButton(toCPointer(instance.spring_animation_mass)).getValue(),
-                new SpinButton(toCPointer(instance.spring_animation_stiffness)).getValue());
+                new SpinButton(cast(instance.spring_animation_damping)).getValue(),
+                new SpinButton(cast(instance.spring_animation_mass)).getValue(),
+                new SpinButton(cast(instance.spring_animation_stiffness)).getValue());
 
-        new SpringAnimation(toCPointer(instance.spring_animation)).setSpringParams(springParams);
+        new SpringAnimation(cast(instance.spring_animation)).setSpringParams(springParams);
         springParams.unref();
     }
 
 
     private void getProperty(int propId, Value value) {
         if (propId == PROP_TIMED_ANIMATION) {
-            value.setObject(toPointer(instance.timed_animation));
+            value.setObject(asPointer(instance.timed_animation));
         } else if (propId == PROP_SPRING_ANIMATION) {
-            value.setObject(toPointer(instance.spring_animation));
+            value.setObject(asPointer(instance.spring_animation));
         } else {
             System.err.println("Invalid property: " + propId);
         }
@@ -311,10 +308,10 @@ public class AdwDemoPageAnimations extends Bin {
 
     private void setProperty(int propId, Value value) {
         if (propId == PROP_TIMED_ANIMATION) {
-            instance.timed_animation = value.getObject().getCPointer(); // Why does C depend on unreadable macros for banal things like this? (#define g_set_object ...)
+            instance.timed_animation = value.getObject().asCPointer(); // Why does C depend on unreadable macros for banal things like this? (#define g_set_object ...)
             instance.writeField("timed_animation");
         } else if (propId == PROP_SPRING_ANIMATION) {
-            instance.spring_animation = value.getObject().getCPointer();
+            instance.spring_animation = value.getObject().asCPointer();
             instance.writeField("spring_animation");
         } else {
             System.err.println("Invalid property: " + propId);
@@ -322,8 +319,8 @@ public class AdwDemoPageAnimations extends Bin {
     }
 
     private void onDispose(ObjectClassExtended parentClass) {
-        new Animation(toCPointer(instance.spring_animation)).unref();
-        new Animation(toCPointer(instance.timed_animation)).unref();
+        new Animation(cast(instance.spring_animation)).unref();
+        new Animation(cast(instance.timed_animation)).unref();
 
         parentClass.onDispose(this);
     }

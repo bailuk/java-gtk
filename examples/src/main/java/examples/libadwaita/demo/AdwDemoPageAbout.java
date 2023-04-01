@@ -6,7 +6,7 @@ import ch.bailu.gtk.gobject.TypeInstance;
 import ch.bailu.gtk.gtk.License;
 import ch.bailu.gtk.gtk.WidgetClassExtended;
 import ch.bailu.gtk.gtk.Window;
-import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 import ch.bailu.gtk.type.gobject.TypeSystem;
@@ -39,7 +39,7 @@ public class AdwDemoPageAbout extends Bin {
         initTemplate();
     }
 
-    public AdwDemoPageAbout(CPointer self) {
+    public AdwDemoPageAbout(PointerContainer self) {
         super(self);
     }
 

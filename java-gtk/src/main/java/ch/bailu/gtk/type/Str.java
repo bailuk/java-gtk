@@ -1,9 +1,9 @@
 package ch.bailu.gtk.type;
 
 public class Str extends Bytes {
-    public final static Str NULL = new Str(CPointer.NULL);
+    public final static Str NULL = new Str(PointerContainer.NULL);
 
-    public Str(CPointer pointer) {
+    public Str(PointerContainer pointer) {
         super(pointer);
     }
 
@@ -24,9 +24,9 @@ public class Str extends Bytes {
 
     @Override
     public String toString() {
-        if (getCPointer() == 0) {
+        if (asCPointer() == 0) {
             return "";
         }
-        return ImpStr.toString(getCPointer());
+        return ImpStr.toString(asCPointer());
     }
 }

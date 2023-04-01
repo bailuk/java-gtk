@@ -4,8 +4,6 @@ import com.sun.jna.Structure;
 
 import java.util.Random;
 
-import javax.annotation.Nonnull;
-
 import ch.bailu.gtk.adw.Bin;
 import ch.bailu.gtk.gdk.Display;
 import ch.bailu.gtk.gio.Icon;
@@ -21,8 +19,7 @@ import ch.bailu.gtk.gobject.TypeInstance;
 import ch.bailu.gtk.gobject.Value;
 import ch.bailu.gtk.gtk.IconTheme;
 import ch.bailu.gtk.gtk.WidgetClassExtended;
-import ch.bailu.gtk.lib.handler.CallbackHandler;
-import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
@@ -44,7 +41,7 @@ public class AdwTabViewDemoPage extends Bin {
     @Structure.FieldOrder({"parent", "title_entry", "title", "icon", "last_icon",  "color"})
     public static class Instance extends Structure {
         public Instance(long _self) {
-            super(toJnaPointer(_self));
+            super(asJnaPointer(_self));
             read();
         }
 
@@ -62,28 +59,28 @@ public class AdwTabViewDemoPage extends Bin {
     private final Instance instance;
 
 
-    public AdwTabViewDemoPage(CPointer cast) {
+    public AdwTabViewDemoPage(PointerContainer cast) {
         super(cast);
-        instance = new Instance(getCPointer());
+        instance = new Instance(asCPointer());
     }
 
     public AdwTabViewDemoPage(TypeInstance self) {
         super(self.cast());
         initTemplate();
-        instance = new Instance(getCPointer());
-        instance.icon = getRandomIcon().getCPointer();
+        instance = new Instance(asCPointer());
+        instance.icon = getRandomIcon().asCPointer();
         instance.writeField("icon");
         setColor(getRandomColor());
     }
 
     public AdwTabViewDemoPage(long self) {
-        super(toCPointer(self));
-        instance = new Instance(getCPointer());
+        super(cast(self));
+        instance = new Instance(asCPointer());
     }
 
     public AdwTabViewDemoPage(Str title) {
         super(TypeSystem.newInstance(getTypeID(), new TypeSystem.Property(PROP_TITLE_NAME, title)));
-        instance = new Instance(getCPointer());
+        instance = new Instance(asCPointer());
     }
 
     public AdwTabViewDemoPage(AdwTabViewDemoPage other) {
@@ -91,7 +88,7 @@ public class AdwTabViewDemoPage extends Bin {
                 getTypeID(),
                 new TypeSystem.Property(PROP_TITLE_NAME, other.instance.title),
                 new TypeSystem.Property(PROP_ICON_NAME, other.instance.icon)));
-        instance = new Instance(getCPointer());
+        instance = new Instance(asCPointer());
     }
 
     public synchronized static long getTypeID() {
@@ -161,9 +158,9 @@ public class AdwTabViewDemoPage extends Bin {
 
     private void getProperty(int propertyId, Value value) {
         if (propertyId == PROP_TITLE) {
-            value.setString(new Str(toCPointer(instance.title)));
+            value.setString(new Str(cast(instance.title)));
         } else if (propertyId == PROP_ICON) {
-            value.setObject(new Pointer(toCPointer(instance.icon)));
+            value.setObject(new Pointer(cast(instance.icon)));
         } else {
             System.err.println("Invalid property");
         }
@@ -171,11 +168,11 @@ public class AdwTabViewDemoPage extends Bin {
 
     private void setProperty(int propertyId, Value value) {
         if (propertyId == PROP_TITLE) {
-            new Str(toCPointer(instance.title)).destroy();
-            instance.title = value.getString().getCPointer();
+            new Str(cast(instance.title)).destroy();
+            instance.title = value.getString().asCPointer();
             instance.writeField("title");
         } else if (propertyId == PROP_ICON) {
-            instance.icon = value.getObject().getCPointer();
+            instance.icon = value.getObject().asCPointer();
             instance.writeField("icon");
         } else {
             System.err.println("Invalid property");
@@ -185,19 +182,19 @@ public class AdwTabViewDemoPage extends Bin {
 
     public void refreshIcon() {
         var icon = getRandomIcon();
-        set("icon", icon.getCPointer(), null); // indirectly calls setProperty()
+        set("icon", icon.asCPointer(), null); // indirectly calls setProperty()
         new ch.bailu.gtk.gobject.Object(icon.cast()).unref(); // Icon is an interface, so no unref
     }
 
     public void setEnableIcon(boolean enableIcon) {
         if (enableIcon) {
             set("icon", instance.last_icon);
-            new ch.bailu.gtk.gobject.Object(toCPointer(instance.last_icon)).unref();
+            new ch.bailu.gtk.gobject.Object(cast(instance.last_icon)).unref();
             instance.last_icon = 0L;
             instance.writeField("last_icon");
         } else {
             instance.last_icon = instance.icon;
-            new ch.bailu.gtk.gobject.Object(toCPointer(instance.icon)).unref();
+            new ch.bailu.gtk.gobject.Object(cast(instance.icon)).unref();
             set("icon", 0, 0);
         }
     }

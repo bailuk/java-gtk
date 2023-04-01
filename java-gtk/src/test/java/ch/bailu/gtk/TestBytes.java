@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import ch.bailu.gtk.type.Bytes;
-import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.PointerContainer;
 
 public class TestBytes {
 
@@ -37,7 +37,7 @@ public class TestBytes {
 
     @Test
     public void testNullBytes() {
-        Bytes bytes = new Bytes(CPointer.NULL);
+        Bytes bytes = new Bytes(PointerContainer.NULL);
         assertEquals(0, bytes.getSize());
         assertEquals(0, bytes.getLength());
     }
