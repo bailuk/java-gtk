@@ -5,7 +5,7 @@ package ch.bailu.gtk.type;
  *
  */
 public class Record extends Pointer {
-    public Record(CPointer pointer) {
+    public Record(PointerContainer pointer) {
         super(pointer);
     }
 
@@ -15,6 +15,6 @@ public class Record extends Pointer {
      * Object is invalid afterwards and should not be accessed.
      */
     public void destroy() {
-        ch.bailu.gtk.lib.jna.CLib.INST().free(getCPointer());
+        ch.bailu.gtk.lib.jna.CLib.INST().free(asCPointer());
     }
 }

@@ -14,7 +14,7 @@ import ch.bailu.gtk.gtk.Window;
 import ch.bailu.gtk.lib.handler.CallbackHandler;
 import ch.bailu.gtk.lib.handler.SignalHandler;
 import ch.bailu.gtk.lib.util.JavaResource;
-import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Str;
 
 public class ImageBridge implements DemoInterface {
@@ -49,7 +49,7 @@ public class ImageBridge implements DemoInterface {
 
         int count = 1;
         while(list.isNotNull() && list.getFieldData().isNotNull()) {
-            var format = new PixbufFormat(new CPointer(list.getFieldData().getCPointer()));
+            var format = new PixbufFormat(new PointerContainer(list.getFieldData().asCPointer()));
 
             System.out.println("__");
             System.out.println("Format " + count + ":");

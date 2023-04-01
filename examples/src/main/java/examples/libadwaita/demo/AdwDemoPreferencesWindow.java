@@ -9,7 +9,7 @@ import ch.bailu.gtk.gobject.Gobject;
 import ch.bailu.gtk.gobject.TypeInstance;
 import ch.bailu.gtk.gtk.Widget;
 import ch.bailu.gtk.gtk.WidgetClassExtended;
-import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
 
@@ -22,17 +22,17 @@ public class AdwDemoPreferencesWindow  extends PreferencesWindow {
     public AdwDemoPreferencesWindow(TypeInstance self) {
         super(self.cast());
         initTemplate();
-        this.instance = new Instance(getCPointer());
+        this.instance = new Instance(asCPointer());
     }
 
     public AdwDemoPreferencesWindow(long self) {
-        super(toCPointer(self));
-        this.instance = new Instance(getCPointer());
+        super(cast(self));
+        this.instance = new Instance(asCPointer());
     }
 
-    public AdwDemoPreferencesWindow(CPointer cast) {
+    public AdwDemoPreferencesWindow(PointerContainer cast) {
         super(cast);
-        this.instance = new Instance(getCPointer());
+        this.instance = new Instance(asCPointer());
     }
 
     public AdwDemoPreferencesWindow() {
@@ -43,7 +43,7 @@ public class AdwDemoPreferencesWindow  extends PreferencesWindow {
     @Structure.FieldOrder({"parent", "subpage1", "subpage2"})
     public static class Instance extends Structure {
         public Instance(long _self) {
-            super(toJnaPointer(_self));
+            super(asJnaPointer(_self));
             read();
         }
 
@@ -98,11 +98,11 @@ public class AdwDemoPreferencesWindow  extends PreferencesWindow {
     }
 
     private void onSubpage1Activated() {
-        presentSubpage(new Widget(toCPointer(instance.subpage1)));
+        presentSubpage(new Widget(cast(instance.subpage1)));
     }
 
     private void onSubpage2Activated() {
-        presentSubpage(new Widget(toCPointer(instance.subpage2)));
+        presentSubpage(new Widget(cast(instance.subpage2)));
     }
 
     private void onReturnToPreferences() {

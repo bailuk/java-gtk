@@ -30,9 +30,9 @@ public class SignalHandler {
         this.callback = callback;
         this.instance = instance;
         this.detailedSignal = detailedSignal;
-        this.handlerId = GObjectLib.INST().g_signal_connect_data(instance.getCPointer(), detailedSignal, this.callback, 0, 0, 0);
+        this.handlerId = GObjectLib.INST().g_signal_connect_data(instance.asCPointer(), detailedSignal, this.callback, 0, 0, 0);
 
-        mmap.put(instance.getCPointer(), handlerId, this);
+        mmap.put(instance.asCPointer(), handlerId, this);
         sizeLog.log(mmap.size());
     }
 
@@ -51,8 +51,8 @@ public class SignalHandler {
      * Disconnect signal and free java reference to callback
      */
     public synchronized void disconnect() {
-        GObjectLib.INST().g_signal_handler_disconnect(instance.getCPointer(), handlerId);
-        mmap.remove(instance.getCPointer(), handlerId);
+        GObjectLib.INST().g_signal_handler_disconnect(instance.asCPointer(), handlerId);
+        mmap.remove(instance.asCPointer(), handlerId);
     }
 
     /**
@@ -61,7 +61,7 @@ public class SignalHandler {
      */
     public static void disconnect(Pointer instance) {
         synchronized (mmap) {
-            var values = mmap.getValues(instance.getCPointer());
+            var values = mmap.getValues(instance.asCPointer());
             for (SignalHandler signal: values.toArray(new SignalHandler[0])) {
                 signal.disconnect();
             }
@@ -76,7 +76,7 @@ public class SignalHandler {
      */
     public static void disconnect(Pointer instance, String detailedSignal) {
         synchronized (mmap) {
-            var values = mmap.getValues(instance.getCPointer());
+            var values = mmap.getValues(instance.asCPointer());
             for (SignalHandler signal: values.toArray(new SignalHandler[0])) {
                 signal.disconnect(detailedSignal);
             }

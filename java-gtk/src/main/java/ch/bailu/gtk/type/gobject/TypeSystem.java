@@ -3,7 +3,7 @@ package ch.bailu.gtk.type.gobject;
 import ch.bailu.gtk.gobject.Gobject;
 import ch.bailu.gtk.gobject.GobjectConstants;
 import ch.bailu.gtk.gobject.TypeQuery;
-import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
 
@@ -39,7 +39,7 @@ public class TypeSystem {
 
         public Property(Str name, Pointer value) {
             this.name = name;
-            this.value = value.getCPointer();
+            this.value = value.asCPointer();
         }
 
         public static Str getFirstArgument(Property... properties) {
@@ -59,7 +59,7 @@ public class TypeSystem {
                 result[r++] = properties[i].value;
 
                 while (++i < properties.length) {
-                    result[r++] = properties[i].name.getCPointer();
+                    result[r++] = properties[i].name.asCPointer();
                     result[r++] = properties[i].value;
                 }
                 result[r] = 0L;
@@ -68,7 +68,7 @@ public class TypeSystem {
         }
     }
 
-    public static CPointer newInstance(long type, Property... properties) {
+    public static PointerContainer newInstance(long type, Property... properties) {
         return new ch.bailu.gtk.gobject.Object(type, Property.getFirstArgument(properties), Property.getRemainingArguments(properties)).cast();
     }
 

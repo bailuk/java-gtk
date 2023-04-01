@@ -2,11 +2,11 @@ package ch.bailu.gtk.type;
 
 public class Bytes extends Array {
 
-    public Bytes(CPointer pointer, int size) {
+    public Bytes(PointerContainer pointer, int size) {
         super(pointer, 1, size);
     }
 
-    public Bytes(CPointer pointer) {
+    public Bytes(PointerContainer pointer) {
         super(pointer, 1, -1);
     }
 
@@ -15,21 +15,21 @@ public class Bytes extends Array {
 
     }
 
-    private static CPointer createBytes(byte[] bytes) {
+    private static PointerContainer createBytes(byte[] bytes) {
         if (bytes.length == 0) {
-            return CPointer.NULL;
+            return PointerContainer.NULL;
         }
-        return new CPointer(ImpBytes.createBytes(bytes));
+        return new PointerContainer(ImpBytes.createBytes(bytes));
     }
 
     public byte getByte(int index) {
         checkLimit(index);
-        return ImpBytes.getByte(getCPointer(), index);
+        return ImpBytes.getByte(asCPointer(), index);
     }
 
     public void setByte(int index, byte value) {
         checkLimit(index);
-        ImpBytes.setByte(getCPointer(), index, value);
+        ImpBytes.setByte(asCPointer(), index, value);
     }
 
     /**
@@ -40,7 +40,7 @@ public class Bytes extends Array {
     public void setInt(int index, int value) {
         checkLimit(index);
         checkLimit(index+3);
-        ImpBytes.setInt(getCPointer(), index, value);
+        ImpBytes.setInt(asCPointer(), index, value);
     }
 
     public byte[] toBytes() {
@@ -52,6 +52,6 @@ public class Bytes extends Array {
         checkLimit(start);
         checkLimit(end);
         if (size <= 0) return new byte[]{};
-        return ImpBytes.toBytes(getCPointer(), start, size);
+        return ImpBytes.toBytes(asCPointer(), start, size);
     }
 }

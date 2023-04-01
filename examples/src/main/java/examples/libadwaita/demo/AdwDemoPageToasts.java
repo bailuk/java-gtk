@@ -8,7 +8,7 @@ import ch.bailu.gtk.gobject.Gobject;
 import ch.bailu.gtk.gobject.ObjectClassExtended;
 import ch.bailu.gtk.gobject.TypeInstance;
 import ch.bailu.gtk.gtk.WidgetClassExtended;
-import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
 
@@ -25,22 +25,22 @@ public class AdwDemoPageToasts extends Bin {
     private static final Str TOAST_UNDO_ACTION_NAME = new Str("toast.undo");
     private static final Str TOAST_DISMISS_ACTION_NAME = new Str("toast.dismiss");
 
-    public AdwDemoPageToasts(CPointer self) {
+    public AdwDemoPageToasts(PointerContainer self) {
         super(self);
-        instance = new Instance(getCPointer());
+        instance = new Instance(asCPointer());
     }
 
     public AdwDemoPageToasts(TypeInstance instance) {
         super(instance.cast());
         initTemplate();
-        this.instance = new Instance(getCPointer());
+        this.instance = new Instance(asCPointer());
         actionSetEnabled(TOAST_DISMISS_ACTION_NAME, false);
     }
 
     @Structure.FieldOrder({"parent", "undo_toast", "toast_undo_items"})
     public static class Instance extends Structure {
         public Instance(long _self) {
-            super(toJnaPointer(_self));
+            super(asJnaPointer(_self));
             read();
         }
 
@@ -82,7 +82,7 @@ public class AdwDemoPageToasts extends Bin {
     }
 
     public void addToast (Toast toast) {
-        Gobject.signalEmit(this, signal, 0, toast.getCPointer());
+        Gobject.signalEmit(this, signal, 0, toast.asCPointer());
     }
 
     private void onDismissed() {
@@ -99,7 +99,7 @@ public class AdwDemoPageToasts extends Bin {
     private void onAddWithButton() {
         instance.toast_undo_items++;
 
-        var toast = new Toast(toCPointer(instance.undo_toast));
+        var toast = new Toast(cast(instance.undo_toast));
 
         if (toast.isNotNull()) {
             var title = new Str("<span font_features='tnum=1'>"+ instance.toast_undo_items +"</span> items deleted");
@@ -108,7 +108,7 @@ public class AdwDemoPageToasts extends Bin {
             title.destroy();
         } else {
             var newToast = new Toast("blah");
-            instance.undo_toast = newToast.getCPointer();
+            instance.undo_toast = newToast.asCPointer();
 
             toast.setButtonLabel("Undo");
             toast.setActionName(TOAST_UNDO_ACTION_NAME);
@@ -131,7 +131,7 @@ public class AdwDemoPageToasts extends Bin {
     }
 
     private void onToastDismiss() {
-        var toast = new Toast(toCPointer(instance.undo_toast));
+        var toast = new Toast(cast(instance.undo_toast));
         if (toast.isNotNull()) {
             toast.dismiss();
         }

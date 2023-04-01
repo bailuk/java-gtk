@@ -8,10 +8,10 @@ public class Flt extends Array {
     public Flt() {
         this(createFlt(0),1);
     }
-    public Flt(CPointer pointer, int length) {
+    public Flt(PointerContainer pointer, int length) {
         super(pointer, Float.BYTES, length);
     }
-    public Flt(CPointer pointer) {
+    public Flt(PointerContainer pointer) {
         super(pointer, Float.BYTES, 0);
     }
     public Flt(float[] values) {
@@ -22,25 +22,25 @@ public class Flt extends Array {
     public void setAt(int index, float value) {
         throwIfNull();
         checkLimit(index);
-        ImpFlt.setAt(getCPointer(), index, value);
+        ImpFlt.setAt(asCPointer(), index, value);
     }
 
 
     public float getAt(int index) {
         throwIfNull();
         checkLimit(index);
-        return ImpFlt.getAt(getCPointer(), index);
+        return ImpFlt.getAt(asCPointer(), index);
     }
 
-    private static CPointer createFloatArray(float[] values) {
+    private static PointerContainer createFloatArray(float[] values) {
         if (values.length > 0) {
-            return new CPointer(ImpFlt.createFloatArray(values));
+            return new PointerContainer(ImpFlt.createFloatArray(values));
         }
-        return CPointer.NULL;
+        return PointerContainer.NULL;
     }
 
-    private static CPointer createFlt(float value) {
-        return new CPointer(ImpDbl.createFlt(value));
+    private static PointerContainer createFlt(float value) {
+        return new PointerContainer(ImpDbl.createFlt(value));
     }
 
     public static Flt create(float value) {

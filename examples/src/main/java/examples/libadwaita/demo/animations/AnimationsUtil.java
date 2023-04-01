@@ -8,10 +8,12 @@ import ch.bailu.gtk.graphene.Point;
 import ch.bailu.gtk.gsk.Transform;
 import ch.bailu.gtk.gtk.Orientation;
 import ch.bailu.gtk.gtk.Widget;
-import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Int;
 import ch.bailu.gtk.type.Pointer;
+import ch.bailu.gtk.type.PointerInterface;
 import ch.bailu.gtk.type.Str;
+import ch.bailu.gtk.type.Type;
 
 public class AnimationsUtil {
 
@@ -111,14 +113,14 @@ public class AnimationsUtil {
     }
 
     public static void bindProperty(long sourcePointer, String sourceProperty, long targetPointer, String targetProperty) {
-        var source = new Widget(Pointer.toCPointer(sourcePointer));
-        var target = new Pointer(Pointer.toCPointer(targetPointer));
+        var source = new Widget(Type.cast(sourcePointer));
+        var target = new Pointer(Type.cast(targetPointer));
         source.bindProperty(sourceProperty, target, targetProperty, BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
     }
 
     public static Transform translate(Point point) {
         // Whatever this does
-        return new Transform(CPointer.NULL).translate(point);
+        return new Transform(PointerContainer.NULL).translate(point);
     }
 
     public static Point getOffsetPoint(int offset) {

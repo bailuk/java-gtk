@@ -4,8 +4,6 @@ import com.sun.jna.Callback;
 import com.sun.jna.Library;
 import com.sun.jna.Structure;
 
-import ch.bailu.gtk.gobject.ObjectClassExtended;
-
 public class GObjectLib {
     private static Instance _INST = null;
 
@@ -15,7 +13,7 @@ public class GObjectLib {
     private static class GListModelInterface extends Structure {
 
         public GListModelInterface(long _self) {
-            super(ch.bailu.gtk.type.Pointer.toJnaPointer(_self));
+            super(ch.bailu.gtk.type.Pointer.asJnaPointer(_self));
         }
 
         public byte[] g_iface = new byte[GTYPE_INTERFACE_SIZE];

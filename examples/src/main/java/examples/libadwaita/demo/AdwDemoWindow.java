@@ -15,7 +15,7 @@ import ch.bailu.gtk.gobject.Gobject;
 import ch.bailu.gtk.gobject.TypeInstance;
 import ch.bailu.gtk.gtk.WidgetClassExtended;
 import ch.bailu.gtk.lib.handler.SignalHandler;
-import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
 import examples.libadwaita.demo.animations.AdwDemoPageAnimations;
@@ -37,7 +37,7 @@ public class AdwDemoWindow extends ApplicationWindow {
     @Structure.FieldOrder({"parent", "color_scheme_button", "main_leaflet", "subpage_leaflet", "toasts_page"})
     public static class Instance extends Structure {
         public Instance(long _self) {
-            super(toJnaPointer(_self));
+            super(asJnaPointer(_self));
             read();
         }
 
@@ -69,11 +69,11 @@ public class AdwDemoWindow extends ApplicationWindow {
         TypeSystem.ensure(AdwDemoPageAnimations.getTypeID());
 
         initTemplate();
-        this.instance = new Instance(getCPointer());
+        this.instance = new Instance(asCPointer());
         StyleManager manager = StyleManager.getDefault();
         manager.connectSignal("notify::system-supports-color-schemes", (SignalHandler.SignalCallback) self -> new AdwDemoWindow(self).notifySystemSupportsColorSchemes());
         notifySystemSupportsColorSchemes();
-        new Leaflet(new CPointer(this.instance.main_leaflet)).navigate(NavigationDirection.FORWARD);
+        new Leaflet(new PointerContainer(this.instance.main_leaflet)).navigate(NavigationDirection.FORWARD);
     }
 
     public AdwDemoWindow(Application app) {
@@ -81,12 +81,12 @@ public class AdwDemoWindow extends ApplicationWindow {
     }
 
     public AdwDemoWindow(long self) {
-        this(new CPointer(self));
+        this(new PointerContainer(self));
     }
 
-    public AdwDemoWindow(CPointer self) {
+    public AdwDemoWindow(PointerContainer self) {
         super(self);
-        this.instance = new Instance(getCPointer());
+        this.instance = new Instance(asCPointer());
     }
 
     public synchronized static long getTypeID() {
@@ -121,15 +121,15 @@ public class AdwDemoWindow extends ApplicationWindow {
     }
 
     private void onLeafletNextPage() {
-        new Leaflet(toCPointer(instance.subpage_leaflet)).navigate(NavigationDirection.FORWARD);
+        new Leaflet(cast(instance.subpage_leaflet)).navigate(NavigationDirection.FORWARD);
     }
 
     private void onLeafletBackClicked() {
-        new Leaflet(toCPointer(instance.subpage_leaflet)).navigate(NavigationDirection.BACK);
+        new Leaflet(cast(instance.subpage_leaflet)).navigate(NavigationDirection.BACK);
     }
 
     private void backClicked() {
-        new Leaflet(toCPointer(instance.main_leaflet)).navigate(NavigationDirection.BACK);
+        new Leaflet(cast(instance.main_leaflet)).navigate(NavigationDirection.BACK);
     }
 
     private void notifyVisibleChild() {
@@ -149,7 +149,7 @@ public class AdwDemoWindow extends ApplicationWindow {
     }
 
     private long getColorSchemeIconName(boolean dark) {
-        return (dark) ? ICON_LIGHT.getCPointer() : ICON_DARK.getCPointer();
+        return (dark) ? ICON_LIGHT.asCPointer() : ICON_DARK.asCPointer();
     }
 
     @FunctionalInterface

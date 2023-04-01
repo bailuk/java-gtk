@@ -112,7 +112,7 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
                 }
 
                 public Fields(long _self) {
-                    super(ch.bailu.gtk.type.Pointer.toJnaPointer(_self));
+                    super(ch.bailu.gtk.type.Pointer.asJnaPointer(_self));
                 }
         """, 4)
         out.end(1)

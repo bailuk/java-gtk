@@ -6,7 +6,7 @@ public class Util {
         long[] result = new long[pointers.length];
 
         for (int i=0; i<pointers.length; i++) {
-            result[i] = pointers[i].getCPointer();
+            result[i] = pointers[i].asCPointer();
         }
         return result;
     }

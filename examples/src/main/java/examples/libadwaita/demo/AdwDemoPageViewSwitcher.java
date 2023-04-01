@@ -3,7 +3,7 @@ package examples.libadwaita.demo;
 import ch.bailu.gtk.adw.Bin;
 import ch.bailu.gtk.gtk.WidgetClassExtended;
 import ch.bailu.gtk.gtk.Window;
-import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
 
@@ -12,7 +12,7 @@ public class AdwDemoPageViewSwitcher extends Bin {
 
     private static long type = 0;
 
-    public AdwDemoPageViewSwitcher(CPointer pointer) {
+    public AdwDemoPageViewSwitcher(PointerContainer pointer) {
         super(pointer);
     }
 

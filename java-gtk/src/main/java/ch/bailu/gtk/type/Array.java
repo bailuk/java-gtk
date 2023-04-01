@@ -7,7 +7,7 @@ public abstract class Array extends Wrapper {
     private int length;
     private final int bytes;
 
-    public Array(CPointer pointer, int bytes, int length) {
+    public Array(PointerContainer pointer, int bytes, int length) {
         super(pointer);
         this.bytes = bytes;
         if (pointer.isNull()) {
@@ -20,7 +20,7 @@ public abstract class Array extends Wrapper {
     @Override
     public void destroy() {
         if (length != 0) {
-            ImpUtil.destroy(getCPointer());
+            ImpUtil.destroy(asCPointer());
             length = 0;
         }
     }

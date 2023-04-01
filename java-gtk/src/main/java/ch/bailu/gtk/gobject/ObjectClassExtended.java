@@ -1,17 +1,17 @@
 package ch.bailu.gtk.gobject;
 
 import ch.bailu.gtk.lib.jna.GObjectLib;
-import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Str;
 
 public class ObjectClassExtended extends ObjectClass {
 
-    public ObjectClassExtended(CPointer g_class) {
+    public ObjectClassExtended(PointerContainer g_class) {
         super(g_class);
     }
 
     public void onDispose(Object instance) {
-        getFieldDispose().invoke(instance.getCPointer());
+        getFieldDispose().invoke(instance.asCPointer());
     }
 
     public void overrideDispose(OnDispose dispose) {
@@ -32,7 +32,7 @@ public class ObjectClassExtended extends ObjectClass {
 
     public int signalNew(Str name, long returnType, Long... types) {
         return GObjectLib.INST().g_signal_new(
-                name.getCPointer(),
+                name.asCPointer(),
                 new TypeClass(cast()).getFieldGType(),
                 SignalFlags.RUN_FIRST,
                 0,

@@ -85,7 +85,7 @@ public class WhereAmI {
         if (timestamp.isNotNull()) {
 
             // Pointer conversion because java-gtk only supports Object in varargs
-            timestamp.get(ttFormat, sec.getCPointer(), usec.getCPointer());
+            timestamp.get(ttFormat, sec.asCPointer(), usec.asCPointer());
 
             var dateTime = DateTime.newFromUnixLocalDateTime(sec.get());
             var formattedDate = dateTime.format(dateFormatString);

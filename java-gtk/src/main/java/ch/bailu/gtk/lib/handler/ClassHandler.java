@@ -39,7 +39,7 @@ public class ClassHandler {
 
     @Override
     public String toString() {
-        return Long.toHexString(instance.getCPointer()) + " "  + instance + " " + name;
+        return Long.toHexString(instance.asCPointer()) + " "  + instance + " " + name;
     }
 
     public static void dump(PrintStream out) {

@@ -1,6 +1,5 @@
 package ch.bailu.gtk.lib.bridge;
 
-import com.sun.jna.Callback;
 import com.sun.jna.Structure;
 
 import javax.annotation.Nonnull;
@@ -20,8 +19,7 @@ import ch.bailu.gtk.gtk.ListItem;
 import ch.bailu.gtk.gtk.SelectionModel;
 import ch.bailu.gtk.gtk.SingleSelection;
 import ch.bailu.gtk.lib.handler.CallbackHandler;
-import ch.bailu.gtk.lib.jna.GObjectLib;
-import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
@@ -50,7 +48,7 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
     @Structure.FieldOrder({"parent", "index", "size"})
     public static class Instance extends Structure {
         public Instance(long _self) {
-            super(toJnaPointer(_self));
+            super(asJnaPointer(_self));
         }
 
         public byte[] parent = new byte[Object.getTypeSize().instanceSize];
@@ -62,12 +60,12 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
 
     public ListIndex(ListItem item) {
         super(item.getItem().cast());
-        instance = new Instance(getCPointer());
+        instance = new Instance(asCPointer());
     }
 
-    public ListIndex(CPointer cast) {
+    public ListIndex(PointerContainer cast) {
         super(cast);
-        instance = new Instance(getCPointer());
+        instance = new Instance(asCPointer());
     }
 
     public ListIndex(int size) {
@@ -78,7 +76,7 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
 
     public ListIndex() {
         super(TypeSystem.newInstance(getTypeID(), new TypeSystem.Property(PROP_NAME, getTypeID())));
-        instance = new Instance(getCPointer());
+        instance = new Instance(asCPointer());
     }
 
     private static long type = 0;
@@ -128,7 +126,7 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
         public void onInterfaceInitFunc(CallbackHandler __self, @Nonnull Pointer g_iface, @Nullable Pointer iface_data) {
             System.out.println("ListIndex::interfaceInit");
 
-            var listModelInterface = new ListModelInterface(Pointer.toCPointer(g_iface.getCPointer()));
+            var listModelInterface = new ListModelInterface(cast(g_iface.asCPointer()));
             listModelInterface.setFieldGetItem(getItem);
             listModelInterface.setFieldGetNItems(getNItems);
             listModelInterface.setFieldGetItemType(getItemType);

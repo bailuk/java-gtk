@@ -8,89 +8,56 @@ import java.util.Objects;
 import ch.bailu.gtk.lib.handler.CallbackHandler;
 import ch.bailu.gtk.lib.handler.SignalHandler;
 
-public class Pointer extends Type implements CPointerInterface {
+public class Pointer extends Type implements PointerInterface {
 
-    public final static Pointer NULL = new Pointer(CPointer.NULL);
+    public final static Pointer NULL = new Pointer(PointerContainer.NULL);
 
-    private final CPointer pointer;
+    private final PointerContainer pointerContainer;
 
     /**
      * Casting constructor to access another interface.
      *
      * @see ch.bailu.gtk.type.Pointer#cast()
      *
-     * @param pointer Wraps a C pointer of a GTK class or record
+     * @param pointerContainer Wraps a C pointerContainer of a GTK class or record
      */
-    public Pointer(CPointer pointer) {
-        this.pointer = pointer;
+    public Pointer(PointerContainer pointerContainer) {
+        this.pointerContainer = pointerContainer;
     }
 
     @Override
-    public final long getCPointer() {
-        return pointer.getCPointer();
+    public final long asCPointer() {
+        return pointerContainer.asCPointer();
     }
 
-    public static com.sun.jna.Pointer toJnaPointer(Pointer p) {
-        return toJnaPointer(p.getCPointer());
-    }
-
-    public static com.sun.jna.Pointer toJnaPointer(long p) {
-        return new com.sun.jna.Pointer(p);
-    }
-
-    public static Pointer toPointer(com.sun.jna.Pointer jnaPointer) {
-        return new Pointer(toCPointer(jnaPointer));
-    }
-
-    public static Pointer toPointer(long nativePointer) {
-        return new Pointer(toCPointer(nativePointer));
-    }
-
-    public static CPointer toCPointer(long p) {
-        return new CPointer(p);
-    }
-
-    public static CPointer toCPointer(com.sun.jna.Pointer p) {
-        return new CPointer(toNativePointer(p));
-    }
-
-    public static long toNativePointer(com.sun.jna.Pointer p) {
-        return com.sun.jna.Pointer.nativeValue(p);
-    }
 
     /**
      * Pass the return value of this function to the casting
      * constructor of any class derived from Pointer
      *
-     * @see ch.bailu.gtk.type.Pointer#Pointer(CPointer)
+     * @see ch.bailu.gtk.type.Pointer#Pointer(PointerContainer)
      * @see ch.bailu.gtk.type.Pointer
      *
      * @return CPointer (wraps a C pointer of a GTK class or record)
      */
-    public final CPointer cast() {
-        return pointer;
+    public final PointerContainer cast() {
+        return pointerContainer;
     }
 
     @Override
     public int hashCode() {
-        return pointer.hashCode();
+        return pointerContainer.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        } else if (obj instanceof Pointer) {
-            return Objects.equals(((Pointer)obj).pointer, pointer);
-        }
-        return false;
+        return pointerContainer.equals(obj);
     }
 
     @Override
     public String toString() {
         return this.getClass().toString();
     }
-
 
     public final void throwNullPointerException(String msg) {
         final String name = this.getClass().getCanonicalName();
@@ -100,19 +67,9 @@ public class Pointer extends Type implements CPointerInterface {
     }
 
     public final void throwIfNull() {
-        if (pointer.isNull()) {
+        if (pointerContainer.isNull()) {
             throwNullPointerException("pointer == 0");
         }
-    }
-
-    @Override
-    public final boolean isNotNull() {
-        return pointer.isNotNull();
-    }
-
-    @Override
-    public final boolean isNull() {
-        return pointer.isNull();
     }
 
     /**
