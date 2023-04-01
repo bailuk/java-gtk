@@ -21,8 +21,14 @@ public class PointerContainer implements PointerInterface {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof PointerInterface) {
+        if (obj == this) {
+            return true;
+        } else if (obj == null) {
+            return cPointer == 0;
+        } else if (obj instanceof PointerInterface) {
             return ((PointerInterface)obj).asCPointer() == cPointer;
+        } else if (obj instanceof Number) {
+            return cPointer == ((Number) obj).longValue();
         }
         return false;
     }
