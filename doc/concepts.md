@@ -39,9 +39,9 @@ In this Example widget, buildable und button reference the same object:
 Widget widget = new Button();
 
 Buildable buildable = widget.asBuildable();
-int id = buildable.getBuildableId() // access interface API
+Str id = buildable.getBuildableId() // access interface API
 
 // cast back to button
 Button button = new Button(buildable.cast());
-button.setLabel("ID: " + id);
+button.setLabel("ID: " + id.toString());
 ```
