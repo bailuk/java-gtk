@@ -2,10 +2,7 @@ package ch.bailu.gtk.model
 
 import ch.bailu.gtk.log.DebugPrint
 import ch.bailu.gtk.model.filter.filterValues
-import ch.bailu.gtk.model.type.CType
-import ch.bailu.gtk.model.type.CallbackType
-import ch.bailu.gtk.model.type.ClassType
-import ch.bailu.gtk.model.type.JavaType
+import ch.bailu.gtk.model.type.*
 import ch.bailu.gtk.validator.Validator
 import ch.bailu.gtk.parser.tag.ParameterTag
 import ch.bailu.gtk.table.EnumTable
@@ -18,6 +15,7 @@ class ParameterModel(namespace: String,
 
     private val classType = ClassType(namespace, parameterTag)
     private val callbackType = CallbackType(namespace, parameterTag.getTypeName())
+    private val parameterNamespace = NamespaceType(namespace, parameterTag.getTypeName())
     private val jType: JavaType
     val hasNativeVariant: Boolean
     val isNativeVariant: Boolean
@@ -54,7 +52,7 @@ class ParameterModel(namespace: String,
 
         isNativeVariant = hasNativeVariant && preferNative
 
-        callbackModel = createCallbackModel(classType, namespace)
+        callbackModel = createCallbackModel(namespace, parameterNamespace, callbackType)
 
         setSupported("value-not-supported", filterValues(parameterTag.value))
         setSupported("java-type-not-supported", jType.valid || isCallback)
@@ -62,17 +60,32 @@ class ParameterModel(namespace: String,
         setCallbackSupported()
     }
 
-    private fun createCallbackModel(classType: ClassType, namespace: String): MethodModel? {
-        val parameterNamespace = classType.type.namespace.ifEmpty {
-            namespace
-        }
-
-        if (callbackType.valid) {
-            if (callbackType.callbackTag != null) {
-                return MethodModel(namespace, parameterNamespace, callbackType.callbackTag, preferNative = false)
+    companion object {
+        private fun createCallbackModel(
+            namespace: String,
+            parameterNamespace: NamespaceType,
+            callbackType: CallbackType
+        ): MethodModel? {
+            if (callbackType.valid) {
+                Validator.giveUp(
+                    "Invalid namespace ${parameterNamespace.namespace}",
+                    !parameterNamespace.valid
+                )
+                if (callbackType.callbackTag != null) {
+                    Validator.giveUp(
+                        "wrong namespace: '${parameterNamespace}' (${callbackType.callbackTag})",
+                        callbackType.callbackTag.getName() == "AsyncReadyCallback" && parameterNamespace.name != "gio"
+                    )
+                    return MethodModel(
+                        namespace,
+                        parameterNamespace.namespace,
+                        callbackType.callbackTag,
+                        preferNative = false
+                    )
+                }
             }
+            return null
         }
-        return null
     }
 
     private fun setCallbackSupported() {

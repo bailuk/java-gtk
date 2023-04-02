@@ -1,5 +1,6 @@
 package ch.bailu.gtk.table
 
+import ch.bailu.gtk.model.type.NamespaceType
 import ch.bailu.gtk.log.Logable
 import java.io.Writer
 import java.util.HashMap
@@ -29,6 +30,10 @@ object StructureTable : Logable {
         return getTable(namespace)[name] != null
     }
 
+    fun contains(namespaceType: NamespaceType): Boolean {
+        return contains(namespaceType.namespace, namespaceType.name)
+    }
+
     override fun log(writer: Writer) {
         table.onEach {
             writer.write("{${it.key}\n")
@@ -46,4 +51,5 @@ object StructureTable : Logable {
     fun clear() {
         table.clear()
     }
+
 }

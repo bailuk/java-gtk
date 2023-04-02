@@ -1,4 +1,4 @@
-package ch.bailu.gtk.converter
+package ch.bailu.gtk.model.type
 
 import java.util.*
 import java.util.regex.Pattern
@@ -8,6 +8,7 @@ class NamespaceType(fallbackNamespace: String, typeName: String) {
         private val NAMESPACE = Pattern.compile("^([A-Za-z]\\w+)\\.([A-Za-z]\\w+)$")
         private val NONAMESPACE = Pattern.compile("^[A-Za-z]\\w+$")
 
+        val INVALID = NamespaceType("", "")
     }
 
     val namespace: String

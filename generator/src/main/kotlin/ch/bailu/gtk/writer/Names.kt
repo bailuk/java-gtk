@@ -1,7 +1,7 @@
 package ch.bailu.gtk.writer
 
 import ch.bailu.gtk.Configuration
-import ch.bailu.gtk.converter.NamespaceType
+import ch.bailu.gtk.model.type.NamespaceType
 import ch.bailu.gtk.table.ReservedTokenTable.convert
 import ch.bailu.gtk.validator.Validator
 

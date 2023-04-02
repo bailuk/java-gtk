@@ -1,7 +1,7 @@
 package ch.bailu.gtk.builder
 
 import ch.bailu.gtk.NamespaceConfig
-import ch.bailu.gtk.converter.NamespaceType
+import ch.bailu.gtk.model.type.NamespaceType
 import ch.bailu.gtk.parser.tag.*
 import ch.bailu.gtk.table.AliasTable.add
 import ch.bailu.gtk.table.AliasTable.convert

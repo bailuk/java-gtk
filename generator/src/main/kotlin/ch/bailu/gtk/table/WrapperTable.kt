@@ -1,5 +1,6 @@
 package ch.bailu.gtk.table
 
+import ch.bailu.gtk.model.type.NamespaceType
 import java.util.*
 
 /**
@@ -34,6 +35,7 @@ object WrapperTable {
         add("float*", "Flt")
         add("gconstpointer", "Pointer")
         add("gpointer", "Pointer")
+        add("void*", "Pointer")
         add("const GdkEvent*", "Pointer")
     }
 
@@ -51,5 +53,15 @@ object WrapperTable {
         return if (contains(cType)) {
             NAMESPACE + "." + table[cType]
         } else cType
+    }
+
+    fun convertToNamespaceType(cTypeName: String): NamespaceType {
+        val typeName = table[cTypeName]
+
+        return if (typeName is String) {
+            NamespaceType(NAMESPACE, typeName)
+        } else {
+            NamespaceType.INVALID
+        }
     }
 }

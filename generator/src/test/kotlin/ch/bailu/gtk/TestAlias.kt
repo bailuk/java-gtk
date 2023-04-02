@@ -1,6 +1,6 @@
 package ch.bailu.gtk
 
-import ch.bailu.gtk.converter.NamespaceType
+import ch.bailu.gtk.model.type.NamespaceType
 import ch.bailu.gtk.table.AliasTable.add
 import ch.bailu.gtk.table.AliasTable.convert
 import org.junit.jupiter.api.Assertions

@@ -1,13 +1,16 @@
 package ch.bailu.gtk.model.type
 
-import ch.bailu.gtk.converter.NamespaceType
 import ch.bailu.gtk.log.DebugPrint
 import ch.bailu.gtk.parser.tag.ParameterTag
 import ch.bailu.gtk.table.AliasTable
-import ch.bailu.gtk.table.StructureTable.contains
+import ch.bailu.gtk.table.StructureTable
 import ch.bailu.gtk.table.WrapperTable
+import ch.bailu.gtk.validator.Validator
 import ch.bailu.gtk.writer.Names
 
+/**
+ * Wrapper or GObject structure
+ */
 class ClassType : Type {
     val type: NamespaceType
 
@@ -22,39 +25,51 @@ class ClassType : Type {
     val valid: Boolean
     val wrapper: Boolean
 
+    private val cType: CType
+
     constructor(namespace: String, parameter: ParameterTag)
-            : this(namespace, parameter.getTypeName(), EnumType.toCTypeName(namespace, parameter))
+            : this(namespace, parameter.getTypeName(), CTypeConverter.toCTypeName(namespace, parameter))
 
     constructor(namespace: String, typeName: String, cTypeName: String) {
-        var classOrWrapperTypeName = typeName
-        val cType = CType(cTypeName)
+        cType = CType(cTypeName)
 
-        wrapper = if (WrapperTable.contains(cType.type)) {
-            classOrWrapperTypeName = WrapperTable.convert(cType.type)
-            true
+        val wrapperType = WrapperTable.convertToNamespaceType(cTypeName)
+        val gtkType = convertToNamespaceType(namespace, typeName)
+
+        type = if (wrapperType.valid && gtkType.valid && cType.isDirectType) {
+            // Prefer wrapper if direct type
+            directType = false
+            valid = true
+            wrapper = true
+            wrapperType
+        } else if (gtkType.valid) {
+            // Else prefer gtk type
+            directType = cType.isDirectType
+            valid = true
+            wrapper = false
+            gtkType
         } else {
-            false
+            // Else take wrapper
+            wrapper = true
+            valid = wrapperType.valid
+            directType = false
+            wrapperType
         }
-
-        type = convert(namespace, classOrWrapperTypeName)
-        valid = wrapper || supportedClass(type, cType)
-        directType = !wrapper && supportedClass(type, cType) && cType.isDirectType
-    }
-
-    private fun supportedClass(type: NamespaceType, ctype: CType): Boolean {
-        return (isInStructureTable(type) && isPointerSupported(ctype))
     }
 
     private fun isPointerSupported(cType: CType): Boolean {
         return cType.isSinglePointer || cType.isDirectType
     }
 
-    private fun convert(namespace: String, typeName: String): NamespaceType {
-        return AliasTable.convert(NamespaceType(namespace, typeName))
-    }
-
-    private fun isInStructureTable(n: NamespaceType): Boolean {
-        return contains(n.namespace, n.name)
+    private fun convertToNamespaceType(namespace: String, typeName: String): NamespaceType {
+        Validator.giveUp("wrong namespace: '$namespace' ($typeName)", typeName == "AsyncResult" && namespace != "gio")
+        if (isPointerSupported(cType)) {
+            val type = AliasTable.convert(NamespaceType(namespace, typeName))
+            if (StructureTable.contains(type)) {
+                return type
+            }
+        }
+        return NamespaceType.INVALID
     }
 
     /**
@@ -66,10 +81,10 @@ class ClassType : Type {
     }
 
     override fun getDebugIdentifier(): String {
-        return "G"
+        return "G${if (wrapper && valid) "w" else if (valid) "g" else "_"}"
     }
 
     override fun toString(): String {
-        return DebugPrint.colon(this, type.name)
+        return DebugPrint.colon(this, type.name, cType.toString())
     }
 }

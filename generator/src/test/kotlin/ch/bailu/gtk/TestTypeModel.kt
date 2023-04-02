@@ -1,11 +1,10 @@
 package ch.bailu.gtk
 
-import ch.bailu.gtk.converter.NamespaceType
 import ch.bailu.gtk.model.type.CType
 import ch.bailu.gtk.model.type.ClassType
 import ch.bailu.gtk.model.type.JavaType
+import ch.bailu.gtk.model.type.NamespaceType
 import ch.bailu.gtk.table.StructureTable
-
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -73,6 +72,13 @@ class TestTypeModel {
         assertEquals("ParamSpecInt64", ntype.name)
         assertEquals("gobject", ntype.namespace)
         assertTrue(ntype.valid)
+
+        assertFalse(NamespaceType.INVALID.valid)
+
+        val geoNamespace = NamespaceType("geoclue", "Gio.AsyncReadyCallback")
+        assertEquals("gio", geoNamespace.namespace)
+        assertEquals("AsyncReadyCallback", geoNamespace.name)
+        assertTrue(geoNamespace.valid)
     }
 
 

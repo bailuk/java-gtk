@@ -1,7 +1,5 @@
 package ch.bailu.gtk.model.type
 
-import ch.bailu.gtk.converter.NamespaceType
-
 class ArrayType(type: NamespaceType) : Type() {
 
     val size = findSize(type)

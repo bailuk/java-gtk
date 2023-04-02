@@ -1,6 +1,5 @@
 package ch.bailu.gtk.model.type
 
-import ch.bailu.gtk.converter.NamespaceType
 import ch.bailu.gtk.log.DebugPrint
 import ch.bailu.gtk.parser.tag.CallbackTag
 import ch.bailu.gtk.table.AliasTable

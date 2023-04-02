@@ -1,7 +1,7 @@
 package ch.bailu.gtk.model
 
 import ch.bailu.gtk.Configuration
-import ch.bailu.gtk.converter.NamespaceType
+import ch.bailu.gtk.model.type.NamespaceType
 import ch.bailu.gtk.model.compose.CodeComposer
 import ch.bailu.gtk.model.filter.*
 import ch.bailu.gtk.model.list.ModelLists

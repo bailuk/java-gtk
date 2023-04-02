@@ -2,7 +2,7 @@ package ch.bailu.gtk.model
 
 import ch.bailu.gtk.Configuration
 import ch.bailu.gtk.NamespaceConfig
-import ch.bailu.gtk.converter.NamespaceType
+import ch.bailu.gtk.model.type.NamespaceType
 import ch.bailu.gtk.parser.tag.MethodTag
 import ch.bailu.gtk.parser.tag.NamespaceTag
 import ch.bailu.gtk.parser.tag.ParameterTag
