@@ -2,10 +2,13 @@ package ch.bailu.gtk.model
 
 import ch.bailu.gtk.log.DebugPrint
 import ch.bailu.gtk.model.filter.filterValues
-import ch.bailu.gtk.model.type.*
-import ch.bailu.gtk.validator.Validator
+import ch.bailu.gtk.model.type.CallbackType
+import ch.bailu.gtk.model.type.ClassType
+import ch.bailu.gtk.model.type.JavaType
+import ch.bailu.gtk.model.type.NamespaceType
 import ch.bailu.gtk.parser.tag.ParameterTag
 import ch.bailu.gtk.table.EnumTable
+import ch.bailu.gtk.validator.Validator
 import ch.bailu.gtk.writer.Names
 
 class ParameterModel(namespace: String,
@@ -74,7 +77,7 @@ class ParameterModel(namespace: String,
                 if (callbackType.callbackTag != null) {
                     Validator.giveUp(
                         "wrong namespace: '${parameterNamespace}' (${callbackType.callbackTag})",
-                        callbackType.callbackTag.getName() == "AsyncReadyCallback" && parameterNamespace.name != "gio"
+                        callbackType.callbackTag.getName() == "AsyncReadyCallback" && parameterNamespace.namespace != "gio"
                     )
                     return MethodModel(
                         namespace,

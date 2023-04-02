@@ -15,11 +15,22 @@ public class Bytes extends Array {
 
     }
 
+    public Bytes(int size) {
+        super(createBytes(size), 1, size);
+    }
+
     private static PointerContainer createBytes(byte[] bytes) {
         if (bytes.length == 0) {
             return PointerContainer.NULL;
         }
         return new PointerContainer(ImpBytes.createBytes(bytes));
+    }
+
+    private static PointerContainer createBytes(int length) {
+        if (length == 0) {
+            return PointerContainer.NULL;
+        }
+        return new PointerContainer(ImpBytes.createBytes(length));
     }
 
     public byte getByte(int index) {

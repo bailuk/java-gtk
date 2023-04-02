@@ -80,10 +80,10 @@ public class AdwStyleDemoWindow extends Window {
                 var objectClass = new ObjectClassExtended(g_class.cast());
 
 
-                objectClass.overrideSetProperty((__self16, object, property_id, value, pspec) -> new AdwStyleDemoWindow(object.cast()).setProperty(property_id, value));
-                objectClass.overrideGetProperty((__self17, object, property_id, value, pspec) -> new AdwStyleDemoWindow(object.cast()).getProperty(property_id, value));
+                objectClass.setFieldGetProperty((__self16, object, property_id, value, pspec) -> new AdwStyleDemoWindow(object.cast()).setProperty(property_id, value));
+                objectClass.setFieldGetProperty((__self17, object, property_id, value, pspec) -> new AdwStyleDemoWindow(object.cast()).getProperty(property_id, value));
 
-                objectClass.overrideDispose((__self15, object) -> new AdwStyleDemoWindow(object.cast()).onDispose(objectClass.getParentClass()));
+                objectClass.setFieldDispose((__self15, object) -> new AdwStyleDemoWindow(object.cast()).onDispose(objectClass.getParentClass()));
 
                 var propDevel = Gobject.paramSpecBoolean(PROP_DEVEL_NAME, null, null, false, ParamFlags.READWRITE | GobjectConstants.PARAM_STATIC_STRINGS);
                 objectClass.installProperty(PROP_DEVEL, propDevel);

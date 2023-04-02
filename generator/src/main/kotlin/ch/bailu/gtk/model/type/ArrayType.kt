@@ -11,6 +11,8 @@ class ArrayType(type: NamespaceType) : Type() {
                 return 8
             } else if (type.name == "TypeInterface") {
                 return 16
+            } else if (type.name == "ObjectClass") {
+                return 136
             }
             return 0
         }

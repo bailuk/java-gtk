@@ -10,17 +10,14 @@ import ch.bailu.gtk.gio.Icon;
 import ch.bailu.gtk.gio.ThemedIcon;
 import ch.bailu.gtk.gobject.Gobject;
 import ch.bailu.gtk.gobject.GobjectConstants;
-import ch.bailu.gtk.gobject.Object;
-import ch.bailu.gtk.gobject.ObjectClass;
 import ch.bailu.gtk.gobject.ObjectClassExtended;
 import ch.bailu.gtk.gobject.ParamFlags;
-import ch.bailu.gtk.gobject.ParamSpec;
 import ch.bailu.gtk.gobject.TypeInstance;
 import ch.bailu.gtk.gobject.Value;
 import ch.bailu.gtk.gtk.IconTheme;
 import ch.bailu.gtk.gtk.WidgetClassExtended;
-import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Pointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 import ch.bailu.gtk.type.gobject.TypeSystem;
@@ -97,10 +94,9 @@ public class AdwTabViewDemoPage extends Bin {
                 var widgetClass = new WidgetClassExtended(g_class.cast());
                 var objectClass = new ObjectClassExtended(g_class.cast());
 
-                objectClass.overrideFinalize((__self1, object) -> new AdwTabViewDemoPage(object.cast()).finalizeInstance());
-                objectClass.overrideGetProperty((__self12, object, property_id, value, pspec) -> new AdwTabViewDemoPage(object.cast()).getProperty(property_id, value));
-                objectClass.overrideSetProperty((__self13, object, property_id, value, pspec) -> new AdwTabViewDemoPage(object.cast()).setProperty(property_id, value));
-
+                objectClass.setFieldFinalize((__self1, object) -> new AdwTabViewDemoPage(object.cast()).finalizeInstance());
+                objectClass.setFieldGetProperty((__self12, object, property_id, value, pspec) -> new AdwTabViewDemoPage(object.cast()).getProperty(property_id, value));
+                objectClass.setFieldSetProperty((__self13, object, property_id, value, pspec) -> new AdwTabViewDemoPage(object.cast()).setProperty(property_id, value));
 
                 var propTitle = Gobject.paramSpecString(PROP_TITLE_NAME, null, null, null, ParamFlags.READWRITE | GobjectConstants.PARAM_STATIC_STRINGS);
                 var propIcon  = Gobject.paramSpecObject(PROP_ICON_NAME,  null, null, Icon.getTypeID(), ParamFlags.READWRITE | GobjectConstants.PARAM_STATIC_STRINGS);

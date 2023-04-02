@@ -3,8 +3,8 @@ package ch.bailu.gtk.type.gobject;
 import ch.bailu.gtk.gobject.Gobject;
 import ch.bailu.gtk.gobject.GobjectConstants;
 import ch.bailu.gtk.gobject.TypeQuery;
-import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Pointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Str;
 
 public class TypeSystem {
@@ -12,7 +12,22 @@ public class TypeSystem {
     // TODO obtain this from api
     public static final long GTYPE_NONE = 1 << GobjectConstants.TYPE_FUNDAMENTAL_SHIFT;
 
-    public static long registerClass(long parentType, Str typeName, int instanceSize, Gobject.OnClassInitFunc classInit, Gobject.OnInstanceInitFunc instanceInit) {
+    public static long registerClass(
+            long parentType,
+            Class<? extends ch.bailu.gtk.gobject.Object> _class,
+            int instanceSize,
+            Gobject.OnClassInitFunc classInit,
+            Gobject.OnInstanceInitFunc instanceInit) {
+            return registerClass(parentType, new Str(_class.getSimpleName()), instanceSize, classInit, instanceInit);
+    }
+
+    public static long registerClass(
+            long parentType,
+            Str typeName,
+            int instanceSize,
+            Gobject.OnClassInitFunc classInit,
+            Gobject.OnInstanceInitFunc instanceInit
+    ) {
         final var parentSize = getTypeSize(parentType);
         return Gobject.typeRegisterStaticSimple(
                 parentType,

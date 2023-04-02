@@ -14,22 +14,6 @@ public class ObjectClassExtended extends ObjectClass {
         getFieldDispose().invoke(instance.asCPointer());
     }
 
-    public void overrideDispose(OnDispose dispose) {
-        setFieldDispose(dispose);
-    }
-
-    public void overrideFinalize(OnFinalize finalize) {
-        setFieldFinalize(finalize);
-    }
-
-    public void overrideSetProperty(OnSetProperty onSetProperty) {
-        setFieldSetProperty(onSetProperty);
-    }
-
-    public void overrideGetProperty(OnGetProperty onGetProperty) {
-        setFieldGetProperty(onGetProperty);
-    }
-
     public int signalNew(Str name, long returnType, Long... types) {
         return GObjectLib.INST().g_signal_new(
                 name.asCPointer(),

@@ -13,7 +13,7 @@ public abstract class Type {
     }
 
     public static long asCPointerNotNull(PointerInterface pointer) {
-        throwIfNull(pointer);
+        //TODO throwIfNull(pointer);
         return pointer.asCPointer();
     }
 

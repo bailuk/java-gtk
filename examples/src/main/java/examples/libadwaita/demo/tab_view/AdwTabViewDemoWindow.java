@@ -316,8 +316,8 @@ public class AdwTabViewDemoWindow extends Window {
                 var widgetClass = new WidgetClassExtended(g_class.cast());
                 var objectClass = new ObjectClassExtended(g_class.cast());
 
-                objectClass.overrideDispose((__self1, object) -> new AdwTabViewDemoWindow(object.cast()).dispose());
-                objectClass.overrideGetProperty((__self12, object, property_id, value, pspec) -> new AdwTabViewDemoWindow(object.cast()).getProperty(property_id, value));
+                objectClass.setFieldDispose((__self1, object) -> new AdwTabViewDemoWindow(object.cast()).dispose());
+                objectClass.setFieldGetProperty((__self12, object, property_id, value, pspec) -> new AdwTabViewDemoWindow(object.cast()).getProperty(property_id, value));
                 widgetClass.overrideSizeAllocate((self, width, height, baseline) -> new AdwTabViewDemoWindow(self).sizeAllocate(width, height, baseline));
 
 

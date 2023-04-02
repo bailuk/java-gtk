@@ -3,6 +3,12 @@ package ch.bailu.gtk.type;
 import ch.bailu.gtk.lib.jna.CLib;
 
 class ImpBytes {
+    public static long createBytes(int size) {
+        var result = CLib.INST().malloc(size);
+        CLib.INST().memset(result, 0, size);
+        return result;
+    }
+
     public static long createBytes(byte[] bytes) {
         long result = CLib.INST().malloc(bytes.length);
 

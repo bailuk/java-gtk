@@ -13,14 +13,12 @@ import ch.bailu.gtk.gobject.Object;
 import ch.bailu.gtk.gobject.ObjectClass;
 import ch.bailu.gtk.gobject.ObjectClassExtended;
 import ch.bailu.gtk.gobject.ParamFlags;
-import ch.bailu.gtk.gobject.ParamSpec;
-import ch.bailu.gtk.gobject.Value;
 import ch.bailu.gtk.gtk.ListItem;
 import ch.bailu.gtk.gtk.SelectionModel;
 import ch.bailu.gtk.gtk.SingleSelection;
 import ch.bailu.gtk.lib.handler.CallbackHandler;
-import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Pointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
 
@@ -106,9 +104,9 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
 
             var objectClass = new ObjectClassExtended(g_class.cast());
             parentClass = objectClass.getParentClass();
-            objectClass.overrideDispose(instanceDispose);
-            objectClass.overrideGetProperty(getProperty);
-            objectClass.overrideSetProperty(setProperty);
+            objectClass.setFieldDispose(instanceDispose);
+            objectClass.setFieldGetProperty(getProperty);
+            objectClass.setFieldSetProperty(setProperty);
 
             var flags =
                     ParamFlags.CONSTRUCT |

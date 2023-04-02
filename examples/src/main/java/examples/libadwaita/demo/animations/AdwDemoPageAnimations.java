@@ -163,9 +163,9 @@ public class AdwDemoPageAnimations extends Bin {
                 var widgetClass = new WidgetClassExtended(g_class.cast());
                 var objectClass = new ObjectClassExtended(g_class.cast());
 
-                objectClass.overrideGetProperty((__self12, object, property_id, value, pspec) -> new AdwDemoPageAnimations(object.cast()).getProperty(property_id, value));
-                objectClass.overrideSetProperty((__self13, object, property_id, value, pspec) -> new AdwDemoPageAnimations(object.cast()).setProperty(property_id, value));
-                objectClass.overrideDispose((__self1, object) -> new AdwDemoPageAnimations(object.cast()).onDispose(objectClass.getParentClass()));
+                objectClass.setFieldGetProperty((__self12, object, property_id, value, pspec) -> new AdwDemoPageAnimations(object.cast()).getProperty(property_id, value));
+                objectClass.setFieldSetProperty((__self13, object, property_id, value, pspec) -> new AdwDemoPageAnimations(object.cast()).setProperty(property_id, value));
+                objectClass.setFieldDispose((__self1, object) -> new AdwDemoPageAnimations(object.cast()).onDispose(objectClass.getParentClass()));
                 specTimedAnimation  = Gobject.paramSpecObject(PROP_TIMED_ANIMATION_NAME , Str.NULL, Str.NULL, Animation.getTypeID(), ParamFlags.READWRITE | GobjectConstants.PARAM_STATIC_STRINGS);
                 specSpringAnimation = Gobject.paramSpecObject(PROP_SPRING_ANIMATION_NAME, Str.NULL, Str.NULL, Animation.getTypeID(), ParamFlags.READWRITE | GobjectConstants.PARAM_STATIC_STRINGS);
                 objectClass.installProperty(PROP_TIMED_ANIMATION,  specTimedAnimation);
