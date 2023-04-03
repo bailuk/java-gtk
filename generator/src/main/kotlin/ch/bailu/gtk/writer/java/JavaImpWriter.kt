@@ -65,6 +65,7 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
     override fun writeSignal(structureModel: StructureModel, methodModel: MethodModel) {}
 
     override fun writeFunction(structureModel: StructureModel, methodModel: MethodModel) {
+        Validator.giveUp("method name missing: ${methodModel.apiName}", methodModel.gtkName.isEmpty())
         out.l(0, "        ${methodModel.returnType.impType} ${methodModel.gtkName}(${getSignature(methodModel)});", 0)
     }
 
@@ -87,10 +88,12 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
         out.l(0,"}", 1)
     }
 
-    override fun writeGetTypeFunction(structureModel: StructureModel) {
-        out.start(0)
-        out.a("        long ${structureModel.typeFunction}();\n")
-        out.end(0)
+    override fun writeIntrospection(structureModel: StructureModel) {
+        if (structureModel.hasGetTypeFunction) {
+            out.start(0)
+            out.a("        long ${structureModel.typeFunction}();\n")
+            out.end(0)
+        }
     }
 
     override fun writeBeginStruct(structureModel : StructureModel, fields: ModelList<FieldModel>) {

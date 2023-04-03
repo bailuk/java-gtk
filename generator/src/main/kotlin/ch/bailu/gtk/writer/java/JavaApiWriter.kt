@@ -230,26 +230,54 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
         out.end(0)
     }
 
-    override fun writeGetTypeFunction(structureModel: StructureModel) {
-        out.start(1)
-        out.a("""
-                public static long getTypeID() { 
-                    return ${structureModel.jnaName}.INST().${structureModel.typeFunction}(); 
-                }
-                
-                public static long getParentTypeID() {
-                    return ch.bailu.gtk.gobject.Gobject.typeParent(getTypeID());
-                }
+    override fun writeIntrospection(structureModel: StructureModel) {
+        if (structureModel.hasTypeFor || structureModel.hasGetTypeFunction) {
+            out.start(1)
 
-                public static ch.bailu.gtk.type.gobject.TypeSystem.TypeSize getTypeSize() {
-                    return ch.bailu.gtk.type.gobject.TypeSystem.getTypeSize(getTypeID());
-                }
+            Validator.giveUp("Both size provider: ${structureModel.apiName}", structureModel.hasTypeFor && structureModel.hasGetTypeFunction)
+            if (structureModel.hasGetTypeFunction) {
+                out.a(
+                    """
+                    public static long getTypeID() { 
+                        return ${structureModel.jnaName}.INST().${structureModel.typeFunction}(); 
+                    }
 
-                public static ch.bailu.gtk.type.gobject.TypeSystem.TypeSize getParentTypeSize() {
-                    return ch.bailu.gtk.type.gobject.TypeSystem.getTypeSize(getParentTypeID());
-                }
-        """, 4)
-        out.end(1)
+                    public static long getParentTypeID() {
+                        return ch.bailu.gtk.gobject.Gobject.typeParent(getTypeID());
+                    }
+
+                    public static ch.bailu.gtk.type.gobject.TypeSystem.TypeSize getTypeSize() {
+                        return ch.bailu.gtk.type.gobject.TypeSystem.getTypeSize(getTypeID());
+                    }
+
+                    public static ch.bailu.gtk.type.gobject.TypeSystem.TypeSize getParentTypeSize() {
+                        return ch.bailu.gtk.type.gobject.TypeSystem.getTypeSize(getParentTypeID());
+                    }
+                    
+                    public static int getInstanceSize() {
+                        return getTypeSize().instanceSize;
+                    }
+                    """, 4
+                )
+            } else {
+                out.a(
+                    """
+                    public static ch.bailu.gtk.type.gobject.TypeSystem.TypeSize getTypeSize() {
+                        return ch.bailu.gtk.type.gobject.TypeSystem.getTypeSize(${structureModel.typeFor}.getTypeID());
+                    }
+
+                    public static ch.bailu.gtk.type.gobject.TypeSystem.TypeSize getParentTypeSize() {
+                        return ch.bailu.gtk.type.gobject.TypeSystem.getTypeSize(${structureModel.typeFor}.getParentTypeID());
+                    }
+                    
+                    public static int getInstanceSize() {
+                        return getTypeSize().classSize;
+                    }
+                    """, 4
+                )
+            }
+            out.end(1)
+        }
     }
 
     override fun writeSignal(structureModel : StructureModel, methodModel : MethodModel) {

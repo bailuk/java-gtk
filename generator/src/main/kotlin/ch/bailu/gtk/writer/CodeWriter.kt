@@ -28,7 +28,7 @@ interface CodeWriter  {
     fun writeMallocConstructor(structureModel : StructureModel)
     fun writeCallback(structureModel: StructureModel, methodModel: MethodModel, isSignal: Boolean = false)
 
-    fun writeGetTypeFunction(structureModel: StructureModel)
+    fun writeIntrospection(structureModel: StructureModel)
     fun writeBeginStruct(structureModel : StructureModel, fields: ModelList<FieldModel>)
     fun writeEndStruct()
     fun writeBeginInstance(namespaceModel: NamespaceModel)

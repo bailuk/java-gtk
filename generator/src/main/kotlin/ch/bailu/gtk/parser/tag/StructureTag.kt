@@ -1,5 +1,6 @@
 package ch.bailu.gtk.parser.tag
 
+import ch.bailu.gtk.validator.Validator
 import java.io.IOException
 
 class StructureTag(parent: TagWithParent, val structureType: String): NamedWithDocTag(parent) {
@@ -59,6 +60,7 @@ class StructureTag(parent: TagWithParent, val structureType: String): NamedWithD
 
     @Throws(IOException::class)
     override fun end() {
+        Validator.giveUp("name is empty $this", getName().isEmpty())
         getBuilder().buildStructure(this)
     }
 

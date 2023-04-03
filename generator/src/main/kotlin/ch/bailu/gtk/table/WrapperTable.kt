@@ -42,7 +42,6 @@ object WrapperTable {
 
     private fun add(ctype: String, wrapper: String) {
         table[ctype] = wrapper
-        StructureTable.add(NAMESPACE, wrapper)
     }
 
     operator fun contains(cType: String): Boolean {

@@ -1,7 +1,7 @@
 package ch.bailu.gtk.table
 
-import ch.bailu.gtk.model.type.NamespaceType
 import ch.bailu.gtk.log.Logable
+import ch.bailu.gtk.model.type.NamespaceType
 import java.io.Writer
 
 object AliasTable : Logable {

@@ -8,6 +8,7 @@ import ch.bailu.gtk.model.list.ModelLists
 import ch.bailu.gtk.model.type.StructureType
 import ch.bailu.gtk.parser.tag.*
 import ch.bailu.gtk.table.AliasTable
+import ch.bailu.gtk.table.StructureTable
 import ch.bailu.gtk.validator.Validator
 import ch.bailu.gtk.writer.CodeWriter
 import ch.bailu.gtk.writer.Names
@@ -22,15 +23,18 @@ class StructureModel : Model {
     private var models = ModelLists()
 
     val structureType: StructureType
-    val typeFunction: String
-
     val cType: String
     val doc: String
 
     val disguised: Boolean
 
+    val typeFunction: String
     val hasGetTypeFunction: Boolean
         get() = "" != typeFunction
+
+    val typeFor: String
+    val hasTypeFor: Boolean
+        get() = "" != typeFor
 
     /**
      * Offset and field order must be identical with c structure
@@ -40,6 +44,7 @@ class StructureModel : Model {
 
     constructor(structure: StructureTag, nameSpace: NamespaceModel) {
         typeFunction = structure.getType
+        typeFor = getIndirectType(structure.isTypeStructFor, nameSpace.namespace)
 
         disguised = structure.disguised
         cType = structure.type
@@ -82,6 +87,13 @@ class StructureModel : Model {
         }
 
         setSupported("name-is-empty", apiName != "")
+    }
+
+    private fun getIndirectType(typeStructFor: String, namespace: String): String {
+        if (StructureTable.hasGetType(namespace, typeStructFor)) {
+            return typeStructFor
+        }
+        return ""
     }
 
     private fun generateAndAddFieldModel(namespace: NamespaceModel, fieldTag: FieldTag) {
@@ -132,6 +144,7 @@ class StructureModel : Model {
     constructor(namespace: NamespaceModel) {
         disguised = false
         typeFunction = ""
+        typeFor = ""
         doc=""
         cType = ""
         nameSpaceModel = namespace
@@ -169,6 +182,7 @@ class StructureModel : Model {
      */
     private constructor(namespace: NamespaceModel, name: String, members: List<ParameterTag>, toUpper: Boolean) {
         typeFunction = ""
+        typeFor = ""
         nameSpaceModel = namespace
         structureType = StructureType(StructureType.Types.ENUMERATION)
         apiName = name
@@ -190,6 +204,7 @@ class StructureModel : Model {
     // parent initializer
     private constructor(defaultNamespace: String, className: String, structType: StructureType) {
         typeFunction = ""
+        typeFor = ""
         doc = ""
         cType = ""
         structureType = structType

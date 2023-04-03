@@ -35,9 +35,7 @@ class ClassComposer : CodeComposer() {
         models.signals.forEach          { writer.writeSignal(structureModel, it) }
         models.functions.forEach        { writer.writeFunction(structureModel, it) }
         models.implements.forEach       { writer.writeImplements(it)}
-        if (structureModel.hasGetTypeFunction) {
-            writer.writeGetTypeFunction(structureModel)
-        }
+        writer.writeIntrospection(structureModel)
         writer.writeEndInstance()
     }
 }

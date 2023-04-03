@@ -5,8 +5,8 @@ import java.util.regex.Pattern
 
 class NamespaceType(fallbackNamespace: String, typeName: String) {
     companion object {
-        private val NAMESPACE = Pattern.compile("^([A-Za-z]\\w+)\\.([A-Za-z]\\w+)$")
-        private val NONAMESPACE = Pattern.compile("^[A-Za-z]\\w+$")
+        private val NAMESPACE = Pattern.compile("^([A-Za-z_]\\w+)\\.([A-Za-z_]\\w+)$")
+        private val NONAMESPACE = Pattern.compile("^[A-Za-z_]\\w+$")
 
         val INVALID = NamespaceType("", "")
     }

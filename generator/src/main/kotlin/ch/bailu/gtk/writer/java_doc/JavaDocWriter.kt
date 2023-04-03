@@ -131,7 +131,7 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
     override fun writeDebugBegin(structureModel: StructureModel) {}
     override fun writeDebugEnd() {}
 
-    override fun writeGetTypeFunction(structureModel: StructureModel) {}
+    override fun writeIntrospection(structureModel: StructureModel) {}
     override fun writeMallocConstructor(structureModel: StructureModel) {}
     override fun writeStart(structureModel: StructureModel, namespaceModel: NamespaceModel) {}
     override fun writeInternalConstructor(structureModel: StructureModel) {}

@@ -79,6 +79,10 @@ class TestTypeModel {
         assertEquals("gio", geoNamespace.namespace)
         assertEquals("AsyncReadyCallback", geoNamespace.name)
         assertTrue(geoNamespace.valid)
+
+        val strangeNamespace = NamespaceType("gobject", "_Value__data__union")
+        assertEquals("gobject", strangeNamespace.namespace)
+        assertEquals("_Value__data__union", strangeNamespace.name)
     }
 
 
@@ -91,7 +95,7 @@ class TestTypeModel {
 
     @Test
     fun testClassTypeInTable() {
-        StructureTable.add("namespace", "Application")
+        StructureTable.add("namespace", "Application", false)
 
         val classType = ClassType("namespace", "Application", "GtkApplication")
         assertTrue(classType.valid)
@@ -103,7 +107,7 @@ class TestTypeModel {
 
     @Test
     fun testClassTypInTablePointer() {
-        StructureTable.add("namespace", "Application")
+        StructureTable.add("namespace", "Application", false)
 
         var classType = ClassType("mynamespace", "Application", "GtkApplication*")
         assertFalse(classType.valid)
