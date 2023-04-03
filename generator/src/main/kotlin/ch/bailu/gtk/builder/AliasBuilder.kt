@@ -11,7 +11,7 @@ class AliasBuilder : BuilderInterface{
     private var namespace = ""
 
     override fun buildStructure(structure: StructureTag) {
-        StructureTable.add(namespace, convert(namespace, structure.getName()), structure.getType.isNotEmpty())
+        StructureTable.add(namespace, convert(namespace, structure.getName()), structure.getType.isNotEmpty(), structure.isTypeStructFor)
     }
 
     private fun convert(namespace: String, name: String): String {

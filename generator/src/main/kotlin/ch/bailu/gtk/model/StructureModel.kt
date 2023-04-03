@@ -8,6 +8,7 @@ import ch.bailu.gtk.model.list.ModelLists
 import ch.bailu.gtk.model.type.StructureType
 import ch.bailu.gtk.parser.tag.*
 import ch.bailu.gtk.table.AliasTable
+import ch.bailu.gtk.table.SizeTable
 import ch.bailu.gtk.table.StructureTable
 import ch.bailu.gtk.validator.Validator
 import ch.bailu.gtk.writer.CodeWriter
@@ -36,6 +37,8 @@ class StructureModel : Model {
     val hasTypeFor: Boolean
         get() = "" != typeFor
 
+    val size: Int
+
     /**
      * Offset and field order must be identical with c structure
      */
@@ -51,6 +54,7 @@ class StructureModel : Model {
         nameSpaceModel = nameSpace
         structureType = StructureType(structure.structureType)
         apiName = AliasTable.convert(nameSpace.namespace, structure.getName()).name
+        size = SizeTable.getSize(nameSpace.namespace, structure.getName())
         parent = StructureModel(nameSpace.namespace, structure.parent, structureType)
         doc = structure.getDoc()
 
@@ -147,6 +151,7 @@ class StructureModel : Model {
         typeFor = ""
         doc=""
         cType = ""
+        size = 0
         nameSpaceModel = namespace
         structureType = StructureType(StructureType.Types.PACKAGE)
         apiName = Names.getJavaClassName(nameSpaceModel.namespace)
@@ -188,6 +193,7 @@ class StructureModel : Model {
         apiName = name
         doc = ""
         cType = ""
+        size = 0
         disguised = false
         parent = this
 
@@ -207,6 +213,7 @@ class StructureModel : Model {
         typeFor = ""
         doc = ""
         cType = ""
+        size = 0
         structureType = structType
         disguised = false
         parent = this

@@ -95,7 +95,7 @@ class TestTypeModel {
 
     @Test
     fun testClassTypeInTable() {
-        StructureTable.add("namespace", "Application", false)
+        StructureTable.add("namespace", "Application", false, "")
 
         val classType = ClassType("namespace", "Application", "GtkApplication")
         assertTrue(classType.valid)
@@ -107,7 +107,7 @@ class TestTypeModel {
 
     @Test
     fun testClassTypInTablePointer() {
-        StructureTable.add("namespace", "Application", false)
+        StructureTable.add("namespace", "Application", false, "")
 
         var classType = ClassType("mynamespace", "Application", "GtkApplication*")
         assertFalse(classType.valid)

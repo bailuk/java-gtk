@@ -138,8 +138,7 @@ class JavaImpWriter(private val out: TextWriter) : CodeWriter {
         if (fieldModel.isMethod) {
             out.a("        public ${fieldModel.getApiTypeName(structureModel.nameSpaceModel.namespace)} ${fieldModel.name};\n")
         } else if (fieldModel.isDirectType) {
-            Validator.giveUp("array size missing", fieldModel.size < 1)
-            out.a("        public byte[] ${fieldModel.name} = new byte[${fieldModel.size}];\n")
+            out.a("        public byte[] ${fieldModel.name} = new byte[${Names.getApiTypeName(fieldModel.classType.type, structureModel.nameSpaceModel.namespace)}.getInstanceSize()];\n")
         } else {
             out.a("        public ${fieldModel.impType} ${fieldModel.name};\n")
         }

@@ -1,19 +1,20 @@
 package ch.bailu.gtk.model
 
 import ch.bailu.gtk.log.DebugPrint
-import ch.bailu.gtk.model.type.ArrayType
 import ch.bailu.gtk.model.type.CallbackType
 import ch.bailu.gtk.model.type.ClassType
 import ch.bailu.gtk.model.type.JavaType
+import ch.bailu.gtk.model.type.NamespaceType
 import ch.bailu.gtk.parser.tag.CallbackTag
 import ch.bailu.gtk.parser.tag.FieldTag
 import ch.bailu.gtk.parser.tag.MethodTag
 import ch.bailu.gtk.table.EnumTable
+import ch.bailu.gtk.table.SizeTable
+import ch.bailu.gtk.table.StructureTable
 import ch.bailu.gtk.writer.Names
 
 class FieldModel(namespace: String, fieldTag: FieldTag) : Model() {
-    private val classType = ClassType(namespace, fieldTag)
-    private val arrayType = ArrayType(classType.type)
+    val classType = ClassType(namespace, fieldTag)
     private val jType: JavaType
     private val hasNativeVariant: Boolean
     val methodModel: MethodModel
@@ -27,7 +28,6 @@ class FieldModel(namespace: String, fieldTag: FieldTag) : Model() {
     val impType: String
     val isWriteable: Boolean
 
-    val size = arrayType.size
 
     init {
         val callbackType = CallbackType(namespace, fieldTag.getTypeName())
@@ -58,7 +58,7 @@ class FieldModel(namespace: String, fieldTag: FieldTag) : Model() {
 
         } else {
             setSupported("java-type-not-supported", jType.valid)
-            setSupported("direct-type", classType.referenceType || arrayType.valid)
+            setSupported("direct-type", classType.referenceType || isSizeKnown(classType.type))
             setPrivate("direct-type", classType.directType)
         }
         isDirectType = classType.directType
@@ -66,10 +66,13 @@ class FieldModel(namespace: String, fieldTag: FieldTag) : Model() {
         isJavaNative = !isMethod && !classType.valid
     }
 
+    private fun isSizeKnown(namespaceType: NamespaceType): Boolean {
+        return StructureTable.isSizeKnown(namespaceType) || SizeTable.isSizeKnown(namespaceType)
+    }
+
     private fun getMethodTag(isMethod: Boolean, methodTag: MethodTag, callbackTag: CallbackTag?): MethodTag {
         return if (!isMethod && callbackTag is CallbackTag) {
             callbackTag
-
         } else {
             methodTag
         }

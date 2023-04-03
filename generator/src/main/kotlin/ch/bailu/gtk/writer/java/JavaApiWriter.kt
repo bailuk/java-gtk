@@ -32,12 +32,13 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
     }
 
     override fun writeClass(structureModel : StructureModel) {
+        val visibility = if (structureModel.disguised) "" else "public "
         out.start(3)
         javaDoc.writeClass(structureModel)
 
         Validator.validateAlias(structureModel.apiParentName)
 
-        out.a("public class ${structureModel.apiName} extends ${structureModel.apiParentName} {\n")
+        out.a("${visibility}class ${structureModel.apiName} extends ${structureModel.apiParentName} {\n")
         out.a("    public static ch.bailu.gtk.lib.handler.ClassHandler getClassHandler() {\n")
         out.a("        return ch.bailu.gtk.lib.handler.ClassHandler.get(${structureModel.apiName}.class.getCanonicalName());\n")
         out.a("    }\n")
@@ -231,7 +232,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
     }
 
     override fun writeIntrospection(structureModel: StructureModel) {
-        if (structureModel.hasTypeFor || structureModel.hasGetTypeFunction) {
+        if (structureModel.hasTypeFor || structureModel.hasGetTypeFunction || structureModel.size > 0) {
             out.start(1)
 
             Validator.giveUp("Both size provider: ${structureModel.apiName}", structureModel.hasTypeFor && structureModel.hasGetTypeFunction)
@@ -259,7 +260,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
                     }
                     """, 4
                 )
-            } else {
+            } else if (structureModel.hasTypeFor) {
                 out.a(
                     """
                     public static ch.bailu.gtk.type.gobject.TypeSystem.TypeSize getTypeSize() {
@@ -272,6 +273,14 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
                     
                     public static int getInstanceSize() {
                         return getTypeSize().classSize;
+                    }
+                    """, 4
+                )
+            } else {
+                out.a(
+                    """
+                    public static int getInstanceSize() {
+                        return ${structureModel.size};
                     }
                     """, 4
                 )
