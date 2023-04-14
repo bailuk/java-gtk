@@ -13,7 +13,7 @@ plugins {
      * -> Update README.md
      * git tag v0.3.0 "Release"
      */
-    id ("pl.allegro.tech.build.axion-release") version "1.14.0"
+    id ("pl.allegro.tech.build.axion-release") version "1.15.0"
 }
 
 project.version = scmVersion.version
