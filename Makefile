@@ -110,11 +110,11 @@ $(jlib): gen FORCE
 
 $(gen_header_marker): $(gen_source_marker)
 	./gradlew -q java-gtk:classes
-	touch $(gen_header_marker)
+	mkdir -p build && touch $(gen_header_marker)
 
 $(gen_source_marker): $(generator_jar)
 	./gradlew -q generator:generate
-	touch $(gen_source_marker)
+	mkdir -p build && touch $(gen_source_marker)
 
 $(generator_jar): FORCE
 	./gradlew -q generator:build
