@@ -28,10 +28,9 @@ public class ImageBridge implements DemoInterface {
         listSupportedFormats();
 
         var demoWindow = new Window();
-        demoWindow.setResizable(true);
         demoWindow.setSizeRequest(300, 300);
 
-        DrawingArea drawingArea = new DrawingArea();
+        var drawingArea = new DrawingArea();
         demoWindow.setChild(drawingArea);
         drawingArea.onResize(this::setPixbuf);
         drawingArea.setDrawFunc((cb, drawing_area, cr, width, height, user_data) -> drawLogo(cr), null, (cb, data)->{});
@@ -73,7 +72,7 @@ public class ImageBridge implements DemoInterface {
 
     private void setPixbuf(int width, int height) {
         try {
-            Pixbuf pixbufNew = loadPixbuf(width, height);
+            var pixbufNew = loadPixbuf(width, height);
             if (pixbuf != null) {
                pixbuf.unref();
             }
@@ -91,11 +90,11 @@ public class ImageBridge implements DemoInterface {
         }
     }
 
-    private boolean drawLogo(Context cr) {
+    private boolean drawLogo(Context context) {
         if (pixbuf != null) {
-            cr.save();
-            Gdk.cairoSetSourcePixbuf(cr, pixbuf, 0, 0);
-            cr.paint();
+            context.save();
+            Gdk.cairoSetSourcePixbuf(context, pixbuf, 0, 0);
+            context.paint();
             return true;
         }
         return false;
