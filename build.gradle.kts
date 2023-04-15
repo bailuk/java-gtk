@@ -5,13 +5,14 @@ plugins {
      * 1. Current build version
      * ./gradlew cV
      *
-     * 2. Move to next version
-     * git tag v0.3.0-alpha -m "Move to next version"
-     * git push origin v0.3.0-alpha
+     * 2. Code freeze
+     * git tag v0.3.0-rc.1 -m "Code freeze"
+     * git push origin v0.3.0-rc.1
      *
      * 3. Release
      * -> Update README.md
      * git tag v0.3.0 "Release"
+     * git push origin v0.3.0
      */
     id ("pl.allegro.tech.build.axion-release") version "1.15.0"
 }
