@@ -28,7 +28,7 @@ abstract class JavaDoc(val writer: Writer): Append {
     abstract fun writeParameter(methodModel: MethodModel)
     abstract fun writeReturn(methodModel: MethodModel)
 
-    fun writeLine(line: String, nl: String) {
+    fun writeLine(line: String, nl: String = "") {
         a("${begin}${nl}${line}\n")
     }
 

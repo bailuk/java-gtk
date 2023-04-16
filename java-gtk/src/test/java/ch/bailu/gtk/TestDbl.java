@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import ch.bailu.gtk.type.Dbl;
-import ch.bailu.gtk.type.Dbls;
 
 public class TestDbl {
 
@@ -27,13 +26,14 @@ public class TestDbl {
 
     @Test
     public void testDbls() {
-        Dbls d = new Dbls(new double[] {4d,5d,6d,7d,0d,-1d});
-        Dbls f = new Dbls(new float[] {4f,5f,7f,0f,-1f});
+        Dbl d = new Dbl(new double[] {4d,Double.MAX_VALUE,6d,7d,0d,-1d});
+        Dbl f = new Dbl(new float[] {4f,Float.MAX_VALUE,7f,0f,-1f});
 
         assertEquals(6, d.getLength());
         assertEquals(5, f.getLength());
 
-        assertEquals(5d, d.getAt(1));
+        assertEquals(Double.MAX_VALUE, d.getAt(1));
+        assertEquals(Float.MAX_VALUE, f.getAt(1));
         assertEquals(-1f, f.getAt(f.getLength()-1));
 
         d.destroy();

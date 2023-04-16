@@ -9,7 +9,7 @@ class JavaDocHtml(writer: Writer) : JavaDoc(writer) {
 
     override fun writeBlockPlain(doc: String) {
         doc.lines().forEach {
-            writeLine(it, "")
+            writeLine(it)
         }
     }
 
@@ -42,7 +42,7 @@ class JavaDocHtml(writer: Writer) : JavaDoc(writer) {
 
     override fun writeClassUrl(structureModel: StructureModel) {
         NamespaceTable.with(structureModel.nameSpaceModel.namespace) {
-            writeLine("<p><a href=\"${it.docUrl.getUrl(structureModel)}\">${it.docUrl.getUrl(structureModel)}</a></p>", "")
+            writeLine("<p><a href=\"${it.docUrl.getUrl(structureModel)}\">${it.docUrl.getUrl(structureModel)}</a></p>")
         }
 
     }
@@ -79,7 +79,6 @@ class JavaDocHtml(writer: Writer) : JavaDoc(writer) {
             writeDocParamLine(methodModel.returnType.doc, "@return")
         }
     }
-
 
     private fun escapeDoc(doc: String): String {
         return doc

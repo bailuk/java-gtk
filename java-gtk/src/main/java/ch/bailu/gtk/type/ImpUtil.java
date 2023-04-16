@@ -1,12 +1,12 @@
 package ch.bailu.gtk.type;
 
-import ch.bailu.gtk.lib.CLib;
+import ch.bailu.gtk.lib.jna.CLib;
 
-public class ImpUtil {
+class ImpUtil {
     public static long createPointerArray(long[] pointers) {
         long size = (long) pointers.length * Long.BYTES;
         long result = CLib.INST().malloc(size);
-        Pointer.toJnaPointer(result).write(0, pointers, 0, pointers.length);
+        Pointer.asJnaPointer(result).write(0, pointers, 0, pointers.length);
         return result;
     }
 

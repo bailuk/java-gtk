@@ -20,10 +20,6 @@ object CallbackTable : Logable {
         return result
     }
 
-    fun contains(namespace: String, name: String): Boolean {
-        return getTable(namespace)[name] != null
-    }
-
     operator fun get(namespace: String, name: String): CallbackTag? {
         return getTable(namespace)[name]
     }
@@ -36,7 +32,6 @@ object CallbackTable : Logable {
                 writer.write(String.format("    %-40s %-40s\n", it.key, it.value))
             }
             writer.write("}\n\n")
-
         }
     }
 }

@@ -2,9 +2,9 @@ name: Build on fedora
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, stage ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, stage ]
   workflow_dispatch:
 
 

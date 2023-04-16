@@ -17,7 +17,7 @@ import ch.bailu.gtk.gtk.Grid;
 import ch.bailu.gtk.gtk.Label;
 import ch.bailu.gtk.gtk.ResponseType;
 import ch.bailu.gtk.gtk.Window;
-import ch.bailu.gtk.type.CPointer;
+import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Str;
 import examples.DemoInterface;
 
@@ -68,7 +68,7 @@ public class Picker implements DemoInterface {
         table.attach(fontPicker,1,1,1,1);
 
         fontPicker = new FontButton();
-        var fontChooser = new FontChooser(fontPicker.cast());
+        var fontChooser = fontPicker.asFontChooser();
         fontChooser.setLevel(FontChooserLevel.FAMILY | FontChooserLevel.SIZE);
 
         fontChooser.setFilterFunc((cb, family, face, data) -> {
@@ -110,7 +110,7 @@ public class Picker implements DemoInterface {
 
             dialog.onResponse(response_id -> {
                 if (response_id == ResponseType.OK) {
-                    var color = new ch.bailu.gtk.gtk.ColorChooser(new CPointer(dialog.getCPointer()));
+                    var color = dialog.asColorChooser();
                     color.getRgba(rgba);
                     da.queueDraw();
                 }

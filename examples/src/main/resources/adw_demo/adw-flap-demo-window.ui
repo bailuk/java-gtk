@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="AdwFlapDemoWindow" parent="AdwWindow">
+    <property name="modal">True</property>
+    <property name="title" translatable="yes">AdwFlap Demo</property>
+    <property name="default-width">640</property>
+    <property name="default-height">480</property>
+    <property name="content">
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkHeaderBar">
+            <child>
+              <object class="GtkToggleButton" id="reveal_btn_start">
+                <property name="icon-name">view-sidebar-start-symbolic</property>
+                <property name="active" bind-source="flap" bind-property="reveal-flap" bind-flags="sync-create|bidirectional"/>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkToggleButton" id="reveal_btn_end">
+                <property name="visible">False</property>
+                <property name="icon-name">view-sidebar-end-symbolic</property>
+                <property name="active" bind-source="flap" bind-property="reveal-flap" bind-flags="sync-create|bidirectional"/>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwFlap" id="flap">
+            <property name="vexpand">True</property>
+            <property name="locked" bind-source="locked_switch" bind-property="active" bind-flags="sync-create"/>
+            <property name="modal" bind-source="modal_switch" bind-property="active" bind-flags="sync-create"/>
+            <property name="swipe-to-open" bind-source="swipe_to_open_switch" bind-property="active" bind-flags="sync-create"/>
+            <property name="swipe-to-close" bind-source="swipe_to_close_switch" bind-property="active" bind-flags="sync-create"/>
+            <property name="flap">
+              <object class="GtkStackSidebar">
+                <property name="stack">stack</property>
+                <property name="width-request">200</property>
+                <style>
+                  <class name="background"/>
+                </style>
+              </object>
+            </property>
+            <property name="separator">
+              <object class="GtkSeparator"/>
+            </property>
+            <property name="content">
+              <object class="GtkStack" id="stack">
+                <property name="vexpand">True</property>
+                <property name="width-request">360</property>
+                <signal name="notify::visible-child" handler="stack_notify_visible_child_cb" swapped="true"/>
+                <child>
+                  <object class="GtkStackPage">
+                    <property name="title" translatable="yes">Folding</property>
+                    <property name="child">
+                      <object class="AdwPreferencesPage">
+                        <child>
+                          <object class="AdwPreferencesGroup">
+                            <child>
+                              <object class="AdwComboRow">
+                                <property name="title" translatable="yes">Fold Policy</property>
+                                <property name="selected" bind-source="flap" bind-property="fold-policy" bind-flags="sync-create|bidirectional"/>
+                                <property name="model">
+                                  <object class="AdwEnumListModel">
+                                    <property name="enum-type">AdwFlapFoldPolicy</property>
+                                  </object>
+                                </property>
+                                <property name="expression">
+                                  <closure type="gchararray" function="fold_policy_name"/>
+                                </property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="AdwActionRow">
+                                <property name="title" translatable="yes">Locked</property>
+                                <property name="subtitle" translatable="yes">Sidebar visibility doesn't change when fold state changes</property>
+                                <property name="activatable_widget">locked_switch</property>
+                                <child>
+                                  <object class="GtkSwitch" id="locked_switch">
+                                    <property name="valign">center</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkStackPage">
+                    <property name="title" translatable="yes">Layout</property>
+                    <property name="child">
+                      <object class="AdwPreferencesPage">
+                        <child>
+                          <object class="AdwPreferencesGroup">
+                            <child>
+                              <object class="AdwActionRow">
+                                <property name="title" translatable="yes">Flap Position</property>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="valign">center</property>
+                                    <style>
+                                      <class name="linked"/>
+                                    </style>
+                                    <child>
+                                      <object class="GtkToggleButton" id="start_toggle_button">
+                                        <property name="label" translatable="yes">Start</property>
+                                        <property name="active">True</property>
+                                        <signal name="toggled" handler="start_toggle_button_toggled_cb"/>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkToggleButton" id="end_toggle_button">
+                                        <property name="label" translatable="yes">End</property>
+                                        <property name="group">start_toggle_button</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="AdwComboRow">
+                                <property name="title" translatable="yes">Transition Type</property>
+                                <property name="selected" bind-source="flap" bind-property="transition-type" bind-flags="sync-create|bidirectional"/>
+                                <property name="model">
+                                  <object class="AdwEnumListModel">
+                                    <property name="enum-type">AdwFlapTransitionType</property>
+                                  </object>
+                                </property>
+                                <property name="expression">
+                                  <closure type="gchararray" function="transition_type_name"/>
+                                </property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkStackPage">
+                    <property name="title" translatable="yes">Interaction</property>
+                    <property name="child">
+                      <object class="AdwPreferencesPage">
+                        <child>
+                          <object class="AdwPreferencesGroup">
+                            <child>
+                              <object class="AdwActionRow">
+                                <property name="title" translatable="yes">Modal</property>
+                                <property name="subtitle" translatable="yes">Clicking outside the sidebar or pressing Esc will close it when folded</property>
+                                <property name="subtitle-lines">2</property>
+                                <property name="activatable_widget">modal_switch</property>
+                                <child>
+                                  <object class="GtkSwitch" id="modal_switch">
+                                    <property name="valign">center</property>
+                                    <property name="active">True</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="AdwActionRow">
+                                <property name="title" translatable="yes">Swipe to Open</property>
+                                <property name="activatable_widget">swipe_to_open_switch</property>
+                                <child>
+                                  <object class="GtkSwitch" id="swipe_to_open_switch">
+                                    <property name="valign">center</property>
+                                    <property name="active">True</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="AdwActionRow">
+                                <property name="title" translatable="yes">Swipe to Close</property>
+                                <property name="activatable_widget">swipe_to_close_switch</property>
+                                <child>
+                                  <object class="GtkSwitch" id="swipe_to_close_switch">
+                                    <property name="valign">center</property>
+                                    <property name="active">True</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+              </object>
+            </property>
+          </object>
+        </child>
+      </object>
+    </property>
+  </template>
+</interface>

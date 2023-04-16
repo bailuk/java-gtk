@@ -37,7 +37,7 @@ public class CallbackHandler {
     public synchronized void register(com.sun.jna.Callback callback)  {
         if (this.callback == null) {
             this.callback = callback;
-            mmap.put(instance.getCPointer(), callbackId, this);
+            mmap.put(instance.asCPointer(), callbackId, this);
             sizeLog.log(mmap.size());
         }
     }
@@ -49,7 +49,7 @@ public class CallbackHandler {
      */
     public synchronized void unregister() {
         if (this.callback != null) {
-            mmap.remove(instance.getCPointer(), callbackId);
+            mmap.remove(instance.asCPointer(), callbackId);
             this.callback = null;
         }
     }
@@ -62,7 +62,7 @@ public class CallbackHandler {
      */
     public static void unregister(Pointer instance) {
         synchronized (mmap) {
-            var values = mmap.getValues(instance.getCPointer());
+            var values = mmap.getValues(instance.asCPointer());
             for (CallbackHandler callback: values.toArray(new CallbackHandler[0])) {
                 callback.unregister();
             }
@@ -83,7 +83,7 @@ public class CallbackHandler {
 
     public static void unregister(Pointer instance, String methodName) {
         synchronized (mmap) {
-            var values = mmap.getValues(instance.getCPointer());
+            var values = mmap.getValues(instance.asCPointer());
             for (CallbackHandler callback: values.toArray(new CallbackHandler[0])) {
                 callback.unregister(methodName);
             }

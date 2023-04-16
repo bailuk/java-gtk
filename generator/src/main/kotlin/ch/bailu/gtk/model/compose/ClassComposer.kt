@@ -17,26 +17,25 @@ class ClassComposer : CodeComposer() {
 
         writer.writeInternalConstructor(structureModel)
 
-        if (structureModel.isRecord && filterCreateMallocConstructor(structureModel)) {
-            writer.writeMallocConstructor(structureModel)
-        }
-
         if (structureModel.isRecord && models.fields.isNotEmpty()) {
+            if (filterCreateMallocConstructor(structureModel)) {
+                writer.writeMallocConstructor(structureModel)
+            }
+
             writer.writeBeginStruct(structureModel, models.fields)
             models.fields.forEach { writer.writeField(structureModel, it) }
             writer.writeEndStruct()
         }
 
-        writer.writeBeginInstace(namespaceModel)
+        writer.writeBeginInstance(namespaceModel)
         models.privateFactories.forEach { writer.writePrivateFactory(structureModel, it) }
         models.factories.forEach        { writer.writeFactory(structureModel, it) }
         models.constructors.forEach     { writer.writeConstructor(structureModel, it) }
         models.methods.forEach          { writer.writeMethod(structureModel, it) }
         models.signals.forEach          { writer.writeSignal(structureModel, it) }
-        models.functions.forEach       { writer.writeFunction(structureModel, it) }
-        if (structureModel.hasGetTypeFunction) {
-            writer.writeGetTypeFunction(structureModel)
-        }
+        models.functions.forEach        { writer.writeFunction(structureModel, it) }
+        models.implements.forEach       { writer.writeImplements(it)}
+        writer.writeIntrospection(structureModel)
         writer.writeEndInstance()
     }
 }

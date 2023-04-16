@@ -1,5 +1,6 @@
 package ch.bailu.gtk.table
 
+import ch.bailu.gtk.model.type.NamespaceType
 import java.util.*
 
 /**
@@ -14,28 +15,33 @@ object WrapperTable {
 
     init {
         add("unsigned char*", "Bytes")
-        add("const double*", "Dbls")
+        add("const double*", "Dbl")
         add("gchar*", "Str")
         add("const char*", "Str")
         add("char*", "Str")
         add("const gchar*", "Str")
         add("filename", "Str")
         add("char**", "Strs")
+        add("const char**", "Strs")
         add("const char* const*", "Strs")  // TODO probably wrong type
+        add("int*", "Int")
         add("gint*", "Int")
+        add("gboolean*", "Int")
+        add("guint32*", "Int")
         add("gsize*", "Int64")
         add("GType*", "Int64")
-        add("int*", "Int")
-        add("gdouble*", "Dbls")
+        add("gdouble*", "Dbl")
+        add("gfloat*", "Flt")
+        add("float*", "Flt")
         add("gconstpointer", "Pointer")
         add("gpointer", "Pointer")
+        add("void*", "Pointer")
         add("const GdkEvent*", "Pointer")
     }
 
 
     private fun add(ctype: String, wrapper: String) {
         table[ctype] = wrapper
-        StructureTable.add(NAMESPACE, wrapper)
     }
 
     operator fun contains(cType: String): Boolean {
@@ -46,5 +52,15 @@ object WrapperTable {
         return if (contains(cType)) {
             NAMESPACE + "." + table[cType]
         } else cType
+    }
+
+    fun convertToNamespaceType(cTypeName: String): NamespaceType {
+        val typeName = table[cTypeName]
+
+        return if (typeName is String) {
+            NamespaceType(NAMESPACE, typeName)
+        } else {
+            NamespaceType.INVALID
+        }
     }
 }

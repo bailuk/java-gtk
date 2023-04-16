@@ -4,17 +4,16 @@ package examples;
 import java.io.IOException;
 import java.io.InputStream;
 
-import ch.bailu.gtk.lib.bridge.Image;
 import ch.bailu.gtk.cairo.Context;
 import ch.bailu.gtk.gdk.Gdk;
 import ch.bailu.gtk.gdkpixbuf.Pixbuf;
 import ch.bailu.gtk.gdkpixbuf.PixbufFormat;
 import ch.bailu.gtk.gtk.DrawingArea;
 import ch.bailu.gtk.gtk.Window;
+import ch.bailu.gtk.lib.bridge.Image;
 import ch.bailu.gtk.lib.handler.CallbackHandler;
 import ch.bailu.gtk.lib.handler.SignalHandler;
 import ch.bailu.gtk.lib.util.JavaResource;
-import ch.bailu.gtk.type.CPointer;
 import ch.bailu.gtk.type.Str;
 
 public class ImageBridge implements DemoInterface {
@@ -29,10 +28,9 @@ public class ImageBridge implements DemoInterface {
         listSupportedFormats();
 
         var demoWindow = new Window();
-        demoWindow.setResizable(true);
         demoWindow.setSizeRequest(300, 300);
 
-        DrawingArea drawingArea = new DrawingArea();
+        var drawingArea = new DrawingArea();
         demoWindow.setChild(drawingArea);
         drawingArea.onResize(this::setPixbuf);
         drawingArea.setDrawFunc((cb, drawing_area, cr, width, height, user_data) -> drawLogo(cr), null, (cb, data)->{});
@@ -49,7 +47,7 @@ public class ImageBridge implements DemoInterface {
 
         int count = 1;
         while(list.isNotNull() && list.getFieldData().isNotNull()) {
-            var format = new PixbufFormat(new CPointer(list.getFieldData().getCPointer()));
+            var format = new PixbufFormat(list.getFieldData().cast());
 
             System.out.println("__");
             System.out.println("Format " + count + ":");
@@ -74,7 +72,7 @@ public class ImageBridge implements DemoInterface {
 
     private void setPixbuf(int width, int height) {
         try {
-            Pixbuf pixbufNew = loadPixbuf(width, height);
+            var pixbufNew = loadPixbuf(width, height);
             if (pixbuf != null) {
                pixbuf.unref();
             }
@@ -92,11 +90,11 @@ public class ImageBridge implements DemoInterface {
         }
     }
 
-    private boolean drawLogo(Context cr) {
+    private boolean drawLogo(Context context) {
         if (pixbuf != null) {
-            cr.save();
-            Gdk.cairoSetSourcePixbuf(cr, pixbuf, 0, 0);
-            cr.paint();
+            context.save();
+            Gdk.cairoSetSourcePixbuf(context, pixbuf, 0, 0);
+            context.paint();
             return true;
         }
         return false;

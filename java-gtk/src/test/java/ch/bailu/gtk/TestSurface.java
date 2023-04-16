@@ -17,7 +17,7 @@ public class TestSurface {
     @Test
     public void testSurface() {
         Surface surface = Cairo.imageSurfaceCreate(Format.ARGB32, 256,256);
-        assertNotEquals(0, surface.getCPointer());
+        assertNotEquals(0, surface.asCPointer());
         surface.destroy();
 
         byte[] bytesBuffer = new byte[256*256*4];
@@ -27,10 +27,10 @@ public class TestSurface {
         Bytes bytes = new Bytes(bytesBuffer);
 
         surface = Cairo.imageSurfaceCreateForData(bytes, Format.ARGB32, 256, 256, 256*4);
-        assertNotEquals(0, surface.getCPointer());
+        assertNotEquals(0, surface.asCPointer());
 
         Context context = surface.createContext();
-        assertNotEquals(0, context.getCPointer());
+        assertNotEquals(0, context.asCPointer());
 
         assertEquals(bytesBuffer[0], bytes.getByte(0));
 

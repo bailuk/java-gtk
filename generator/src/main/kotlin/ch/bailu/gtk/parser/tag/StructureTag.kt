@@ -1,5 +1,6 @@
 package ch.bailu.gtk.parser.tag
 
+import ch.bailu.gtk.validator.Validator
 import java.io.IOException
 
 class StructureTag(parent: TagWithParent, val structureType: String): NamedWithDocTag(parent) {
@@ -16,7 +17,10 @@ class StructureTag(parent: TagWithParent, val structureType: String): NamedWithD
     var getType = ""
         private set
 
-    val implementsList = TagList<NamedWithDocTag>()
+    var isTypeStructFor = ""
+        private set
+
+    val implements = TagList<NamedWithDocTag>()
     val constructors = TagList<MethodTag>()
     val functions = TagList<MethodTag>()
 
@@ -25,14 +29,14 @@ class StructureTag(parent: TagWithParent, val structureType: String): NamedWithD
     val methods = TagList<MethodTag>()
 
     val signals = TagList<MethodTag>()
-    val fields = TagList<ParameterTag>()
+    val fields = TagList<FieldTag>()
 
     override fun getChild(name: String): TagWithParent {
         if ("field" == name) {
-            return fields.addTag(ParameterTag(this))
+            return fields.addTag(FieldTag(this))
         }
         if ("implements" == name) {
-            return implementsList.addTag(NamedWithDocTag(this))
+            return implements.addTag(NamedWithDocTag(this))
         }
         if ("constructor" == name) {
             return constructors.addTag(MethodTag(this))
@@ -56,11 +60,9 @@ class StructureTag(parent: TagWithParent, val structureType: String): NamedWithD
 
     @Throws(IOException::class)
     override fun end() {
-        if (!disguised) {
-            getBuilder().buildStructure(this)
-        }
+        Validator.giveUp("name is empty $this", getName().isEmpty())
+        getBuilder().buildStructure(this)
     }
-
 
     override fun setAttribute(name: String, value: String) {
         if ("parent" == name) {
@@ -70,10 +72,11 @@ class StructureTag(parent: TagWithParent, val structureType: String): NamedWithD
         } else if ("c:type" == name) {
             type = value
         } else if ("glib:get-type" == name) {
-            getType = value;
+            getType = value
+        } else if ("glib:is-gtype-struct-for" == name) {
+            isTypeStructFor = value
         } else {
             super.setAttribute(name, value)
         }
     }
-
 }

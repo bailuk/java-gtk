@@ -1,16 +1,16 @@
 package ch.bailu.gtk.model
 
 import ch.bailu.gtk.Configuration
-import ch.bailu.gtk.converter.NamespaceType
+import ch.bailu.gtk.model.type.NamespaceType
 import ch.bailu.gtk.model.compose.CodeComposer
 import ch.bailu.gtk.model.filter.*
 import ch.bailu.gtk.model.list.ModelLists
 import ch.bailu.gtk.model.type.StructureType
-import ch.bailu.gtk.parser.tag.EnumerationTag
-import ch.bailu.gtk.parser.tag.MethodTag
-import ch.bailu.gtk.parser.tag.ParameterTag
-import ch.bailu.gtk.parser.tag.StructureTag
-import ch.bailu.gtk.table.AliasTable.convert
+import ch.bailu.gtk.parser.tag.*
+import ch.bailu.gtk.table.AliasTable
+import ch.bailu.gtk.table.SizeTable
+import ch.bailu.gtk.table.StructureTable
+import ch.bailu.gtk.validator.Validator
 import ch.bailu.gtk.writer.CodeWriter
 import ch.bailu.gtk.writer.Names
 import java.io.IOException
@@ -24,27 +24,42 @@ class StructureModel : Model {
     private var models = ModelLists()
 
     val structureType: StructureType
-    val typeFunction: String
-
     val cType: String
     val doc: String
 
+    val disguised: Boolean
+
+    val typeFunction: String
     val hasGetTypeFunction: Boolean
         get() = "" != typeFunction
 
+    val typeFor: String
+    val hasTypeFor: Boolean
+        get() = "" != typeFor
 
+    val size: Int
+
+    /**
+     * Offset and field order must be identical with c structure
+     */
+    var allFieldsAreSupported = true
+        private set
 
     constructor(structure: StructureTag, nameSpace: NamespaceModel) {
         typeFunction = structure.getType
+        typeFor = getIndirectType(structure.isTypeStructFor, nameSpace.namespace)
 
+        disguised = structure.disguised
         cType = structure.type
         nameSpaceModel = nameSpace
         structureType = StructureType(structure.structureType)
-        apiName = convert(nameSpace.namespace, structure.getName())
+        apiName = AliasTable.convert(nameSpace.namespace, structure.getName()).name
+        size = SizeTable.getSize(nameSpace.namespace, structure.getName())
         parent = StructureModel(nameSpace.namespace, structure.parent, structureType)
         doc = structure.getDoc()
-        for (methodTag in structure.constructors) {
-            generateAndAddMethodModel(nameSpace, models.privateFactories, methodTag)
+
+        structure.constructors.forEach {
+            generateAndAddMethodModel(nameSpace, models.privateFactories, it)
         }
 
         models.privateFactories.forEach {
@@ -55,26 +70,50 @@ class StructureModel : Model {
             }
         }
 
-        for (methodTag in structure.methods) {
-            generateAndAddMethodModel(nameSpace, models.methods, methodTag)
+        structure.methods.forEach {
+            generateAndAddMethodModel(nameSpace, models.methods, it)
         }
 
-        for (signal in structure.signals) {
-            models.signals.addIfSupported(MethodModel(nameSpace.namespace,nameSpace.namespace, signal, preferNative = false))
+        structure.signals.forEach {
+            models.signals.addIfSupported(MethodModel(nameSpace.namespace,nameSpace.namespace, it, preferNative = false))
         }
-        for (field in structure.fields) {
-            val fieldModel = ParameterModel(
-                nameSpace.namespace,
-                field, isConstant = false,
-                supportsDirectAccess = filterFieldDirectAccess(this),
-                preferNative = false)
-            models.fields.addIfSupported(filterField(fieldModel))
+
+        structure.fields.forEach {
+            generateAndAddFieldModel(nameSpace, it)
         }
-        for (m in structure.functions) {
-            models.addIfSupportedWithCallbacks(models.functions, filter(MethodModel(nameSpace.namespace, nameSpace.namespace,m, preferNative = false)))
+
+        structure.functions.forEach {
+            models.addIfSupportedWithCallbacks(models.functions, filter(MethodModel(nameSpace.namespace, nameSpace.namespace, it, preferNative = false)))
+        }
+
+        structure.implements.forEach {
+            models.implements.addIfSupported(ImplementsModel(nameSpace.namespace, it))
         }
 
         setSupported("name-is-empty", apiName != "")
+    }
+
+    private fun getIndirectType(typeStructFor: String, namespace: String): String {
+        if (StructureTable.hasGetType(namespace, typeStructFor)) {
+            return typeStructFor
+        }
+        return ""
+    }
+
+    private fun generateAndAddFieldModel(namespace: NamespaceModel, fieldTag: FieldTag) {
+        val fieldModel = filterField(FieldModel(
+            namespace.namespace,
+            fieldTag
+        ))
+
+        fieldModel.setSupported("previous-field-unsupported", allFieldsAreSupported)
+
+        models.fields.addIfSupported(fieldModel)
+        if (fieldModel.isMethod) {
+            models.callbacks.addIfSupported(fieldModel.methodModel, fieldModel.isSupported)
+        }
+
+        allFieldsAreSupported = allFieldsAreSupported && fieldModel.isSupported
     }
 
     private fun generateAndAddMethodModel(namespace: NamespaceModel, models: ModelList<MethodModel>, methodTag: MethodTag) {
@@ -87,15 +126,9 @@ class StructureModel : Model {
         }
     }
 
-    private fun convert(namespace: String, name: String): String {
-        val from = NamespaceType(namespace, name)
-        return convert(from).name
-    }
-
-    private fun filterField(parameterModel: ParameterModel): ParameterModel {
-        parameterModel.setSupported("cb-field", !parameterModel.isCallback)
-        parameterModel.setSupported("filter-field", filterField(this))
-        return parameterModel
+    private fun filterField(fieldModel: FieldModel): FieldModel {
+        fieldModel.setSupported("filter-field", filterField())
+        return fieldModel
     }
 
     private fun filterConstructor(methodModel: MethodModel): MethodModel {
@@ -113,9 +146,12 @@ class StructureModel : Model {
      * @param namespace
      */
     constructor(namespace: NamespaceModel) {
+        disguised = false
         typeFunction = ""
+        typeFor = ""
         doc=""
         cType = ""
+        size = 0
         nameSpaceModel = namespace
         structureType = StructureType(StructureType.Types.PACKAGE)
         apiName = Names.getJavaClassName(nameSpaceModel.namespace)
@@ -151,11 +187,14 @@ class StructureModel : Model {
      */
     private constructor(namespace: NamespaceModel, name: String, members: List<ParameterTag>, toUpper: Boolean) {
         typeFunction = ""
+        typeFor = ""
         nameSpaceModel = namespace
         structureType = StructureType(StructureType.Types.ENUMERATION)
         apiName = name
         doc = ""
         cType = ""
+        size = 0
+        disguised = false
         parent = this
 
         for (parameterTag in members) {
@@ -163,7 +202,6 @@ class StructureModel : Model {
                 ParameterModel(namespace.namespace, parameterTag,
                     isConstant = toUpper,
                     preferNative = true,
-                    supportsDirectAccess = false
                 )
             )
         }
@@ -172,9 +210,12 @@ class StructureModel : Model {
     // parent initializer
     private constructor(defaultNamespace: String, className: String, structType: StructureType) {
         typeFunction = ""
+        typeFor = ""
         doc = ""
         cType = ""
+        size = 0
         structureType = structType
+        disguised = false
         parent = this
 
         if (className == "") {
@@ -182,7 +223,7 @@ class StructureModel : Model {
             apiName = structType.apiParentClassName
 
         } else {
-            val type = NamespaceType(defaultNamespace, className)
+            val type = AliasTable.convert(NamespaceType(defaultNamespace, className))
             val typeNamespaceModel = NamespaceModel(type)
             if (typeNamespaceModel.isSupported) {
                 nameSpaceModel = typeNamespaceModel
@@ -196,6 +237,8 @@ class StructureModel : Model {
                 apiName = Configuration.BASE_NAME_SPACE_DOT + "type.Outsider"
             }
         }
+
+        Validator.validateAlias(apiName)
     }
 
     fun hasNativeCalls(): Boolean {

@@ -10,14 +10,14 @@ public class Int64 extends Wrapper {
         this(createLong(0));
     }
 
-    public Int64(CPointer pointer) {
+    public Int64(PointerContainer pointer) {
         super(pointer);
         created = pointer.isNotNull();
     }
 
 
-    private static CPointer createLong(long value) {
-        return new CPointer(ImpInt.createLong(value));
+    private static PointerContainer createLong(long value) {
+        return new PointerContainer(ImpInt.createLong(value));
     }
 
     public static Int64 create(long value) {
@@ -25,16 +25,17 @@ public class Int64 extends Wrapper {
     }
 
     public void set(long i) {
-        ImpInt.setLong(getCPointer(), i);
+        ImpInt.setLong(asCPointer(), i);
     }
 
     public long get() {
-        return ImpInt.getLong(getCPointer());
+        return ImpInt.getLong(asCPointer());
     }
 
+    @Override
     public void destroy() {
         if (created) {
-            ImpUtil.destroy(getCPointer());
+            ImpUtil.destroy(asCPointer());
             created = false;
         }
     }

@@ -6,4 +6,8 @@ class StaticUrl(val url: String): DocUrl() {
     override fun getUrl(structureModel: StructureModel): String {
         return url
     }
+
+    override fun getBaseUrl(): String {
+        return url
+    }
 }

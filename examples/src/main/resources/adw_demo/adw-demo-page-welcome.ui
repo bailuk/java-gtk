@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="AdwDemoPageWelcome" parent="AdwBin">
+    <property name="child">
+      <object class="AdwStatusPage">
+        <property name="icon-name">org.gnome.Adwaita1.Demo-symbolic</property>
+        <property name="title" translatable="yes">Welcome to Adwaita Demo</property>
+        <property name="description" translatable="yes">This is a tour of the features the library has to offer.</property>
+      </object>
+    </property>
+  </template>
+</interface>

@@ -2,8 +2,8 @@
 plugins {
     java
 
-    // https://kotlinlang.org/docs/gradle.html#targeting-the-jvm
-    kotlin("jvm") version "1.6.10"
+    // https://kotlinlang.org/docs/gradle-configure-project.html
+    kotlin("jvm") version "1.8.20"
 }
 
 repositories {
@@ -11,21 +11,13 @@ repositories {
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
 
-    /**
-     *  https://mvnrepository.com/artifact/net.sf.kxml/kxml2
-     *  xml parser implementation
-     */
+    // https://mvnrepository.com/artifact/net.sf.kxml/kxml2
+    // xml parser implementation
     implementation("net.sf.kxml:kxml2:2.3.0")
 
 }
-
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions { jvmTarget = "11" }
-}
-
 
 tasks.test {
     useJUnitPlatform()
@@ -38,9 +30,7 @@ tasks.register("generate", JavaExec::class) {
     classpath = sourceSets["main"].runtimeClasspath
     mainClass.set("ch.bailu.gtk.AppKt")
 
-    args(setOf(
-            "-i", "/usr/share/gir-1.0",
-            "-j", "${project.getRootDir()}/java-gtk/build/generated/src/main/java/ch/bailu/gtk/"))
+    args(setOf("-j", "${project.rootDir}/java-gtk/build/generated/src/main/java/ch/bailu/gtk/"))
 }
 
 tasks.compileJava {

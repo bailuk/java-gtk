@@ -10,6 +10,7 @@ object PrimitivesTable {
         add("none", "void")
         add("void", "void")
         add("gboolean", "boolean")
+        add("_Bool", "boolean")
         add("gint", "int")
         add("glong", "long")
         add("guint", "int")
@@ -38,7 +39,8 @@ object PrimitivesTable {
         add("float", "float")
         add("const char*", "String")
         add("const gchar*", "String")
-        add("...", "Object...")
+        add("...", "java.lang.Object...")
+        add("GQuark", "int")
     }
 
     private fun add(cType: String, jType: String) {

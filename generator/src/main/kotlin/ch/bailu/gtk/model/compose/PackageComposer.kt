@@ -13,7 +13,7 @@ class PackageComposer : CodeComposer() {
             writer.writeCallback(structureModel, cb)
         }
 
-        writer.writeBeginInstace(namespaceModel)
+        writer.writeBeginInstance(namespaceModel)
         for (m in models.functions) {
             writer.writeFunction(structureModel, m)
         }

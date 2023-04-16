@@ -40,7 +40,7 @@ public class TestStr {
 
         assertEquals(3,strs.getLength());
         assertEquals("test2", strs.get(1).toString());
-        assertEquals(0, strs.get(2).getCPointer());
+        assertEquals(0, strs.get(2).asCPointer());
         assertEquals("", strs.get(2).toString());
     }
 

@@ -98,8 +98,8 @@ jdoc: $(gen_source_marker)
 	./gradlew -q java-gtk:javadocJar
 
 jdoc-install: $(jdoc) javadoc
-	rm -rf javadoc/*
-	unzip -q java-gtk/build/libs/java-gtk-$(VERSION)-javadoc.jar -d javadoc
+	if [ -d javadoc/$(VERSION) ]; then rm -r javadoc/$(VERSION); fi
+	unzip -q java-gtk/build/libs/java-gtk-javadoc.jar -d javadoc/$(VERSION)
 
 javadoc:
 	mkdir javadoc
@@ -110,11 +110,11 @@ $(jlib): gen FORCE
 
 $(gen_header_marker): $(gen_source_marker)
 	./gradlew -q java-gtk:classes
-	touch $(gen_header_marker)
+	mkdir -p build && touch $(gen_header_marker)
 
 $(gen_source_marker): $(generator_jar)
 	./gradlew -q generator:generate
-	touch $(gen_source_marker)
+	mkdir -p build && touch $(gen_source_marker)
 
 $(generator_jar): FORCE
 	./gradlew -q generator:build

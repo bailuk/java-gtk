@@ -43,10 +43,10 @@ dependencies {
 
     // https://github.com/java-native-access/jna
     // https://mvnrepository.com/artifact/net.java.dev.jna/jna
-    api("net.java.dev.jna:jna:5.12.1")
+    api("net.java.dev.jna:jna:5.13.0")
 
     //https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
 }
 
 
@@ -79,8 +79,7 @@ tasks.javadoc {
         https://docs.gradle.org/current/javadoc/org/gradle/external/javadoc/StandardJavadocDocletOptions.html
     */
     options.windowTitle("java-gtk")
-    options.overview("java-gtk")
+    options.overview("../doc/overview.html")
     (options as StandardJavadocDocletOptions).addStringOption("Xdoclint:none", "-quiet")
     (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
-    (options as StandardJavadocDocletOptions).footer = "Test"
 }

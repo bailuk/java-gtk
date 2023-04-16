@@ -1,12 +1,12 @@
 package ch.bailu.gtk.type;
 
 public class Strs extends Pointer {
-    public final static Strs NULL = new Strs(CPointer.NULL);
+    public final static Strs NULL = new Strs(PointerContainer.NULL);
 
     private Str[] strs;
     private boolean destroyAll = false;
 
-    public Strs(CPointer pointer) {
+    public Strs(PointerContainer pointer) {
         super(pointer);
         strs = null;
     }
@@ -17,10 +17,10 @@ public class Strs extends Pointer {
     }
 
     public Strs(Str[] strs) {
-        this(strs, new CPointer(ImpUtil.createPointerArray(Util.toPointerArray(strs))));
+        this(strs, new PointerContainer(ImpUtil.createPointerArray(Util.toPointerArray(strs))));
     }
 
-    public Strs(Str[] strs, CPointer pointers) {
+    public Strs(Str[] strs, PointerContainer pointers) {
         super(pointers);
         this.strs=strs;
     }
@@ -90,7 +90,7 @@ public class Strs extends Pointer {
     public void destroyAll() {
         if (strs != null) {
             for (Pointer pointer : strs) {
-                ImpUtil.destroy(pointer.getCPointer());
+                ImpUtil.destroy(pointer.asCPointer());
             }
             destroyArray();
         }
@@ -99,7 +99,7 @@ public class Strs extends Pointer {
 
     private void destroyArray() {
         if (strs != null) {
-            ImpUtil.destroy(getCPointer());
+            ImpUtil.destroy(asCPointer());
         }
         strs = null;
     }

@@ -24,17 +24,19 @@ abstract class CodeComposer {
     fun write(writer: CodeWriter, namespaceModel: NamespaceModel, structureModel: StructureModel, models: ModelLists) {
         writeStart(writer, structureModel)
         compose(writer, namespaceModel, structureModel, models)
-        writeEnd(writer, models)
+        writeEnd(writer, structureModel, models)
     }
 
-    fun writeStart(writer: CodeWriter, structureModel: StructureModel) {
+    private fun writeStart(writer: CodeWriter, structureModel: StructureModel) {
         writer.writeStart(structureModel, structureModel.nameSpaceModel)
     }
 
-    fun writeEnd(writer: CodeWriter, models: ModelLists) {
+    fun writeEnd(writer: CodeWriter, structureModel: StructureModel, models: ModelLists) {
+        writer.writeClassEnd()
+        writer.writeDebugBegin(structureModel)
         for (m in models.unsupported) {
-            writer.writeUnsupported(m)
+            writer.writeDebugUnsupported(m)
         }
-        writer.writeEnd()
+        writer.writeDebugEnd()
     }
 }

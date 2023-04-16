@@ -3,20 +3,20 @@ package ch.bailu.gtk.config
 import ch.bailu.gtk.model.StructureModel
 import ch.bailu.gtk.model.type.StructureType
 
-class GtkDocUrl(val section: String): DocUrl() {
+class GtkDocUrl(private val baseUrl: String, private val section: String): DocUrl() {
 
-    companion object {
-        const val baseUrl = "https://docs.gtk.org/"
-    }
     override fun getUrl(structureModel: StructureModel): String {
-        val name = structureModel.apiName
         val type = getType(structureModel.structureType)
 
         return if ("" == type) {
             baseUrl
         } else {
-            "${baseUrl}${section}/${type}.${name}.html"
+             "${baseUrl}${section}/${type}.${structureModel.apiName}.html"
         }
+    }
+
+    override fun getBaseUrl(): String {
+        return baseUrl
     }
 
     private fun getType(structureType: StructureType): String {

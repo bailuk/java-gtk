@@ -5,6 +5,9 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
+import ch.bailu.gtk.glib.Bytes;
+import ch.bailu.gtk.type.Str;
+
 /**
  * Util class for location-independent access to program specific resources.
  * To read files from "resources/" or from the applications jar archive
@@ -44,5 +47,10 @@ public class JavaResource {
             throw new IOException("Failed to load '" + resourcePath + "'");
         }
         return resourceStream;
+    }
+
+    public Bytes asBytes() throws IOException {
+        var data = new Str(asString());
+        return new Bytes(data, data.getSize()-1);
     }
 }

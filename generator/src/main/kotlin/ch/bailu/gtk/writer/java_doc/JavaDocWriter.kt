@@ -43,6 +43,11 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
     override fun writeConstant(structureModel: StructureModel, parameterModel: ParameterModel) {
         doc.writeStart(4)
         doc.writeBlock(parameterModel.doc)
+
+        if (parameterModel.isCallback && parameterModel.callbackModel != null) {
+            val name = parameterModel.callbackModel.name
+            doc.writeBlockPlain("<br>See {@link ${Names.getJavaCallbackInterfaceName(name)}#${Names.getJavaCallbackMethodName(name)}}")
+        }
         doc.writeDocEnd()
     }
 
@@ -58,25 +63,40 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
 
 
     override fun writeSignal(structureModel: StructureModel, methodModel: MethodModel) {
-        doc.writeStart(4)
-
         val block = """
             Connect to signal "${methodModel.name}".
             <br>See {@link ${Names.getJavaCallbackInterfaceName(methodModel.name)}#${Names.getJavaCallbackMethodName(methodModel.name)}} for signal description.
             <br>Field {@link #${methodModel.signalNameVariable}} contains original signal name and can be used as resource reference.
             <br>
             @param signal callback function (lambda).
-            @returns {@link ch.bailu.gtk.lib.handler.SignalHandler}. Can be used to disconnect signal and to release callback function.
+            @return {@link ch.bailu.gtk.lib.handler.SignalHandler}. Can be used to disconnect signal and to release callback function.
         """.trimIndent()
 
+        doc.writeStart(4)
         doc.writeBlockPlain(block)
         doc.writeDocEnd()
     }
 
 
-    override fun writeField(structureModel: StructureModel, parameterModel: ParameterModel) {
-        //writeConstant(structureModel, parameterModel)
-    }
+    override fun writeField(structureModel: StructureModel, fieldModel: FieldModel) {
+        doc.writeStart(4)
+        doc.writeBlock(fieldModel.doc)
+
+        if (fieldModel.isPublic) {
+            if (fieldModel.isMethod) {
+                val name = fieldModel.methodModel.name
+                doc.writeBlockPlain(
+                    "<br>See {@link ${Names.getJavaCallbackInterfaceName(name)}#${
+                        Names.getJavaCallbackMethodName(
+                            name
+                        )
+                    }}"
+                )
+            }
+        } else {
+            doc.writeBlockPlain("<br>Private field: ${fieldModel.visibleState}")
+        }
+        doc.writeDocEnd()    }
 
     override fun writeFunction(structureModel: StructureModel, methodModel: MethodModel) {
         writeMethod(structureModel, methodModel)
@@ -92,14 +112,31 @@ class JavaDocWriter(private val out: TextWriter, val doc: JavaDoc) : CodeWriter 
         }
     }
 
-    override fun writeUnsupported(model: Model) {}
-    override fun writeEnd() {}
-    override fun writeGetTypeFunction(structureModel: StructureModel) {}
+    override fun writeDebugUnsupported(model: Model) {}
+    override fun writeImplements(implementsModel: ImplementsModel) {
+
+        val name = implementsModel.apiTypeName
+
+        val block = """
+            Implements interface {@link $name}. Call this to get access to interface functions.
+            @return {@link $name}
+        """.trimIndent()
+
+        doc.writeStart(4)
+        doc.writeBlockPlain(block)
+        doc.writeDocEnd()
+    }
+
+    override fun writeClassEnd() {}
+    override fun writeDebugBegin(structureModel: StructureModel) {}
+    override fun writeDebugEnd() {}
+
+    override fun writeIntrospection(structureModel: StructureModel) {}
     override fun writeMallocConstructor(structureModel: StructureModel) {}
     override fun writeStart(structureModel: StructureModel, namespaceModel: NamespaceModel) {}
     override fun writeInternalConstructor(structureModel: StructureModel) {}
-    override fun writeBeginStruct(structureModel : StructureModel, fields: ModelList<ParameterModel>) {}
+    override fun writeBeginStruct(structureModel : StructureModel, fields: ModelList<FieldModel>) {}
     override fun writeEndStruct() {}
-    override fun writeBeginInstace(namespaceModel: NamespaceModel) {}
+    override fun writeBeginInstance(namespaceModel: NamespaceModel) {}
     override fun writeEndInstance() {}
 }

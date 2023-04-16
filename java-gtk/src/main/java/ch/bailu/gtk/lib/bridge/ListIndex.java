@@ -1,17 +1,26 @@
 package ch.bailu.gtk.lib.bridge;
 
-import com.sun.jna.Callback;
 import com.sun.jna.Structure;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import ch.bailu.gtk.gio.ListModel;
+import ch.bailu.gtk.gio.ListModelInterface;
+import ch.bailu.gtk.gobject.Gobject;
+import ch.bailu.gtk.gobject.InterfaceInfo;
+import ch.bailu.gtk.gobject.Object;
+import ch.bailu.gtk.gobject.ObjectClass;
+import ch.bailu.gtk.gobject.ObjectClassExtended;
 import ch.bailu.gtk.gobject.ParamFlags;
 import ch.bailu.gtk.gtk.ListItem;
 import ch.bailu.gtk.gtk.SelectionModel;
 import ch.bailu.gtk.gtk.SingleSelection;
-import ch.bailu.gtk.type.CPointer;
-import ch.bailu.gtk.type.Sizes;
-import ch.bailu.gtk.lib.GIO;
-import ch.bailu.gtk.lib.GObject;
+import ch.bailu.gtk.lib.handler.CallbackHandler;
+import ch.bailu.gtk.type.Pointer;
+import ch.bailu.gtk.type.PointerContainer;
+import ch.bailu.gtk.type.Str;
+import ch.bailu.gtk.type.gobject.TypeSystem;
 
 /**
  * A ListModel that provides indices for n items.
@@ -29,21 +38,32 @@ import ch.bailu.gtk.lib.GObject;
 public class ListIndex extends ch.bailu.gtk.gobject.Object {
 
     private static final int PROP_ITEM_TYPE = 1;
-    private static final String   PROP_NAME = "item-type";
-    private static final String   TYPE_NAME = "ListIndex";
-    private static final long   PARENT_TYPE = ch.bailu.gtk.gobject.Object.getTypeID();
-    private static final int     CLASS_SIZE = Sizes.GOBJECT_CLASS;
-    private static final int  INSTANCE_SIZE = Sizes.GOBJECT + 8;
+    private static final Str      PROP_NAME = new Str("item-type");
+    private static final Str      TYPE_NAME = new Str(ListIndex.class.getSimpleName());
+    private static final long   PARENT_TYPE = Object.getTypeID();
+    private static final Str          EMPTY = new Str("");
+
+    @Structure.FieldOrder({"parent", "index", "size"})
+    public static class Instance extends Structure {
+        public Instance(long _self) {
+            super(asJnaPointer(_self));
+        }
+
+        public byte[] parent = new byte[Object.getTypeSize().instanceSize];
+        public int index;
+        public int size;
+    }
 
     private final Instance instance;
 
     public ListIndex(ListItem item) {
         super(item.getItem().cast());
-        instance = new Instance(getCPointer());
+        instance = new Instance(asCPointer());
     }
-    public ListIndex(CPointer cast) {
+
+    public ListIndex(PointerContainer cast) {
         super(cast);
-        instance = new Instance(getCPointer());
+        instance = new Instance(asCPointer());
     }
 
     public ListIndex(int size) {
@@ -53,109 +73,80 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
     }
 
     public ListIndex() {
-        super(create(getTypeID(), PROP_NAME, getTypeID()));
-        instance = new Instance(getCPointer());
-    }
-
-    private static CPointer create(long type, String property_name, long property_value) {
-        return new CPointer(GObject.INST().g_object_new(type, property_name, property_value, 0));
+        super(TypeSystem.newInstance(getTypeID(), new TypeSystem.Property(PROP_NAME, getTypeID())));
+        instance = new Instance(asCPointer());
     }
 
     private static long type = 0;
     public synchronized static long getTypeID() {
         if (type == 0) {
-            type = registerClass();
+            type = TypeSystem.registerClass(PARENT_TYPE, TYPE_NAME, 8, classInit, instanceInit);
             registerInterface(type);
         }
         return type;
     }
 
-    private static synchronized long registerClass() {
-        System.out.println("ListIndex::registerClass");
-        return GObject.INST().g_type_register_static_simple(
-                PARENT_TYPE,
-                TYPE_NAME,
-                CLASS_SIZE,
-                classInit,
-                INSTANCE_SIZE,
-                instanceInit,
-                0);
-    }
 
     private static synchronized void registerInterface(long type) {
         System.out.println("ListIndex::registerInterface");
-        GObject.InterfaceInfo info = new GObject.InterfaceInfo();
-        info.read();
-        info.interface_init = interfaceInit;
-        info.interface_data = 0;
-        info.interface_finalize = 0;
-        info.write();
-        GObject.INST().g_type_add_interface_static(type, ListModel.getTypeID(), info);
+
+        InterfaceInfo info = new InterfaceInfo();
+        info.setFieldInterfaceInit(interfaceInit);
+        Gobject.typeAddInterfaceStatic(type, ListModel.getTypeID(), info);
   }
 
-    private static long parentClass = 0;
-    private static Callback classInit = new Callback() {
-        public void invoke(long klass) {
+    private static ObjectClassExtended parentClass = null;
+    private static final Gobject.OnClassInitFunc classInit = new Gobject.OnClassInitFunc() {
+        @Override
+        public void onClassInitFunc(CallbackHandler __self, @Nonnull Pointer g_class, @Nullable Pointer class_data) {
+
             System.out.println("ListIndex::classInit");
-            parentClass = GObject.INST().g_type_class_peek_parent(klass);
 
-            long object_class = GObject.INST().g_type_check_class_cast(klass, PARENT_TYPE);
+            var objectClass = new ObjectClassExtended(g_class.cast());
+            parentClass = objectClass.getParentClass();
+            objectClass.setFieldDispose(instanceDispose);
+            objectClass.setFieldGetProperty(getProperty);
+            objectClass.setFieldSetProperty(setProperty);
 
-            GObject.ObjectClass objectClass = new GObject.ObjectClass(object_class);
+            var flags =
+                    ParamFlags.CONSTRUCT |
+                    ParamFlags.READWRITE   |
+                    ParamFlags.STATIC_NAME |
+                    ParamFlags.STATIC_NICK |
+                    ParamFlags.STATIC_BLURB;
 
-            //objectClass.read();
-            objectClass.dispose = instanceDispose;
-            objectClass.getProperty = getProperty;
-            objectClass.setProperty = setProperty;
-
-            objectClass.writeField("dispose");
-            objectClass.writeField("getProperty");
-            objectClass.writeField("setProperty");
-
-            long paramType = GObject.INST().g_param_spec_gtype(PROP_NAME, "", "", PARENT_TYPE,
-                      ParamFlags.CONSTRUCT   |
-                            ParamFlags.READWRITE   |
-                            ParamFlags.STATIC_NAME |
-                            ParamFlags.STATIC_NICK |
-                            ParamFlags.STATIC_BLURB);
-
-            GObject.INST().g_object_class_install_property(object_class, PROP_ITEM_TYPE, paramType);
+            objectClass.installProperty(PROP_ITEM_TYPE, Gobject.paramSpecGtype(PROP_NAME, EMPTY, EMPTY, PARENT_TYPE, flags));
         }
     };
 
-    private static Callback interfaceInit = new Callback() {
-        public void invoke(long inst) {
+    private static final InterfaceInfo.OnInterfaceInitFunc interfaceInit = new InterfaceInfo.OnInterfaceInitFunc() {
+        @Override
+        public void onInterfaceInitFunc(CallbackHandler __self, @Nonnull Pointer g_iface, @Nullable Pointer iface_data) {
             System.out.println("ListIndex::interfaceInit");
-            GIO.GListModelInterface iface = new GIO.GListModelInterface(inst);
 
-            iface.read();
-            iface.get_item      = getItem;
-            iface.get_n_items   = getNItems;
-            iface.get_item_type = getItemType;
-            iface.write();
+            var listModelInterface = new ListModelInterface(cast(g_iface.asCPointer()));
+            listModelInterface.setFieldGetItem(getItem);
+            listModelInterface.setFieldGetNItems(getNItems);
+            listModelInterface.setFieldGetItemType(getItemType);
         }
     };
-    private static Callback getItemType = new Callback() {
-        public long invoke(long inst) {
-            System.out.println("ListIndex::getItemType");
-            return getTypeID();
-        }
+
+    private static final ListModelInterface.OnGetItemType getItemType = (__self, list) -> {
+        System.out.println("ListIndex::getItemType");
+        return getTypeID();
     };
-    private static Callback getNItems = new Callback() {
-        public int invoke(long inst) {
-            return new ListIndex(toCPointer(inst)).getSize();
+
+    private static final ListModelInterface.OnGetNItems getNItems = (__self, list) -> new ListIndex(list.cast()).getSize();
+
+    private static final ListModelInterface.OnGetItem getItem = (__self, list, position) -> {
+        Pointer result = Pointer.NULL;
+        ListIndex item = new ListIndex(list.cast()).getItem(position);
+        if (item != null) {
+            result = item;
         }
+        return result;
     };
-    private static Callback getItem = new Callback() {
-        public long invoke(long inst, int position) {
-            long result = 0;
-            ListIndex item = new ListIndex(toCPointer(inst)).getItem(position);
-            if (item != null) {
-                result = item.cast().getCPointer();
-            }
-            return result;
-        }
-    };
+
 
     public ListIndex getItem(int position) {
         ListIndex result = null;
@@ -192,11 +183,7 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
     }
 
 
-    private static Callback instanceInit = new Callback() {
-        public void invoke(long inst) {
-            new ListIndex(toCPointer(inst)).initInstance();
-        }
-    };
+    private static final Gobject.OnInstanceInitFunc instanceInit = (__self, instance, g_class) -> new ListIndex(instance.cast()).initInstance();
 
     private void initInstance() {
         instance.index = 0;
@@ -205,34 +192,27 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
         instance.writeField("size");
     }
 
-    private static GObject.DisposeCallback instanceDispose = instance -> {
-        if (parentClass == 0) {
+    private static final ObjectClass.OnDispose instanceDispose = (__self, object) -> {
+        if (parentClass.isNull()) {
             System.out.println("ListIndex::instanceDispose (no parent)");
         } else {
-            GObject.ObjectClass pClass = new GObject.ObjectClass(parentClass);
-            pClass.readField("dispose");
-            pClass.dispose.invoke(instance);
+            parentClass.onDispose(new ListIndex(object.cast()));
         }
     };
 
-    private static Callback setProperty = new Callback() {
-        public void invoke(long object, int property_id, long value, long pspec) {
-            if (property_id != PROP_ITEM_TYPE) {
-                System.out.println("ListIndex::setProperty (unknown property");
-            }
+    private static final ObjectClass.OnSetProperty setProperty = (__self, object, property_id, value, pspec) -> {
+        if (property_id != PROP_ITEM_TYPE) {
+            System.out.println("ListIndex::setProperty (unknown property");
         }
     };
 
-    private static Callback getProperty = new Callback() {
-        public void invoke(long object, int property_id, long value, long pspec) {
-            if (property_id == PROP_ITEM_TYPE) {
-                GObject.INST().g_value_set_gtype(value, getTypeID());
-            } else {
-                System.out.println("ListIndex::getProperty (unknown property");
-            }
+    private static final ObjectClass.OnGetProperty getProperty = (__self, object, property_id, value, pspec) -> {
+        if (property_id == PROP_ITEM_TYPE) {
+            value.setGtype(getTypeID());
+        } else {
+            System.out.println("ListIndex::getProperty (unknown property");
         }
     };
-
 
     public ListModel asListModel() {
         return new ListModel(cast());
@@ -248,17 +228,5 @@ public class ListIndex extends ch.bailu.gtk.gobject.Object {
 
     public static int toIndex(ListItem item) {
         return new ListIndex(item).getIndex();
-    }
-
-
-    @Structure.FieldOrder({"parent", "index", "size"})
-    public static class Instance extends Structure {
-        public Instance(long _self) {
-            super(toJnaPointer(_self));
-        }
-
-        public byte[] parent = new byte[Sizes.GOBJECT];
-        public int index;
-        public int size;
     }
 }

@@ -5,7 +5,7 @@ import com.sun.jna.Callback;
 import java.io.PrintStream;
 import java.util.Objects;
 
-import ch.bailu.gtk.lib.GObject;
+import ch.bailu.gtk.lib.jna.GObjectLib;
 import ch.bailu.gtk.lib.util.MMap;
 import ch.bailu.gtk.lib.util.SizeLog;
 import ch.bailu.gtk.type.Pointer;
@@ -30,9 +30,9 @@ public class SignalHandler {
         this.callback = callback;
         this.instance = instance;
         this.detailedSignal = detailedSignal;
-        this.handlerId = GObject.INST().g_signal_connect_data(instance.getCPointer(), detailedSignal, this.callback, 0, 0, 0);
+        this.handlerId = GObjectLib.INST().g_signal_connect_data(instance.asCPointer(), detailedSignal, this.callback, 0, 0, 0);
 
-        mmap.put(instance.getCPointer(), handlerId, this);
+        mmap.put(instance.asCPointer(), handlerId, this);
         sizeLog.log(mmap.size());
     }
 
@@ -51,8 +51,8 @@ public class SignalHandler {
      * Disconnect signal and free java reference to callback
      */
     public synchronized void disconnect() {
-        GObject.INST().g_signal_handler_disconnect(instance.getCPointer(), handlerId);
-        mmap.remove(instance.getCPointer(), handlerId);
+        GObjectLib.INST().g_signal_handler_disconnect(instance.asCPointer(), handlerId);
+        mmap.remove(instance.asCPointer(), handlerId);
     }
 
     /**
@@ -61,7 +61,7 @@ public class SignalHandler {
      */
     public static void disconnect(Pointer instance) {
         synchronized (mmap) {
-            var values = mmap.getValues(instance.getCPointer());
+            var values = mmap.getValues(instance.asCPointer());
             for (SignalHandler signal: values.toArray(new SignalHandler[0])) {
                 signal.disconnect();
             }
@@ -71,12 +71,12 @@ public class SignalHandler {
     /**
      * Disconnect all signals of instance with detailedSignal (signal name)
      * and free java references of callbacks
-     * @param instance
+     * @param instance disconnect all signals of this instance
      * @param detailedSignal the signal name, for example "clicked"
      */
     public static void disconnect(Pointer instance, String detailedSignal) {
         synchronized (mmap) {
-            var values = mmap.getValues(instance.getCPointer());
+            var values = mmap.getValues(instance.asCPointer());
             for (SignalHandler signal: values.toArray(new SignalHandler[0])) {
                 signal.disconnect(detailedSignal);
             }
@@ -132,4 +132,12 @@ public class SignalHandler {
         });
     }
 
+
+    /**
+     * Default signal callback
+     */
+    @FunctionalInterface
+    public interface SignalCallback extends Callback {
+        void invoke(long self);
+    }
 }

@@ -1,9 +1,10 @@
 package ch.bailu.gtk.model.type
 
 import ch.bailu.gtk.Configuration
+import ch.bailu.gtk.log.DebugPrint
 
 
-class StructureType(value: String) {
+class StructureType(value: String) : Type() {
 
     enum class Types {PACKAGE, UNION, RECORD, CLASS, INTERFACE, BITFIELD, CALLBACK, ENUMERATION }
 
@@ -21,6 +22,9 @@ class StructureType(value: String) {
                 isCallback -> {
                     Configuration.BASE_NAME_SPACE_DOT + "type.Callback"
                 }
+                isInterface -> {
+                    Configuration.BASE_NAME_SPACE_DOT + "type.Interface"
+                }
                 else -> {
                     Configuration.BASE_NAME_SPACE_DOT + "type.Pointer"
                 }
@@ -32,7 +36,7 @@ class StructureType(value: String) {
     val isClassType: Boolean
         get() = compare(Types.CLASS) || compare(Types.RECORD) || compare(Types.INTERFACE) || compare(Types.UNION)
 
-    val isCallback: Boolean
+    private val isCallback: Boolean
         get() = compare(Types.CALLBACK)
 
     val isPackage: Boolean
@@ -41,8 +45,18 @@ class StructureType(value: String) {
     val isRecord: Boolean
         get() = compare(Types.RECORD) || compare(Types.UNION)
 
+    val isInterface: Boolean
+        get() = compare(Types.INTERFACE)
 
     fun compare(type: Types): Boolean {
         return value == type.toString()
+    }
+
+    override fun getDebugIdentifier(): String {
+        return "S"
+    }
+
+    override fun toString(): String {
+        return DebugPrint.colon(this, value)
     }
 }

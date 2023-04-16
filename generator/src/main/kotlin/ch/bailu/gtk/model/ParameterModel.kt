@@ -2,21 +2,23 @@ package ch.bailu.gtk.model
 
 import ch.bailu.gtk.log.DebugPrint
 import ch.bailu.gtk.model.filter.filterValues
-import ch.bailu.gtk.model.type.CType
+import ch.bailu.gtk.model.type.CallbackType
 import ch.bailu.gtk.model.type.ClassType
 import ch.bailu.gtk.model.type.JavaType
+import ch.bailu.gtk.model.type.NamespaceType
 import ch.bailu.gtk.parser.tag.ParameterTag
 import ch.bailu.gtk.table.EnumTable
+import ch.bailu.gtk.validator.Validator
 import ch.bailu.gtk.writer.Names
 
 class ParameterModel(namespace: String,
                      private val parameterTag: ParameterTag,
                      isConstant: Boolean,
-                     supportsDirectAccess: Boolean,
                      preferNative: Boolean) : Model() {
 
-    private val cType: CType
-    private val classType: ClassType = ClassType(namespace, parameterTag, supportsDirectAccess)
+    private val classType = ClassType(namespace, parameterTag)
+    private val callbackType = CallbackType(namespace, parameterTag.getTypeName())
+    private val parameterNamespace = NamespaceType(namespace, parameterTag.getTypeName())
     private val jType: JavaType
     val hasNativeVariant: Boolean
     val isNativeVariant: Boolean
@@ -27,67 +29,72 @@ class ParameterModel(namespace: String,
         Names.getJavaVariableName(parameterTag.getName())
     }
 
-    val isWriteable: Boolean
     val callbackModel: MethodModel?
 
     init {
-        if (!classType.isClass() && EnumTable.isEnum(namespace, parameterTag)) {
-            this.cType = CType("int")
+        if (!classType.valid && EnumTable.isEnum(namespace, parameterTag)) {
             this.jType = JavaType("int")
             hasNativeVariant = false
 
         } else {
-            val cType = CType(parameterTag.getType())
             val jType = JavaType(parameterTag.getType())
-            hasNativeVariant = classType.isClass() && jType.isValid()
+            hasNativeVariant = classType.valid && jType.valid
 
             if (hasNativeVariant && preferNative) {
-                this.cType = cType
                 this.jType = jType
 
-            } else if (classType.isClass()) {
-                this.cType = CType("void*")
+            } else if (classType.valid) {
                 this.jType = JavaType("long")
 
             } else if (parameterTag.isVarargs) {
-                this.cType = CType("Object...")
                 this.jType = JavaType("...")
             } else {
-                this.cType = cType
                 this.jType = jType
             }
         }
 
         isNativeVariant = hasNativeVariant && preferNative
 
-        callbackModel = createCallbackModel(classType, namespace)
+        callbackModel = createCallbackModel(namespace, parameterNamespace, callbackType)
 
         setSupported("value-not-supported", filterValues(parameterTag.value))
-        setSupported("jType-not-supported", jType.isValid())
+        setSupported("java-type-not-supported", jType.valid || isCallback)
+        setSupported("direct-type", classType.referenceType || classType.wrapper || isCallback)
         setCallbackSupported()
-        isWriteable = parameterTag.isWriteable
     }
 
-    private fun createCallbackModel(classType: ClassType, namespace: String): MethodModel? {
-        val parameterNamespace = if (classType.namespace.isNotEmpty()) {
-            classType.namespace
-        } else {
-            namespace
-        }
-
-        if (classType.isCallback()) {
-            val callbackTag = classType.getCallbackTag()
-            if (callbackTag != null) {
-                return MethodModel(namespace, parameterNamespace, callbackTag, preferNative = false)
+    companion object {
+        private fun createCallbackModel(
+            namespace: String,
+            parameterNamespace: NamespaceType,
+            callbackType: CallbackType
+        ): MethodModel? {
+            if (callbackType.valid) {
+                Validator.giveUp(
+                    "Invalid namespace ${parameterNamespace.namespace}",
+                    !parameterNamespace.valid
+                )
+                if (callbackType.callbackTag != null) {
+                    Validator.giveUp(
+                        "wrong namespace: '${parameterNamespace}' (${callbackType.callbackTag})",
+                        callbackType.callbackTag.getName() == "AsyncReadyCallback" && parameterNamespace.namespace != "gio"
+                    )
+                    return MethodModel(
+                        namespace,
+                        parameterNamespace.namespace,
+                        callbackType.callbackTag,
+                        preferNative = false
+                    )
+                }
             }
+            return null
         }
-        return null
     }
 
     private fun setCallbackSupported() {
         if (isCallback) {
             if (callbackModel == null) {
-                setSupported("no-cb-model", false)
+                Validator.giveUp("no-cb-model")
             } else if (!callbackModel.isSupported) {
                 setSupported("cb-not-supported", false)
             } else if (callbackModel.hasCallback()) {
@@ -104,7 +111,7 @@ class ParameterModel(namespace: String,
     fun getApiTypeName(namespace: String): String {
         return if (isCallback && callbackModel != null) {
             Names.getJavaCallbackInterfaceName(callbackModel.name)
-        } else if (classType.isClass() && !isNativeVariant) {
+        } else if (classType.valid && !isNativeVariant) {
             classType.getApiTypeName(namespace)
         } else {
             jType.getApiTypeName()
@@ -117,55 +124,36 @@ class ParameterModel(namespace: String,
         }
 
     val isVoid: Boolean
-        get() {
-            return jType.isVoid()
-        }
+        get() = jType.isVoid()
 
     val isJavaNative: Boolean
         get() {
-            return !classType.isClass() || isNativeVariant
+            return !classType.valid || isNativeVariant
         }
 
-    val gtkType: String
-        get() {
-            return cType.type
-        }
 
     override fun toString(): String {
         return if (isCallback) {
-            val cb = DebugPrint.colon(supportedState, callbackModel.toString())
-            "<cb>\n${" ".repeat(8)}${cb}\n${" ".repeat(8)}<cb>}"
+            DebugPrint.colon(this, supportedState, callbackModel.toString())
 
         } else {
-            DebugPrint.colon(
+            DebugPrint.colon(this,
                 supportedState,
-                parameterTag.toString(),
-                gtkType,
-                getApiTypeName("")
+                classType.toString(),
+                jType.toString(),
             )
         }
     }
 
     val isCallback: Boolean
-        get() {
-            return classType.isCallback()
-        }
-
-    val isDirectType: Boolean
-        get() {
-            return classType.isDirectType()
-        }
+        get() = callbackType.valid
 
     val value: String
-        get() {
-            return parameterTag.value
-        }
+        get() = parameterTag.value
 
     val doc: String
         get() = parameterTag.getDoc()
 
     val nullable: Boolean
-        get() {
-            return parameterTag.nullable
-        }
+        get() = parameterTag.nullable
 }

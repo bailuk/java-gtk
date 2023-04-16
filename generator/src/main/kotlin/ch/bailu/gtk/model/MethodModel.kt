@@ -14,8 +14,7 @@ class MethodModel(namespace: String, parameterNamespace: String, method: MethodT
         namespace,
         method.getReturnValue(),
         preferNative = false,
-        isConstant = false,
-        supportsDirectAccess = false
+        isConstant = false
     )
 
     var hasNativeVariant = false
@@ -31,16 +30,15 @@ class MethodModel(namespace: String, parameterNamespace: String, method: MethodT
     val doc : String = method.getDoc()
 
     init {
-        setSupported("deprecated", !method.isDeprecated())
-        setSupported("return-value-not-supported", returnType.isSupported)
-        setSupported("returns-callback", !returnType.isCallback)
+        setSupported("cb-deprecated", !method.isDeprecated())
+        setSupported("cb-return-value-not-supported", returnType.isSupported)
+        setSupported("cb-returns-callback", !returnType.isCallback)
 
         for (t in method.getParameters()) {
             val parameterModel = ParameterModel(
                 parameterNamespace, t,
                 preferNative = preferNative,
                 isConstant = false,
-                supportsDirectAccess = false
             )
             hasNativeVariant = hasNativeVariant || parameterModel.hasNativeVariant
             isNativeVariant = isNativeVariant || parameterModel.isNativeVariant
@@ -59,7 +57,7 @@ class MethodModel(namespace: String, parameterNamespace: String, method: MethodT
     }
 
     override fun toString(): String {
-        val result = StringBuilder().append(DebugPrint.colon(supportedState,returnType.toString(),apiName))
+        val result = StringBuilder().append(DebugPrint.colon(this, supportedState, apiName, returnType.toString()))
         for (p in parameters) {
             result.append("\n        ").append(p.toString())
         }

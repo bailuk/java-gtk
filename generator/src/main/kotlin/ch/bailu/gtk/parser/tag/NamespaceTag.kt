@@ -11,6 +11,13 @@ class NamespaceTag(parent: TagWithParent): NamedWithDocTag(parent) {
 
     private var packageTag = NamedWithDocTag(this)
 
+    var version = ""
+        private set
+
+    var sharedLibrary = ""
+        private set
+
+
     @Throws(IOException::class)
     override fun started() {
         getBuilder().buildNamespaceStart(this, getNamespaceConfig())
@@ -58,6 +65,16 @@ class NamespaceTag(parent: TagWithParent): NamedWithDocTag(parent) {
             return CallbackTag(this)
         }
         return super.getChild(name)
+    }
+
+    override fun setAttribute(name: String, value: String) {
+        if ("version" == name) {
+            version = value
+        } else if ("shared-library" == name) {
+            sharedLibrary = value
+        } else {
+            super.setAttribute(name, value)
+        }
     }
 
     fun getIncludes(): List<NamedWithDocTag> {

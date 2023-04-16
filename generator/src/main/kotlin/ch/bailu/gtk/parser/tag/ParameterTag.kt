@@ -121,6 +121,6 @@ open class ParameterTag(parent: TagWithParent): NamedWithDocTag(parent) {
 
 
     override fun toString(): String {
-        return DebugPrint.colon(getTypeName(), getType(), value)
+        return DebugPrint.colon(this, getTypeName(), getType(), value)
     }
 }
