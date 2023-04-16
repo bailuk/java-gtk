@@ -6,13 +6,13 @@ plugins {
      * ./gradlew cV
      *
      * 2. Code freeze
-     * git tag v0.3.0-rc.1 -m "Code freeze"
-     * git push origin v0.3.0-rc.1
+     * git tag v0.4.0-rc.1 -m "Code freeze"
+     * git push origin v0.4.0-rc.1
      *
      * 3. Release
      * -> Update README.md
-     * git tag v0.3.0 "Release"
-     * git push origin v0.3.0
+     * git tag v0.4.0 "Release"
+     * git push origin v0.4.0
      */
     id ("pl.allegro.tech.build.axion-release") version "1.15.0"
 }
