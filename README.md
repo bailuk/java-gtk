@@ -6,7 +6,7 @@
 GTK 4 bindings for Java.
 It uses [Java Native Access (JNA)](https://github.com/java-native-access/jna) to access GTK libraries. 
 
-[![POC screenshot](screenshot.png)](examples/src/main/java/examples/ImageBridge.java)
+[![POC screenshot](doc/screenshot.png)](examples/src/main/java/examples/ImageBridge.java)
 
 ## Example
 
