@@ -1,4 +1,4 @@
-# Next Release (0.4.0)
+# Release (0.4.0)
 
 - Generator: Improve record support (structure and callbacks)
 - Generator: Java doc for callback class
@@ -13,7 +13,7 @@
 - CI: Update GIR Files (add script) and prefer from Project
 - CI: Update dependencies: gradle:8.1, kotlin:1.8.20, jna:5.13.0, junit-jupiter:5.9.2, axion-release:1.15.0
 
-# Release (0.3.0)
+# 0.3.0
 
 - Generator: Add java doc to signal connectors
 - Generator: Support GeoClue2
