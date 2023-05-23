@@ -11,7 +11,7 @@ plugins {
      *
      * 3. Release
      * -> Update README.md
-     * git tag v0.4.0 "Release"
+     * git tag v0.4.0 -m "Release"
      * git push origin v0.4.0
      */
     id ("pl.allegro.tech.build.axion-release") version "1.15.0"
