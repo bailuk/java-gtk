@@ -50,20 +50,25 @@ public class HelloWorld {
 }
 ```
 
-## Build
-`make gen`  
+## Build and run
+`./gradlew generate` or `make gen`  
 Compiles and runs the code generator. This will generate Java code from [GIR](https://gi.readthedocs.io/en/latest/) files.
+
 - Input: `generator/src/resources/gir/*`
 - Output Java: `java-gtk/build/generated/src/main/java/[...]/*.java`
 - Configuration: [generator/src/main/kotlin/ch/bailu/gtk/Configuration.kt](generator/src/main/kotlin/ch/bailu/gtk/Configuration.kt)
 
-`make`  
+`./gradlew build` or `make`  
 Creates library, javadoc and run tests
+
 - Output: jar, javadoc.jar and sources.jar in `libray/build/libs/` 
 
-`make run`  
+`./gradlew run` or `make run`  
 Run the default demo application.
 There are more demo applications in [examples/src/main/java/examples](examples/src/main/java/examples) including GeoClue2 and Adwaita samples.
+
+- To run on Windows see [doc/windows.md](doc/windows.md)
+- To run on MacOS see [doc/macos.md](doc/macos.md)
 
 `make install`  
 Compile Java library, generate JAR archive and copy JAR archive as artifact to local Maven repository (`~/.m2/repository`).
