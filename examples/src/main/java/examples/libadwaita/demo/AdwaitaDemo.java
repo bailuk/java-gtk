@@ -1,18 +1,13 @@
 package examples.libadwaita.demo;
 
-import java.io.IOException;
-
 import ch.bailu.gtk.adw.AboutWindow;
 import ch.bailu.gtk.adw.Application;
 import ch.bailu.gtk.gio.ApplicationFlags;
-import ch.bailu.gtk.gio.Resource;
 import ch.bailu.gtk.gtk.License;
 import ch.bailu.gtk.gtk.Window;
+import ch.bailu.gtk.lib.bridge.GResource;
 import ch.bailu.gtk.lib.handler.action.ActionHandler;
-import ch.bailu.gtk.lib.util.JavaResource;
-import ch.bailu.gtk.type.Bytes;
 import ch.bailu.gtk.type.Strs;
-import ch.bailu.gtk.type.exception.AllocationError;
 
 /**
  * Almost complete port of the official demo from C to Java
@@ -20,7 +15,7 @@ import ch.bailu.gtk.type.exception.AllocationError;
  *
  */
 public class AdwaitaDemo {
-    private static Strs developers = new Strs(new String[] {
+    private static final Strs developers = new Strs(new String[] {
                 "Adrien Plazas",
                 "Alexander Mikhaylenko",
                 "Andrei Lișiță",
@@ -33,13 +28,13 @@ public class AdwaitaDemo {
                 null
     });
 
-    private static Strs designers = new Strs(new String[] {
+    private static final Strs designers = new Strs(new String[] {
             "GNOME Design Team",
             null
     });
 
     public static void main(String[] args) {
-        loadAndRegisterGResource("/adw_demo/adwaita-demo.gresources.gresource");
+        GResource.loadAndRegister("/adw_demo/adwaita-demo.gresources.gresource");
 
         final var app = new Application("org.gnome.Adwaita1.Demo", ApplicationFlags.NON_UNIQUE);
 
@@ -53,17 +48,6 @@ public class AdwaitaDemo {
         });
         app.run(args.length, new Strs(args));
         app.unref();
-    }
-
-    private static void loadAndRegisterGResource(String path) {
-        // TODO wouldn't it be nice if resource could be loaded directly from java resources instead of .gresource?
-        try (var stream = (new JavaResource(path).asStream())) {
-            var bytes = new Bytes(stream.readAllBytes());
-            var resource = Resource.newFromDataResource(ch.bailu.gtk.glib.Bytes.newStaticBytes(bytes, bytes.getLength()));
-            resource.register();
-        } catch (IOException | AllocationError e) {
-            System.err.println("Load gresource failed for '"  + path + "'");
-        }
     }
 
     private static void showAbout(Application app) {
