@@ -185,6 +185,40 @@
                 </parameters>
             </method>
 
+            <method name="select_font_face" c:identifier="cairo_select_font_face">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                    <parameter name="utf8" transfer-ownership="none">
+                        <type name="const char*" c:type="const char*"/>
+                    </parameter>
+                    <parameter name="style">
+                        <type name="int" c:type="int"/>
+                    </parameter>
+                    <parameter name="weight">
+                        <type name="int" c:type="int"/>
+                    </parameter>
+                </parameters>
+            </method>
+
+            <method name="set_font_size" c:identifier="cairo_set_font_size">
+                <return-value transfer-ownership="none">
+                    <type name="none" c:type="void"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="cr" transfer-ownership="none">
+                        <type name="Context" c:type="cairo_t*"/>
+                    </instance-parameter>
+                    <parameter name="size">
+                        <type name="gdouble" c:type="gdouble"/>
+                    </parameter>
+                </parameters>
+            </method>
+
             <method name="line_to" c:identifier="cairo_line_to">
                 <return-value transfer-ownership="none">
                     <type name="none" c:type="void"/>
