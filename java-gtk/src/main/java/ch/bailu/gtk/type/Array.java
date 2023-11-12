@@ -1,5 +1,7 @@
 package ch.bailu.gtk.type;
 
+import ch.bailu.gtk.glib.Glib;
+
 public abstract class Array extends Wrapper {
     private final static int SIZE_UNKNOWN = -1;
 
@@ -20,7 +22,7 @@ public abstract class Array extends Wrapper {
     @Override
     public void destroy() {
         if (length != 0) {
-            ImpUtil.destroy(asCPointer());
+            Glib.free(asPointer());
             length = 0;
         }
     }

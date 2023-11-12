@@ -1,5 +1,7 @@
 package ch.bailu.gtk.type;
 
+import ch.bailu.gtk.glib.Glib;
+
 /**
  * https://www.w3schools.com/java/java_data_types.asp
  */
@@ -35,7 +37,7 @@ public class Int64 extends Wrapper {
     @Override
     public void destroy() {
         if (created) {
-            ImpUtil.destroy(asCPointer());
+            Glib.free(asPointer());
             created = false;
         }
     }

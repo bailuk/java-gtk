@@ -1,20 +1,18 @@
 package ch.bailu.gtk.type;
 
-import ch.bailu.gtk.lib.jna.CLib;
+import ch.bailu.gtk.glib.Glib;
 
 class ImpBytes {
     public static long createBytes(int size) {
-        var result = CLib.INST().malloc(size);
-        CLib.INST().memset(result, 0, size);
-        return result;
+        var result = Glib.malloc0(size);
+        return result.asCPointer();
     }
 
     public static long createBytes(byte[] bytes) {
-        long result = CLib.INST().malloc(bytes.length);
+        var result = Glib.malloc(bytes.length);
+        result.asJnaPointer().write(0, bytes, 0, bytes.length);
 
-        com.sun.jna.Pointer pointer = Pointer.asJnaPointer(result);
-        pointer.write(0, bytes, 0, bytes.length);
-        return result;
+        return result.asCPointer();
     }
 
     public static byte getByte(long cPointer, int index) {
