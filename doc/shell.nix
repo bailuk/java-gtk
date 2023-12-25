@@ -10,13 +10,12 @@ pkgs.mkShell {
     ];
     shellHook = ''
         LD_LIBRARY_PATH=${pkgs.gtk4.outPath}/lib
-        LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${pkgs.glib.out.outPath}/lib
-        LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${pkgs.gdk-pixbuf.outPath}/lib
-        LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${pkgs.cairo.outPath}/lib
-        LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${pkgs.pango.out.outPath}/lib
-        LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${pkgs.libadwaita.outPath}/lib
+        LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.glib.out.outPath}/lib
+        LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.gdk-pixbuf.outPath}/lib
+        LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.cairo.outPath}/lib
+        LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.pango.out.outPath}/lib
+        LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.libadwaita.outPath}/lib
         export LD_LIBRARY_PATH
-        echo "https://github.com/bailuk/java-gtk"
         echo "./gradlew generate && ./gradlew build && ./gradlew run"
     '';
 }

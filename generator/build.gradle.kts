@@ -3,7 +3,7 @@ plugins {
     java
 
     // https://kotlinlang.org/docs/gradle-configure-project.html
-    kotlin("jvm") version "1.9.0"
+    kotlin("jvm") version "1.9.22"
 }
 
 repositories {
