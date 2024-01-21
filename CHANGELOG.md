@@ -1,4 +1,11 @@
-# Release (0.4.0)
+# Release (0.5.0)
+
+- Add `shell.nix` as documentation
+- Support JDK21
+- Library: Remove dependency to libc
+- CI: Update dependencies: gradle:8.5, kotlin:1.9.22
+
+# 0.4.0
 
 - Generator: Improve record support (structure and callbacks)
 - Generator: Java doc for callback class
