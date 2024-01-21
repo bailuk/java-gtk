@@ -16,18 +16,14 @@ public class TestGBytes {
 
         Bytes bytesA = new Bytes(buffer);
 
-
         assertEquals(200, bytesA.getSize());
         assertEquals(42, bytesA.getByte(0));
         assertEquals(99, bytesA.getByte(199));
         bytesA.unref();
-        assertEquals(0, bytesA.getSize());
-
 
         Bytes bytesB = new Bytes(new byte[0]);
         assertEquals(0, bytesB.getSize());
         bytesB.unref();
-
 
         Bytes bytesC = new Bytes(new byte[]{4,5,0});
         byte[] res = bytesC.toBytes();

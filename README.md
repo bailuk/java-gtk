@@ -74,7 +74,7 @@ There are more demo applications in [examples/src/main/java/examples](examples/s
 Compile Java library, generate JAR archive and copy JAR archive as artifact to local Maven repository (`~/.m2/repository`).
 
 ## Integration
-Library and [Javadoc](https://javadoc.jitpack.io/com/github/bailuk/java-gtk/0.4.0/javadoc/) is available via [JitPack](https://jitpack.io).
+Library and [Javadoc](https://javadoc.jitpack.io/com/github/bailuk/java-gtk/0.5.0/javadoc/) is available via [JitPack](https://jitpack.io).
 
 ```kotlin
 // build.gradle.kts
@@ -87,7 +87,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.bailuk:java-gtk:0.4.0")
+    implementation("com.github.bailuk:java-gtk:0.5.0")
 }
 
 application {

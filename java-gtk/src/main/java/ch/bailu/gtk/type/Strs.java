@@ -1,5 +1,7 @@
 package ch.bailu.gtk.type;
 
+import ch.bailu.gtk.glib.Glib;
+
 public class Strs extends Pointer {
     public final static Strs NULL = new Strs(PointerContainer.NULL);
 
@@ -17,7 +19,7 @@ public class Strs extends Pointer {
     }
 
     public Strs(Str[] strs) {
-        this(strs, new PointerContainer(ImpUtil.createPointerArray(Util.toPointerArray(strs))));
+        this(strs, new PointerContainer(Imp.createPointerArray(Util.toPointerArray(strs))));
     }
 
     public Strs(Str[] strs, PointerContainer pointers) {
@@ -90,7 +92,7 @@ public class Strs extends Pointer {
     public void destroyAll() {
         if (strs != null) {
             for (Pointer pointer : strs) {
-                ImpUtil.destroy(pointer.asCPointer());
+                Glib.free(pointer);
             }
             destroyArray();
         }
@@ -99,7 +101,7 @@ public class Strs extends Pointer {
 
     private void destroyArray() {
         if (strs != null) {
-            ImpUtil.destroy(asCPointer());
+            Glib.free(asPointer());
         }
         strs = null;
     }

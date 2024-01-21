@@ -1,13 +1,13 @@
 package ch.bailu.gtk.type;
 
-import ch.bailu.gtk.lib.jna.CLib;
+import ch.bailu.gtk.glib.Glib;
 
 class ImpInt {
 
     public static long createInt(int value) {
-        long result = CLib.INST().malloc(Integer.BYTES);
-        Pointer.asJnaPointer(result).setInt(0, value);
-        return result;
+        var result = Glib.malloc(Integer.BYTES);
+        result.asJnaPointer().setInt(0, value);
+        return result.asCPointer();
     }
 
     public static void set(long cPointer, int value) {
@@ -20,9 +20,9 @@ class ImpInt {
 
 
     public static long createLong(long value) {
-        long result = CLib.INST().malloc(Long.BYTES);
-        Pointer.asJnaPointer(result).setLong(0, value);
-        return result;
+        var result = Glib.malloc(Long.BYTES);
+        result.asJnaPointer().setLong(0, value);
+        return result.asCPointer();
     }
 
     public static void setLong(long cPointer, long value) {

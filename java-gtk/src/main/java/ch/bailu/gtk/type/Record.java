@@ -1,5 +1,7 @@
 package ch.bailu.gtk.type;
 
+import ch.bailu.gtk.glib.Glib;
+
 /**
  * Record: a structure that is not based on gobject
  *
@@ -15,6 +17,6 @@ public class Record extends Pointer {
      * Object is invalid afterwards and should not be accessed.
      */
     public void destroy() {
-        ch.bailu.gtk.lib.jna.CLib.INST().free(asCPointer());
+        Glib.free(asPointer());
     }
 }

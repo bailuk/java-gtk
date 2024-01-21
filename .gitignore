@@ -57,6 +57,9 @@ nb-configuration.xml
 ## OS X
 .DS_Store
 
+## nix-shell
+/shell.nix
+
 # Development
 todo/
 /ci/qemu/

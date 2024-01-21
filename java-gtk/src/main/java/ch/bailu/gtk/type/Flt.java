@@ -40,7 +40,7 @@ public class Flt extends Array {
     }
 
     private static PointerContainer createFlt(float value) {
-        return new PointerContainer(ImpDbl.createFlt(value));
+        return new PointerContainer(ImpFlt.createFlt(value));
     }
 
     public static Flt create(float value) {

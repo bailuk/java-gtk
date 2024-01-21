@@ -1,5 +1,7 @@
 package ch.bailu.gtk.type;
 
+import ch.bailu.gtk.glib.Glib;
+
 public class Int extends Wrapper {
 
     public final static Int NULL = new Int(new PointerContainer(0));
@@ -43,7 +45,7 @@ public class Int extends Wrapper {
     @Override
     public void destroy() {
         if (created) {
-            ImpUtil.destroy(asCPointer());
+            Glib.free(asPointer());
             created = false;
         }
     }
