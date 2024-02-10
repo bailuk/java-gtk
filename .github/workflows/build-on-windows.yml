@@ -18,16 +18,14 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: 17
 
       - name: Set up MSYS2
         uses: msys2/setup-msys2@v2
-
-      - name: Install GTK-4
-        shell: msys2 {0}
-        run: |
-          pacman -Syu --noconfirm
-          pacman -Sy --noconfirm mingw-w64-x86_64-gtk4
+        with:
+            system: MINGW64
+            update: true
+            install: mingw-w64-x86_64-gtk4
 
       - name: Version
         run: ./gradlew cV
