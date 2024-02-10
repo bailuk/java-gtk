@@ -14,7 +14,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up JDK 11
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
@@ -23,12 +23,9 @@ jobs:
       - name: Set up MSYS2
         uses: msys2/setup-msys2@v2
         with:
-            system: MINGW64
+            msystem: MINGW64
             update: true
             install: mingw-w64-x86_64-gtk4
-
-      - name: Version
-        run: ./gradlew cV
 
       - name: Generate source code
         run: ./gradlew generate
