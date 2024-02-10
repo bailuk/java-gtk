@@ -2,7 +2,9 @@ name: Build on Windows
 
 on:
   push:
-    branches: [ main, stage ]
+    branches:
+      - '*'
+      - '!main'
   workflow_dispatch:
 
 
