@@ -25,7 +25,7 @@ jobs:
 
       - name: Install GTK-4
         shell: msys2 {0}
-        run: pacman -S mingw-w64-x86_64-gtk4
+        run: pacman -Syu mingw-w64-x86_64-gtk4
 
       - name: Version
         run: ./gradlew cV
