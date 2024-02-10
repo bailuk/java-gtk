@@ -30,5 +30,10 @@ jobs:
       - name: Generate source code
         run: ./gradlew generate
 
+      - name: Install GTK-4
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-4-1
+
       - name: Build library
         run: ./gradlew build
