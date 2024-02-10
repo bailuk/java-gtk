@@ -1,17 +1,18 @@
-name: Build on ubuntu
+name: Build on Windows
 
 on:
   push:
-    branches: [ !main, * ]
+    branches: [ main, stage ]
   workflow_dispatch:
 
 
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
+      - name: Checkout
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
@@ -22,6 +23,13 @@ jobs:
           distribution: 'zulu'
           java-version: 11
 
+      - name: Set up MSYS2
+        uses: msys2/setup-msys2@v2
+
+      - name: Install GTK-4
+        shell: msys2 {0}
+        run: pacman -S mingw-w64-x86_64-gtk4
+
       - name: Version
         run: ./gradlew cV
 
@@ -29,4 +37,5 @@ jobs:
         run: ./gradlew generate
 
       - name: Build library
+        shell: msys2 {0}
         run: ./gradlew build
