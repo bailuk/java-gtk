@@ -1,4 +1,4 @@
-name: Build on ubuntu
+name: Build on Ubuntu
 
 on:
   push:

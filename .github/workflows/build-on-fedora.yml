@@ -1,4 +1,4 @@
-name: Build on fedora
+name: Build on Fedora
 
 on:
   push:

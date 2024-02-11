@@ -1,4 +1,4 @@
-name: Build on debian
+name: Build on Debian
 
 on:
   push:
