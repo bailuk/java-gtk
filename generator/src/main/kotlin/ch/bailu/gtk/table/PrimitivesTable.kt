@@ -41,6 +41,7 @@ object PrimitivesTable {
         add("const gchar*", "String")
         add("...", "java.lang.Object...")
         add("GQuark", "int")
+        add("GstClockTime", "long")
     }
 
     private fun add(cType: String, jType: String) {

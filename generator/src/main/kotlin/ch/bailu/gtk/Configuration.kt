@@ -35,7 +35,9 @@ object Configuration  {
                 NamespaceConfig("Pango-1.0.gir",      "pango-1.0",      GtkDocUrl(DOCS_GTK_ORG, "Pango")),
                 NamespaceConfig("GdkPixbuf-2.0.gir",  "gdk_pixbuf-2.0", GtkDocUrl(DOCS_GTK_ORG, "gdk-pixbuf")),
                 NamespaceConfig("Geoclue-2.0.gir",    "geoclue-2",      StaticUrl("https://www.freedesktop.org/software/geoclue/docs/libgeoclue/")),
-                NamespaceConfig("Adw-1.gir",          "adwaita-1",      GtkDocUrl("https://gnome.pages.gitlab.gnome.org/libadwaita/doc/", "main")))
+                NamespaceConfig("Adw-1.gir",          "adwaita-1",      GtkDocUrl("https://gnome.pages.gitlab.gnome.org/libadwaita/doc/", "main")),
+                NamespaceConfig("Gst-1.0.gir",        "gstreamer-1.0",  StaticUrl("https://gstreamer.freedesktop.org/documentation/gstreamer/gi-index.html"))
+    )
 
     fun createJavaDocConfig(out: Writer): JavaDoc {
         return JavaDocHtml(out)
