@@ -1,8 +1,9 @@
 package ch.bailu.gtk.type;
 
+import java.nio.charset.StandardCharsets;
+
 public class Str extends Bytes {
     public final static Str NULL = new Str(PointerContainer.NULL);
-    public final static String ENCODING = "UTF-8";
 
     public Str(PointerContainer pointer) {
         super(pointer);
@@ -14,7 +15,7 @@ public class Str extends Bytes {
      * @param str Java string to copy to c heap
      */
     public Str(String str) {
-        super(str.getBytes(), (byte)0);
+        super(str.getBytes(StandardCharsets.UTF_8), (byte)0);
     }
 
     @Override

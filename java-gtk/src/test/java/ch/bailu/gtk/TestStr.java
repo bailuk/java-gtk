@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
@@ -14,14 +15,14 @@ public class TestStr {
     @Test
     public void testUTF8() {
         // assertEquals("UTF-8", u8(Native.getDefaultStringEncoding()), "Property `jna.encoding` is not set to `UTF-8`");
-        assertEquals(Str.ENCODING, u8(System.getProperty("file.encoding")), "Property `file.encoding` is not set to `UTF-8`");
-        assertEquals(Str.ENCODING, u8(Charset.defaultCharset().name()), "Java default charset is not set to `UTF-8`");
+        assertEquals(StandardCharsets.UTF_8.name(), u8(System.getProperty("file.encoding")), "Property `file.encoding` is not set to `UTF-8`");
+        assertEquals(StandardCharsets.UTF_8.name(), u8(Charset.defaultCharset().name()), "Java default charset is not set to `UTF-8`");
     }
 
     private String u8(String in) {
         if (in.equals("UTF8")) {
             System.err.println("WARNING: Incorrect naming: Use `UTF-8` instead of `UTF8`");
-            return "UTF-8";
+            return StandardCharsets.UTF_8.name();
         }
         return in;
     }
