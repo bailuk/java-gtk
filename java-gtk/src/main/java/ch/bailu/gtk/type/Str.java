@@ -2,6 +2,7 @@ package ch.bailu.gtk.type;
 
 public class Str extends Bytes {
     public final static Str NULL = new Str(PointerContainer.NULL);
+    public final static String ENCODING = "UTF-8";
 
     public Str(PointerContainer pointer) {
         super(pointer);
