@@ -495,6 +495,7 @@ an integer or enumeration value.</doc>
     </record>
     <record name="AttrIterator"
             c:type="PangoAttrIterator"
+            opaque="1"
             glib:type-name="PangoAttrIterator"
             glib:get-type="pango_attr_iterator_get_type"
             c:symbol-prefix="attr_iterator">
@@ -773,6 +774,7 @@ are languages.</doc>
     </record>
     <record name="AttrList"
             c:type="PangoAttrList"
+            opaque="1"
             glib:type-name="PangoAttrList"
             glib:get-type="pango_attr_list_get_type"
             c:symbol-prefix="attr_list">
@@ -2544,7 +2546,7 @@ The values in this enumeration are specified by the
                 version="1.22">
         <doc xml:space="preserve"
              filename="pango/pango-bidi-type.c"
-             line="33">Determines the bidirectional type of a character.
+             line="34">Determines the bidirectional type of a character.
 
 The bidirectional type is specified in the Unicode Character Database.
 
@@ -2553,7 +2555,7 @@ A simplified version of this function is available as [func@unichar_direction].<
         <return-value transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-bidi-type.c"
-               line="43">the bidirectional character type, as used in the
+               line="44">the bidirectional character type, as used in the
 Unicode bidirectional algorithm.</doc>
           <type name="BidiType" c:type="PangoBidiType"/>
         </return-value>
@@ -2561,7 +2563,7 @@ Unicode bidirectional algorithm.</doc>
           <parameter name="ch" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-bidi-type.c"
-                 line="35">a Unicode character</doc>
+                 line="36">a Unicode character</doc>
             <type name="gunichar" c:type="gunichar"/>
           </parameter>
         </parameters>
@@ -3508,6 +3510,7 @@ compatible with previous Pango behavior.</doc>
     <record name="ContextClass"
             c:type="PangoContextClass"
             disguised="1"
+            opaque="1"
             glib:is-gtype-struct-for="Context">
       <source-position filename="pango/pango-context.h" line="33"/>
     </record>
@@ -4314,10 +4317,7 @@ rendering system enables by default.</doc>
               <type name="HarfBuzz.feature_t" c:type="hb_feature_t"/>
             </array>
           </parameter>
-          <parameter name="len"
-                     direction="out"
-                     caller-allocates="0"
-                     transfer-ownership="full">
+          <parameter name="len" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/fonts.c"
                  line="2781">the length of @features</doc>
@@ -4601,10 +4601,7 @@ rendering system enables by default.</doc>
               <type name="HarfBuzz.feature_t" c:type="hb_feature_t"/>
             </array>
           </parameter>
-          <parameter name="len"
-                     direction="out"
-                     caller-allocates="0"
-                     transfer-ownership="full">
+          <parameter name="len" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/fonts.c"
                  line="2781">the length of @features</doc>
@@ -5072,10 +5069,7 @@ To recreate a font from its serialized form, use [func@Pango.Font.deserialize].<
                 <type name="HarfBuzz.feature_t" c:type="hb_feature_t"/>
               </array>
             </parameter>
-            <parameter name="len"
-                       direction="out"
-                       caller-allocates="0"
-                       transfer-ownership="full">
+            <parameter name="len" transfer-ownership="none">
               <doc xml:space="preserve"
                    filename="pango/fonts.c"
                    line="2781">the length of @features</doc>
@@ -5109,6 +5103,7 @@ To recreate a font from its serialized form, use [func@Pango.Font.deserialize].<
     </record>
     <record name="FontDescription"
             c:type="PangoFontDescription"
+            opaque="1"
             glib:type-name="PangoFontDescription"
             glib:get-type="pango_font_description_get_type"
             c:symbol-prefix="font_description">
@@ -6948,7 +6943,7 @@ for enumerating faces.</doc>
              line="2429">The type of items contained in this list.</doc>
         <type name="GType" c:type="GType"/>
       </property>
-      <property name="n-items" transfer-ownership="none">
+      <property name="n-items" transfer-ownership="none" default-value="0">
         <doc xml:space="preserve"
              filename="pango/fonts.c"
              line="2438">The number of items contained in this list.</doc>
@@ -7572,7 +7567,7 @@ a font matching @desc.</doc>
              line="96">The type of items contained in this list.</doc>
         <type name="GType" c:type="GType"/>
       </property>
-      <property name="n-items" transfer-ownership="none">
+      <property name="n-items" transfer-ownership="none" default-value="0">
         <doc xml:space="preserve"
              filename="pango/pango-fontmap.c"
              line="105">The number of items contained in this list.</doc>
@@ -8708,6 +8703,7 @@ The fontset takes ownership of @font.</doc>
     <record name="FontsetSimpleClass"
             c:type="PangoFontsetSimpleClass"
             disguised="1"
+            opaque="1"
             glib:is-gtype-struct-for="FontsetSimple">
       <source-position filename="pango/pango-fontset-simple.h" line="47"/>
     </record>
@@ -10569,6 +10565,7 @@ the right of the glyph origin.</doc>
     </function-macro>
     <record name="Language"
             c:type="PangoLanguage"
+            opaque="1"
             glib:type-name="PangoLanguage"
             glib:get-type="pango_language_get_type"
             c:symbol-prefix="language">
@@ -11490,19 +11487,19 @@ A negative value indicates a hanging indentation.</doc>
       <method name="get_iter" c:identifier="pango_layout_get_iter">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="7181">Returns an iterator to iterate over the visual extents of the layout.</doc>
+             line="7183">Returns an iterator to iterate over the visual extents of the layout.</doc>
         <source-position filename="pango/pango-layout.h" line="486"/>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve"
                filename="pango/pango-layout.c"
-               line="7187">the new `PangoLayoutIter`</doc>
+               line="7189">the new `PangoLayoutIter`</doc>
           <type name="LayoutIter" c:type="PangoLayoutIter*"/>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7183">a `PangoLayout`</doc>
+                 line="7185">a `PangoLayout`</doc>
             <type name="Layout" c:type="PangoLayout*"/>
           </instance-parameter>
         </parameters>
@@ -12854,8 +12851,8 @@ literal @accel_marker character.</doc>
           </parameter>
           <parameter name="accel_char"
                      direction="out"
-                     caller-allocates="1"
-                     transfer-ownership="none"
+                     caller-allocates="0"
+                     transfer-ownership="full"
                      optional="1"
                      allow-none="1">
             <doc xml:space="preserve"
@@ -13179,6 +13176,7 @@ the X or Y positions were not inside the layout, then the function returns
     <record name="LayoutClass"
             c:type="PangoLayoutClass"
             disguised="1"
+            opaque="1"
             glib:is-gtype-struct-for="Layout">
       <source-position filename="pango/pango-layout.h" line="33"/>
     </record>
@@ -13259,6 +13257,7 @@ New members may be added to this enumeration over time.</doc>
     </bitfield>
     <record name="LayoutIter"
             c:type="PangoLayoutIter"
+            opaque="1"
             glib:type-name="PangoLayoutIter"
             glib:get-type="pango_layout_iter_get_type"
             c:symbol-prefix="layout_iter">
@@ -13275,19 +13274,19 @@ The `PangoLayoutIter` structure is opaque, and has no user-visible fields.</doc>
               c:identifier="pango_layout_iter_at_last_line">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="7422">Determines whether @iter is on the last line of the layout.</doc>
+             line="7424">Determines whether @iter is on the last line of the layout.</doc>
         <source-position filename="pango/pango-layout.h" line="503"/>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-layout.c"
-               line="7428">%TRUE if @iter is on the last line</doc>
+               line="7430">%TRUE if @iter is on the last line</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
           <instance-parameter name="iter" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7424">a `PangoLayoutIter`</doc>
+                 line="7426">a `PangoLayoutIter`</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
         </parameters>
@@ -13295,12 +13294,12 @@ The `PangoLayoutIter` structure is opaque, and has no user-visible fields.</doc>
       <method name="copy" c:identifier="pango_layout_iter_copy" version="1.20">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="7121">Copies a `PangoLayoutIter`.</doc>
+             line="7123">Copies a `PangoLayoutIter`.</doc>
         <source-position filename="pango/pango-layout.h" line="488"/>
         <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve"
                filename="pango/pango-layout.c"
-               line="7127">the newly allocated `PangoLayoutIter`</doc>
+               line="7129">the newly allocated `PangoLayoutIter`</doc>
           <type name="LayoutIter" c:type="PangoLayoutIter*"/>
         </return-value>
         <parameters>
@@ -13310,7 +13309,7 @@ The `PangoLayoutIter` structure is opaque, and has no user-visible fields.</doc>
                               allow-none="1">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7123">a `PangoLayoutIter`</doc>
+                 line="7125">a `PangoLayoutIter`</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
         </parameters>
@@ -13318,7 +13317,7 @@ The `PangoLayoutIter` structure is opaque, and has no user-visible fields.</doc>
       <method name="free" c:identifier="pango_layout_iter_free">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="7266">Frees an iterator that's no longer in use.</doc>
+             line="7268">Frees an iterator that's no longer in use.</doc>
         <source-position filename="pango/pango-layout.h" line="490"/>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
@@ -13330,7 +13329,7 @@ The `PangoLayoutIter` structure is opaque, and has no user-visible fields.</doc>
                               allow-none="1">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7268">a `PangoLayoutIter`, may be %NULL</doc>
+                 line="7270">a `PangoLayoutIter`, may be %NULL</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
         </parameters>
@@ -13339,7 +13338,7 @@ The `PangoLayoutIter` structure is opaque, and has no user-visible fields.</doc>
               c:identifier="pango_layout_iter_get_baseline">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="7985">Gets the Y position of the current line's baseline, in layout
+             line="7987">Gets the Y position of the current line's baseline, in layout
 coordinates.
 
 Layout coordinates have the origin at the top left of the entire layout.</doc>
@@ -13347,14 +13346,14 @@ Layout coordinates have the origin at the top left of the entire layout.</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-layout.c"
-               line="7994">baseline of current line</doc>
+               line="7996">baseline of current line</doc>
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
           <instance-parameter name="iter" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7987">a `PangoLayoutIter`</doc>
+                 line="7989">a `PangoLayoutIter`</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
         </parameters>
@@ -13363,7 +13362,7 @@ Layout coordinates have the origin at the top left of the entire layout.</doc>
               c:identifier="pango_layout_iter_get_char_extents">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="7712">Gets the extents of the current character, in layout coordinates.
+             line="7714">Gets the extents of the current character, in layout coordinates.
 
 Layout coordinates have the origin at the top left of the entire layout.
 
@@ -13377,7 +13376,7 @@ ink extents make sense only down to the level of clusters.</doc>
           <instance-parameter name="iter" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7714">a `PangoLayoutIter`</doc>
+                 line="7716">a `PangoLayoutIter`</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
           <parameter name="logical_rect"
@@ -13386,7 +13385,7 @@ ink extents make sense only down to the level of clusters.</doc>
                      transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7715">rectangle to fill with
+                 line="7717">rectangle to fill with
   logical extents</doc>
             <type name="Rectangle" c:type="PangoRectangle*"/>
           </parameter>
@@ -13396,7 +13395,7 @@ ink extents make sense only down to the level of clusters.</doc>
               c:identifier="pango_layout_iter_get_cluster_extents">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="7765">Gets the extents of the current cluster, in layout coordinates.
+             line="7767">Gets the extents of the current cluster, in layout coordinates.
 
 Layout coordinates have the origin at the top left of the entire layout.</doc>
         <source-position filename="pango/pango-layout.h" line="520"/>
@@ -13407,7 +13406,7 @@ Layout coordinates have the origin at the top left of the entire layout.</doc>
           <instance-parameter name="iter" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7767">a `PangoLayoutIter`</doc>
+                 line="7769">a `PangoLayoutIter`</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
           <parameter name="ink_rect"
@@ -13418,7 +13417,7 @@ Layout coordinates have the origin at the top left of the entire layout.</doc>
                      allow-none="1">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7768">rectangle to fill with ink extents</doc>
+                 line="7770">rectangle to fill with ink extents</doc>
             <type name="Rectangle" c:type="PangoRectangle*"/>
           </parameter>
           <parameter name="logical_rect"
@@ -13429,7 +13428,7 @@ Layout coordinates have the origin at the top left of the entire layout.</doc>
                      allow-none="1">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7769">rectangle to fill with logical extents</doc>
+                 line="7771">rectangle to fill with logical extents</doc>
             <type name="Rectangle" c:type="PangoRectangle*"/>
           </parameter>
         </parameters>
@@ -13437,7 +13436,7 @@ Layout coordinates have the origin at the top left of the entire layout.</doc>
       <method name="get_index" c:identifier="pango_layout_iter_get_index">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="7282">Gets the current byte index.
+             line="7284">Gets the current byte index.
 
 Note that iterating forward by char moves in visual order,
 not logical order, so indexes may not be sequential. Also,
@@ -13447,14 +13446,14 @@ layout, if on the %NULL run (see [method@Pango.LayoutIter.get_run]).</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-layout.c"
-               line="7293">current byte index</doc>
+               line="7295">current byte index</doc>
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
           <instance-parameter name="iter" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7284">a `PangoLayoutIter`</doc>
+                 line="7286">a `PangoLayoutIter`</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
         </parameters>
@@ -13464,19 +13463,19 @@ layout, if on the %NULL run (see [method@Pango.LayoutIter.get_run]).</doc>
               version="1.20">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="7439">Gets the layout associated with a `PangoLayoutIter`.</doc>
+             line="7441">Gets the layout associated with a `PangoLayoutIter`.</doc>
         <source-position filename="pango/pango-layout.h" line="505"/>
         <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve"
                filename="pango/pango-layout.c"
-               line="7445">the layout associated with @iter</doc>
+               line="7447">the layout associated with @iter</doc>
           <type name="Layout" c:type="PangoLayout*"/>
         </return-value>
         <parameters>
           <instance-parameter name="iter" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7441">a `PangoLayoutIter`</doc>
+                 line="7443">a `PangoLayoutIter`</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
         </parameters>
@@ -13485,7 +13484,7 @@ layout, if on the %NULL run (see [method@Pango.LayoutIter.get_run]).</doc>
               c:identifier="pango_layout_iter_get_layout_extents">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="8031">Obtains the extents of the `PangoLayout` being iterated over.</doc>
+             line="8033">Obtains the extents of the `PangoLayout` being iterated over.</doc>
         <source-position filename="pango/pango-layout.h" line="539"/>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
@@ -13494,7 +13493,7 @@ layout, if on the %NULL run (see [method@Pango.LayoutIter.get_run]).</doc>
           <instance-parameter name="iter" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="8033">a `PangoLayoutIter`</doc>
+                 line="8035">a `PangoLayoutIter`</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
           <parameter name="ink_rect"
@@ -13505,7 +13504,7 @@ layout, if on the %NULL run (see [method@Pango.LayoutIter.get_run]).</doc>
                      allow-none="1">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="8034">rectangle to fill with ink extents</doc>
+                 line="8036">rectangle to fill with ink extents</doc>
             <type name="Rectangle" c:type="PangoRectangle*"/>
           </parameter>
           <parameter name="logical_rect"
@@ -13516,7 +13515,7 @@ layout, if on the %NULL run (see [method@Pango.LayoutIter.get_run]).</doc>
                      allow-none="1">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="8035">rectangle to fill with logical extents</doc>
+                 line="8037">rectangle to fill with logical extents</doc>
             <type name="Rectangle" c:type="PangoRectangle*"/>
           </parameter>
         </parameters>
@@ -13524,7 +13523,7 @@ layout, if on the %NULL run (see [method@Pango.LayoutIter.get_run]).</doc>
       <method name="get_line" c:identifier="pango_layout_iter_get_line">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="7375">Gets the current line.
+             line="7377">Gets the current line.
 
 Use the faster [method@Pango.LayoutIter.get_line_readonly] if
 you do not plan to modify the contents of the line (glyphs,
@@ -13533,14 +13532,14 @@ glyph widths, etc.).</doc>
         <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve"
                filename="pango/pango-layout.c"
-               line="7385">the current line</doc>
+               line="7387">the current line</doc>
           <type name="LayoutLine" c:type="PangoLayoutLine*"/>
         </return-value>
         <parameters>
           <instance-parameter name="iter" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7377">a `PangoLayoutIter`</doc>
+                 line="7379">a `PangoLayoutIter`</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
         </parameters>
@@ -13549,7 +13548,7 @@ glyph widths, etc.).</doc>
               c:identifier="pango_layout_iter_get_line_extents">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="7889">Obtains the extents of the current line.
+             line="7891">Obtains the extents of the current line.
 
 Extents are in layout coordinates (origin is the top-left corner
 of the entire `PangoLayout`). Thus the extents returned by this
@@ -13563,7 +13562,7 @@ as the extents returned from [method@Pango.LayoutLine.get_extents].</doc>
           <instance-parameter name="iter" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7891">a `PangoLayoutIter`</doc>
+                 line="7893">a `PangoLayoutIter`</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
           <parameter name="ink_rect"
@@ -13574,7 +13573,7 @@ as the extents returned from [method@Pango.LayoutLine.get_extents].</doc>
                      allow-none="1">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7892">rectangle to fill with ink extents</doc>
+                 line="7894">rectangle to fill with ink extents</doc>
             <type name="Rectangle" c:type="PangoRectangle*"/>
           </parameter>
           <parameter name="logical_rect"
@@ -13585,7 +13584,7 @@ as the extents returned from [method@Pango.LayoutLine.get_extents].</doc>
                      allow-none="1">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7893">rectangle to fill with logical extents</doc>
+                 line="7895">rectangle to fill with logical extents</doc>
             <type name="Rectangle" c:type="PangoRectangle*"/>
           </parameter>
         </parameters>
@@ -13595,7 +13594,7 @@ as the extents returned from [method@Pango.LayoutLine.get_extents].</doc>
               version="1.16">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="7398">Gets the current line for read-only access.
+             line="7400">Gets the current line for read-only access.
 
 This is a faster alternative to [method@Pango.LayoutIter.get_line],
 but the user is not expected to modify the contents of the line
@@ -13604,7 +13603,7 @@ but the user is not expected to modify the contents of the line
         <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve"
                filename="pango/pango-layout.c"
-               line="7408">the current line, that should not be
+               line="7410">the current line, that should not be
   modified</doc>
           <type name="LayoutLine" c:type="PangoLayoutLine*"/>
         </return-value>
@@ -13612,7 +13611,7 @@ but the user is not expected to modify the contents of the line
           <instance-parameter name="iter" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7400">a `PangoLayoutIter`</doc>
+                 line="7402">a `PangoLayoutIter`</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
         </parameters>
@@ -13621,7 +13620,7 @@ but the user is not expected to modify the contents of the line
               c:identifier="pango_layout_iter_get_line_yrange">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="7928">Divides the vertical space in the `PangoLayout` being iterated over
+             line="7930">Divides the vertical space in the `PangoLayout` being iterated over
 between the lines in the layout, and returns the space belonging to
 the current line.
 
@@ -13640,7 +13639,7 @@ may be gaps between the ranges returned by this function.</doc>
           <instance-parameter name="iter" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7930">a `PangoLayoutIter`</doc>
+                 line="7932">a `PangoLayoutIter`</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
           <parameter name="y0_"
@@ -13651,7 +13650,7 @@ may be gaps between the ranges returned by this function.</doc>
                      allow-none="1">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7931">start of line</doc>
+                 line="7933">start of line</doc>
             <type name="gint" c:type="int*"/>
           </parameter>
           <parameter name="y1_"
@@ -13662,7 +13661,7 @@ may be gaps between the ranges returned by this function.</doc>
                      allow-none="1">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7932">end of line</doc>
+                 line="7934">end of line</doc>
             <type name="gint" c:type="int*"/>
           </parameter>
         </parameters>
@@ -13670,7 +13669,7 @@ may be gaps between the ranges returned by this function.</doc>
       <method name="get_run" c:identifier="pango_layout_iter_get_run">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="7304">Gets the current run.
+             line="7306">Gets the current run.
 
 When iterating by run, at the end of each line, there's a position
 with a %NULL run, so this function can return %NULL. The %NULL run
@@ -13683,14 +13682,14 @@ plan to modify the contents of the run (glyphs, glyph widths, etc.).</doc>
         <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve"
                filename="pango/pango-layout.c"
-               line="7318">the current run</doc>
+               line="7320">the current run</doc>
           <type name="LayoutRun" c:type="PangoLayoutRun*"/>
         </return-value>
         <parameters>
           <instance-parameter name="iter" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7306">a `PangoLayoutIter`</doc>
+                 line="7308">a `PangoLayoutIter`</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
         </parameters>
@@ -13700,7 +13699,7 @@ plan to modify the contents of the run (glyphs, glyph widths, etc.).</doc>
               version="1.50">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="8005">Gets the Y position of the current run's baseline, in layout
+             line="8007">Gets the Y position of the current run's baseline, in layout
 coordinates.
 
 Layout coordinates have the origin at the top left of the entire layout.
@@ -13715,7 +13714,7 @@ example due to superscript or subscript positioning.</doc>
           <instance-parameter name="iter" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="8007">a `PangoLayoutIter`</doc>
+                 line="8009">a `PangoLayoutIter`</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
         </parameters>
@@ -13724,7 +13723,7 @@ example due to superscript or subscript positioning.</doc>
               c:identifier="pango_layout_iter_get_run_extents">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="7815">Gets the extents of the current run in layout coordinates.
+             line="7817">Gets the extents of the current run in layout coordinates.
 
 Layout coordinates have the origin at the top left of the entire layout.</doc>
         <source-position filename="pango/pango-layout.h" line="524"/>
@@ -13735,7 +13734,7 @@ Layout coordinates have the origin at the top left of the entire layout.</doc>
           <instance-parameter name="iter" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7817">a `PangoLayoutIter`</doc>
+                 line="7819">a `PangoLayoutIter`</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
           <parameter name="ink_rect"
@@ -13746,7 +13745,7 @@ Layout coordinates have the origin at the top left of the entire layout.</doc>
                      allow-none="1">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7818">rectangle to fill with ink extents</doc>
+                 line="7820">rectangle to fill with ink extents</doc>
             <type name="Rectangle" c:type="PangoRectangle*"/>
           </parameter>
           <parameter name="logical_rect"
@@ -13757,7 +13756,7 @@ Layout coordinates have the origin at the top left of the entire layout.</doc>
                      allow-none="1">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7819">rectangle to fill with logical extents</doc>
+                 line="7821">rectangle to fill with logical extents</doc>
             <type name="Rectangle" c:type="PangoRectangle*"/>
           </parameter>
         </parameters>
@@ -13767,7 +13766,7 @@ Layout coordinates have the origin at the top left of the entire layout.</doc>
               version="1.16">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="7331">Gets the current run for read-only access.
+             line="7333">Gets the current run for read-only access.
 
 When iterating by run, at the end of each line, there's a position
 with a %NULL run, so this function can return %NULL. The %NULL run
@@ -13781,7 +13780,7 @@ glyph widths, etc.).</doc>
         <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve"
                filename="pango/pango-layout.c"
-               line="7346">the current run, that
+               line="7348">the current run, that
   should not be modified</doc>
           <type name="LayoutRun" c:type="PangoLayoutRun*"/>
         </return-value>
@@ -13789,7 +13788,7 @@ glyph widths, etc.).</doc>
           <instance-parameter name="iter" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7333">a `PangoLayoutIter`</doc>
+                 line="7335">a `PangoLayoutIter`</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
         </parameters>
@@ -13797,21 +13796,21 @@ glyph widths, etc.).</doc>
       <method name="next_char" c:identifier="pango_layout_iter_next_char">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="7561">Moves @iter forward to the next character in visual order.
+             line="7563">Moves @iter forward to the next character in visual order.
 
 If @iter was already at the end of the layout, returns %FALSE.</doc>
         <source-position filename="pango/pango-layout.h" line="508"/>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-layout.c"
-               line="7569">whether motion was possible</doc>
+               line="7571">whether motion was possible</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
           <instance-parameter name="iter" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7563">a `PangoLayoutIter`</doc>
+                 line="7565">a `PangoLayoutIter`</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
         </parameters>
@@ -13820,21 +13819,21 @@ If @iter was already at the end of the layout, returns %FALSE.</doc>
               c:identifier="pango_layout_iter_next_cluster">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="7606">Moves @iter forward to the next cluster in visual order.
+             line="7608">Moves @iter forward to the next cluster in visual order.
 
 If @iter was already at the end of the layout, returns %FALSE.</doc>
         <source-position filename="pango/pango-layout.h" line="510"/>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-layout.c"
-               line="7614">whether motion was possible</doc>
+               line="7616">whether motion was possible</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
           <instance-parameter name="iter" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7608">a `PangoLayoutIter`</doc>
+                 line="7610">a `PangoLayoutIter`</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
         </parameters>
@@ -13842,21 +13841,21 @@ If @iter was already at the end of the layout, returns %FALSE.</doc>
       <method name="next_line" c:identifier="pango_layout_iter_next_line">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="7667">Moves @iter forward to the start of the next line.
+             line="7669">Moves @iter forward to the start of the next line.
 
 If @iter is already on the last line, returns %FALSE.</doc>
         <source-position filename="pango/pango-layout.h" line="514"/>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-layout.c"
-               line="7675">whether motion was possible</doc>
+               line="7677">whether motion was possible</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
           <instance-parameter name="iter" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7669">a `PangoLayoutIter`</doc>
+                 line="7671">a `PangoLayoutIter`</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
         </parameters>
@@ -13864,21 +13863,21 @@ If @iter is already on the last line, returns %FALSE.</doc>
       <method name="next_run" c:identifier="pango_layout_iter_next_run">
         <doc xml:space="preserve"
              filename="pango/pango-layout.c"
-             line="7622">Moves @iter forward to the next run in visual order.
+             line="7624">Moves @iter forward to the next run in visual order.
 
 If @iter was already at the end of the layout, returns %FALSE.</doc>
         <source-position filename="pango/pango-layout.h" line="512"/>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-layout.c"
-               line="7630">whether motion was possible</doc>
+               line="7632">whether motion was possible</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
           <instance-parameter name="iter" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-layout.c"
-                 line="7624">a `PangoLayoutIter`</doc>
+                 line="7626">a `PangoLayoutIter`</doc>
             <type name="LayoutIter" c:type="PangoLayoutIter*"/>
           </instance-parameter>
         </parameters>
@@ -16845,7 +16844,10 @@ and must be implemented:
         </callback>
       </field>
     </record>
-    <record name="RendererPrivate" c:type="PangoRendererPrivate" disguised="1">
+    <record name="RendererPrivate"
+            c:type="PangoRendererPrivate"
+            disguised="1"
+            opaque="1">
       <source-position filename="pango/pango-renderer.h" line="37"/>
     </record>
     <constant name="SCALE" value="1024" c:type="PANGO_SCALE">
@@ -18031,6 +18033,7 @@ context language is not feasible.</doc>
     </enumeration>
     <record name="ScriptIter"
             c:type="PangoScriptIter"
+            opaque="1"
             glib:type-name="PangoScriptIter"
             glib:get-type="pango_script_iter_get_type"
             c:symbol-prefix="script_iter">
@@ -18155,7 +18158,7 @@ values.</doc>
       <method name="next" c:identifier="pango_script_iter_next" version="1.4">
         <doc xml:space="preserve"
              filename="pango/pango-script.c"
-             line="298">Advances a `PangoScriptIter` to the next range.
+             line="315">Advances a `PangoScriptIter` to the next range.
 
 If @iter is already at the end, it is left unchanged
 and %FALSE is returned.</doc>
@@ -18163,14 +18166,14 @@ and %FALSE is returned.</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-script.c"
-               line="307">%TRUE if @iter was successfully advanced</doc>
+               line="324">%TRUE if @iter was successfully advanced</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
           <instance-parameter name="iter" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="pango/pango-script.c"
-                 line="300">a `PangoScriptIter`</doc>
+                 line="317">a `PangoScriptIter`</doc>
             <type name="ScriptIter" c:type="PangoScriptIter*"/>
           </instance-parameter>
         </parameters>
@@ -18429,6 +18432,7 @@ position.</doc>
     </enumeration>
     <record name="TabArray"
             c:type="PangoTabArray"
+            opaque="1"
             glib:type-name="PangoTabArray"
             glib:get-type="pango_tab_array_get_type"
             c:symbol-prefix="tab_array">
@@ -19177,14 +19181,14 @@ Two encoded version numbers can be compared as integers.</doc>
       <source-position filename="pango/pango-features.h" line="4"/>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_MICRO" value="12" c:type="PANGO_VERSION_MICRO">
+    <constant name="VERSION_MICRO" value="0" c:type="PANGO_VERSION_MICRO">
       <doc xml:space="preserve"
            filename="pango/pango-utils.h"
            line="147">The micro component of the version of Pango available at compile-time.</doc>
       <source-position filename="pango/pango-features.h" line="6"/>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_MINOR" value="50" c:type="PANGO_VERSION_MINOR">
+    <constant name="VERSION_MINOR" value="51" c:type="PANGO_VERSION_MINOR">
       <doc xml:space="preserve"
            filename="pango/pango-utils.h"
            line="142">The minor component of the version of Pango available at compile-time.</doc>
@@ -19192,7 +19196,7 @@ Two encoded version numbers can be compared as integers.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="VERSION_STRING"
-              value="1.50.12"
+              value="1.51.0"
               c:type="PANGO_VERSION_STRING">
       <doc xml:space="preserve"
            filename="pango/pango-utils.h"
@@ -19563,7 +19567,7 @@ relative to the run of preceding run.
     <function name="attr_break" c:identifier="pango_attr_break" version="1.50">
       <doc xml:space="preserve"
            filename="pango/break.c"
-           line="2273">Apply customization from attributes to the breaks in @attrs.
+           line="2277">Apply customization from attributes to the breaks in @attrs.
 
 The line breaks are assumed to have been produced
 by [func@Pango.default_break] and [func@Pango.tailor_break].</doc>
@@ -19575,31 +19579,31 @@ by [func@Pango.default_break] and [func@Pango.tailor_break].</doc>
         <parameter name="text" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2275">text to break. Must be valid UTF-8</doc>
+               line="2279">text to break. Must be valid UTF-8</doc>
           <type name="utf8" c:type="const char*"/>
         </parameter>
         <parameter name="length" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2276">length of text in bytes (may be -1 if @text is nul-terminated)</doc>
+               line="2280">length of text in bytes (may be -1 if @text is nul-terminated)</doc>
           <type name="gint" c:type="int"/>
         </parameter>
         <parameter name="attr_list" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2277">`PangoAttrList` to apply</doc>
+               line="2281">`PangoAttrList` to apply</doc>
           <type name="AttrList" c:type="PangoAttrList*"/>
         </parameter>
         <parameter name="offset" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2278">Byte offset of @text from the beginning of the paragraph</doc>
+               line="2282">Byte offset of @text from the beginning of the paragraph</doc>
           <type name="gint" c:type="int"/>
         </parameter>
         <parameter name="attrs" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2279">array with one `PangoLogAttr`
+               line="2283">array with one `PangoLogAttr`
   per character in @text, plus one extra, to be filled in</doc>
           <array length="5" zero-terminated="0" c:type="PangoLogAttr*">
             <type name="LogAttr" c:type="PangoLogAttr"/>
@@ -19608,7 +19612,7 @@ by [func@Pango.default_break] and [func@Pango.tailor_break].</doc>
         <parameter name="attrs_len" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2281">length of @attrs array</doc>
+               line="2285">length of @attrs array</doc>
           <type name="gint" c:type="int"/>
         </parameter>
       </parameters>
@@ -20633,7 +20637,7 @@ sentence classification around the range.</doc>
               version="1.22">
       <doc xml:space="preserve"
            filename="pango/pango-bidi-type.c"
-           line="33">Determines the bidirectional type of a character.
+           line="34">Determines the bidirectional type of a character.
 
 The bidirectional type is specified in the Unicode Character Database.
 
@@ -20642,7 +20646,7 @@ A simplified version of this function is available as [func@unichar_direction].<
       <return-value transfer-ownership="none">
         <doc xml:space="preserve"
              filename="pango/pango-bidi-type.c"
-             line="43">the bidirectional character type, as used in the
+             line="44">the bidirectional character type, as used in the
 Unicode bidirectional algorithm.</doc>
         <type name="BidiType" c:type="PangoBidiType"/>
       </return-value>
@@ -20650,7 +20654,7 @@ Unicode bidirectional algorithm.</doc>
         <parameter name="ch" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-bidi-type.c"
-               line="35">a Unicode character</doc>
+               line="36">a Unicode character</doc>
           <type name="gunichar" c:type="gunichar"/>
         </parameter>
       </parameters>
@@ -20661,7 +20665,7 @@ Unicode bidirectional algorithm.</doc>
               deprecated-version="1.44">
       <doc xml:space="preserve"
            filename="pango/break.c"
-           line="2195">Determines possible line, word, and character breaks
+           line="2199">Determines possible line, word, and character breaks
 for a string of Unicode text with a single analysis.
 
 For most purposes you may want to use [func@Pango.get_log_attrs].</doc>
@@ -20675,25 +20679,25 @@ For most purposes you may want to use [func@Pango.get_log_attrs].</doc>
         <parameter name="text" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2197">the text to process. Must be valid UTF-8</doc>
+               line="2201">the text to process. Must be valid UTF-8</doc>
           <type name="utf8" c:type="const char*"/>
         </parameter>
         <parameter name="length" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2198">length of @text in bytes (may be -1 if @text is nul-terminated)</doc>
+               line="2202">length of @text in bytes (may be -1 if @text is nul-terminated)</doc>
           <type name="gint" c:type="int"/>
         </parameter>
         <parameter name="analysis" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2199">`PangoAnalysis` structure for @text</doc>
+               line="2203">`PangoAnalysis` structure for @text</doc>
           <type name="Analysis" c:type="PangoAnalysis*"/>
         </parameter>
         <parameter name="attrs" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2200">an array to store character information in</doc>
+               line="2204">an array to store character information in</doc>
           <array length="4" zero-terminated="0" c:type="PangoLogAttr*">
             <type name="LogAttr" c:type="PangoLogAttr"/>
           </array>
@@ -20701,7 +20705,7 @@ For most purposes you may want to use [func@Pango.get_log_attrs].</doc>
         <parameter name="attrs_len" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2201">size of the array passed as @attrs</doc>
+               line="2205">size of the array passed as @attrs</doc>
           <type name="gint" c:type="int"/>
         </parameter>
       </parameters>
@@ -20709,7 +20713,7 @@ For most purposes you may want to use [func@Pango.get_log_attrs].</doc>
     <function name="default_break" c:identifier="pango_default_break">
       <doc xml:space="preserve"
            filename="pango/break.c"
-           line="2161">This is the default break algorithm.
+           line="2165">This is the default break algorithm.
 
 It applies rules from the [Unicode Line Breaking Algorithm](http://www.unicode.org/unicode/reports/tr14/)
 without language-specific tailoring, therefore the @analyis argument is unused
@@ -20726,13 +20730,13 @@ See [func@Pango.attr_break] for attribute-based customization.</doc>
         <parameter name="text" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2163">text to break. Must be valid UTF-8</doc>
+               line="2167">text to break. Must be valid UTF-8</doc>
           <type name="utf8" c:type="const char*"/>
         </parameter>
         <parameter name="length" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2164">length of text in bytes (may be -1 if @text is nul-terminated)</doc>
+               line="2168">length of text in bytes (may be -1 if @text is nul-terminated)</doc>
           <type name="gint" c:type="int"/>
         </parameter>
         <parameter name="analysis"
@@ -20741,19 +20745,19 @@ See [func@Pango.attr_break] for attribute-based customization.</doc>
                    allow-none="1">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2165">a `PangoAnalysis` structure for the @text</doc>
+               line="2169">a `PangoAnalysis` structure for the @text</doc>
           <type name="Analysis" c:type="PangoAnalysis*"/>
         </parameter>
         <parameter name="attrs" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2166">logical attributes to fill in</doc>
+               line="2170">logical attributes to fill in</doc>
           <type name="LogAttr" c:type="PangoLogAttr*"/>
         </parameter>
         <parameter name="attrs_len" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2167">size of the array passed as @attrs</doc>
+               line="2171">size of the array passed as @attrs</doc>
           <type name="gint" c:type="int"/>
         </parameter>
       </parameters>
@@ -20763,7 +20767,7 @@ See [func@Pango.attr_break] for attribute-based customization.</doc>
               version="1.16">
       <doc xml:space="preserve"
            filename="pango/pango-utils.c"
-           line="1026">Converts extents from Pango units to device units.
+           line="1024">Converts extents from Pango units to device units.
 
 The conversion is done by dividing by the %PANGO_SCALE factor and
 performing rounding.
@@ -20791,7 +20795,7 @@ as @nearest.</doc>
                    allow-none="1">
           <doc xml:space="preserve"
                filename="pango/pango-utils.c"
-               line="1028">rectangle to round to pixels inclusively</doc>
+               line="1026">rectangle to round to pixels inclusively</doc>
           <type name="Rectangle" c:type="PangoRectangle*"/>
         </parameter>
         <parameter name="nearest"
@@ -20800,7 +20804,7 @@ as @nearest.</doc>
                    allow-none="1">
           <doc xml:space="preserve"
                filename="pango/pango-utils.c"
-               line="1029">rectangle to round to nearest pixels</doc>
+               line="1027">rectangle to round to nearest pixels</doc>
           <type name="Rectangle" c:type="PangoRectangle*"/>
         </parameter>
       </parameters>
@@ -20810,13 +20814,13 @@ as @nearest.</doc>
               version="1.4">
       <doc xml:space="preserve"
            filename="pango/pango-utils.c"
-           line="851">Searches a string the first character that has a strong
+           line="849">Searches a string the first character that has a strong
 direction, according to the Unicode bidirectional algorithm.</doc>
       <source-position filename="pango/pango-bidi-type.h" line="107"/>
       <return-value transfer-ownership="none">
         <doc xml:space="preserve"
              filename="pango/pango-utils.c"
-             line="859">The direction corresponding to the first strong character.
+             line="857">The direction corresponding to the first strong character.
   If no such character is found, then %PANGO_DIRECTION_NEUTRAL is returned.</doc>
         <type name="Direction" c:type="PangoDirection"/>
       </return-value>
@@ -20824,13 +20828,13 @@ direction, according to the Unicode bidirectional algorithm.</doc>
         <parameter name="text" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-utils.c"
-               line="853">the text to process. Must be valid UTF-8</doc>
+               line="851">the text to process. Must be valid UTF-8</doc>
           <type name="utf8" c:type="const gchar*"/>
         </parameter>
         <parameter name="length" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-utils.c"
-               line="854">length of @text in bytes (may be -1 if @text is nul-terminated)</doc>
+               line="852">length of @text in bytes (may be -1 if @text is nul-terminated)</doc>
           <type name="gint" c:type="gint"/>
         </parameter>
       </parameters>
@@ -20839,7 +20843,7 @@ direction, according to the Unicode bidirectional algorithm.</doc>
               c:identifier="pango_find_paragraph_boundary">
       <doc xml:space="preserve"
            filename="pango/pango-utils.c"
-           line="1156">Locates a paragraph boundary in @text.
+           line="1154">Locates a paragraph boundary in @text.
 
 A boundary is caused by delimiter characters, such as
 a newline, carriage return, carriage return-newline pair,
@@ -20861,13 +20865,13 @@ and @next_paragraph_start are filled with the length of @text
         <parameter name="text" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-utils.c"
-               line="1158">UTF-8 text</doc>
+               line="1156">UTF-8 text</doc>
           <type name="utf8" c:type="const char*"/>
         </parameter>
         <parameter name="length" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-utils.c"
-               line="1159">length of @text in bytes, or -1 if nul-terminated</doc>
+               line="1157">length of @text in bytes, or -1 if nul-terminated</doc>
           <type name="gint" c:type="int"/>
         </parameter>
         <parameter name="paragraph_delimiter_index"
@@ -20876,7 +20880,7 @@ and @next_paragraph_start are filled with the length of @text
                    transfer-ownership="full">
           <doc xml:space="preserve"
                filename="pango/pango-utils.c"
-               line="1160">return location for index of
+               line="1158">return location for index of
   delimiter</doc>
           <type name="gint" c:type="int*"/>
         </parameter>
@@ -20886,7 +20890,7 @@ and @next_paragraph_start are filled with the length of @text
                    transfer-ownership="full">
           <doc xml:space="preserve"
                filename="pango/pango-utils.c"
-               line="1162">return location for start of next
+               line="1160">return location for start of next
   paragraph</doc>
           <type name="gint" c:type="int*"/>
         </parameter>
@@ -20960,7 +20964,7 @@ A typical example:
     <function name="get_log_attrs" c:identifier="pango_get_log_attrs">
       <doc xml:space="preserve"
            filename="pango/break.c"
-           line="2319">Computes a `PangoLogAttr` for each character in @text.
+           line="2323">Computes a `PangoLogAttr` for each character in @text.
 
 The @attrs array must have one `PangoLogAttr` for
 each position in @text; if @text contains N characters,
@@ -20977,31 +20981,31 @@ a word to know the word is a word).</doc>
         <parameter name="text" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2321">text to process. Must be valid UTF-8</doc>
+               line="2325">text to process. Must be valid UTF-8</doc>
           <type name="utf8" c:type="const char*"/>
         </parameter>
         <parameter name="length" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2322">length in bytes of @text</doc>
+               line="2326">length in bytes of @text</doc>
           <type name="gint" c:type="int"/>
         </parameter>
         <parameter name="level" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2323">embedding level, or -1 if unknown</doc>
+               line="2327">embedding level, or -1 if unknown</doc>
           <type name="gint" c:type="int"/>
         </parameter>
         <parameter name="language" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2324">language tag</doc>
+               line="2328">language tag</doc>
           <type name="Language" c:type="PangoLanguage*"/>
         </parameter>
         <parameter name="attrs" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2325">array with one `PangoLogAttr`
+               line="2329">array with one `PangoLogAttr`
   per character in @text, plus one extra, to be filled in</doc>
           <array length="5" zero-terminated="0" c:type="PangoLogAttr*">
             <type name="LogAttr" c:type="PangoLogAttr"/>
@@ -21010,7 +21014,7 @@ a word to know the word is a word).</doc>
         <parameter name="attrs_len" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2327">length of @attrs array</doc>
+               line="2331">length of @attrs array</doc>
           <type name="gint" c:type="int"/>
         </parameter>
       </parameters>
@@ -21021,7 +21025,7 @@ a word to know the word is a word).</doc>
               deprecated-version="1.30">
       <doc xml:space="preserve"
            filename="pango/pango-bidi-type.c"
-           line="277">Returns the mirrored character of a Unicode character.
+           line="303">Returns the mirrored character of a Unicode character.
 
 Mirror characters are determined by the Unicode mirrored property.</doc>
       <doc-deprecated xml:space="preserve">Use [func@GLib.unichar_get_mirror_char] instead;
@@ -21030,7 +21034,7 @@ Mirror characters are determined by the Unicode mirrored property.</doc>
       <return-value transfer-ownership="none">
         <doc xml:space="preserve"
              filename="pango/pango-bidi-type.c"
-             line="286">%TRUE if @ch has a mirrored character and @mirrored_ch is
+             line="312">%TRUE if @ch has a mirrored character and @mirrored_ch is
 filled in, %FALSE otherwise</doc>
         <type name="gboolean" c:type="gboolean"/>
       </return-value>
@@ -21038,13 +21042,13 @@ filled in, %FALSE otherwise</doc>
         <parameter name="ch" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-bidi-type.c"
-               line="279">a Unicode character</doc>
+               line="305">a Unicode character</doc>
           <type name="gunichar" c:type="gunichar"/>
         </parameter>
         <parameter name="mirrored_ch" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-bidi-type.c"
-               line="280">location to store the mirrored character</doc>
+               line="306">location to store the mirrored character</doc>
           <type name="gunichar" c:type="gunichar*"/>
         </parameter>
       </parameters>
@@ -21207,7 +21211,7 @@ you should multiply it by (180. / G_PI).</doc>
               version="1.10">
       <doc xml:space="preserve"
            filename="pango/pango-utils.c"
-           line="891">Checks if a character that should not be normally rendered.
+           line="889">Checks if a character that should not be normally rendered.
 
 This includes all Unicode characters with "ZERO WIDTH" in their name,
 as well as *bidi* formatting characters, and a few other ones.
@@ -21217,14 +21221,14 @@ This is totally different from [func@GLib.unichar_iszerowidth] and is at best mi
       <return-value transfer-ownership="none">
         <doc xml:space="preserve"
              filename="pango/pango-utils.c"
-             line="902">%TRUE if @ch is a zero-width character, %FALSE otherwise</doc>
+             line="900">%TRUE if @ch is a zero-width character, %FALSE otherwise</doc>
         <type name="gboolean" c:type="gboolean"/>
       </return-value>
       <parameters>
         <parameter name="ch" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-utils.c"
-               line="893">a Unicode character</doc>
+               line="891">a Unicode character</doc>
           <type name="gunichar" c:type="gunichar"/>
         </parameter>
       </parameters>
@@ -21232,7 +21236,7 @@ This is totally different from [func@GLib.unichar_iszerowidth] and is at best mi
     <function name="itemize" c:identifier="pango_itemize">
       <doc xml:space="preserve"
            filename="pango/itemize.c"
-           line="1631">Breaks a piece of text into segments with consistent directional
+           line="1642">Breaks a piece of text into segments with consistent directional
 level and font.
 
 Each byte of @text will be contained in exactly one of the items in the
@@ -21248,7 +21252,7 @@ in the same @cached_iter).</doc>
       <return-value transfer-ownership="full">
         <doc xml:space="preserve"
              filename="pango/itemize.c"
-             line="1655">a `GList` of
+             line="1666">a `GList` of
   [struct@Pango.Item] structures. The items should be freed using
   [method@Pango.Item.free] in combination with [func@GLib.List.free_full].</doc>
         <type name="GLib.List" c:type="GList*">
@@ -21259,33 +21263,33 @@ in the same @cached_iter).</doc>
         <parameter name="context" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/itemize.c"
-               line="1633">a structure holding information that affects
+               line="1644">a structure holding information that affects
   the itemization process.</doc>
           <type name="Context" c:type="PangoContext*"/>
         </parameter>
         <parameter name="text" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/itemize.c"
-               line="1635">the text to itemize. Must be valid UTF-8</doc>
+               line="1646">the text to itemize. Must be valid UTF-8</doc>
           <type name="utf8" c:type="const char*"/>
         </parameter>
         <parameter name="start_index" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/itemize.c"
-               line="1636">first byte in @text to process</doc>
+               line="1647">first byte in @text to process</doc>
           <type name="gint" c:type="int"/>
         </parameter>
         <parameter name="length" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/itemize.c"
-               line="1637">the number of bytes (not characters) to process
+               line="1648">the number of bytes (not characters) to process
   after @start_index. This must be &gt;= 0.</doc>
           <type name="gint" c:type="int"/>
         </parameter>
         <parameter name="attrs" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/itemize.c"
-               line="1639">the set of attributes that apply to @text.</doc>
+               line="1650">the set of attributes that apply to @text.</doc>
           <type name="AttrList" c:type="PangoAttrList*"/>
         </parameter>
         <parameter name="cached_iter"
@@ -21294,7 +21298,7 @@ in the same @cached_iter).</doc>
                    allow-none="1">
           <doc xml:space="preserve"
                filename="pango/itemize.c"
-               line="1640">Cached attribute iterator</doc>
+               line="1651">Cached attribute iterator</doc>
           <type name="AttrIterator" c:type="PangoAttrIterator*"/>
         </parameter>
       </parameters>
@@ -21304,7 +21308,7 @@ in the same @cached_iter).</doc>
               version="1.4">
       <doc xml:space="preserve"
            filename="pango/itemize.c"
-           line="1583">Like `pango_itemize()`, but with an explicitly specified base direction.
+           line="1594">Like `pango_itemize()`, but with an explicitly specified base direction.
 
 The base direction is used when computing bidirectional levels.
 [func@itemize] gets the base direction from the `PangoContext`
@@ -21313,7 +21317,7 @@ The base direction is used when computing bidirectional levels.
       <return-value transfer-ownership="full">
         <doc xml:space="preserve"
              filename="pango/itemize.c"
-             line="1601">a `GList` of
+             line="1612">a `GList` of
   [struct@Pango.Item] structures. The items should be freed using
   [method@Pango.Item.free] probably in combination with [func@GLib.List.free_full].</doc>
         <type name="GLib.List" c:type="GList*">
@@ -21324,39 +21328,39 @@ The base direction is used when computing bidirectional levels.
         <parameter name="context" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/itemize.c"
-               line="1585">a structure holding information that affects
+               line="1596">a structure holding information that affects
   the itemization process.</doc>
           <type name="Context" c:type="PangoContext*"/>
         </parameter>
         <parameter name="base_dir" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/itemize.c"
-               line="1587">base direction to use for bidirectional processing</doc>
+               line="1598">base direction to use for bidirectional processing</doc>
           <type name="Direction" c:type="PangoDirection"/>
         </parameter>
         <parameter name="text" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/itemize.c"
-               line="1588">the text to itemize.</doc>
+               line="1599">the text to itemize.</doc>
           <type name="utf8" c:type="const char*"/>
         </parameter>
         <parameter name="start_index" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/itemize.c"
-               line="1589">first byte in @text to process</doc>
+               line="1600">first byte in @text to process</doc>
           <type name="gint" c:type="int"/>
         </parameter>
         <parameter name="length" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/itemize.c"
-               line="1590">the number of bytes (not characters) to process
+               line="1601">the number of bytes (not characters) to process
   after @start_index. This must be &gt;= 0.</doc>
           <type name="gint" c:type="int"/>
         </parameter>
         <parameter name="attrs" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/itemize.c"
-               line="1592">the set of attributes that apply to @text.</doc>
+               line="1603">the set of attributes that apply to @text.</doc>
           <type name="AttrList" c:type="PangoAttrList*"/>
         </parameter>
         <parameter name="cached_iter"
@@ -21365,7 +21369,7 @@ The base direction is used when computing bidirectional levels.
                    allow-none="1">
           <doc xml:space="preserve"
                filename="pango/itemize.c"
-               line="1593">Cached attribute iterator</doc>
+               line="1604">Cached attribute iterator</doc>
           <type name="AttrIterator" c:type="PangoAttrIterator*"/>
         </parameter>
       </parameters>
@@ -21491,7 +21495,7 @@ languages returned by this function.</doc>
               version="1.4">
       <doc xml:space="preserve"
            filename="pango/pango-bidi-type.c"
-           line="90">Return the bidirectional embedding levels of the input paragraph.
+           line="91">Return the bidirectional embedding levels of the input paragraph.
 
 The bidirectional embedding levels are defined by the [Unicode Bidirectional
 Algorithm](http://www.unicode.org/reports/tr9/).
@@ -21502,7 +21506,7 @@ characters in the text will determine the final resolved direction.</doc>
       <return-value transfer-ownership="none">
         <doc xml:space="preserve"
              filename="pango/pango-bidi-type.c"
-             line="105">a newly allocated array of embedding levels, one item per
+             line="106">a newly allocated array of embedding levels, one item per
   character (not byte), that should be freed using [func@GLib.free].</doc>
         <type name="guint8" c:type="guint8*"/>
       </return-value>
@@ -21510,20 +21514,20 @@ characters in the text will determine the final resolved direction.</doc>
         <parameter name="text" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-bidi-type.c"
-               line="92">the text to itemize.</doc>
+               line="93">the text to itemize.</doc>
           <type name="utf8" c:type="const gchar*"/>
         </parameter>
         <parameter name="length" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-bidi-type.c"
-               line="93">the number of bytes (not characters) to process, or -1
+               line="94">the number of bytes (not characters) to process, or -1
   if @text is nul-terminated and the length should be calculated.</doc>
           <type name="gint" c:type="int"/>
         </parameter>
         <parameter name="pbase_dir" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-bidi-type.c"
-               line="95">input base direction, and output resolved direction.</doc>
+               line="96">input base direction, and output resolved direction.</doc>
           <type name="Direction" c:type="PangoDirection*"/>
         </parameter>
       </parameters>
@@ -21948,7 +21952,7 @@ and integers. Case variations are ignored.</doc>
               version="1.12">
       <doc xml:space="preserve"
            filename="pango/pango-utils.c"
-           line="951">Quantizes the thickness and position of a line to whole device pixels.
+           line="949">Quantizes the thickness and position of a line to whole device pixels.
 
 This is typically used for underline or strikethrough. The purpose of
 this function is to avoid such lines looking blurry.
@@ -21967,7 +21971,7 @@ of rounding.</doc>
                    transfer-ownership="full">
           <doc xml:space="preserve"
                filename="pango/pango-utils.c"
-               line="953">pointer to the thickness of a line, in Pango units</doc>
+               line="951">pointer to the thickness of a line, in Pango units</doc>
           <type name="gint" c:type="int*"/>
         </parameter>
         <parameter name="position"
@@ -21976,7 +21980,7 @@ of rounding.</doc>
                    transfer-ownership="full">
           <doc xml:space="preserve"
                filename="pango/pango-utils.c"
-               line="954">corresponding position</doc>
+               line="952">corresponding position</doc>
           <type name="gint" c:type="int*"/>
         </parameter>
       </parameters>
@@ -22255,7 +22259,7 @@ context language is not feasible.</doc>
     <function name="shape" c:identifier="pango_shape">
       <doc xml:space="preserve"
            filename="pango/shape.c"
-           line="771">Convert the characters in @text into glyphs.
+           line="795">Convert the characters in @text into glyphs.
 
 Given a segment of text and the corresponding `PangoAnalysis` structure
 returned from [func@Pango.itemize], convert the characters into glyphs. You
@@ -22281,25 +22285,25 @@ calling [func@Pango.shape].</doc>
         <parameter name="text" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="773">the text to process</doc>
+               line="797">the text to process</doc>
           <type name="utf8" c:type="const char*"/>
         </parameter>
         <parameter name="length" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="774">the length (in bytes) of @text</doc>
+               line="798">the length (in bytes) of @text</doc>
           <type name="gint" c:type="int"/>
         </parameter>
         <parameter name="analysis" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="775">`PangoAnalysis` structure from [func@Pango.itemize]</doc>
+               line="799">`PangoAnalysis` structure from [func@Pango.itemize]</doc>
           <type name="Analysis" c:type="const PangoAnalysis*"/>
         </parameter>
         <parameter name="glyphs" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="776">glyph string in which to store results</doc>
+               line="800">glyph string in which to store results</doc>
           <type name="GlyphString" c:type="PangoGlyphString*"/>
         </parameter>
       </parameters>
@@ -22307,7 +22311,7 @@ calling [func@Pango.shape].</doc>
     <function name="shape_full" c:identifier="pango_shape_full" version="1.32">
       <doc xml:space="preserve"
            filename="pango/shape.c"
-           line="806">Convert the characters in @text into glyphs.
+           line="830">Convert the characters in @text into glyphs.
 
 Given a segment of text and the corresponding `PangoAnalysis` structure
 returned from [func@Pango.itemize], convert the characters into glyphs.
@@ -22336,13 +22340,13 @@ to subtract the item offset from their indices before calling
         <parameter name="item_text" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="808">valid UTF-8 text to shape.</doc>
+               line="832">valid UTF-8 text to shape.</doc>
           <type name="utf8" c:type="const char*"/>
         </parameter>
         <parameter name="item_length" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="809">the length (in bytes) of @item_text. -1 means nul-terminated text.</doc>
+               line="833">the length (in bytes) of @item_text. -1 means nul-terminated text.</doc>
           <type name="gint" c:type="int"/>
         </parameter>
         <parameter name="paragraph_text"
@@ -22351,25 +22355,25 @@ to subtract the item offset from their indices before calling
                    allow-none="1">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="810">text of the paragraph (see details).</doc>
+               line="834">text of the paragraph (see details).</doc>
           <type name="utf8" c:type="const char*"/>
         </parameter>
         <parameter name="paragraph_length" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="811">the length (in bytes) of @paragraph_text. -1 means nul-terminated text.</doc>
+               line="835">the length (in bytes) of @paragraph_text. -1 means nul-terminated text.</doc>
           <type name="gint" c:type="int"/>
         </parameter>
         <parameter name="analysis" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="812">`PangoAnalysis` structure from [func@Pango.itemize].</doc>
+               line="836">`PangoAnalysis` structure from [func@Pango.itemize].</doc>
           <type name="Analysis" c:type="const PangoAnalysis*"/>
         </parameter>
         <parameter name="glyphs" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="813">glyph string in which to store results.</doc>
+               line="837">glyph string in which to store results.</doc>
           <type name="GlyphString" c:type="PangoGlyphString*"/>
         </parameter>
       </parameters>
@@ -22377,7 +22381,7 @@ to subtract the item offset from their indices before calling
     <function name="shape_item" c:identifier="pango_shape_item" version="1.50">
       <doc xml:space="preserve"
            filename="pango/shape.c"
-           line="902">Convert the characters in @item into glyphs.
+           line="926">Convert the characters in @item into glyphs.
 
 This is similar to [func@Pango.shape_with_flags], except it takes a
 `PangoItem` instead of separate @item_text and @analysis arguments.
@@ -22398,7 +22402,7 @@ to subtract the item offset from their indices before calling
         <parameter name="item" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="904">`PangoItem` to shape</doc>
+               line="928">`PangoItem` to shape</doc>
           <type name="Item" c:type="PangoItem*"/>
         </parameter>
         <parameter name="paragraph_text"
@@ -22407,13 +22411,13 @@ to subtract the item offset from their indices before calling
                    allow-none="1">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="905">text of the paragraph (see details).</doc>
+               line="929">text of the paragraph (see details).</doc>
           <type name="utf8" c:type="const char*"/>
         </parameter>
         <parameter name="paragraph_length" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="906">the length (in bytes) of @paragraph_text.
+               line="930">the length (in bytes) of @paragraph_text.
     -1 means nul-terminated text.</doc>
           <type name="gint" c:type="int"/>
         </parameter>
@@ -22423,19 +22427,19 @@ to subtract the item offset from their indices before calling
                    allow-none="1">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="908">array of `PangoLogAttr` for @item</doc>
+               line="932">array of `PangoLogAttr` for @item</doc>
           <type name="LogAttr" c:type="PangoLogAttr*"/>
         </parameter>
         <parameter name="glyphs" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="909">glyph string in which to store results</doc>
+               line="933">glyph string in which to store results</doc>
           <type name="GlyphString" c:type="PangoGlyphString*"/>
         </parameter>
         <parameter name="flags" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="910">flags influencing the shaping process</doc>
+               line="934">flags influencing the shaping process</doc>
           <type name="ShapeFlags" c:type="PangoShapeFlags"/>
         </parameter>
       </parameters>
@@ -22445,7 +22449,7 @@ to subtract the item offset from their indices before calling
               version="1.44">
       <doc xml:space="preserve"
            filename="pango/shape.c"
-           line="854">Convert the characters in @text into glyphs.
+           line="878">Convert the characters in @text into glyphs.
 
 Given a segment of text and the corresponding `PangoAnalysis` structure
 returned from [func@Pango.itemize], convert the characters into glyphs.
@@ -22471,13 +22475,13 @@ to subtract the item offset from their indices before calling
         <parameter name="item_text" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="856">valid UTF-8 text to shape</doc>
+               line="880">valid UTF-8 text to shape</doc>
           <type name="utf8" c:type="const char*"/>
         </parameter>
         <parameter name="item_length" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="857">the length (in bytes) of @item_text.
+               line="881">the length (in bytes) of @item_text.
     -1 means nul-terminated text.</doc>
           <type name="gint" c:type="int"/>
         </parameter>
@@ -22487,32 +22491,32 @@ to subtract the item offset from their indices before calling
                    allow-none="1">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="859">text of the paragraph (see details).</doc>
+               line="883">text of the paragraph (see details).</doc>
           <type name="utf8" c:type="const char*"/>
         </parameter>
         <parameter name="paragraph_length" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="860">the length (in bytes) of @paragraph_text.
+               line="884">the length (in bytes) of @paragraph_text.
     -1 means nul-terminated text.</doc>
           <type name="gint" c:type="int"/>
         </parameter>
         <parameter name="analysis" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="862">`PangoAnalysis` structure from [func@Pango.itemize]</doc>
+               line="886">`PangoAnalysis` structure from [func@Pango.itemize]</doc>
           <type name="Analysis" c:type="const PangoAnalysis*"/>
         </parameter>
         <parameter name="glyphs" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="863">glyph string in which to store results</doc>
+               line="887">glyph string in which to store results</doc>
           <type name="GlyphString" c:type="PangoGlyphString*"/>
         </parameter>
         <parameter name="flags" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/shape.c"
-               line="864">flags influencing the shaping process</doc>
+               line="888">flags influencing the shaping process</doc>
           <type name="ShapeFlags" c:type="PangoShapeFlags"/>
         </parameter>
       </parameters>
@@ -22602,7 +22606,7 @@ See that functions for details about the format.</doc>
               version="1.44">
       <doc xml:space="preserve"
            filename="pango/break.c"
-           line="2225">Apply language-specific tailoring to the breaks in @attrs.
+           line="2229">Apply language-specific tailoring to the breaks in @attrs.
 
 The line breaks are assumed to have been produced by [func@Pango.default_break].
 
@@ -22619,32 +22623,32 @@ to apply attributes to the whole paragraph.</doc>
         <parameter name="text" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2227">text to process. Must be valid UTF-8</doc>
+               line="2231">text to process. Must be valid UTF-8</doc>
           <type name="utf8" c:type="const char*"/>
         </parameter>
         <parameter name="length" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2228">length in bytes of @text</doc>
+               line="2232">length in bytes of @text</doc>
           <type name="gint" c:type="int"/>
         </parameter>
         <parameter name="analysis" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2229">`PangoAnalysis` for @text</doc>
+               line="2233">`PangoAnalysis` for @text</doc>
           <type name="Analysis" c:type="PangoAnalysis*"/>
         </parameter>
         <parameter name="offset" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2230">Byte offset of @text from the beginning of the
+               line="2234">Byte offset of @text from the beginning of the
   paragraph, or -1 to ignore attributes from @analysis</doc>
           <type name="gint" c:type="int"/>
         </parameter>
         <parameter name="attrs" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2232">array with one `PangoLogAttr`
+               line="2236">array with one `PangoLogAttr`
   per character in @text, plus one extra, to be filled in</doc>
           <array length="5" zero-terminated="0" c:type="PangoLogAttr*">
             <type name="LogAttr" c:type="PangoLogAttr"/>
@@ -22653,7 +22657,7 @@ to apply attributes to the whole paragraph.</doc>
         <parameter name="attrs_len" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/break.c"
-               line="2234">length of @attrs array</doc>
+               line="2238">length of @attrs array</doc>
           <type name="gint" c:type="int"/>
         </parameter>
       </parameters>
@@ -22684,7 +22688,7 @@ to apply attributes to the whole paragraph.</doc>
     <function name="unichar_direction" c:identifier="pango_unichar_direction">
       <doc xml:space="preserve"
            filename="pango/pango-bidi-type.c"
-           line="243">Determines the inherent direction of a character.
+           line="269">Determines the inherent direction of a character.
 
 The inherent direction is either `PANGO_DIRECTION_LTR`, `PANGO_DIRECTION_RTL`,
 or `PANGO_DIRECTION_NEUTRAL`.
@@ -22697,14 +22701,14 @@ can be used instead.</doc>
       <return-value transfer-ownership="none">
         <doc xml:space="preserve"
              filename="pango/pango-bidi-type.c"
-             line="257">the direction of the character.</doc>
+             line="283">the direction of the character.</doc>
         <type name="Direction" c:type="PangoDirection"/>
       </return-value>
       <parameters>
         <parameter name="ch" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-bidi-type.c"
-               line="245">a Unicode character</doc>
+               line="271">a Unicode character</doc>
           <type name="gunichar" c:type="gunichar"/>
         </parameter>
       </parameters>
@@ -22714,7 +22718,7 @@ can be used instead.</doc>
               version="1.16">
       <doc xml:space="preserve"
            filename="pango/pango-utils.c"
-           line="989">Converts a floating-point number to Pango units.
+           line="987">Converts a floating-point number to Pango units.
 
 The conversion is done by multiplying @d by %PANGO_SCALE and
 rounding the result to nearest integer.</doc>
@@ -22722,14 +22726,14 @@ rounding the result to nearest integer.</doc>
       <return-value transfer-ownership="none">
         <doc xml:space="preserve"
              filename="pango/pango-utils.c"
-             line="998">the value in Pango units.</doc>
+             line="996">the value in Pango units.</doc>
         <type name="gint" c:type="int"/>
       </return-value>
       <parameters>
         <parameter name="d" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-utils.c"
-               line="991">double floating-point value</doc>
+               line="989">double floating-point value</doc>
           <type name="gdouble" c:type="double"/>
         </parameter>
       </parameters>
@@ -22739,21 +22743,21 @@ rounding the result to nearest integer.</doc>
               version="1.16">
       <doc xml:space="preserve"
            filename="pango/pango-utils.c"
-           line="1008">Converts a number in Pango units to floating-point.
+           line="1006">Converts a number in Pango units to floating-point.
 
 The conversion is done by dividing @i by %PANGO_SCALE.</doc>
       <source-position filename="pango/pango-types.h" line="152"/>
       <return-value transfer-ownership="none">
         <doc xml:space="preserve"
              filename="pango/pango-utils.c"
-             line="1016">the double value.</doc>
+             line="1014">the double value.</doc>
         <type name="gdouble" c:type="double"/>
       </return-value>
       <parameters>
         <parameter name="i" transfer-ownership="none">
           <doc xml:space="preserve"
                filename="pango/pango-utils.c"
-               line="1010">value in Pango units</doc>
+               line="1008">value in Pango units</doc>
           <type name="gint" c:type="int"/>
         </parameter>
       </parameters>
