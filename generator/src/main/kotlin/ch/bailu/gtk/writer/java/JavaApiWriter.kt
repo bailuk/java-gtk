@@ -91,13 +91,22 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
     override fun writeMethod(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(1)
         javaDoc.writeMethod(structureModel, methodModel)
+        writeDeprecated(methodModel)
         writeFunctionCall(structureModel, methodModel, "this", "asCPointer()")
         out.end(1)
+    }
+
+    private fun writeDeprecated(methodModel: MethodModel) {
+        if (methodModel.isDeprecated) {
+            out.a("    @Deprecated").nl()
+        }
+
     }
 
     override fun writeFunction(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(1)
         javaDoc.writeFunction(structureModel, methodModel)
+        writeDeprecated(methodModel)
         writeFunctionCall(structureModel, methodModel, "getClassHandler().getInstance()", "", "static ")
         out.end(1)
     }
@@ -181,6 +190,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
     override fun writeConstructor(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(1)
         javaDoc.writeConstructor(structureModel, methodModel)
+        writeDeprecated(methodModel)
         out.a("""
             public ${structureModel.apiName}(${getSignature(structureModel, methodModel.parameters)}) {
                 super(cast(${structureModel.jnaName}.INST().${methodModel.gtkName}(${getCallSignature(methodModel, "", "getClassHandler().getInstance()")})));
@@ -192,6 +202,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
     override fun writeFactory(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(1)
         javaDoc.writeFactory(structureModel, methodModel)
+        writeDeprecated(methodModel)
         out.a("""
             public static ${structureModel.apiName} ${methodModel.apiName}${structureModel.apiName}(${getSignature(structureModel, methodModel.parameters)}) ${getThrowsExtension(methodModel)} {
                 PointerContainer __self = cast(${structureModel.jnaName}.INST().${methodModel.gtkName}(${getCallSignature(methodModel, "", "getClassHandler().getInstance()")}));
@@ -292,6 +303,7 @@ class JavaApiWriter(private val out: TextWriter, doc: JavaDoc) : CodeWriter {
     override fun writeSignal(structureModel : StructureModel, methodModel : MethodModel) {
         out.start(1)
 
+        writeDeprecated(methodModel)
         out.a("""
             public final static String ${methodModel.signalNameVariable} = "${methodModel.name}";
             

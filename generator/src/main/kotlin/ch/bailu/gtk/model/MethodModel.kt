@@ -23,6 +23,8 @@ class MethodModel(namespace: String, parameterNamespace: String, method: MethodT
     var isNativeVariant = false
         private set
 
+    val isDeprecated = method.isDeprecated()
+
     val isConstructorType: Boolean
     val throwsError: Boolean = method.throwsError()
     val callbackModel: MutableList<MethodModel> = ArrayList()
@@ -30,7 +32,6 @@ class MethodModel(namespace: String, parameterNamespace: String, method: MethodT
     val doc : String = method.getDoc()
 
     init {
-        setSupported("cb-deprecated", !method.isDeprecated())
         setSupported("cb-return-value-not-supported", returnType.isSupported)
         setSupported("cb-returns-callback", !returnType.isCallback)
 
