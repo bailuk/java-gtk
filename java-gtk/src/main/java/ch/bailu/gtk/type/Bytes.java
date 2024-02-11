@@ -2,27 +2,56 @@ package ch.bailu.gtk.type;
 
 public class Bytes extends Array {
 
+    /**
+     * Create a reference to a byte array of specific size
+     * @param pointer pointer to byte array
+     * @param size size of byte array
+     */
     public Bytes(PointerContainer pointer, int size) {
         super(pointer, 1, size);
     }
 
+    /**
+     * Create a reference to a byte array of unknown size
+     * @param pointer pointer to byte array
+     */
     public Bytes(PointerContainer pointer) {
         super(pointer, 1, -1);
     }
 
+    /**
+     * Allocates a byte array in the c heap  of size bytes.length.
+     * Copies bytes to allocated array.
+     * @param bytes bytes to copy to c heap
+     */
     public Bytes(byte[] bytes) {
         super(createBytes(bytes), 1, bytes.length);
-
     }
 
+    /**
+     * Allocates a byte array of size bytes.length + 1) in the c heap.
+     * Copies bytes to allocated array and adds one byte at the end.
+     * @param bytes bytes to copy to the allocated array
+     * @param terminate byte to add at the end of the allocated array
+     */
+    public Bytes(byte[] bytes, byte terminate) {
+        super(createBytes(bytes, terminate), 1, bytes.length + 1);
+    }
+
+    /**
+     * Allocates a byte array in the c heap of a specific size.
+     * Array is initialized with zeros.
+     * @param size size of new array
+     */
     public Bytes(int size) {
         super(createBytes(size), 1, size);
     }
 
+    private static PointerContainer createBytes(byte[] bytes, byte terminate) {
+        return new PointerContainer(ImpBytes.createBytes(bytes, terminate));
+    }
+
     private static PointerContainer createBytes(byte[] bytes) {
-        if (bytes.length == 0) {
-            return PointerContainer.NULL;
-        }
         return new PointerContainer(ImpBytes.createBytes(bytes));
     }
 

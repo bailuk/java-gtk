@@ -1,5 +1,7 @@
 package ch.bailu.gtk.type;
 
+import java.nio.charset.StandardCharsets;
+
 public class Str extends Bytes {
     public final static Str NULL = new Str(PointerContainer.NULL);
 
@@ -7,19 +9,13 @@ public class Str extends Bytes {
         super(pointer);
     }
 
-    public Str(String str) {
-        super(strToBytes(str));
-    }
-
     /**
-     *  String.getBytes() does not return a 0 terminated result.
-     *  Therefore the string needs to be copied twice
+     * Allocate a null terminated string in the c heap.
+     * Copy str to allocated string.
+     * @param str Java string to copy to c heap
      */
-    private static byte[] strToBytes(String str) {
-        byte[] src=str.getBytes();
-        byte[] dst=new byte[src.length+1];
-        System.arraycopy(src, 0, dst, 0, src.length);
-        return dst;
+    public Str(String str) {
+        super(str.getBytes(StandardCharsets.UTF_8), (byte)0);
     }
 
     @Override

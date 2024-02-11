@@ -16,13 +16,8 @@ RUN chmod +x clone-and-build.sh
 
 RUN apt-get -y update
 RUN apt-get -y upgrade
-RUN apt-get -y install libgtk-4-1
 RUN apt-get -y install git
-RUN apt-get -y install openjdk-11-jdk
-RUN apt-get -y install libgirepository1.0-dev
-RUN apt-get -y install build-essential
+RUN apt-get -y install openjdk-17-jdk
+RUN apt-get -y install libgtk-4-1
 RUN apt-get -y install libadwaita-1-0
-RUN apt-get -y install libadwaita-1-dev
-RUN apt-get -y install libgtk-4-dev
-RUN apt-get -y install libgeoclue-2-dev
 RUN apt-get -y clean

@@ -1,4 +1,4 @@
-name: Build on fedora
+name: Build on Fedora
 
 on:
   push:
@@ -31,13 +31,10 @@ jobs:
         run: ./gradlew cV
 
       - name: Generate source code
-        run: make gen
+        run: ./gradlew generate
 
       - name: Build library
-        run: make
-
-      - name: Build exsamples
-        run: make examples
+        run: ./gradlew build
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2

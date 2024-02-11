@@ -29,8 +29,8 @@ public class InputStreamBridgeTest {
             var count = (int)inputStreamBridge.read(buffer,buffer.getLength(), null);
             buffer.setByte(count, (byte)0);
 
-            assertEquals(5, count);
-            assertEquals("test\n", new Str(buffer.cast()).toString());
+            assertEquals(4, count, "resources/test.txt must not contain new line");
+            assertEquals("test", new Str(buffer.cast()).toString());
             inputStreamBridge.unref();
         }
     }

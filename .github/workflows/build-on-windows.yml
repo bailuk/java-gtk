@@ -1,0 +1,42 @@
+name: Build on Windows
+
+on:
+  push:
+    branches: [ main, stage ]
+  pull_request:
+    branches: [ main, stage ]
+  workflow_dispatch:
+
+env:
+  JAVA_TOOL_OPTIONS: '-Dfile.encoding=UTF8'
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Set up MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+            msystem: MINGW64
+            update: true
+            install: mingw-w64-x86_64-gtk4
+
+      - name: Generate source code
+        run: ./gradlew generate
+
+      - name: Build library
+        shell: msys2 {0}
+        run: ./gradlew build

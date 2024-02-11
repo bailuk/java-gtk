@@ -15,6 +15,14 @@ class ImpBytes {
         return result.asCPointer();
     }
 
+    public static long createBytes(byte[] bytes, byte terminate) {
+        var result = Glib.malloc(bytes.length+1);
+        result.asJnaPointer().write(0, bytes, 0, bytes.length);
+        result.asJnaPointer().setByte(bytes.length, terminate);
+
+        return result.asCPointer();
+    }
+
     public static byte getByte(long cPointer, int index) {
         com.sun.jna.Pointer pointer = Pointer.asJnaPointer(cPointer);
         return pointer.getByte(index);

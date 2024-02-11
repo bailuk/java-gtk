@@ -36,6 +36,7 @@ object WrapperTable {
         add("gconstpointer", "Pointer")
         add("gpointer", "Pointer")
         add("void*", "Pointer")
+        add("char***", "Pointer")
         add("const GdkEvent*", "Pointer")
     }
 
