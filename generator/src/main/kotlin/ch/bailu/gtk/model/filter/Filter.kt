@@ -20,6 +20,9 @@ fun filterMethod(structureModel: StructureModel, methodModel: MethodModel): Bool
     if ("ActionRow" == structureModel.apiName && "activate" == methodModel.apiName) {
         return false
     }
+    if ("DataInputStream" == structureModel.apiName && "readByte" == methodModel.apiName) {
+        return false // overrides function with different return type
+    }
     return true
 }
 
