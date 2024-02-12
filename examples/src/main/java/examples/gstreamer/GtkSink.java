@@ -8,14 +8,15 @@ import ch.bailu.gtk.gst.ElementFactory;
 import ch.bailu.gtk.gst.Gst;
 import ch.bailu.gtk.gst.Pipeline;
 import ch.bailu.gtk.gtk.Application;
+import ch.bailu.gtk.lib.util.PropertyAccess;
 import ch.bailu.gtk.type.Int;
 import ch.bailu.gtk.type.Pointer;
-import ch.bailu.gtk.type.PointerContainer;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.Strs;
 
 /**
- * https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs/-/blob/main/video/gtk4/examples/gtksink.py
+ * <a href="https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs/-/blob/main/video/gtk4/examples/gtksink.py">gtksink.py</a>
+ * apt install librust-gst-plugin-gtk4-dev
  */
 public class GtkSink {
     public static void main(String[] args) {
@@ -23,22 +24,20 @@ public class GtkSink {
 
         var gtkSink = ElementFactory.make(new Str("gtk4paintablesink"), new Str("sink"));
 
-        var paintable = new Paintable(PointerContainer.NULL);
 
-
-        gtkSink.get(new Str("paintable"), paintable.asCPointer(), null);
+        var paintable = new Paintable(PropertyAccess.getObjectProperty(gtkSink, "paintable").cast());
         //gtkSink.getProperty(new Str("paintable"), new Value(paintable.cast()));
 
 
 
-        var glContext = Int.NULL;
-        paintable.getProperty("gl_context", new Value(glContext.cast()));
+        //var glContext = new Int();
+        var glContext = PropertyAccess.getObjectProperty(paintable, "gl_context");
 
         Element source = null;
         Element glSink = null;
         Element sink = null;
 
-        if (glContext.get() != 0) {
+        if (glContext.isNotNull()) {
             System.out.println("Using GL");
             source = ElementFactory.make(new Str("gltestsrc"), new Str("source"));
             glSink = ElementFactory.make(new Str("glsinkbin"), new Str("sink"));
