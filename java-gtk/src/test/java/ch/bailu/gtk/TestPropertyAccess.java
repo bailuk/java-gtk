@@ -1,39 +1,69 @@
 package ch.bailu.gtk;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIf;
+
+import ch.bailu.gtk.gio.ListStore;
 import ch.bailu.gtk.gtk.Box;
 import ch.bailu.gtk.gtk.Button;
 import ch.bailu.gtk.gtk.Gtk;
 import ch.bailu.gtk.gtk.Orientation;
+import ch.bailu.gtk.gtk.TextTag;
 import ch.bailu.gtk.type.Str;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class TestPropertyAccess {
+    public static boolean gtkInit() {
+        return Gtk.initCheck();
+    }
+
 
     @Test
-    public void testPropertyAccessButton() {
-        Gtk.init();
-        var button = new Button();
-        var label = new Str("test2");
+    public void testPropertyAccess() {
+        var listStore = new ListStore(TextTag.getTypeID());
+        var textTag = new TextTag("test");
 
+        assertEquals(0,listStore.getIntProperty("n-items"));
+        listStore.append(textTag);
+        assertEquals(1,listStore.getIntProperty("n-items"));
 
-        button.setStringProperty( "label", "test");
-        assertEquals("test", button.getLabel().toString());
-        assertEquals("test", button.getStringProperty("label"));
+        var textTagGet = new TextTag(listStore.asListModel().getItem(0).cast());
+        assertEquals("test", textTagGet.getStringProperty("name"));
+        assertEquals("test", textTag.getStringProperty("name"));
 
-        button.setStrProperty("label", label);
-        assertEquals("test2", button.getLabel().toString());
-
-        assertTrue(button.getChild().isNotNull());
-        assertTrue(button.getObjectProperty("child").isNotNull());
-
-        assertEquals(button.getChild(), button.getObjectProperty("child"));
+        textTag.setBooleanProperty("accumulative-margin", false);
+        assertFalse(textTag.getBooleanProperty("accumulative-margin"));
+        textTag.setBooleanProperty("accumulative-margin", true);
+        assertTrue(textTag.getBooleanProperty("accumulative-margin"));
     }
 
     @Test
+    @EnabledIf("gtkInit")
+    public void testPropertyAccessButton() {
+            var button = new Button();
+            var label = new Str("test2");
+
+
+            button.setStringProperty("label", "test");
+            assertEquals("test", button.getLabel().toString());
+            assertEquals("test", button.getStringProperty("label"));
+
+            button.setStrProperty("label", label);
+            assertEquals("test2", button.getLabel().toString());
+
+            assertTrue(button.getChild().isNotNull());
+            assertTrue(button.getObjectProperty("child").isNotNull());
+
+            assertEquals(button.getChild(), button.getObjectProperty("child"));
+    }
+
+
+    @Test
+    @EnabledIf("gtkInit")
     public void testPropertyAccessBox() {
-        Gtk.init();
         var box = new Box(Orientation.HORIZONTAL, 5);
 
         int spacing = box.getIntProperty("spacing");
