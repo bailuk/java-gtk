@@ -48,7 +48,6 @@ jobs:
           path: |
             generator/build/reports/*
             generator/build/*.out
-        if-no-files-found: ignore
 
       - name: Upload library test reports
         uses: actions/upload-artifact@v4
@@ -56,5 +55,4 @@ jobs:
           name: library-reports
           path: |
             java-gtk/build/reports/*
-            **/*.log
-        if-no-files-found: ignore
+            **/*.log            
