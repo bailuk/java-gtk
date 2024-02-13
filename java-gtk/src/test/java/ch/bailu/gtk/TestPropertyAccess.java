@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIf;
 
@@ -41,6 +42,7 @@ public class TestPropertyAccess {
     }
 
     @Test
+    @Disabled // Does not work in windows container
     @EnabledIf("gtkInit")
     public void testPropertyAccessButton() {
         var button = new Button();
@@ -61,6 +63,7 @@ public class TestPropertyAccess {
 
 
     @Test
+    @Disabled // Does not work in windows container
     @EnabledIf("gtkInit")
     public void testPropertyAccessBox() {
         var box = new Box(Orientation.HORIZONTAL, 5);
