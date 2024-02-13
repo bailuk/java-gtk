@@ -10,8 +10,8 @@ See [Setting up GTK for Windows](https://www.gtk.org/docs/installations/windows)
 pacman -S mingw-w64-x86_64-gtk4
 pacman -S mingw-w64-x86_64-libadwaita
 ```
-3. Add `C:\msys64\mingw64\bin` to PATH
-
+3. Add `C:\msys64\mingw64\bin` to the `PATH` environment varable
+4. Add `-Dfile.encoding=UTF8` to the `JAVA_TOOL_OPTIONS` environment varable.   
 
 ## Build and run sample
 
