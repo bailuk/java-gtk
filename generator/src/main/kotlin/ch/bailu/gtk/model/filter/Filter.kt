@@ -20,6 +20,9 @@ fun filterMethod(structureModel: StructureModel, methodModel: MethodModel): Bool
     if ("ActionRow" == structureModel.apiName && "activate" == methodModel.apiName) {
         return false
     }
+    if ("DataInputStream" == structureModel.apiName && "readByte" == methodModel.apiName) {
+        return false // overrides function with different return type
+    }
     return true
 }
 
@@ -30,4 +33,11 @@ fun filterField(): Boolean {
 
 fun filterCreateMallocConstructor(structureModel: StructureModel): Boolean {
     return structureModel.allFieldsAreSupported && !structureModel.disguised
+}
+
+fun filterParent(parent: String): String {
+    if ("Object" == parent || "ch.bailu.gtk.gobject.Object" == parent) {
+        return "ch.bailu.gtk.type.PropertyHolder"
+    }
+    return parent
 }

@@ -25,4 +25,8 @@ public class Str extends Bytes {
         }
         return ImpStr.toString(asCPointer());
     }
+
+    public static int getTypeID() {
+        return 64; // G_TYPE_STRING
+    }
 }

@@ -6,7 +6,11 @@ public class Int extends Wrapper {
 
     public final static Int NULL = new Int(new PointerContainer(0));
 
-    private boolean created;
+    private boolean created; // prevent double destroy
+
+    public Int(int value) {
+        this(createInt(value));
+    }
 
     public Int() {
         this(createInt(0));
@@ -48,5 +52,13 @@ public class Int extends Wrapper {
             Glib.free(asPointer());
             created = false;
         }
+    }
+
+    public static int getTypeID() {
+        return 24; // G_TYPE_INT
+    }
+
+    public static long getBooleanTypeID() {
+        return 20; // G_TYPE_BOOLEAN
     }
 }

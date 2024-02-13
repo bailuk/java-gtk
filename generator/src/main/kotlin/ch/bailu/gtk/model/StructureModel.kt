@@ -265,7 +265,7 @@ class StructureModel : Model {
         get() = Names.getImpClassName(apiName)
 
     val apiParentName: String
-        get() = parent.getApiTypeName(nameSpaceModel.namespace)
+        get() = filterParent(parent.getApiTypeName(nameSpaceModel.namespace))
 
      fun hasDefaultConstructor(): Boolean {
          return models.constructors.find { return it.parameters.isEmpty() } != null
