@@ -38,5 +38,4 @@ abstract class Model {
     fun setPublic(reason: String, public: Boolean) {
         setPrivate(reason, !public)
     }
-
 }

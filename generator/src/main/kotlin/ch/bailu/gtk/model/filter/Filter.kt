@@ -34,3 +34,10 @@ fun filterField(): Boolean {
 fun filterCreateMallocConstructor(structureModel: StructureModel): Boolean {
     return structureModel.allFieldsAreSupported && !structureModel.disguised
 }
+
+fun filterParent(parent: String): String {
+    if ("Object" == parent || "ch.bailu.gtk.gobject.Object" == parent) {
+        return "ch.bailu.gtk.type.PropertyHolder"
+    }
+    return parent
+}
