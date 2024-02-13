@@ -40,3 +40,21 @@ jobs:
       - name: Build library
         shell: msys2 {0}
         run: ./gradlew build
+
+      - name: Upload generator test reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: generator-reports
+          path: |
+            generator/build/reports/*
+            generator/build/*.out
+        if-no-files-found: ignore
+
+      - name: Upload library test reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: library-reports
+          path: |
+            java-gtk/build/reports/*
+            **/*.log
+        if-no-files-found: ignore
