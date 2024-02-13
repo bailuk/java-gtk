@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIf;
 
+import ch.bailu.gtk.gdk.Display;
 import ch.bailu.gtk.gio.ListStore;
 import ch.bailu.gtk.gtk.Box;
 import ch.bailu.gtk.gtk.Button;
@@ -17,18 +18,17 @@ import ch.bailu.gtk.type.Str;
 
 public class TestPropertyAccess {
     public static boolean gtkInit() {
-        return Gtk.initCheck();
+        return Gtk.initCheck() && Display.getDefault().isNotNull();
     }
-
 
     @Test
     public void testPropertyAccess() {
         var listStore = new ListStore(TextTag.getTypeID());
         var textTag = new TextTag("test");
 
-        assertEquals(0,listStore.getIntProperty("n-items"));
+        assertEquals(0, listStore.getIntProperty("n-items"));
         listStore.append(textTag);
-        assertEquals(1,listStore.getIntProperty("n-items"));
+        assertEquals(1, listStore.getIntProperty("n-items"));
 
         var textTagGet = new TextTag(listStore.asListModel().getItem(0).cast());
         assertEquals("test", textTagGet.getStringProperty("name"));
@@ -43,21 +43,20 @@ public class TestPropertyAccess {
     @Test
     @EnabledIf("gtkInit")
     public void testPropertyAccessButton() {
-            var button = new Button();
-            var label = new Str("test2");
+        var button = new Button();
+        var label = new Str("test2");
 
+        button.setStringProperty("label", "test");
+        assertEquals("test", button.getLabel().toString());
+        assertEquals("test", button.getStringProperty("label"));
 
-            button.setStringProperty("label", "test");
-            assertEquals("test", button.getLabel().toString());
-            assertEquals("test", button.getStringProperty("label"));
+        button.setStrProperty("label", label);
+        assertEquals("test2", button.getLabel().toString());
 
-            button.setStrProperty("label", label);
-            assertEquals("test2", button.getLabel().toString());
+        assertTrue(button.getChild().isNotNull());
+        assertTrue(button.getObjectProperty("child").isNotNull());
 
-            assertTrue(button.getChild().isNotNull());
-            assertTrue(button.getObjectProperty("child").isNotNull());
-
-            assertEquals(button.getChild(), button.getObjectProperty("child"));
+        assertEquals(button.getChild(), button.getObjectProperty("child"));
     }
 
 
