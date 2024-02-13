@@ -19,6 +19,7 @@ import ch.bailu.gtk.gtk.SingleSelection;
 import ch.bailu.gtk.lib.handler.CallbackHandler;
 import ch.bailu.gtk.type.Pointer;
 import ch.bailu.gtk.type.PointerContainer;
+import ch.bailu.gtk.type.PropertyHolder;
 import ch.bailu.gtk.type.Str;
 import ch.bailu.gtk.type.gobject.TypeSystem;
 
@@ -28,14 +29,13 @@ import ch.bailu.gtk.type.gobject.TypeSystem;
  * Java data structure.
  * @see ch.bailu.gtk.gtk.ListView (view for this model)
  * see examples.HugeList for example usage
- *
  * ListIndex subclasses GObject and implements ListModel.
  * This class provides a proof of concept for implementing and
  * subclassing GObject structures with java-gtk.
  * @see ch.bailu.gtk.gobject.Object (parent class)
  * @see ch.bailu.gtk.gio.ListModel (interface)
  */
-public class ListIndex extends ch.bailu.gtk.gobject.Object {
+public class ListIndex extends PropertyHolder {
 
     private static final int PROP_ITEM_TYPE = 1;
     private static final Str      PROP_NAME = new Str("item-type");
