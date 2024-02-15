@@ -9,6 +9,7 @@ import org.junit.jupiter.api.condition.EnabledIf;
 
 import ch.bailu.gtk.gdk.Display;
 import ch.bailu.gtk.gio.ListStore;
+import ch.bailu.gtk.glib.Glib;
 import ch.bailu.gtk.gtk.Box;
 import ch.bailu.gtk.gtk.Button;
 import ch.bailu.gtk.gtk.Gtk;
@@ -18,11 +19,21 @@ import ch.bailu.gtk.type.Str;
 
 public class TestPropertyAccess {
     public static boolean gtkInit() {
-        return Gtk.initCheck() && Display.getDefault().isNotNull(); // Does not work inside Windows container
+        if ("true".equals(System.getProperty("java-gtk.headless"))) {
+            return false;
+        } else {
+            return Gtk.initCheck() && Display.getDefault().isNotNull(); // Does not work inside Windows container
+        }
+    }
+
+    public static boolean checkVersion() {
+        return  Glib.checkVersion(2, 44,0).isNull();
     }
 
     @Test
+    @EnabledIf("checkVersion")
     public void testPropertyAccess() {
+
         var listStore = new ListStore(TextTag.getTypeID());
         var textTag = new TextTag("test");
 
@@ -58,7 +69,6 @@ public class TestPropertyAccess {
 
         assertEquals(button.getChild(), button.getObjectProperty("child"));
     }
-
 
     @Test
     @EnabledIf("gtkInit")
