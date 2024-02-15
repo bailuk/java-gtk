@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
 
     // https://mvnrepository.com/artifact/net.sf.kxml/kxml2
     // xml parser implementation
@@ -24,13 +24,24 @@ tasks.test {
 }
 
 
-tasks.register("generate", JavaExec::class) {
-    dependsOn("build")
-    description = "Generate source code from introspective files"
-    classpath = sourceSets["main"].runtimeClasspath
-    mainClass.set("ch.bailu.gtk.AppKt")
+tasks.register("generate-update-doc", JavaExec::class) {
+    description = "Generate source code from introspective files and update meta documentation"
+    registerGeneratorTask(this)
+    args(setOf("-l", "../doc/gen"))
+}
 
-    args(setOf("-j", "${project.rootDir}/java-gtk/build/generated/src/main/java/ch/bailu/gtk/"))
+tasks.register("generate", JavaExec::class) {
+    description = "Generate source code from introspective files"
+    registerGeneratorTask(this)
+}
+
+
+fun registerGeneratorTask(task: JavaExec) {
+    task.dependsOn("build")
+    description = "Generate source code from introspective files"
+    task.classpath = sourceSets["main"].runtimeClasspath
+    task.mainClass.set("ch.bailu.gtk.AppKt")
+    task.args(setOf("-j", "${project.rootDir}/java-gtk/build/generated/src/main/java/ch/bailu/gtk/"))
 }
 
 tasks.compileJava {
