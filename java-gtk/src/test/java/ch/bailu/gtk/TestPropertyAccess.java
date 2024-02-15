@@ -27,13 +27,12 @@ public class TestPropertyAccess {
     }
 
     public static boolean checkVersion() {
-        return  Glib.checkVersion(2, 44,0).isNull();
+        return  Glib.checkVersion(2, 74, 0).isNull();
     }
 
     @Test
     @EnabledIf("checkVersion")
-    public void testPropertyAccess() {
-
+    public void testPropertyAccessListStore() {
         var listStore = new ListStore(TextTag.getTypeID());
         var textTag = new TextTag("test");
 
@@ -43,6 +42,12 @@ public class TestPropertyAccess {
 
         var textTagGet = new TextTag(listStore.asListModel().getItem(0).cast());
         assertEquals("test", textTagGet.getStringProperty("name"));
+        assertEquals("test", textTag.getStringProperty("name"));
+    }
+
+    @Test
+    public void testPropertyAccessTextTag() {
+        var textTag = new TextTag("test");
         assertEquals("test", textTag.getStringProperty("name"));
 
         textTag.setBooleanProperty("accumulative-margin", false);

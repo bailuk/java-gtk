@@ -32,8 +32,6 @@ public class PropertyHolder extends Object {
         return value.getString();
     }
 
-
-
     public Pointer getObjectProperty(String name) {
         var value = initValue(Object.getTypeID());
         getProperty(name, value);
