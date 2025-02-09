@@ -6,6 +6,8 @@ import java.io.*
 
 class Directories(args: Array<String>) {
     private val javaBaseDir: File
+    var logDir = Configuration.LOG_DEFAULT_DIRECTORY
+        private set
 
     private val girDirs = ArrayList<GirDirectory>()
 
@@ -21,6 +23,8 @@ class Directories(args: Array<String>) {
                 jdir.mkdirs()
             } else if ("-i" == args[i]) {
                 addGirDirectoryIfExists(GirDirectory(File(args[++i]), "external"))
+            } else if ("-l" == args[i]) {
+                logDir = args[++i]
             }
             i++
         }
