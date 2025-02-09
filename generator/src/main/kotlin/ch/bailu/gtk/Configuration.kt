@@ -57,7 +57,7 @@ object Configuration : Logable {
 
 
         NAMESPACES.forEach {
-            writer.write(String.format("| %s | %s | %s\n", it.girFile, it.girFile, toUrl(it.docUrl.getBaseUrl())))
+            writer.write(String.format("| %s | %s | %s\n", it.girFile, it.library, toUrl(it.docUrl.getBaseUrl())))
         }
 
         writer.write("\n## Tables\n\n")
