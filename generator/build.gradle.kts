@@ -19,10 +19,13 @@ dependencies {
 
 }
 
-tasks.test {
-    useJUnitPlatform()
+testing {
+    suites {
+        val test by getting(JvmTestSuite::class) {
+            useJUnitJupiter()
+        }
+    }
 }
-
 
 tasks.register("generate-update-doc", JavaExec::class) {
     description = "Generate source code from introspective files and update meta documentation"

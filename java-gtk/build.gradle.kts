@@ -50,16 +50,20 @@ dependencies {
 }
 
 
-tasks.test {
-    useJUnitPlatform()
+testing {
+    suites {
+        val test by getting(JvmTestSuite::class) {
+            useJUnitJupiter()
+        }
+    }
 }
-
 
 /** add generated code and C library to source set **/
 sourceSets {
     main {
         java {
-            val src = File(project(":java-gtk").buildDir,"generated/src/main/java")
+            val buildDir = layout.buildDirectory.get().asFile
+            val src = File(buildDir, "generated/src/main/java")
             srcDir(src)
         }
     }
