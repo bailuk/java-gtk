@@ -6,7 +6,7 @@ plugins {
      * ./gradlew cV
      *
      */
-    id ("pl.allegro.tech.build.axion-release") version "1.15.0"
+    id ("pl.allegro.tech.build.axion-release") version "1.18.18"
 }
 
 project.version = scmVersion.version

@@ -3,7 +3,7 @@ plugins {
     java
 
     // https://kotlinlang.org/docs/gradle-configure-project.html
-    kotlin("jvm") version "1.9.22"
+    kotlin("jvm") version "2.1.10"
 }
 
 repositories {
@@ -11,7 +11,8 @@ repositories {
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter
+    testImplementation("org.junit.jupiter:junit-jupiter:5.12.1")
 
     // https://mvnrepository.com/artifact/net.sf.kxml/kxml2
     // xml parser implementation
@@ -19,10 +20,13 @@ dependencies {
 
 }
 
-tasks.test {
-    useJUnitPlatform()
+testing {
+    suites {
+        val test by getting(JvmTestSuite::class) {
+            useJUnitJupiter()
+        }
+    }
 }
-
 
 tasks.register("generate-update-doc", JavaExec::class) {
     description = "Generate source code from introspective files and update meta documentation"
