@@ -1,10 +1,10 @@
-name: Build on ubuntu
+name: Build on Ubuntu
 
 on:
   push:
     branches:
       - '*'
-      - '!master'
+      - '!main'
   workflow_dispatch:
 
 
@@ -30,5 +30,10 @@ jobs:
       - name: Generate source code
         run: ./gradlew generate
 
+      - name: Install GTK-4
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-4-1
+
       - name: Build library
-        run: ./gradlew build -xtest
+        run: ./gradlew build

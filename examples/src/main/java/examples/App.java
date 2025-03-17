@@ -36,7 +36,6 @@ public class App {
     public final static int HEIGHT = 900;
 
     public static void main (String[] args)  {
-
         var app = new Application(ID, ApplicationFlags.FLAGS_NONE);
         app.onActivate(()->{
             var demoList = new Box(Orientation.VERTICAL, 0);
@@ -73,7 +72,7 @@ public class App {
             addSample(demoList, window, new GlibSettings());
             addSample(demoList, window, new Accordion());
 
-            window.show();
+            window.present();
         });
 
         System.exit(app.run(args.length, new Strs(args)));

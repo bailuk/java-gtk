@@ -25,17 +25,17 @@ object SizeTable: Logable {
         return table.getOrDefault(NamespaceType(namespace, name),0)
     }
 
-    fun getSize(namespaceType: NamespaceType): Int {
-        return table.getOrDefault(namespaceType,0)
-    }
-
     fun isSizeKnown(namespaceType: NamespaceType): Boolean {
         return table.getOrDefault(namespaceType,0) > 0
     }
 
     override fun log(writer: Writer) {
+        writer.write("# ${SizeTable.javaClass.canonicalName}\n\n")
+        writer.write("| Type                           | Size\n")
+        writer.write("|--------------------------------|-----\n")
+
         table.forEach {
-            writer.write(String.format("%-30s => %d\n", it.key, it.value))
+            writer.write(String.format("| %-30s | %d\n", it.key, it.value))
         }
     }
 }

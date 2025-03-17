@@ -3,11 +3,12 @@ package ch.bailu.gtk
 import ch.bailu.gtk.config.DocUrl
 import ch.bailu.gtk.config.GtkDocUrl
 import ch.bailu.gtk.config.StaticUrl
+import ch.bailu.gtk.log.Logable
 import ch.bailu.gtk.writer.java_doc.JavaDoc
 import ch.bailu.gtk.writer.java_doc.JavaDocHtml
 import java.io.Writer
 
-object Configuration  {
+object Configuration : Logable {
 
     const val BASE_NAME_SPACE_NODOT    = "ch.bailu.gtk"
     const val BASE_NAME_SPACE_DOT      = "ch.bailu.gtk."
@@ -15,10 +16,14 @@ object Configuration  {
     const val GIR_DIR_CUSTOM           = "src/main/resources"
     const val GIR_DIR_LOCAL            = "src/main/resources/gir"
 
-    const val LOG_STRUCTURE_TABLE_FILE = "build/structure_table.out"
-    const val LOG_ALIAS_TABLE_FILE     = "build/alias_table.out"
-    const val LOG_CALLBACK_TABLE_FILE  = "build/callback_table.out"
-    const val LOG_ENUM_TABLE_FILE      = "build/enum_table.out"
+    const val LOG_DEFAULT_DIRECTORY    = "build"
+    const val LOG_STRUCTURE_TABLE_FILE = "structure_table.md"
+    const val LOG_ALIAS_TABLE_FILE     = "alias_table.md"
+    const val LOG_CALLBACK_TABLE_FILE  = "callback_table.md"
+    const val LOG_ENUM_TABLE_FILE      = "enum_table.md"
+    const val LOG_SIZE_TABLE_FILE      = "size_table.md"
+
+    const val LOG_CONFIGURATION        = "README.md"
 
     const val DOCS_GTK_ORG = "https://docs.gtk.org/"
 
@@ -35,10 +40,36 @@ object Configuration  {
                 NamespaceConfig("Pango-1.0.gir",      "pango-1.0",      GtkDocUrl(DOCS_GTK_ORG, "Pango")),
                 NamespaceConfig("GdkPixbuf-2.0.gir",  "gdk_pixbuf-2.0", GtkDocUrl(DOCS_GTK_ORG, "gdk-pixbuf")),
                 NamespaceConfig("Geoclue-2.0.gir",    "geoclue-2",      StaticUrl("https://www.freedesktop.org/software/geoclue/docs/libgeoclue/")),
-                NamespaceConfig("Adw-1.gir",          "adwaita-1",      GtkDocUrl("https://gnome.pages.gitlab.gnome.org/libadwaita/doc/", "main")))
+                NamespaceConfig("Adw-1.gir",          "adwaita-1",      GtkDocUrl("https://gnome.pages.gitlab.gnome.org/libadwaita/doc/", "main")),
+                NamespaceConfig("Gst-1.0.gir",        "gstreamer-1.0",  StaticUrl("https://gstreamer.freedesktop.org/documentation/gstreamer/gi-index.html"))
+    )
 
     fun createJavaDocConfig(out: Writer): JavaDoc {
         return JavaDocHtml(out)
+    }
+
+    override fun log(writer: Writer) {
+        writer.write("# ${javaClass.name}\n\n")
+
+        writer.write("## Namespaces\n\n")
+        writer.write("| GIR File | Library | Documentation\n")
+        writer.write("|----------|---------|--------------\n")
+
+
+        NAMESPACES.forEach {
+            writer.write(String.format("| %s | %s | %s\n", it.girFile, it.library, toUrl(it.docUrl.getBaseUrl())))
+        }
+
+        writer.write("\n## Tables\n\n")
+        writer.write("- ${toUrl(LOG_STRUCTURE_TABLE_FILE)}\n")
+        writer.write("- ${toUrl(LOG_ALIAS_TABLE_FILE)}\n")
+        writer.write("- ${toUrl(LOG_CALLBACK_TABLE_FILE)}\n")
+        writer.write("- ${toUrl(LOG_ENUM_TABLE_FILE)}\n")
+        writer.write("- ${toUrl(LOG_SIZE_TABLE_FILE)}\n")
+    }
+
+    private fun toUrl(url: String): String {
+        return "[${url}](${url})"
     }
 }
 

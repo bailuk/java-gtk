@@ -3,7 +3,7 @@ plugins {
     java
 
     // https://kotlinlang.org/docs/gradle-configure-project.html
-    kotlin("jvm") version "1.9.22"
+    kotlin("jvm") version "2.1.10"
 }
 
 repositories {
@@ -11,7 +11,8 @@ repositories {
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter
+    testImplementation("org.junit.jupiter:junit-jupiter:5.12.1")
 
     // https://mvnrepository.com/artifact/net.sf.kxml/kxml2
     // xml parser implementation
@@ -19,18 +20,32 @@ dependencies {
 
 }
 
-tasks.test {
-    useJUnitPlatform()
+testing {
+    suites {
+        val test by getting(JvmTestSuite::class) {
+            useJUnitJupiter()
+        }
+    }
+}
+
+tasks.register("generate-update-doc", JavaExec::class) {
+    description = "Generate source code from introspective files and update meta documentation"
+    registerGeneratorTask(this)
+    args(setOf("-l", "../doc/gen"))
+}
+
+tasks.register("generate", JavaExec::class) {
+    description = "Generate source code from introspective files"
+    registerGeneratorTask(this)
 }
 
 
-tasks.register("generate", JavaExec::class) {
-    dependsOn("build")
+fun registerGeneratorTask(task: JavaExec) {
+    task.dependsOn("build")
     description = "Generate source code from introspective files"
-    classpath = sourceSets["main"].runtimeClasspath
-    mainClass.set("ch.bailu.gtk.AppKt")
-
-    args(setOf("-j", "${project.rootDir}/java-gtk/build/generated/src/main/java/ch/bailu/gtk/"))
+    task.classpath = sourceSets["main"].runtimeClasspath
+    task.mainClass.set("ch.bailu.gtk.AppKt")
+    task.args(setOf("-j", "${project.rootDir}/java-gtk/build/generated/src/main/java/ch/bailu/gtk/"))
 }
 
 tasks.compileJava {

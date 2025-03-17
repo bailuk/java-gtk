@@ -17,7 +17,7 @@ public class Loader {
     private static final String LOADER_PROPERTY = "/jna/loader.properties";
 
     private static Loader INST = null;
-    private LibraryList libraries = new LibraryList();
+    private final LibraryList libraries = new LibraryList();
 
     /**
      * Load Interface from library.
@@ -59,12 +59,12 @@ public class Loader {
      * @return Instance of interface
      */
     public <T extends Library> T loadInterface(@Nonnull String libraryName, @Nonnull Class<T> interfaceClass) {
-        libraries.addInitial(libraryName);
+        var initial = libraries.addInitial(libraryName);
 
         for (var lib: libraries.get(libraryName)) {
             final var result = tryLoadInterface(lib, interfaceClass);
             if (result != null) {
-                libraryLoaded(libraryName, lib);
+                libraryLoaded(libraryName, lib, initial);
                 return result;
             }
         }
@@ -73,8 +73,8 @@ public class Loader {
         throw new UnsatisfiedLinkError("Failed to load'" + libraryName + "'");
     }
 
-    private void libraryLoaded(String libraryName, String lib) {
-        if (libraries.size(libraryName) != 1) {
+    private void libraryLoaded(String libraryName, String lib, boolean initial) {
+        if (libraries.size(libraryName) != 1 || initial) {
             System.out.println("Loaded '" + lib + "' for '" + libraryName + "'");
             libraries.addSingle(libraryName, lib);
         }

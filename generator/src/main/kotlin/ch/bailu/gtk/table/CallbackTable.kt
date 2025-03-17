@@ -25,13 +25,16 @@ object CallbackTable : Logable {
     }
 
     override fun log(writer: Writer) {
-        table.onEach {
-            writer.write("{${it.key}\n")
+        writer.write("# ${CallbackTable.javaClass.canonicalName}\n")
 
-            it.value.forEach {
-                writer.write(String.format("    %-40s %-40s\n", it.key, it.value))
+        table.onEach { namespace ->
+            writer.write("\n## ${namespace.key}\n\n")
+
+            writer.write("| Name                                     | Detailed\n")
+            writer.write("|------------------------------------------|---------\n")
+            namespace.value.forEach {
+                writer.write(String.format("| %-40s | %s\n", it.key, it.value))
             }
-            writer.write("}\n\n")
         }
     }
 }

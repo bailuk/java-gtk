@@ -1,4 +1,4 @@
-name: Build on debian
+name: Build on Debian
 
 on:
   push:
@@ -30,16 +30,13 @@ jobs:
         run: ./gradlew cV
 
       - name: Generate source code
-        run: make gen
+        run: ./gradlew generate
 
       - name: Build library
-        run: make
-
-      - name: Build exsamples
-        run: make examples
+        run: ./gradlew build
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: java-gtk
           path: java-gtk/build/libs/*

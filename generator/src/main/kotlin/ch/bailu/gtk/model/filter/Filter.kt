@@ -3,14 +3,14 @@ package ch.bailu.gtk.model.filter
 import ch.bailu.gtk.model.MethodModel
 import ch.bailu.gtk.model.StructureModel
 
+/**
+ * See [ch.bailu.gtk.table.ValueTable] for converted values
+ */
 fun filterValues(value: String): Boolean {
-    return ("2147483648" != value
-            && "9223372036854775807" != value
-            && "4294967295" != value
-            && "18446744073709551615" != value
-            && "-9223372036854775808" != value
-            && "86400000000" != value
-            && "3600000000" != value)
+    return ("9223372036854775807" != value     // G_MAXINT64
+            && "-9223372036854775808" != value // G_MININT64
+            && "86400000000" != value          // TIME_SPAN_DAY
+            && "3600000000" != value)          // TIME_SPAN_HOUR
 }
 
 fun filterMethod(structureModel: StructureModel, methodModel: MethodModel): Boolean {
@@ -19,6 +19,9 @@ fun filterMethod(structureModel: StructureModel, methodModel: MethodModel): Bool
     }
     if ("ActionRow" == structureModel.apiName && "activate" == methodModel.apiName) {
         return false
+    }
+    if ("DataInputStream" == structureModel.apiName && "readByte" == methodModel.apiName) {
+        return false // overrides function with different return type
     }
     return true
 }
@@ -32,6 +35,9 @@ fun filterCreateMallocConstructor(structureModel: StructureModel): Boolean {
     return structureModel.allFieldsAreSupported && !structureModel.disguised
 }
 
-fun filterFieldDirectAccess(): Boolean {
-    return true
+fun filterParent(parent: String): String {
+    if ("Object" == parent || "ch.bailu.gtk.gobject.Object" == parent) {
+        return "ch.bailu.gtk.type.PropertyHolder"
+    }
+    return parent
 }

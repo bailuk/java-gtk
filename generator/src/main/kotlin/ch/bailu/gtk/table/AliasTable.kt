@@ -31,8 +31,11 @@ object AliasTable : Logable {
     }
 
     override fun log(writer: Writer) {
+        writer.write("# ${AliasTable.javaClass.canonicalName}\n\n")
+        writer.write("| From                           | To\n")
+        writer.write("|--------------------------------|---\n")
         table.forEach {
-            writer.write(String.format("%-30s => %s\n", it.key, it.value))
+            writer.write(String.format("| %-30s | %s\n", it.key, it.value))
         }
     }
 }

@@ -7,6 +7,16 @@ import ch.bailu.gtk.glib.Glib;
  *
  */
 public class Record extends Pointer {
+
+    /**
+     * Creates an empty record of specified size.
+     * Allocates heap of specified size and initializes memory to 0.
+     * @param size size to allocate
+     */
+    public Record(int size) {
+        super(Glib.malloc0(size).cast());
+    }
+
     public Record(PointerContainer pointer) {
         super(pointer);
     }

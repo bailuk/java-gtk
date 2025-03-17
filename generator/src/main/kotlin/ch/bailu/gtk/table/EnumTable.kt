@@ -37,12 +37,17 @@ object EnumTable: Logable {
     }
 
     override fun log(writer: Writer) {
+        writer.write("# ${EnumTable.javaClass.canonicalName}\n")
+
         table.onEach { namespace ->
-            writer.write("{${namespace.key}\n")
+            writer.write("\n## ${namespace.key}\n\n")
+
+            writer.write("| Name\n")
+            writer.write("| -----\n")
+
             namespace.value.forEach {
-                writer.write(String.format("    %-40s\n", it.key))
+                writer.write(String.format("| %s\n", it.key))
             }
-            writer.write("}\n\n")
         }
     }
 }

@@ -2,21 +2,16 @@ package ch.bailu.gtk.lib.jna;
 
 import java.util.HashMap;
 import java.util.TreeSet;
-import java.util.function.Consumer;
 
 public class LibraryList {
-    private HashMap<String, TreeSet<String>> libraries = new HashMap<>();
+    private final HashMap<String, TreeSet<String>> libraries = new HashMap<>();
 
-    public void addInitial(String libraryName) {
+    public boolean addInitial(String libraryName) {
         if (!libraries.containsKey(libraryName)) {
             addSingle(libraryName, libraryName);
+            return true;
         }
-    }
-
-    public void forEach(String libraryName, Consumer<String> action) {
-        if (libraries.containsKey(libraryName)) {
-            libraries.get(libraryName).forEach(action);
-        }
+        return false;
     }
 
     public void addSingle(String libraryName, String lib) {

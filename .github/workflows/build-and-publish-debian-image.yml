@@ -1,4 +1,4 @@
-name: Create and publish debian build image
+name: Create and publish Debian build image
 
 on:
   workflow_dispatch:

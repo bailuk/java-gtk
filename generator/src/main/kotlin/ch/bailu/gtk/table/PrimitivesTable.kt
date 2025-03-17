@@ -22,6 +22,7 @@ object PrimitivesTable {
         add("gulong", "long")
         add("gsize", "long")
         add("GType", "long")
+        add("guchar", "byte")
         add("gchar", "byte")
         add("gunichar", "byte")
         add("gint64", "long")
@@ -41,6 +42,7 @@ object PrimitivesTable {
         add("const gchar*", "String")
         add("...", "java.lang.Object...")
         add("GQuark", "int")
+        add("GstClockTime", "long")
     }
 
     private fun add(cType: String, jType: String) {

@@ -53,14 +53,19 @@ object StructureTable : Logable {
 
 
     override fun log(writer: Writer) {
-        table.onEach { namespace ->
-            writer.write("{${namespace.key}\n")
-            namespace.value.forEach { structure ->
-                val getType = if (structure.value.hasGetType) "get-type" else ""
+        writer.write("# ${StructureTable.javaClass.name}\n")
 
-                writer.write(String.format("    %-40s%s%s\n", structure.key, getType, structure.value.isTypeStructFor))
+        table.onEach { namespace ->
+            writer.write("\n## ${namespace.key}\n\n")
+
+            writer.write("| Name                           | getType | isTypeStructFor\n")
+            writer.write("|--------------------------------|---------|----------------\n")
+
+            namespace.value.forEach { structure ->
+                val getType = if (structure.value.hasGetType) "true" else ""
+
+                writer.write(String.format("| %-30s | %-7s | %s\n", structure.key, getType, structure.value.isTypeStructFor))
             }
-            writer.write("}\n\n")
         }
     }
 

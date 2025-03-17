@@ -8,6 +8,7 @@ import ch.bailu.gtk.model.type.JavaType
 import ch.bailu.gtk.model.type.NamespaceType
 import ch.bailu.gtk.parser.tag.ParameterTag
 import ch.bailu.gtk.table.EnumTable
+import ch.bailu.gtk.table.ValueTable
 import ch.bailu.gtk.validator.Validator
 import ch.bailu.gtk.writer.Names
 
@@ -149,7 +150,7 @@ class ParameterModel(namespace: String,
         get() = callbackType.valid
 
     val value: String
-        get() = parameterTag.value
+        get() = ValueTable.convert(parameterTag.value)
 
     val doc: String
         get() = parameterTag.getDoc()
