@@ -3,6 +3,7 @@
 - Generator: Add markdown summary logs
 - Generator: Add gstreamer support
 - Generator: Update Kotlin to 2.1.10
+- Generator: Update gir files (sync with debian testing)
 - Library: Add PropertyHolder to accesss GObject properties
 - Library: Update findbugs to spotbugs-annotations:4.9.3
 - Library: Update jna to 5.17.0
