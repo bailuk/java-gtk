@@ -38,15 +38,16 @@ repositories {
 
 dependencies {
     // implementation of javax.annotation:javax.annotation-api
-    // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
-    api("com.google.code.findbugs:jsr305:3.0.2")
+    // https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations
+    api("com.github.spotbugs:spotbugs-annotations:4.9.3")
+
 
     // https://github.com/java-native-access/jna
     // https://mvnrepository.com/artifact/net.java.dev.jna/jna
-    api("net.java.dev.jna:jna:5.13.0")
+    api("net.java.dev.jna:jna:5.17.0")
 
-    //https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+    testImplementation("org.junit.jupiter:junit-jupiter:5.12.1")
 }
 
 

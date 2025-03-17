@@ -2,7 +2,13 @@
 
 - Generator: Add markdown summary logs
 - Generator: Add gstreamer support
+- Generator: Update Kotlin to 2.1.10
 - Library: Add PropertyHolder to accesss GObject properties
+- Library: Update findbugs to spotbugs-annotations:4.9.3
+- Library: Update jna to 5.17.0
+- CI: Update gradle to version 8.13
+- CI: Update release plugin to version 1.18.18
+- CI: Update JUnit to 5.12.1
 
 # 0.5.0
 
