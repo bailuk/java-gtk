@@ -1,4 +1,4 @@
-# Next
+# 0.6.0
 
 - Generator: Add markdown summary logs
 - Generator: Add gstreamer support
