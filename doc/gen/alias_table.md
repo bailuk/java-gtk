@@ -9,7 +9,6 @@
 | glib.Quark                     | glib.guint32
 | pango.LayoutRun                | pango.GlyphItem
 | gst.ElementFactoryListType     | gst.guint64
-| glib.Type                      | glib.gsize
 | gst.MemoryMapInfo              | gst.MapInfo
 | gobject.Type                   | gobject.gsize
 | gst.ClockTimeDiff              | gst.gint64

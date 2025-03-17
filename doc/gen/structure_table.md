@@ -120,6 +120,7 @@
 | Int64Range                     | true    | 
 | Promise                        | true    | 
 | TracerPrivate                  |         | 
+| ByteArrayInterface             |         | 
 | TypeFindFactory                | true    | 
 | ControlBindingClass            |         | ControlBinding
 | DebugCategory                  |         | 
@@ -190,8 +191,8 @@
 | ControlSource                  | true    | 
 | DynamicTypeFactory             | true    | 
 | StreamCollectionClass          |         | StreamCollection
-| TypeFind                       |         | 
-| StaticCaps                     |         | 
+| TypeFind                       | true    | 
+| StaticCaps                     | true    | 
 | GhostPadPrivate                |         | 
 | PluginClass                    |         | Plugin
 | ReferenceTimestampMeta         |         | 
@@ -204,6 +205,7 @@
 | BinClass                       |         | Bin
 | Message                        | true    | 
 | BufferPoolPrivate              |         | 
+| IdStr                          | true    | 
 | Element                        | true    | 
 | SharedTaskPoolPrivate          |         | 
 | TracerFactory                  | true    | 
@@ -213,6 +215,7 @@
 | CapsFeatures                   | true    | 
 | DynamicTypeFactoryClass        |         | DynamicTypeFactory
 | PluginFeatureClass             |         | PluginFeature
+| VecDeque                       |         | 
 | BusPrivate                     |         | 
 | ParamFraction                  | true    | 
 | Iterator                       | true    | 
@@ -223,7 +226,7 @@
 | ObjectClass                    |         | Object
 | ControlSourceClass             |         | ControlSource
 | PadClass                       |         | Pad
-| StaticPadTemplate              |         | 
+| StaticPadTemplate              | true    | 
 | Bin                            | true    | 
 | Sample                         | true    | 
 | AllocationParams               | true    | 
@@ -480,7 +483,9 @@
 | UnixSocketAddressPrivate       |         | 
 | VolumeMonitor                  | true    | 
 | NetworkMonitorInterface        |         | NetworkMonitor
+| ThreadedResolverClass          |         | ThreadedResolver
 | Application                    | true    | 
+| ThreadedResolver               | true    | 
 | NetworkAddressPrivate          |         | 
 | DBusMenuModel                  | true    | 
 | SocketClientPrivate            |         | 
@@ -699,12 +704,14 @@
 | List                           |         | 
 | Private                        |         | 
 | HookList                       |         | 
+| StaticPrivate                  |         | 
 | OptionContext                  |         | 
 | MarkupParser                   |         | 
 | PatternSpec                    | true    | 
 | TestConfig                     |         | 
 | SList                          |         | 
-| Hmac                           |         | 
+| StaticMutex                    |         | 
+| Hmac                           | true    | 
 | VariantBuilder                 | true    | 
 | PtrArray                       | true    | 
 | Mutex                          |         | 
@@ -717,13 +724,16 @@
 | TimeZone                       | true    | 
 | RecMutex                       |         | 
 | DoubleIEEE754                  |         | 
+| Tuples                         |         | 
 | IConv                          |         | 
 | IOChannel                      | true    | 
+| Cache                          |         | 
 | TrashStack                     |         | 
 | Scanner                        |         | 
 | OptionEntry                    |         | 
 | VariantType                    | true    | 
 | ThreadPool                     |         | 
+| MemChunk                       |         | 
 | SourceFuncs                    |         | 
 | VariantDict                    | true    | 
 | MainLoop                       | true    | 
@@ -736,32 +746,39 @@
 | Source                         | true    | 
 | TokenValue                     |         | 
 | MappedFile                     | true    | 
+| StaticRWLock                   |         | 
+| Relation                       |         | 
 | OptionGroup                    | true    | 
 | SourceCallbackFuncs            |         | 
 | HashTableIter                  |         | 
+| StaticRecMutex                 |         | 
 | Queue                          |         | 
 | BookmarkFile                   | true    | 
 | TestLogMsg                     |         | 
+| Allocator                      |         | 
 | Hook                           |         | 
+| ThreadFunctions                |         | 
 | Cond                           |         | 
-| Rand                           |         | 
+| Rand                           | true    | 
 | PathBuf                        |         | 
 | Error                          | true    | 
+| UnixPipe                       |         | 
 | Data                           |         | 
-| Dir                            |         | 
+| Dir                            | true    | 
 | Date                           | true    | 
 | VariantIter                    |         | 
 | StringChunk                    |         | 
 | Thread                         | true    | 
 | UriParamsIter                  |         | 
 | Array                          | true    | 
+| Completion                     |         | 
 | SequenceIter                   |         | 
 | Timer                          |         | 
 | MatchInfo                      | true    | 
 | TestCase                       |         | 
 | MainContext                    | true    | 
 | StatBuf                        |         | 
-| StrvBuilder                    |         | 
+| StrvBuilder                    | true    | 
 | TestLogBuffer                  |         | 
 
 ## gdk
@@ -772,16 +789,19 @@
 | DragSurface                    | true    | 
 | Rectangle                      | true    | 
 | TouchEvent                     | true    | 
+| ColorState                     | true    | 
 | FrameClockPrivate              |         | 
 | Cursor                         | true    | 
 | FocusEvent                     | true    | 
 | SnapshotClass                  |         | Snapshot
 | DeleteEvent                    | true    | 
+| MemoryTextureBuilder           | true    | 
 | EventSequence                  | true    | 
 | RGBA                           | true    | 
 | PaintableInterface             |         | Paintable
 | GLTextureBuilder               | true    | 
 | Popup                          | true    | 
+| CicpParamsClass                |         | CicpParams
 | Toplevel                       | true    | 
 | ContentSerializer              | true    | 
 | TimeCoord                      |         | 
@@ -798,13 +818,14 @@
 | MemoryTextureClass             |         | MemoryTexture
 | ProximityEvent                 | true    | 
 | GLTextureClass                 |         | GLTexture
-| DragSurfaceSize                |         | 
+| DragSurfaceSize                | true    | 
 | Drop                           | true    | 
 | Snapshot                       | true    | 
 | FrameClockClass                |         | FrameClock
 | ScrollEvent                    | true    | 
 | CairoContext                   | true    | 
 | ToplevelInterface              |         | Toplevel
+| MemoryTextureBuilderClass      |         | MemoryTextureBuilder
 | ContentDeserializer            | true    | 
 | TouchpadEvent                  | true    | 
 | AppLaunchContext               | true    | 
@@ -813,13 +834,16 @@
 | SurfaceClass                   |         | Surface
 | ContentProvider                | true    | 
 | GLContext                      | true    | 
-| ToplevelSize                   |         | 
+| ToplevelSize                   | true    | 
+| DmabufFormats                  | true    | 
 | Texture                        | true    | 
 | DevicePad                      | true    | 
 | DeviceTool                     | true    | 
 | Surface                        | true    | 
 | KeyEvent                       | true    | 
 | ContentFormats                 | true    | 
+| DmabufTextureClass             |         | DmabufTexture
+| DmabufTextureBuilder           | true    | 
 | Monitor                        | true    | 
 | ContentFormatsBuilder          | true    | 
 | DrawContext                    | true    | 
@@ -827,9 +851,12 @@
 | FrameClock                     | true    | 
 | VulkanContext                  | true    | 
 | PopupInterface                 |         | Popup
+| DmabufTexture                  | true    | 
+| DmabufTextureBuilderClass      |         | DmabufTextureBuilder
 | MemoryTexture                  | true    | 
 | MotionEvent                    | true    | 
 | Paintable                      | true    | 
+| CicpParams                     | true    | 
 | Drag                           | true    | 
 | ButtonEvent                    | true    | 
 | PopupLayout                    | true    | 
@@ -865,10 +892,16 @@
 
 | Name                           | getType | isTypeStructFor
 |--------------------------------|---------|----------------
+| AlertDialog                    | true    | 
 | AnimationClass                 |         | Animation
 | TimedAnimation                 | true    | 
+| AboutDialog                    | true    | 
+| AlertDialogClass               |         | AlertDialog
+| ToggleClass                    |         | Toggle
 | ToolbarView                    | true    | 
 | CarouselIndicatorLines         | true    | 
+| PreferencesDialog              | true    | 
+| ButtonRow                      | true    | 
 | EntryRowClass                  |         | EntryRow
 | PreferencesPageClass           |         | PreferencesPage
 | FlapClass                      |         | Flap
@@ -877,21 +910,25 @@
 | PreferencesGroup               | true    | 
 | CarouselIndicatorDotsClass     |         | CarouselIndicatorDots
 | ExpanderRowClass               |         | ExpanderRow
+| ToggleGroupClass               |         | ToggleGroup
 | SplitButtonClass               |         | SplitButton
 | ViewStackPageClass             |         | ViewStackPage
 | LeafletClass                   |         | Leaflet
 | ViewSwitcherBarClass           |         | ViewSwitcherBar
+| BottomSheetClass               |         | BottomSheet
 | TabView                        | true    | 
 | EntryRow                       | true    | 
 | NavigationSplitView            | true    | 
 | OverlaySplitViewClass          |         | OverlaySplitView
 | PreferencesRow                 | true    | 
+| PreferencesDialogClass         |         | PreferencesDialog
 | CallbackAnimationTargetClass   |         | CallbackAnimationTarget
 | ComboRowClass                  |         | ComboRow
 | NavigationSplitViewClass       |         | NavigationSplitView
 | SqueezerPage                   | true    | 
 | AboutWindowClass               |         | AboutWindow
 | BreakpointCondition            | true    | 
+| LayoutSlotClass                |         | LayoutSlot
 | TabButton                      | true    | 
 | TabPage                        | true    | 
 | SwitchRow                      | true    | 
@@ -904,7 +941,10 @@
 | BreakpointClass                |         | Breakpoint
 | ViewStackClass                 |         | ViewStack
 | SqueezerPageClass              |         | SqueezerPage
+| LayoutSlot                     | true    | 
+| Spinner                        | true    | 
 | NavigationViewClass            |         | NavigationView
+| WrapBox                        | true    | 
 | Swipeable                      | true    | 
 | PreferencesWindow              | true    | 
 | OverlaySplitView               | true    | 
@@ -921,10 +961,13 @@
 | CarouselClass                  |         | Carousel
 | CallbackAnimationTarget        | true    | 
 | Banner                         | true    | 
+| ButtonRowClass                 |         | ButtonRow
 | ApplicationClass               |         | Application
 | StyleManagerClass              |         | StyleManager
 | PreferencesGroupClass          |         | PreferencesGroup
 | ToastOverlay                   | true    | 
+| WrapBoxClass                   |         | WrapBox
+| Layout                         | true    | 
 | PreferencesRowClass            |         | PreferencesRow
 | Animation                      | true    | 
 | Clamp                          | true    | 
@@ -935,13 +978,19 @@
 | ClampScrollable                | true    | 
 | CarouselIndicatorDots          | true    | 
 | NavigationView                 | true    | 
+| MultiLayoutViewClass           |         | MultiLayoutView
+| SpinnerPaintable               | true    | 
 | TabBar                         | true    | 
 | Carousel                       | true    | 
 | TabOverview                    | true    | 
 | LeafletPage                    | true    | 
 | BreakpointBinClass             |         | BreakpointBin
+| WrapLayout                     | true    | 
+| LayoutClass                    |         | Layout
 | PasswordEntryRow               | true    | 
+| InlineViewSwitcherClass        |         | InlineViewSwitcher
 | NavigationPage                 | true    | 
+| Dialog                         | true    | 
 | TabPageClass                   |         | TabPage
 | PropertyAnimationTargetClass   |         | PropertyAnimationTarget
 | SpringAnimation                | true    | 
@@ -958,7 +1007,10 @@
 | ApplicationWindow              | true    | 
 | Flap                           | true    | 
 | WindowClass                    |         | Window
+| DialogClass                    |         | Dialog
 | Squeezer                       | true    | 
+| AboutDialogClass               |         | AboutDialog
+| BottomSheet                    | true    | 
 | AnimationTargetClass           |         | AnimationTarget
 | BannerClass                    |         | Banner
 | AnimationTarget                | true    | 
@@ -971,14 +1023,18 @@
 | SpringParams                   | true    | 
 | CarouselIndicatorLinesClass    |         | CarouselIndicatorLines
 | ViewSwitcher                   | true    | 
+| SpinnerClass                   |         | Spinner
 | ViewStackPagesClass            |         | ViewStackPages
 | ViewSwitcherTitleClass         |         | ViewSwitcherTitle
+| WrapLayoutClass                |         | WrapLayout
 | Toast                          | true    | 
 | ComboRow                       | true    | 
 | SplitButton                    | true    | 
+| Toggle                         | true    | 
 | ClampLayoutClass               |         | ClampLayout
 | TabButtonClass                 |         | TabButton
 | ExpanderRow                    | true    | 
+| InlineViewSwitcher             | true    | 
 | SwipeTracker                   | true    | 
 | PreferencesPage                | true    | 
 | TabOverviewClass               |         | TabOverview
@@ -987,6 +1043,7 @@
 | Bin                            | true    | 
 | EnumListModel                  | true    | 
 | ActionRow                      | true    | 
+| SpinnerPaintableClass          |         | SpinnerPaintable
 | ToastClass                     |         | Toast
 | StatusPageClass                |         | StatusPage
 | Avatar                         | true    | 
@@ -996,7 +1053,9 @@
 | SpringAnimationClass           |         | SpringAnimation
 | AvatarClass                    |         | Avatar
 | EnumListItem                   | true    | 
+| MultiLayoutView                | true    | 
 | ViewSwitcherBar                | true    | 
+| ToggleGroup                    | true    | 
 | ButtonContent                  | true    | 
 | ButtonContentClass             |         | ButtonContent
 
@@ -1064,46 +1123,56 @@
 | GLShaderNode                   | true    | 
 | RoundedRect                    |         | 
 | OutsetShadowNode               | true    | 
-| GLRenderer                     | true    | 
 | LinearGradientNode             | true    | 
+| SubsurfaceNode                 | true    | 
 | BlendNode                      | true    | 
+| TextureNode                    | true    | 
+| MaskNode                       | true    | 
+| ShadowNode                     | true    | 
+| ClipNode                       | true    | 
+| RepeatingRadialGradientNode    | true    | 
+| RenderNode                     | true    | 
+| FillNode                       | true    | 
+| CairoRenderer                  | true    | 
+| ParseLocation                  |         | 
+| TransformNode                  | true    | 
+| GLRendererClass                |         | GLRenderer
+| CrossFadeNode                  | true    | 
+| VulkanRenderer                 | true    | 
+| RepeatNode                     | true    | 
+| PathMeasure                    | true    | 
+| Renderer                       | true    | 
+| CairoNode                      | true    | 
+| ColorMatrixNode                | true    | 
+| GLRenderer                     | true    | 
 | Shadow                         |         | 
 | DebugNode                      | true    | 
 | RadialGradientNode             | true    | 
-| TextureNode                    | true    | 
-| MaskNode                       | true    | 
+| StrokeNode                     | true    | 
+| PathPoint                      | true    | 
+| PathBuilder                    | true    | 
 | ConicGradientNode              | true    | 
 | ContainerNode                  | true    | 
-| ShadowNode                     | true    | 
 | RendererClass                  |         | Renderer
 | GLShaderClass                  |         | GLShader
-| ClipNode                       | true    | 
-| RepeatingRadialGradientNode    | true    | 
 | RepeatingLinearGradientNode    | true    | 
 | RoundedClipNode                | true    | 
+| Path                           | true    | 
 | ColorStop                      |         | 
+| Stroke                         | true    | 
 | NglRenderer                    | true    | 
-| RenderNode                     | true    | 
 | ShaderArgsBuilder              | true    | 
 | CairoRendererClass             |         | CairoRenderer
 | ColorNode                      | true    | 
 | BlurNode                       | true    | 
-| CairoRenderer                  | true    | 
 | OpacityNode                    | true    | 
-| ParseLocation                  |         | 
-| TransformNode                  | true    | 
 | TextNode                       | true    | 
-| GLRendererClass                |         | GLRenderer
 | BroadwayRenderer               | true    | 
-| CrossFadeNode                  | true    | 
-| RepeatNode                     | true    | 
+| VulkanRendererClass            |         | VulkanRenderer
 | InsetShadowNode                | true    | 
 | TextureScaleNode               | true    | 
-| Renderer                       | true    | 
 | BroadwayRendererClass          |         | BroadwayRenderer
-| CairoNode                      | true    | 
 | BorderNode                     | true    | 
-| ColorMatrixNode                | true    | 
 | GLShader                       | true    | 
 | Transform                      | true    | 
 
@@ -1251,6 +1320,7 @@
 | AlertDialog                    | true    | 
 | BookmarkList                   | true    | 
 | IconView                       | true    | 
+| AccessibleText                 | true    | 
 | DropDownClass                  |         | DropDown
 | FlattenListModel               | true    | 
 | ColumnViewCellClass            |         | ColumnViewCell
@@ -1261,6 +1331,7 @@
 | Image                          | true    | 
 | PrintOperationPreview          | true    | 
 | ShortcutLabel                  | true    | 
+| PrintDialogClass               |         | PrintDialog
 | TextViewPrivate                |         | 
 | CellRendererText               | true    | 
 | Sorter                         | true    | 
@@ -1274,6 +1345,7 @@
 | Root                           | true    | 
 | AppChooserButton               | true    | 
 | TextChildAnchor                | true    | 
+| GraphicsOffload                | true    | 
 | FileChooserNativeClass         |         | FileChooserNative
 | CellRendererToggle             | true    | 
 | Snapshot                       | true    | 
@@ -1335,6 +1407,7 @@
 | FontChooserIface               |         | FontChooser
 | FixedClass                     |         | Fixed
 | ColumnViewColumn               | true    | 
+| PrintSetup                     | true    | 
 | SelectionModel                 | true    | 
 | TreeDragSource                 | true    | 
 | WindowControls                 | true    | 
@@ -1389,6 +1462,7 @@
 | ColorChooser                   | true    | 
 | Scale                          | true    | 
 | OrientableIface                |         | Orientable
+| AccessibleTextRange            |         | 
 | ShortcutManagerInterface       |         | ShortcutManager
 | IMMulticontextClass            |         | IMMulticontext
 | CallbackAction                 | true    | 
@@ -1506,6 +1580,7 @@
 | SymbolicPaintable              | true    | 
 | KeyvalTrigger                  | true    | 
 | PrintOperationPreviewIface     |         | PrintOperationPreview
+| AccessibleList                 | true    | 
 | SignalListItemFactoryClass     |         | SignalListItemFactory
 | PaperSize                      | true    | 
 | Border                         | true    | 
@@ -1575,6 +1650,7 @@
 | LockButton                     | true    | 
 | ConstraintLayoutChild          | true    | 
 | EventControllerScroll          | true    | 
+| GraphicsOffloadClass           |         | GraphicsOffload
 | FileFilter                     | true    | 
 | Buildable                      | true    | 
 | Fixed                          | true    | 
@@ -1582,6 +1658,7 @@
 | TextTagTable                   | true    | 
 | CellLayoutIface                |         | CellLayout
 | GestureDrag                    | true    | 
+| PrintDialog                    | true    | 
 | FileChooserNative              | true    | 
 | MultiSelectionClass            |         | MultiSelection
 | MediaControls                  | true    | 
@@ -1622,6 +1699,7 @@
 | ConstraintTargetInterface      |         | ConstraintTarget
 | EventControllerScrollClass     |         | EventControllerScroll
 | AccessibleInterface            |         | Accessible
+| AccessibleTextInterface        |         | AccessibleText
 | DropTarget                     | true    | 
 | ATContextClass                 |         | ATContext
 | TreeDragSourceIface            |         | TreeDragSource
