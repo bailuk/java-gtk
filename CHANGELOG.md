@@ -1,4 +1,10 @@
-# Release (0.5.0)
+# Next
+
+- Generator: Add markdown summary logs
+- Generator: Add gstreamer support
+- Library: Add PropertyHolder to accesss GObject properties
+
+# 0.5.0
 
 - Add `shell.nix` as documentation
 - Support JDK21
