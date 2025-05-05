@@ -1,3 +1,7 @@
+# Next
+
+- Library: Fix Value size (ValueFactory) and property access
+
 # 0.6.0
 
 - Generator: Add markdown summary logs
