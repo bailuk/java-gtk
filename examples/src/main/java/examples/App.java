@@ -28,6 +28,7 @@ import examples.gtk4_demo.Pixbufs;
 import examples.gtk4_tutorial.CustomDrawing;
 import examples.gtk4_tutorial.ExampleApplication;
 import examples.gtk4_tutorial.UiBuilderExample;
+import examples.image_io.ImageIo;
 
 public class App {
 
@@ -71,6 +72,7 @@ public class App {
             addSample(demoList, window, new ExampleApplication(app));
             addSample(demoList, window, new GlibSettings());
             addSample(demoList, window, new Accordion());
+            addSample(demoList, window, new ImageIo());
 
             window.present();
         });

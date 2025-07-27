@@ -7,8 +7,11 @@ import ch.bailu.gtk.type.Record;
 import ch.bailu.gtk.type.Str;
 
 public class ValueFactory {
+    // TODO: This should come from SizeTable.kt
+    private static final int VALUE_SIZE = 24;
+
     public static Value initValue(long typeID) {
-        return new Value(new Record(5).cast()).init(typeID);
+        return new Value(new Record(VALUE_SIZE).cast()).init(typeID);
     }
 
     public static Value toValue(Str str) {

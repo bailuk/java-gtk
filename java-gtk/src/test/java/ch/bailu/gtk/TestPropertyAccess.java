@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIf;
 
+import ch.bailu.gtk.adw.BreakpointBin;
 import ch.bailu.gtk.gdk.Display;
 import ch.bailu.gtk.gio.ListStore;
 import ch.bailu.gtk.glib.Glib;
@@ -93,5 +94,18 @@ public class TestPropertyAccess {
         box.setBooleanProperty("homogeneous", true);
         assertEquals(box.getCanFocus(), box.getBooleanProperty("homogeneous"));
         assertTrue(box.getHomogeneous());
+    }
+
+    @Test
+    @EnabledIf("gtkInit")
+    public void testPropertyAccessBreakpointBin() {
+        var breakpointBin = new BreakpointBin();
+
+        for (int i=0; i< 10000; i++) {
+            breakpointBin.setIntProperty("width-request", i);
+            breakpointBin.setIntProperty("height-request", i);
+
+            assertEquals(i, breakpointBin.getIntProperty("width-request"));
+        }
     }
 }
