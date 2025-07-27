@@ -1,6 +1,8 @@
 # Next
 
 - Library: Fix Value size (ValueFactory) and property access
+- Generator: Add cairo PNG support
+- Examples: ImageIO sample
 
 # 0.6.0
 
