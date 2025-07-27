@@ -1,4 +1,4 @@
-# Next
+# 0.6.1
 
 - Library: Fix Value size (ValueFactory) and property access
 - Generator: Add cairo PNG support
