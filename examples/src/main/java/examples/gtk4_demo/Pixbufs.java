@@ -57,7 +57,7 @@ public class Pixbufs implements DemoInterface {
     private final Pixbuf[] images = new Pixbuf[IMAGE_NAMES.length];
 
     /* Widgets */
-    private DrawingArea da;
+    private DrawingArea drawingArea;
 
     private static final long CYCLE_TIME = 3000000; /* 3 seconds */
     private long startTime;
@@ -163,7 +163,7 @@ public class Pixbufs implements DemoInterface {
                         overallAlpha);
             }
         }
-        da.queueDraw();
+        drawingArea.queueDraw();
         return GlibConstants.SOURCE_CONTINUE;
     }
 
@@ -175,11 +175,11 @@ public class Pixbufs implements DemoInterface {
         try  {
             loadPixbufs();
             frame = new Pixbuf(Colorspace.RGB, false, 8, backWidth, backHeight);
-            da = new DrawingArea();
+            drawingArea = new DrawingArea();
 
 
-            da.setDrawFunc((cb, drawingArea, cr, width, height, userData) -> onDraw(cr), null, (cb, data) -> {});
-            demoWindow.setChild(da);
+            drawingArea.setDrawFunc((cb, drawingArea, cr, width, height, userData) -> onDraw(cr), null, (cb, data) -> {});
+            demoWindow.setChild(drawingArea);
             demoWindow.setSizeRequest(backWidth, backHeight);
             demoWindow.addTickCallback((cb, widget, frame_clock, user_data) -> onTick(frame_clock), null, (cb, data) -> {});
 
@@ -193,7 +193,7 @@ public class Pixbufs implements DemoInterface {
                     new Str("Failed to load an image: " + e.getMessage()));
 
             dialog.onResponse(response_id -> demoWindow.destroy());
-            dialog.show();
+            dialog.present();
         }
         return demoWindow;
     }

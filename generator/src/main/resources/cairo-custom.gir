@@ -743,6 +743,21 @@
                     </instance-parameter>
                 </parameters>
             </method>
+
+            <!-- https://cairographics.org/manual/cairo-PNG-Support.html -->
+            <method name = "write_to_png" c:identifier="cairo_surface_write_to_png">
+                <return-value transfer-ownership="none">
+                    <type name="Status" c:type="cairo_status_t"/>
+                </return-value>
+                <parameters>
+                    <instance-parameter name="imageSurface" transfer-ownership="none">
+                        <type name="Surface" c:type="cairo_surface_t*"/>
+                    </instance-parameter>
+                    <parameter name="filename" transfer-ownership="none">
+                        <type name="char*" c:type="char*"/>
+                    </parameter>
+                </parameters>
+            </method>
         </record>
 
 
@@ -1728,6 +1743,18 @@
                 </parameters>
         </function>
 
+        <!-- https://cairographics.org/manual/cairo-PNG-Support.html -->
+        <function name="image_surface_create_from_png" c:identifier="cairo_image_surface_create_from_png">
+            <return-value transfer-ownership="full">
+                <type name="Surface" c:type="cairo_surface_t*"/>
+            </return-value>
+
+            <parameters>
+                <parameter name="filename" transfer-ownership="none">
+                    <type name="char*" c:type="char*"/>
+                </parameter>
+            </parameters>
+        </function>
 
         <!-- custom -->
         <function name="image_surface_create_for_data" c:identifier="cairo_image_surface_create_for_data">

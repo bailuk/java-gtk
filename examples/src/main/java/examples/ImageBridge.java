@@ -90,14 +90,12 @@ public class ImageBridge implements DemoInterface {
         }
     }
 
-    private boolean drawLogo(Context context) {
+    private void drawLogo(Context context) {
         if (pixbuf != null) {
             context.save();
             Gdk.cairoSetSourcePixbuf(context, pixbuf, 0, 0);
             context.paint();
-            return true;
         }
-        return false;
     }
 
     @Override
