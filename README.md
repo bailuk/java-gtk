@@ -1,3 +1,35 @@
+
+<div align="right">
+  <details>
+    <summary >🌐 Language</summary>
+    <div>
+      <div align="center">
+        <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=en">English</a>
+        | <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=zh-CN">简体中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=zh-TW">繁體中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=ja">日本語</a>
+        | <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=ko">한국어</a>
+        | <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=hi">हिन्दी</a>
+        | <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=th">ไทย</a>
+        | <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=fr">Français</a>
+        | <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=de">Deutsch</a>
+        | <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=es">Español</a>
+        | <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=it">Italiano</a>
+        | <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=ru">Русский</a>
+        | <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=pt">Português</a>
+        | <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=nl">Nederlands</a>
+        | <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=pl">Polski</a>
+        | <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=ar">العربية</a>
+        | <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=fa">فارسی</a>
+        | <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=tr">Türkçe</a>
+        | <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=vi">Tiếng Việt</a>
+        | <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=id">Bahasa Indonesia</a>
+        | <a href="https://openaitx.github.io/view.html?user=bailuk&project=java-gtk&lang=as">অসমীয়া</
+      </div>
+    </div>
+  </details>
+</div>
+
 [![Build on Debian](https://github.com/bailuk/java-gtk/actions/workflows/build-on-debian.yml/badge.svg)](https://github.com/bailuk/java-gtk/actions/workflows/build-on-debian.yml)
 [![Build on Fedora](https://github.com/bailuk/java-gtk/actions/workflows/build-on-fedora.yml/badge.svg)](https://github.com/bailuk/java-gtk/actions/workflows/build-on-fedora.yml)
 [![Build on Ubuntu](https://github.com/bailuk/java-gtk/actions/workflows/build-on-ubuntu.yml/badge.svg)](https://github.com/bailuk/java-gtk/actions/workflows/build-on-ubuntu.yml)
